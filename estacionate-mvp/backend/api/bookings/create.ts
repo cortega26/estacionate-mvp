@@ -1,9 +1,10 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { z } from 'zod'
 import { db } from '../../lib/db.js'
-import { verifyToken } from '../../lib/auth.js'
-import { APP_CONSTANTS } from '../../lib/constants.js'
+import { verifyToken, getTokenFromRequest } from '../../lib/auth.js'
+import { calculateBookingPricing } from '../../lib/pricing.js'
 import cors from '../../lib/cors.js'
+import crypto from 'crypto'
 
 const createBookingSchema = z.object({
     blockId: z.string().uuid(),
@@ -61,8 +62,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
             // Fetch the block to get details for booking (price)
             const block = await tx.availabilityBlock.findUniqueOrThrow({
-                where: { id: data.blockId }
+                where: { id: data.blockId },
+                include: { spot: true }
             })
+
+            // Fix 2: IDOR Prevention
+            // Ensure the resident is booking a spot in THEIR OWN building
+            if (user.buildingId && block.spot.buildingId !== user.buildingId) {
+                throw new Error('BUILDING_MISMATCH')
+            }
+
+            const pricing = calculateBookingPricing(block.basePriceClp)
 
             // Create Booking
             return tx.booking.create({
@@ -72,10 +82,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                     visitorName: data.visitorName,
                     visitorPhone: data.visitorPhone,
                     vehiclePlate: data.vehiclePlate,
-                    amountClp: block.basePriceClp,
-                    commissionClp: Math.floor(block.basePriceClp * APP_CONSTANTS.BOOKING_COMMISSION_RATE),
+                    amountClp: pricing.totalAmountClp,
+                    commissionClp: pricing.commissionClp,
                     status: 'pending', // Pending Payment
-                    confirmationCode: Math.random().toString(36).substring(7).toUpperCase(),
+                    confirmationCode: crypto.randomBytes(4).toString('hex').toUpperCase(),
                     specialInstructions: 'Park carefully'
                 }
             })
@@ -86,6 +96,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     } catch (error: any) {
         if (error.message === 'BLOCK_UNAVAILABLE') {
             return res.status(409).json({ error: 'Spot is no longer available' })
+        }
+        if (error.message === 'BUILDING_MISMATCH') {
+            return res.status(403).json({ error: 'You can only book spots in your own building' })
         }
         if (error instanceof z.ZodError) {
             return res.status(400).json({ error: error.errors })

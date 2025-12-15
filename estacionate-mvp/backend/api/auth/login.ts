@@ -10,6 +10,9 @@ const loginSchema = z.object({
     password: z.string()
 })
 
+const MAX_ATTEMPTS = 5
+const LOCKOUT_MINUTES = 15
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
     await cors(req, res) // Enable CORS
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
@@ -17,14 +20,47 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     try {
         const { email, password } = loginSchema.parse(req.body)
 
+        // 1. Try Resident Login
         let resident = await db.resident.findUnique({
             where: { email },
             include: { unit: true }
         })
 
         if (resident && resident.passwordHash) {
+            // Check Lockout
+            if (resident.lockoutUntil && resident.lockoutUntil > new Date()) {
+                const minutesLeft = Math.ceil((resident.lockoutUntil.getTime() - Date.now()) / 60000)
+                return res.status(429).json({ error: `Account locked. Try again in ${minutesLeft} minutes` })
+            }
+
             const isValid = await comparePassword(password, resident.passwordHash)
-            if (!isValid) return res.status(401).json({ error: 'Invalid credentials' })
+            if (!isValid) {
+                // Increment Failed Attempts
+                const attempts = resident.failedLoginAttempts + 1
+                const data: any = { failedLoginAttempts: attempts }
+
+                if (attempts >= MAX_ATTEMPTS) {
+                    const lockout = new Date()
+                    lockout.setMinutes(lockout.getMinutes() + LOCKOUT_MINUTES)
+                    data.lockoutUntil = lockout
+                }
+
+                await db.resident.update({ where: { id: resident.id }, data })
+                return res.status(401).json({ error: 'Invalid credentials' })
+            }
+
+            // Success: Reset counters
+            if (resident.failedLoginAttempts > 0 || resident.lockoutUntil) {
+                await db.resident.update({
+                    where: { id: resident.id },
+                    data: { failedLoginAttempts: 0, lockoutUntil: null }
+                })
+            }
+
+            // S2 Fix: Verification Check
+            if (!resident.isVerified) {
+                return res.status(403).json({ error: 'Account not verified. Please check your email or contact administration.' })
+            }
 
             const token = signToken({
                 userId: resident.id,
@@ -36,7 +72,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             const serialized = serialize('token', token, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
-                sameSite: 'lax', // Lax needed for top-level nav if any, Strict is safer but Strict prevents some flows. Strict is fine for API calls.
+                sameSite: 'lax',
                 maxAge: 60 * 60 * 24 * 7,
                 path: '/'
             })
@@ -44,7 +80,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
             return res.status(200).json({
                 success: true,
-                // accessToken: token, // Removed for security
                 user: {
                     id: resident.id,
                     email: resident.email,
@@ -56,7 +91,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             })
         }
 
-        // 2. Check Admin/User Table
+        // 2. Try Admin/User Login
         const user = await db.user.findUnique({
             where: { email }
         })
@@ -65,8 +100,34 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             return res.status(401).json({ error: 'Invalid credentials' })
         }
 
+        // Check Lockout (User)
+        if (user.lockoutUntil && user.lockoutUntil > new Date()) {
+            const minutesLeft = Math.ceil((user.lockoutUntil.getTime() - Date.now()) / 60000)
+            return res.status(429).json({ error: `Account locked. Try again in ${minutesLeft} minutes` })
+        }
+
         const isValid = await comparePassword(password, user.passwordHash)
-        if (!isValid) return res.status(401).json({ error: 'Invalid credentials' })
+        if (!isValid) {
+            const attempts = user.failedLoginAttempts + 1
+            const data: any = { failedLoginAttempts: attempts }
+
+            if (attempts >= MAX_ATTEMPTS) {
+                const lockout = new Date()
+                lockout.setMinutes(lockout.getMinutes() + LOCKOUT_MINUTES)
+                data.lockoutUntil = lockout
+            }
+
+            await db.user.update({ where: { id: user.id }, data })
+            return res.status(401).json({ error: 'Invalid credentials' })
+        }
+
+        // Success: Reset counters
+        if (user.failedLoginAttempts > 0 || user.lockoutUntil) {
+            await db.user.update({
+                where: { id: user.id },
+                data: { failedLoginAttempts: 0, lockoutUntil: null }
+            })
+        }
 
         if (!user.isActive) return res.status(403).json({ error: 'Account inactive' })
 
@@ -87,7 +148,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         return res.status(200).json({
             success: true,
-            // accessToken: token,
             user: {
                 id: user.id,
                 email: user.email,

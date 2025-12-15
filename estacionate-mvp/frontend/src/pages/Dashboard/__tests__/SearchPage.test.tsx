@@ -27,7 +27,7 @@ const renderComponent = () => {
 describe('SearchPage', () => {
     beforeEach(() => {
         // Reset store
-        useAuthStore.setState({ user: null, token: null });
+        useAuthStore.setState({ user: null });
     });
 
     it('shows loading when user is missing', () => {
@@ -45,7 +45,7 @@ describe('SearchPage', () => {
                 role: 'resident',
                 isVerified: true
             },
-            token: 'fake-token'
+            // token: 'fake-token' // Removed as it's not in AuthState
         });
 
         renderComponent();

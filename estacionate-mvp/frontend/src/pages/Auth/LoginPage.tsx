@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { useForm } from 'react-hook-form';
 import { useNavigate, Link } from 'react-router-dom';
 import { api } from '../../lib/api';
@@ -14,7 +14,7 @@ export const LoginPage = () => {
         try {
             const res = await api.post('/auth/login', data);
             if (res.data.success) {
-                setAuth(res.data.user, res.data.accessToken);
+                setAuth(res.data.user);
                 toast.success('¡Bienvenida/o!');
                 navigate('/search');
             }

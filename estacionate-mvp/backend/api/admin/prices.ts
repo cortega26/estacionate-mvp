@@ -1,5 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { db } from '../../lib/db.js'
+import { verifyToken, getTokenFromRequest } from '../../lib/auth.js'
+import cors from '../../lib/cors.js'
 import { z } from 'zod'
 
 const priceUpdateSchema = z.object({
@@ -8,7 +10,19 @@ const priceUpdateSchema = z.object({
 })
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+    await cors(req, res)
     if (req.method !== 'PUT') return res.status(405).json({ error: 'Method not allowed' })
+
+    // 1. Auth & Role Check
+    const token = getTokenFromRequest(req)
+    if (!token) return res.status(401).json({ error: 'Missing token' })
+
+    const user = verifyToken(token)
+    if (!user) return res.status(401).json({ error: 'Invalid token' })
+
+    if (user.role !== 'admin') {
+        return res.status(403).json({ error: 'Forbidden: Admins only' })
+    }
 
     try {
         const { buildingId, newPrice } = priceUpdateSchema.parse(req.body);

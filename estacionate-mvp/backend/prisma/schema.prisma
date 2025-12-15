@@ -109,6 +109,11 @@ model Resident {
   verificationCode String?   @map("verification_code") @db.VarChar(10)
   passwordHash     String?   @map("password_hash") @db.VarChar(255) // Added for MVP password login
   isActive         Boolean   @default(true) @map("is_active")
+
+  // Rate Limiting
+  failedLoginAttempts Int       @default(0) @map("failed_login_attempts")
+  lockoutUntil        DateTime? @map("lockout_until")
+
   createdAt        DateTime  @default(now()) @map("created_at")
 
   // Relations
@@ -224,6 +229,11 @@ model User {
   role         Role     @default(admin)
   buildingId   String?  @map("building_id")
   isActive     Boolean  @default(true) @map("is_active")
+
+  // Rate Limiting
+  failedLoginAttempts Int       @default(0) @map("failed_login_attempts")
+  lockoutUntil        DateTime? @map("lockout_until")
+
   createdAt    DateTime @default(now()) @map("created_at")
 
   // Relations

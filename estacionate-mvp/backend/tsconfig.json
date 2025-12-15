@@ -1,0 +1,34 @@
+{
+    "compilerOptions": {
+        "target": "ES2022",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "lib": [
+            "ESNext"
+        ],
+        "outDir": "dist",
+        "rootDir": ".",
+        "strict": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "resolveJsonModule": true,
+        "noEmit": true
+    },
+    "include": [
+        "api/**/*",
+        "lib/**/*",
+        "prisma/**/*",
+        "scripts/**/*",
+        "tests/**/*",
+        "*.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist",
+        ".vercel",
+        ".git",
+        "build"
+    ]
+}

@@ -18,8 +18,8 @@ import { AdminLayout } from './layouts/AdminLayout';
 import { MainLayout } from './layouts/MainLayout';
 
 const ProtectedLayout = () => {
-  const token = useAuthStore((state) => state.token);
-  return token ? <Outlet /> : <Navigate to="/login" />;
+  const user = useAuthStore((state) => state.user);
+  return user ? <Outlet /> : <Navigate to="/login" />;
 };
 
 function App() {
