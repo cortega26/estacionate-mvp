@@ -1,0 +1,22 @@
+### Signup A
+POST http://localhost:3000/api/auth/signup
+Content-Type: application/json
+
+{
+    "email": "test-resident@example.com",
+    "password": "securepassword123",
+    "rut": "12345678-9",
+    "firstName": "Test",
+    "lastName": "User",
+    "buildingId": "FIXME-UUID",
+    "unitNumber": "101"
+}
+
+### Login A
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "test-resident@example.com",
+    "password": "securepassword123"
+}
