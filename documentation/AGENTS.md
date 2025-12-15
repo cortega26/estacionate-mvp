@@ -4,6 +4,16 @@
 > **Goal:** Build a robust, secure, and performant parking management platform.
 > **Context:** This project is a Monorepo. Frontend is in `/frontend`, Backend is in `/backend`.
 
+## 0. Knowledge Hub (Context & Memory)
+**Before starting any task, you must check these files:**
+
+* **Context & Schema:** `documentation/TECH_SPEC.md` (The "What")
+    * *Consult this for:* Database schema, API endpoints, and core business rules. Do not hallucinate table names; check here first.
+* **Operational Rules:** `documentation/PROTOCOL.md` (The "How")
+    * *Consult this for:* Terminal output limits, diff formats, and behavior rules. (If using Cursor, these are also in `.cursorrules`).
+* **Memory:** `documentation/LESSONS.md` (The "History")
+    * *Consult this for:* Past mistakes, specific library quirks, and "gotchas" to avoid repeating errors.
+
 ## 1. Technology Stack
 - **Frontend:** React (Vite), Tailwind CSS, Headless UI, React Query (`@tanstack/react-query`), Zustand.
 - **Backend:** Node.js (Express), Prisma ORM, PostgreSQL.

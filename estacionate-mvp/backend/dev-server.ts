@@ -1,18 +1,20 @@
 import 'dotenv/config';
 import express from 'express';
-import loginHandler from './api/auth/login';
-import signupHandler from './api/auth/signup';
-import searchHandler from './api/spots/search';
-import createBookingHandler from './api/bookings/create';
-import checkoutHandler from './api/payments/checkout';
-import webhookHandler from './api/payments/webhook';
-import listBuildingsHandler from './api/buildings/list';
-import statsHandler from './api/admin/stats';
-import pricesHandler from './api/admin/prices';
+import loginHandler from './api/auth/login.js';
+import signupHandler from './api/auth/signup.js';
+import searchHandler from './api/spots/search.js';
+import createBookingHandler from './api/bookings/create.js';
+import checkoutHandler from './api/payments/checkout.js';
+import webhookHandler from './api/payments/webhook.js';
+import listBuildingsHandler from './api/buildings/list.js';
+import statsHandler from './api/admin/stats.js';
+import pricesHandler from './api/admin/prices.js';
 
 import cors from 'cors';
+import helmet from 'helmet';
 
 const app = express();
+app.use(helmet());
 app.use(cors({
     origin: 'http://localhost:5173', // Frontend URL
     credentials: true,

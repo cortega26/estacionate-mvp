@@ -1,4 +1,4 @@
-import { APP_CONSTANTS } from './constants.js'
+import { APP_CONSTANTS } from '../constants.js'
 
 /**
  * Calculates the total price and commission for a booking using Integer Math.

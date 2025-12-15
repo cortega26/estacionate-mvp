@@ -33,10 +33,10 @@ export const Select: React.FC<SelectProps> = ({
                     {label}
                 </label>
             )}
-            <Listbox value={value} onChange={onChange} disabled={disabled}>
+            <Listbox value={value === null ? undefined : value} onChange={onChange} disabled={disabled}>
                 <div className="relative mt-1">
                     <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-sm border border-gray-300 focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-500/75 focus-visible:ring-offset-2 sm:text-sm transition duration-150 ease-in-out disabled:bg-gray-100 disabled:text-gray-400">
-                        <span className={`block truncate ${!value ? 'text-gray-400' : 'text-gray-900'}`}>
+                        <span className={clsx('block truncate', !value ? 'text-gray-400' : 'text-gray-900')}>
                             {value ? value.label : placeholder}
                         </span>
                         <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
@@ -57,16 +57,17 @@ export const Select: React.FC<SelectProps> = ({
                                 <Listbox.Option
                                     key={personIdx}
                                     className={({ active }) =>
-                                        `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? 'bg-indigo-100 text-indigo-900' : 'text-gray-900'
-                                        }`
+                                        clsx(
+                                            'relative cursor-default select-none py-2 pl-10 pr-4',
+                                            active ? 'bg-indigo-100 text-indigo-900' : 'text-gray-900'
+                                        )
                                     }
                                     value={option}
                                 >
                                     {({ selected }) => (
                                         <>
                                             <span
-                                                className={`block truncate ${selected ? 'font-medium' : 'font-normal'
-                                                    }`}
+                                                className={clsx('block truncate', selected ? 'font-medium' : 'font-normal')}
                                             >
                                                 {option.label}
                                             </span>

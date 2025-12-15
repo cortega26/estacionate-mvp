@@ -22,7 +22,16 @@
     "node": ">=18.0.0",
     "npm": ">=8.0.0"
   },
-  "keywords": ["parking", "reservation", "chile", "mvp", "saas"],
+  "keywords": [
+    "parking",
+    "reservation",
+    "chile",
+    "mvp",
+    "saas"
+  ],
   "author": "Estaciónate Team",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "typescript": "^5.9.3"
+  }
 }

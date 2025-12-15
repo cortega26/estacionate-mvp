@@ -66,10 +66,34 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 include: { spot: true }
             })
 
+            // Fix 1: Temporal Safety (Prevent Booking Past)
+            if (new Date(block.startDatetime) < new Date()) {
+                throw new Error('PAST_TIME')
+            }
+
             // Fix 2: IDOR Prevention
             // Ensure the resident is booking a spot in THEIR OWN building
             if (user.buildingId && block.spot.buildingId !== user.buildingId) {
                 throw new Error('BUILDING_MISMATCH')
+            }
+
+            // Fix 3: Double Booking Overlap Check
+            // Check if ANY other block for this spot is effectively reserved/booked and overlaps this time
+            // Overlap logic: (StartA <= EndB) and (EndA >= StartB)
+            // We search for: status != available AND spotId = block.spotId AND overlap
+            const overlap = await tx.availabilityBlock.findFirst({
+                where: {
+                    spotId: block.spotId,
+                    id: { not: block.id }, // Don't check self
+                    status: 'reserved',
+                    // Overlap Condition:
+                    startDatetime: { lt: block.endDatetime },
+                    endDatetime: { gt: block.startDatetime }
+                }
+            })
+
+            if (overlap) {
+                throw new Error('DOUBLE_BOOKING_DETECTED')
             }
 
             const pricing = calculateBookingPricing(block.basePriceClp)
@@ -96,6 +120,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     } catch (error: any) {
         if (error.message === 'BLOCK_UNAVAILABLE') {
             return res.status(409).json({ error: 'Spot is no longer available' })
+        }
+        if (error.message === 'DOUBLE_BOOKING_DETECTED') {
+            return res.status(409).json({ error: 'Double Booking Detected' })
+        }
+        if (error.message === 'PAST_TIME') {
+            return res.status(400).json({ error: 'Cannot book past dates' })
         }
         if (error.message === 'BUILDING_MISMATCH') {
             return res.status(403).json({ error: 'You can only book spots in your own building' })
