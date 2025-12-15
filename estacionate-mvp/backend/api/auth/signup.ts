@@ -2,6 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { z } from 'zod'
 import { db } from '../../lib/db.js'
 import { hashPassword } from '../../lib/auth.js'
+import cors from '../../lib/cors.js'
 
 // Schema
 const signupSchema = z.object({
@@ -16,6 +17,7 @@ const signupSchema = z.object({
 })
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+    await cors(req, res)
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
 
     try {

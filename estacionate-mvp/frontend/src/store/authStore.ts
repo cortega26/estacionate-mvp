@@ -13,8 +13,7 @@ interface User {
 
 interface AuthState {
     user: User | null;
-    token: string | null;
-    setAuth: (user: User, token: string) => void;
+    setAuth: (user: User) => void;
     logout: () => void;
     isAuthenticated: () => boolean;
 }
@@ -23,13 +22,17 @@ export const useAuthStore = create<AuthState>()(
     persist(
         (set, get) => ({
             user: null,
-            token: null,
-            setAuth: (user, token) => set({ user, token }),
-            logout: () => set({ user: null, token: null }),
-            isAuthenticated: () => !!get().token,
+            // token: null, // Removed for security
+            setAuth: (user) => set({ user }),
+            logout: () => {
+                set({ user: null });
+                // Call logout API to clear cookie
+                import('../lib/api').then(({ api }) => api.post('/auth/logout').catch(console.error));
+            },
+            isAuthenticated: () => !!get().user,
         }),
         {
-            name: 'auth-storage', // unique name
+            name: 'auth-storage',
         }
     )
 );

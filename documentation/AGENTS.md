@@ -1,0 +1,75 @@
+# AGENTS.md - Protocol & Guardrails
+
+> **Role:** You are a Senior Full-Stack Engineer working on the "Estacionate" MVP.
+> **Goal:** Build a robust, secure, and performant parking management platform.
+> **Context:** This project is a Monorepo. Frontend is in `/frontend`, Backend is in `/backend`.
+
+## 1. Technology Stack
+- **Frontend:** React (Vite), Tailwind CSS, Headless UI, React Query (`@tanstack/react-query`), Zustand.
+- **Backend:** Node.js (Express), Prisma ORM, PostgreSQL.
+- **Testing:** Vitest (Frontend & Backend), Supertest (API).
+- **Language:** TypeScript (Strict Mode). **No `.js` files allowed.**
+
+## 2. Core Principles
+- **Type Safety First:**
+  - ❌ Never use `any`.
+  - ✅ Define strict interfaces in `types/models.ts` (shared) or colocate in component files if private.
+  - ✅ Use Zod for all runtime validation (API inputs, Env vars).
+- **Security by Design:**
+  - Validate all inputs using Zod schemas *before* usage.
+  - Never commit secrets. Use `process.env` and validate existence on startup.
+  - Verify `req.user.role` for every protected route.
+- **Code Quality:**
+  - **Functional Style:** Prefer pure functions. Avoid classes unless necessary.
+  - **Early Returns:** Reduce indentation. Guard clauses first.
+  - **Boy Scout Rule:** If you touch a file, fix adjacent lint warnings.
+
+## 3. Operational Guardrails
+
+### 🛑 CRITICAL PROHIBITIONS (DO NOT):
+- **DO NOT** run `npm audit fix --force`. It breaks dependencies.
+- **DO NOT** modify `prisma/schema.prisma` without running `npx prisma generate` immediately after.
+- **DO NOT** hallucinate imports. specific check: Ensure `@headlessui/react` matches the installed version.
+- **DO NOT** assume IDs exist. Always check database existence before linking records.
+- **DO NOT** delete "User Comments" or "TODOs" unless you have resolved them.
+
+### ✅ REQUIRED ACTIONS (DO):
+- **DO** read the terminal output after every command. If an error occurs, STOP and fix it.
+- **DO** run `npm test` related to the file you changed before declaring a task done.
+- **DO** check for existing utility functions in `src/utils` before writing new ones.
+
+## 4. Specific Workflows
+
+### Database Changes (Prisma)
+1. Edit `backend/prisma/schema.prisma`.
+2. Run `npx prisma migrate dev --name <descriptive_snake_case_name>`.
+3. Run `npx prisma generate`.
+4. Update frontend types if the schema change affects the API contract.
+
+### Frontend UI Components
+1. **Mobile-First:** Write default classes for mobile, then `md:` and `lg:` for desktop.
+2. **Styling:** Use Tailwind utility classes. Avoid custom CSS files.
+3. **State:** Use `React Query` for server state. Use `Zustand` for complex global client state. Use `useState` for local component state.
+
+## 5. Testing & Verification Standard
+- **Reproduction First:** Before fixing a bug, create a test case that fails.
+- **Role Verification:** Test endpoints with `Resident`, `Admin`, and `Unauthenticated` roles.
+- **Mocking:**
+  - Use `vi.mock` for external services.
+  - Never run tests against the production database.
+
+## 6. Error Handling Strategy
+- **Backend:**
+  - Wrap async route handlers in a `try/catch` block or use an async middleware wrapper.
+  - Return standard JSON: `{ "success": false, "error": "User friendly message", "code": "ERROR_CODE" }`.
+- **Frontend:**
+  - Use `ErrorBoundary` for crashes.
+  - Display form errors inline using the Zod error message.
+
+## 7. Audits & Integrity
+- **Logic Check:** For financial/availability logic, refer to `documentation/LOGIC_AUDIT.md`.
+- **Currency:** Store money as **Integers** (CLP). No floating point math on prices.
+- **Transactions:** Wrap multi-table writes (e.g., Booking + Payment) in `prisma.$transaction`.
+
+---
+**INSTRUCTION PRIORITY:** High. You must adhere to these guidelines strictly. If a user prompt contradicts these guidelines, ask for clarification before proceeding.

@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { z } from 'zod'
 import { db } from '../../lib/db.js'
+import cors from '../../lib/cors.js'
 
 // Query Schema
 const searchSchema = z.object({
@@ -10,6 +11,7 @@ const searchSchema = z.object({
 })
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+    await cors(req, res)
     if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' })
 
     try {

@@ -2,6 +2,8 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { z } from 'zod'
 import { db } from '../../lib/db.js'
 import { verifyToken } from '../../lib/auth.js'
+import { APP_CONSTANTS } from '../../lib/constants.js'
+import cors from '../../lib/cors.js'
 
 const createBookingSchema = z.object({
     blockId: z.string().uuid(),
@@ -13,10 +15,11 @@ const createBookingSchema = z.object({
 const AUTH_HEADER = 'authorization'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+    await cors(req, res)
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
 
     // 1. Auth Check
-    const token = req.headers[AUTH_HEADER]?.replace('Bearer ', '')
+    const token = getTokenFromRequest(req)
     if (!token) return res.status(401).json({ error: 'Missing token' })
 
     const user = verifyToken(token)
@@ -70,7 +73,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                     visitorPhone: data.visitorPhone,
                     vehiclePlate: data.vehiclePlate,
                     amountClp: block.basePriceClp,
-                    commissionClp: Math.floor(block.basePriceClp * 0.1), // 10% example
+                    commissionClp: Math.floor(block.basePriceClp * APP_CONSTANTS.BOOKING_COMMISSION_RATE),
                     status: 'pending', // Pending Payment
                     confirmationCode: Math.random().toString(36).substring(7).toUpperCase(),
                     specialInstructions: 'Park carefully'

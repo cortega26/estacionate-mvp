@@ -2,6 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { MercadoPagoConfig, Preference } from 'mercadopago'
 import { z } from 'zod'
 import { db } from '../../lib/db.js'
+import cors from '../../lib/cors.js'
 
 const checkoutSchema = z.object({
     bookingId: z.string().uuid()
@@ -12,6 +13,7 @@ const MP_ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN
 const client = MP_ACCESS_TOKEN ? new MercadoPagoConfig({ accessToken: MP_ACCESS_TOKEN }) : null
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+    await cors(req, res)
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
 
     try {

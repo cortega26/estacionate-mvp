@@ -13,7 +13,12 @@ import pricesHandler from './api/admin/prices';
 import cors from 'cors';
 
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:5173', // Frontend URL
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 
 // Shim for Vercel Request/Response if needed, but Express req/res are compatible enough for basic JSON usage.
