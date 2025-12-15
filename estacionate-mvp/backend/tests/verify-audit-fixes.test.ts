@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { calculateBookingPricing } from '../lib/pricing.js'
+import { calculateBookingPricing } from '../lib/domain/pricing.js'
 import { APP_CONSTANTS } from '../lib/constants.js'
 
 describe('Audit Fixes Verification', () => {

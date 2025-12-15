@@ -2,7 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { z } from 'zod'
 import { db } from '../../lib/db.js'
 import { verifyToken, getTokenFromRequest } from '../../lib/auth.js'
-import { calculateBookingPricing } from '../../lib/pricing.js'
+import { calculateBookingPricing } from '../../lib/domain/pricing.js'
 import cors from '../../lib/cors.js'
 import crypto from 'crypto'
 

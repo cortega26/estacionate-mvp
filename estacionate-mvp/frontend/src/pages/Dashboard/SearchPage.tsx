@@ -4,7 +4,7 @@ import { api } from '../../lib/api';
 import { useAuthStore } from '../../store/authStore';
 import toast from 'react-hot-toast';
 import { format } from 'date-fns';
-import { BookingModal } from '../../components/BookingModal';
+import { BookingModal } from '../../features/bookings/components/BookingModal';
 import type { Building, Spot } from '../../types/app-models';
 import { Input } from '../../components/ui/Input';
 import { Select, type SelectOption } from '../../components/ui/Select';
