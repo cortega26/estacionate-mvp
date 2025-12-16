@@ -36,6 +36,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         // 2. Optimistic Locking Transaction
         const booking = await db.$transaction(async (tx) => {
+            // 0. PRE-FETCH: Get Spot ID to acquire lock
+            const preBlock = await tx.availabilityBlock.findUniqueOrThrow({
+                where: { id: data.blockId },
+                select: { spotId: true }
+            })
+
+            // 1. LOCK PARENT RESOURCE (VisitorSpot)
+            // Serializes booking attempts for this spot
+            await tx.visitorSpot.update({
+                where: { id: preBlock.spotId },
+                data: { updatedAt: new Date() }
+            })
+
             // Atomic Update: Only succeeds if status is currently 'available'
             // Prisma `update` throws RecordNotFound if where clause doesn't match
             // But `updateMany` returns count. `update` is better for ID.
@@ -63,7 +76,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             // Fetch the block to get details for booking (price)
             const block = await tx.availabilityBlock.findUniqueOrThrow({
                 where: { id: data.blockId },
-                include: { spot: true }
+                include: {
+                    spot: {
+                        include: {
+                            building: true
+                        }
+                    }
+                }
             })
 
             // Fix 1: Temporal Safety (Prevent Booking Past)
@@ -96,7 +115,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 throw new Error('DOUBLE_BOOKING_DETECTED')
             }
 
-            const pricing = calculateBookingPricing(block.basePriceClp)
+            const pricing = calculateBookingPricing(block.basePriceClp, block.spot.building.platformCommissionRate)
 
             // Create Booking
             return tx.booking.create({

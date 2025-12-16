@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { z } from 'zod'
 import { db } from '../../lib/db.js'
-import { zonedTimeToUtc } from 'date-fns-tz'
+import { fromZonedTime } from 'date-fns-tz'
 import cors from '../../lib/cors.js'
 
 // Query Schema
@@ -44,10 +44,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
             // Construct start of day in the target timezone
             // Note: Month in Date constructor is 0-indexed
-            const startOfDay = zonedTimeToUtc(new Date(year, month - 1, day, 0, 0, 0, 0), timeZone)
+            const startOfDay = fromZonedTime(new Date(year, month - 1, day, 0, 0, 0, 0), timeZone)
 
             // Construct end of day in the target timezone
-            const endOfDay = zonedTimeToUtc(new Date(year, month - 1, day, 23, 59, 59, 999), timeZone)
+            const endOfDay = fromZonedTime(new Date(year, month - 1, day, 23, 59, 59, 999), timeZone)
 
             whereClause.startDatetime = {
                 gte: startOfDay,

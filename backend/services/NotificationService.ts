@@ -1,5 +1,5 @@
 import { sendWhatsAppMessage } from '../lib/twilio.js';
-import { QueueService } from './QueueService.js';
+
 
 interface BookingDetails {
     id: string;
@@ -13,7 +13,9 @@ export class NotificationService {
 
     // Helper for QueueService to call
     static async sendWhatsAppMessage(to: string, body: string) {
-        return sendWhatsAppMessage(to, body);
+        console.log(`[Mock WhatsApp] To: ${to}, Body: ${body}`);
+        return;
+        // return sendWhatsAppMessage(to, body); 
     }
 
     /**
@@ -47,7 +49,7 @@ Gracias por preferirnos.`;
         
 Hola ${visitorName}, hubo un problema con tu pago. Por favor intenta nuevamente para asegurar tu lugar.`;
 
-        await QueueService.add('SEND_WHATSAPP', { phone, message });
+        await sendWhatsAppMessage(phone, message);
     }
 
     static async sendPasswordReset(phone: string, code: string) {
@@ -59,6 +61,6 @@ Tu código de recuperación es: *${code}*
 
 Este código expira en 15 minutos. Si no lo solicitaste, ignora este mensaje.`;
 
-        await QueueService.add('SEND_WHATSAPP', { phone, message });
+        await sendWhatsAppMessage(phone, message);
     }
 }

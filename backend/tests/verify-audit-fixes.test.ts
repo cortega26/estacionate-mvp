@@ -11,7 +11,7 @@ describe('Audit Fixes Verification', () => {
 
         it('should calculate commission correctly for varying amounts', () => {
             // Case 1: Standard
-            const p1 = calculateBookingPricing(5000)
+            const p1 = calculateBookingPricing(5000, 0.10)
             // 10% of 5000 = 500
             expect(p1.commissionClp).toBe(500)
             expect(p1.ownerAmountClp).toBe(4500)
@@ -19,13 +19,13 @@ describe('Audit Fixes Verification', () => {
 
             // Case 2: Rounding (Basis Points should handle floor)
             // 1555 * 0.1 = 155.5 -> floor -> 155
-            const p2 = calculateBookingPricing(1555)
+            const p2 = calculateBookingPricing(1555, 0.10)
             expect(p2.commissionClp).toBe(155) // (1555 * 1000) / 10000 = 155.5 -> 155
             expect(p2.ownerAmountClp).toBe(1400) // 1555 - 155 = 1400
         })
 
         it('should throw on floating point inputs', () => {
-            expect(() => calculateBookingPricing(100.5)).toThrowError('Base Price must be an integer')
+            expect(() => calculateBookingPricing(100.5, 0.10)).toThrowError('Base Price must be an integer')
         })
     })
 
