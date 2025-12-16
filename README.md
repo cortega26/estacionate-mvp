@@ -6,7 +6,7 @@
 
 - **Oportunidad:** Monetizar espacios de estacionamiento subutilizados para visitas en edificios residenciales mediante marketplace digital
 - **Modelo:** Plataforma B2B2C con take rate, conectando administradoras con residentes verificados para arriendo de espacios por 11h/23h
-- **MVP Técnico:** Front-end estático (GitHub Pages) + API serverless (Vercel) + pagos locales (MercadoPago/Fintoc)
+- **MVP Técnico:** Front-end estático (GitHub Pages) + API serverless (Vercel) + pagos locales (MercadoPago/Fintoc) + Recuperación de cuenta (WhatsApp) + Rol de Conserjería (Dashboard móvil)
 - **Mercado:** Chile inicialmente, enfoque en edificios de alta densidad con déficit de estacionamientos para visitas
 - **Diferenciación:** Verificación de residentes, integración con administradoras, ventanas horarias adaptadas al mercado local
 
