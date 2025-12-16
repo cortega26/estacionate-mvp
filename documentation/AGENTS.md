@@ -77,7 +77,7 @@
   - Display form errors inline using the Zod error message.
 
 ## 7. Audits & Integrity
-- **Logic Check:** For financial/availability logic, refer to `documentation/LOGIC_AUDIT.md`.
+- **Logic Check:** For financial/availability logic, refer to `../audit-system/audits/A1_Business_Logic,_Code_Health_&_Behavioral_Integrity_Audit.md`.
 - **Currency:** Store money as **Integers** (CLP). No floating point math on prices.
 - **Transactions:** Wrap multi-table writes (e.g., Booking + Payment) in `prisma.$transaction`.
 
