@@ -15,7 +15,7 @@ export class QueueService {
             logger.info(`[Queue] Job added: ${job.id} (${type})`);
             return job;
         } catch (error) {
-            logger.error('[Queue] Failed to add job', error);
+            logger.error(error, '[Queue] Failed to add job');
             throw error;
         }
     }

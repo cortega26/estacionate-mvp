@@ -23,83 +23,95 @@ import helmet from 'helmet';
 
 const app = express();
 app.use(helmet());
-app.use(cors({
-    origin: 'http://localhost:5173', // Frontend URL
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-}));
+// CORS is handled by individual Vercel-style handlers (e.g. login.ts) via lib/cors.ts wrapper.
+// Do NOT add global CORS here to avoid duplicate headers and dev/prod parity issues.
+// app.use(cors({...}));
 app.use(express.json());
 
 // Shim for Vercel Request/Response if needed, but Express req/res are compatible enough for basic JSON usage.
 // VercelRequest extends http.IncomingMessage, Express Request does too.
 
-app.post('/api/auth/login', (req, res) => {
+import { errorHandler } from './middleware/errorHandler.js';
+import { AppError, ErrorCode } from './lib/errors.js';
+
+// ... (previous imports)
+
+// Helper to catch async errors
+const asyncHandler = (fn: Function) => (req: any, res: any, next: any) => {
+    Promise.resolve(fn(req, res, next)).catch(next);
+};
+
+// ... (app setup)
+
+app.post('/api/auth/login', asyncHandler((req: any, res: any) => {
     // Cast to any to satisfy Vercel vs Express type mismatch if strict
-    loginHandler(req as any, res as any);
-});
+    return loginHandler(req, res);
+}));
 
-app.post('/api/auth/signup', (req, res) => {
-    signupHandler(req as any, res as any);
-});
+app.post('/api/auth/signup', asyncHandler((req: any, res: any) => {
+    return signupHandler(req, res);
+}));
 
-app.post('/api/auth/forgot-password', (req, res) => {
-    forgotPasswordHandler(req as any, res as any);
-});
+app.post('/api/auth/forgot-password', asyncHandler((req: any, res: any) => {
+    return forgotPasswordHandler(req, res);
+}));
 
-app.post('/api/auth/reset-password', (req, res) => {
-    resetPasswordHandler(req as any, res as any);
-});
+app.post('/api/auth/reset-password', asyncHandler((req: any, res: any) => {
+    return resetPasswordHandler(req, res);
+}));
 
-app.get('/api/spots/search', (req, res) => {
-    searchHandler(req as any, res as any);
-});
+app.get('/api/spots/search', asyncHandler((req: any, res: any) => {
+    return searchHandler(req, res);
+}));
 
-app.post('/api/bookings/create', (req, res) => {
-    createBookingHandler(req as any, res as any);
-});
+app.post('/api/bookings/create', asyncHandler((req: any, res: any) => {
+    return createBookingHandler(req, res);
+}));
 
-app.post('/api/payments/checkout', (req, res) => {
-    checkoutHandler(req as any, res as any);
-});
+app.post('/api/payments/checkout', asyncHandler((req: any, res: any) => {
+    return checkoutHandler(req, res);
+}));
 
-app.post('/api/payments/webhook', (req, res) => {
-    webhookHandler(req as any, res as any);
-});
+app.post('/api/payments/webhook', asyncHandler((req: any, res: any) => {
+    return webhookHandler(req, res);
+}));
 
-app.get('/api/buildings', (req, res) => {
-    listBuildingsHandler(req as any, res as any);
-});
+app.get('/api/buildings', asyncHandler((req: any, res: any) => {
+    return listBuildingsHandler(req, res);
+}));
 
-app.get('/api/admin/stats', (req, res) => {
-    statsHandler(req as any, res as any);
-});
+app.get('/api/admin/stats', asyncHandler((req: any, res: any) => {
+    return statsHandler(req, res);
+}));
 
-app.put('/api/admin/prices', (req, res) => {
-    pricesHandler(req as any, res as any);
-});
+app.put('/api/admin/prices', asyncHandler((req: any, res: any) => {
+    return pricesHandler(req, res);
+}));
 
 import buildingsAdminHandler from './api/admin/buildings.js';
-app.all('/api/admin/buildings', (req, res) => {
-    buildingsAdminHandler(req as any, res as any);
-});
+app.all('/api/admin/buildings', asyncHandler((req: any, res: any) => {
+    return buildingsAdminHandler(req, res);
+}));
 
 import conciergeDashboardHandler from './api/concierge/dashboard.js';
 import conciergeVerifyHandler from './api/concierge/verify.js';
 
-app.get('/api/concierge/dashboard', (req, res) => {
-    conciergeDashboardHandler(req as any, res as any);
-});
+app.get('/api/concierge/dashboard', asyncHandler((req: any, res: any) => {
+    return conciergeDashboardHandler(req, res);
+}));
 
-app.post('/api/concierge/verify', (req, res) => {
-    conciergeVerifyHandler(req as any, res as any);
-});
+app.post('/api/concierge/verify', asyncHandler((req: any, res: any) => {
+    return conciergeVerifyHandler(req, res);
+}));
 
-app.get('/api/cron/worker', (req, res) => {
-    workerHandler(req as any, res as any);
-});
+app.get('/api/cron/worker', asyncHandler((req: any, res: any) => {
+    return workerHandler(req, res);
+}));
+
+// Global Error Handler
+app.use(errorHandler as any);
 
 const PORT = 3000;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
     logger.info(`Local Dev Server running on http://localhost:${PORT}`);
 });

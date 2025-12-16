@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { z } from 'zod'
 import { db } from '../../lib/db.js'
+import { zonedTimeToUtc } from 'date-fns-tz'
 import cors from '../../lib/cors.js'
 
 // Query Schema
@@ -35,14 +36,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         }
 
         if (query.date) {
-            // Simple day filter: Start time >= Date 00:00 and End time <= Date 23:59? 
-            // Or just "starts on this day".
-            // For MVP availability blocks are usually fixed slots per day.
-            const startOfDay = new Date(query.date)
-            startOfDay.setHours(0, 0, 0, 0)
+            // Fix: Use date-fns-tz for explicit timezone handling
+            const timeZone = 'America/Santiago'
 
-            const endOfDay = new Date(query.date)
-            endOfDay.setHours(23, 59, 59, 999)
+            // Parse the date string simply as a calendar date, then form the range in the specific timezone
+            const [year, month, day] = query.date.split('-').map(Number)
+
+            // Construct start of day in the target timezone
+            // Note: Month in Date constructor is 0-indexed
+            const startOfDay = zonedTimeToUtc(new Date(year, month - 1, day, 0, 0, 0, 0), timeZone)
+
+            // Construct end of day in the target timezone
+            const endOfDay = zonedTimeToUtc(new Date(year, month - 1, day, 23, 59, 59, 999), timeZone)
 
             whereClause.startDatetime = {
                 gte: startOfDay,

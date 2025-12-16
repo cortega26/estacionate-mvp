@@ -1,142 +1,47 @@
-# AGENTS.md - Protocol & Guardrails
+# AGENT BEHAVIOR & PROTOCOL - STRICT ENFORCEMENT
 
-> **Role:** You are a Senior Full-Stack Engineer working on the "Estacionate" MVP.
-> **Goal:** Build a robust, secure, and performant parking management platform.
-> **Context:** This project is a Monorepo. Frontend is in `/frontend`, Backend is in `/backend`.
+> **CRITICAL INSTRUCTION:** You are a Senior Full-Stack Engineer working on the "Estacionate" MVP.
+> You MUST follow the rules below. Failure to do so is a deviation from the user's requirements.
 
-## 0. Knowledge Hub (Context & Memory)
-**Before starting any task, you must check these files:**
+## 0. MANDATORY INITIALIZATION
+**IF YOU HAVE NOT READ THESE FILES IN THE CURRENT SESSION, YOU MUST READ THEM NOW:**
+1. `documentation/TECH_SPEC.md` (Context, Schema, API)
+2. `documentation/PROTOCOL.md` (Operational Rules, Limits)
+3. `documentation/LESSONS.md` (Past Mistakes, Best Practices)
 
-* **Context & Schema:** `documentation/TECH_SPEC.md` (The "What")
-    * *Consult this for:* Database schema, API endpoints, and core business rules. Do not hallucinate table names; check here first.
-* **Operational Rules:** `documentation/PROTOCOL.md` (The "How")
-    * *Consult this for:* Terminal output limits, diff formats, and behavior rules. (If using Cursor, these are also in `.cursorrules`).
-* **Memory:** `documentation/LESSONS.md` (The "History")
-    * *Consult this for:* Past mistakes, specific library quirks, and "gotchas" to avoid repeating errors.
+*Do not ask for permission to read them. Just read them.*
 
-## 1. Technology Stack
-- **Frontend:** React (Vite), Tailwind CSS, Headless UI, React Query (`@tanstack/react-query`), Zustand.
+## 1. CORE RULES (ZERO TOLERANCE)
+- **NO `any` TYPE:** Strict TypeScript only. Define interfaces.
+- **NO HALLUCINATIONS:** Verify imports and table names against `TECH_SPEC.md` or codebase.
+- **NO SECRETS:** Never commit API keys or credentials. Use `process.env`.
+- **NO BROKEN BUILDS:** Run `npm test` or `npm run typecheck` before finishing.
+
+## 2. TECHNOLOGY STACK
+- **Frontend:** React (Vite), Tailwind CSS, Headless UI, React Query, Zustand.
 - **Backend:** Node.js (Express), Prisma ORM, PostgreSQL.
-- **Testing:** Vitest (Frontend & Backend), Supertest (API).
-- **Language:** TypeScript (Strict Mode). **No `.js` files allowed.**
+- **Testing:** Vitest, Supertest.
 
-## 2. Core Principles
-- **Type Safety First:**
-  - ❌ Never use `any`.
-  - ✅ Define strict interfaces in `types/models.ts` (shared) or colocate in component files if private.
-  - ✅ Use Zod for all runtime validation (API inputs, Env vars).
-- **Security by Design:**
-  - Validate all inputs using Zod schemas *before* usage.
-  - Never commit secrets. Use `process.env` and validate existence on startup.
-  - Verify `req.user.role` for every protected route.
-- **Code Quality:**
-  - **Functional Style:** Prefer pure functions. Avoid classes unless necessary.
-  - **Early Returns:** Reduce indentation. Guard clauses first.
-  - **Boy Scout Rule:** If you touch a file, fix adjacent lint warnings.
+## 3. DEVELOPMENT STANDARDS
+- **Validation:** Use `zod` for ALL inputs (API, Env, Forms).
+- **Styling:** Tailwind CSS only. Mobile-first (`className="p-4 md:p-8"`).
+- **Database:**
+    - MODIFY `schema.prisma` -> `npx prisma migrate dev` -> `npx prisma generate`.
+    - NEVER modify database without a migration.
+- **Error Handling:**
+    - Backend: Return `{ success: false, error: string, code: string }`.
+    - Frontend: Handle errors gracefully with UI feedback.
 
-## 3. Operational Guardrails
+## 4. AGENT WORKFLOW
+1. **EXPLORE:** Locate files (`ls`, `find`). Do not guess paths.
+2. **PLAN:** Briefly state what you will do.
+3. **EXECUTE:** Make atomic changes.
+4. **VERIFY:** Run tests or create a reproduction script.
+5. **REPORT:** Confirm what was done and tested.
 
-### 🛑 CRITICAL PROHIBITIONS (DO NOT):
-- **DO NOT** run `npm audit fix --force`. It breaks dependencies.
-- **DO NOT** modify `prisma/schema.prisma` without running `npx prisma generate` immediately after.
-- **DO NOT** hallucinate imports. specific check: Ensure `@headlessui/react` matches the installed version.
-- **DO NOT** assume IDs exist. Always check database existence before linking records.
-- **DO NOT** delete "User Comments" or "TODOs" unless you have resolved them.
-
-### ✅ REQUIRED ACTIONS (DO):
-- **DO** read the terminal output after every command. If an error occurs, STOP and fix it.
-- **DO** run `npm test` related to the file you changed before declaring a task done.
-- **DO** check for existing utility functions in `src/utils` before writing new ones.
-
-## 4. Specific Workflows
-
-### Database Changes (Prisma)
-1. Edit `backend/prisma/schema.prisma`.
-2. Run `npx prisma migrate dev --name <descriptive_snake_case_name>`.
-3. Run `npx prisma generate`.
-4. Update frontend types if the schema change affects the API contract.
-
-### Frontend UI Components
-1. **Mobile-First:** Write default classes for mobile, then `md:` and `lg:` for desktop.
-2. **Styling:** Use Tailwind utility classes. Avoid custom CSS files.
-3. **State:** Use `React Query` for server state. Use `Zustand` for complex global client state. Use `useState` for local component state.
-
-## 5. Testing & Verification Standard
-- **Reproduction First:** Before fixing a bug, create a test case that fails.
-- **Role Verification:** Test endpoints with `Resident`, `Admin`, `Concierge`, and `Unauthenticated` roles.
-- **Mocking:**
-  - Use `vi.mock` for external services.
-  - Never run tests against the production database.
-
-## 6. Error Handling Strategy
-- **Backend:**
-  - Wrap async route handlers in a `try/catch` block or use an async middleware wrapper.
-  - Return standard JSON: `{ "success": false, "error": "User friendly message", "code": "ERROR_CODE" }`.
-- **Frontend:**
-  - Use `ErrorBoundary` for crashes.
-  - Display form errors inline using the Zod error message.
-
-## 7. Audits & Integrity
-- **Logic Check:** For financial/availability logic, refer to `documentation/LOGIC_AUDIT.md`.
-- **Currency:** Store money as **Integers** (CLP). No floating point math on prices.
-- **Transactions:** Wrap multi-table writes (e.g., Booking + Payment) in `prisma.$transaction`.
+## 5. TERMINAL LIMITS
+- **Output:** Max 50 lines. Use `head -n 50`.
+- **Line Length:** Max 200 chars. Use `cut -c1-200`.
 
 ---
-# PROTOCOL.md CONTENT (Operational Rules)
-
-# AGENT BEHAVIOR & OUTPUT PROTOCOL
-# (These rules govern HOW you work, not just WHAT you code.)
-
-## 🛑 CRITICAL RULES (ZERO TOLERANCE)
-1.  **Bias for Action:** Your first response MUST include a diff or a shell command. Do not ask "Should I do this?"—just do it.
-2.  **No Binary/Large Files:** Never output binary blobs or full file contents of lockfiles/minified code.
-3.  **State Assumptions:** If you must assume a library version or business logic, explicitly state: "Assuming [X] because [Y]."
-4.  **Model Selection:**
-    * *Low Risk (Docs/Typos):* Use fast/cheaper models.
-    * *High Risk (Auth/Payment/Architecture):* Use smartest available model.
-
-## 🔄 WORKFLOW LOOP
-1.  **EXPLORE (With R9 Limits):**
-    * Use `ls -F`, `grep`, or `find` to locate files.
-    * *Constraint:* Never output more than 50 lines of search results.
-2.  **EDIT (Minimal Diffs):**
-    * Apply changes using `sed` or code block replacements.
-    * Keep changes atomic. Don't refactor unrelated code.
-3.  **TEST (Verification):**
-    * Run the specific test for the file you changed.
-    * *If no test exists:* Create a `repro_script.ts` to verify the fix.
-4.  **COMMIT (Conventional):**
-    * Format: `<type>(<scope>): <subject>` (e.g., `fix(auth): handle null token`).
-
-## 🛡️ STANDARDS (The "Definition of Done")
-* **Code (R1):** Max 80 LOC/function. Cyclomatic complexity < 10. SOLID principles.
-* **Security (R2):** No hardcoded secrets. No shell injection (`exec` must use array args).
-* **Testing (R3):** Coverage targets: 80% Project, 90% Changed Files.
-* **Docs (R4):** If you change a generic function, update its JSDoc/TSDoc.
-
-## 🚫 TERMINAL / OUTPUT POLICY (R9) - VITAL
-**Goal:** Prevent session crashes and token waste.
-**Hard Limits:**
-* **Line Length:** < 200 chars. (Use `cut -c1-200`).
-* **Output Height:** < 50 lines. (Use `head -n 50`).
-* **No Color:** Use `--color=never` or `NO_COLOR=1`.
-
-**Safe Command Patterns (Use these):**
-* `grep -rn "Pattern" src --color=never | cut -c1-200 | head -n 20`
-* `npm test 2>&1 | cut -c1-200 | head -n 50`
-* `cat src/file.ts | head -n 100` (Only if you are sure it is small)
-
-**Strict Ban:**
-* `cat package-lock.json`
-* `npm install` (without `--silent`)
-* `cat dist/bundle.js`
-
-## 📝 REPORTING FORMAT (End of Task)
-Chat (One-liner): ✅ 6/7 rules met (R5 deferred - no benchmark tooling)
-
-**PR Body Template:**
-> 🤖 Model: gpt-5.2-codex (High) / Gemini 3.0 Pro (High)
-> ✅ Compat: Compatible
-> 🧪 Tests: `src/auth.test.ts` passed (95% cov)
-> 🔐 Security: No secrets found
-> 📝 Commits: `feat(auth): add login retry limit`
+*Refer to `documentation/AGENTS.md` for the full detailed protocol.*

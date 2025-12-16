@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { db } from '../../lib/db.js'
 import cors from '../../lib/cors.js'
 import { hashPassword } from '../../lib/auth.js'
+import { User, Resident } from '@prisma/client'
 
 const resetSchema = z.object({
     token: z.string().min(6),
@@ -18,7 +19,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         // 1. Try Resident
         let type = 'resident'
-        let account = await db.resident.findFirst({
+        let account: Resident | User | null = await db.resident.findFirst({
             where: {
                 resetToken: token,
                 resetTokenExpiresAt: { gt: new Date() }
