@@ -32,12 +32,11 @@ describe('Booking Flow (Integration)', () => {
             buildingId = building.id;
         }
 
-        // 2. Create User for Auth
+        // 2. Create User for Auth (Direct DB)
         const unique = Date.now();
         const email = `test-user-${unique}@test.com`;
-        const rut = `${unique.toString().slice(-8)}-${unique.toString().slice(-1)}`; // Unique RUT based on timestamp
+        const rut = `${unique.toString().slice(-8)}-${unique.toString().slice(-1)}`;
 
-        // Signup via API to get token simply
         const unit = await prisma.unit.create({
             data: {
                 buildingId: buildingId,
@@ -45,20 +44,20 @@ describe('Booking Flow (Integration)', () => {
             }
         });
 
-        await axios.post(`${API_URL}/api/auth/signup`, {
-            email,
-            password: 'password123',
-            rut,
-            firstName: 'Test',
-            lastName: 'User',
-            buildingId: buildingId,
-            unitNumber: unit.unitNumber
-        });
+        // Hash password manually
+        const bcrypt = await import('bcryptjs');
+        const passwordHash = await bcrypt.hash('password123', 10);
 
-        // Manual Verification for Logic Safety
-        await prisma.resident.updateMany({
-            where: { email },
-            data: { isVerified: true }
+        await prisma.resident.create({
+            data: {
+                email,
+                passwordHash,
+                rut,
+                firstName: 'Test',
+                lastName: 'User',
+                unitId: unit.id,
+                isVerified: true // Directly verified
+            }
         });
 
         const loginRes = await axios.post(`${API_URL}/api/auth/login`, {
@@ -172,6 +171,46 @@ describe('Booking Flow (Integration)', () => {
             });
         } catch (error: any) {
             expect(error.response?.status).toBe(400);
+        }
+    });
+
+    it('should prevent booking a different block that overlaps in time', async () => {
+        // 1. Create a second block that overlaps with the first one (which is already booked)
+        // Original block: Tomorrow 10am - 9pm
+        // New block: Tomorrow 12pm - 2pm (Inside the first one)
+
+        const start = new Date();
+        start.setDate(start.getDate() + 1);
+        start.setHours(12, 0, 0, 0);
+        const end = new Date(start);
+        end.setHours(14, 0, 0, 0);
+
+        const blockB = await prisma.availabilityBlock.create({
+            data: {
+                spotId,
+                startDatetime: start,
+                endDatetime: end,
+                durationType: DurationType.ELEVEN_HOURS, // Dummy Type
+                basePriceClp: 6000,
+                status: 'available'
+            }
+        });
+
+        try {
+            await axios.post(`${API_URL}/api/bookings/create`, {
+                blockId: blockB.id,
+                vehiclePlate: 'OVERLAP',
+                visitorName: 'Overlap Visitor'
+            }, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            // Should fail
+            expect(true).toBe(false);
+        } catch (error: any) {
+            expect(error.response?.status).toBe(409);
+            expect(error.response?.data?.error).toMatch(/Double Booking/i);
+        } finally {
+            await prisma.availabilityBlock.delete({ where: { id: blockB.id } });
         }
     });
 });
