@@ -18,6 +18,7 @@ import pricesHandler from './api/admin/prices.js';
 import forgotPasswordHandler from './api/auth/forgot-password.js';
 import resetPasswordHandler from './api/auth/reset-password.js';
 import workerHandler from './api/cron/worker.js';
+import reconcileHandler from './api/cron/reconcile.js';
 
 import cors from 'cors';
 import helmet from 'helmet';
@@ -109,6 +110,10 @@ app.post('/api/concierge/verify', asyncHandler((req: any, res: any) => {
 
 app.get('/api/cron/worker', asyncHandler((req: any, res: any) => {
     return workerHandler(req, res);
+}));
+
+app.get('/api/cron/reconcile', asyncHandler((req: any, res: any) => {
+    return reconcileHandler(req, res);
 }));
 
 app.get('/api/health', asyncHandler((req: any, res: any) => {
