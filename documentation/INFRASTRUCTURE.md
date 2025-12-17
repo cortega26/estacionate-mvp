@@ -44,6 +44,7 @@ We use `docker-compose` to replicate the production environment locally.
 | `PORT` | API Server Port | `3000` |
 | `MP_ACCESS_TOKEN` | MercadoPago Access Token | `TEST-...` |
 | `MP_WEBHOOK_SECRET` | MercadoPago Webhook Secret | `...` |
+| `REDIS_URL` | Redis Connection String | `redis://localhost:6379` |
 
 ### Frontend (`frontend/.env`)
 

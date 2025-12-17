@@ -138,6 +138,7 @@ model VisitorSpot {
   availabilityBlocks AvailabilityBlock[]
 
   @@unique([buildingId, spotNumber])
+  @@index([buildingId])
   @@map("visitor_spots")
 }
 
@@ -157,6 +158,8 @@ model AvailabilityBlock {
   bookings Booking[]
 
   @@map("availability_blocks")
+  @@index([spotId, status])
+  @@index([startDatetime, endDatetime])
 }
 
 model Booking {
@@ -181,6 +184,8 @@ model Booking {
   payment           Payment?
 
   @@map("bookings")
+  @@index([residentId])
+  @@index([status])
 }
 
 model Payment {

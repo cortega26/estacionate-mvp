@@ -16,12 +16,21 @@ function initMiddleware(middleware: any) {
 }
 
 // Initialize the cors middleware
+const whitelist = [
+    'http://localhost:5173',
+    'https://cortega26.github.io',
+    ...(process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : [])
+];
+
 const corsMiddleware = initMiddleware(
     Cors({
-        origin: [
-            'http://localhost:5173',
-            'https://cortega26.github.io'
-        ],
+        origin: function (origin, callback) {
+            if (!origin || whitelist.indexOf(origin) !== -1 || origin.match(/^https:\/\/.*\.vercel\.app$/)) {
+                callback(null, true)
+            } else {
+                callback(new Error('Not allowed by CORS'))
+            }
+        },
         credentials: true,
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     })

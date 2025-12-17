@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { db } from '../../lib/db.js'
 import { subMinutes } from 'date-fns'
+import { logger } from '../../lib/logger.js'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Cron jobs can be GET or POST usually
@@ -53,12 +54,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         })
 
         if (result.count > 0) {
-            console.log(`[CRON] Cleaned up ${result.count} zombie bookings.`)
+            logger.info({ count: result.count }, `[CRON] Cleaned up zombie bookings`)
         }
 
         return res.status(200).json({ success: true, expired: result.count })
     } catch (error) {
-        console.error('Cleanup failed:', error)
+        logger.error({ error }, 'Cleanup failed')
         return res.status(500).json({ error: 'Internal Server Error' })
     }
 }

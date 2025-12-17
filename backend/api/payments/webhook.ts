@@ -3,6 +3,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { db } from '../../lib/db.js';
 import cors from '../../lib/cors.js';
 import { NotificationService } from '../../services/NotificationService.js';
+import { logger } from '../../lib/logger.js';
 
 const webhookSchema = z.object({
     type: z.enum(['payment', 'simulator']),
@@ -15,8 +16,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     try {
         const { type, data } = webhookSchema.parse(req.body);
-
-        console.log(`[Webhook] Received ${type} event`, data);
+        logger.info({ type, data }, `[Webhook] Received event`);
 
         // 1. SIMULATOR HANDLER (Dev/Demo Only)
         if (type === 'simulator') {
@@ -70,14 +70,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 }
             });
 
-            console.log(`[Webhook] Simulator processed for Booking ${bookingId}: ${status}`);
+            logger.info({ bookingId, status }, `[Webhook] Simulator processed`);
             return res.status(200).json({ success: true, mode: 'simulator' });
         }
 
         // 2. REAL HANDLER (MercadoPago)
         if (type === 'payment') {
             const paymentId = data.id;
-            console.log(`[Webhook] Real Payment Notification: ${paymentId}`);
+            logger.info({ paymentId }, `[Webhook] Real Payment Notification`);
             // TODO: Fetch payment from MP API using paymentId
             // const paymentInfo = await mp.payment.get(paymentId);
             // Update DB based on paymentInfo.external_reference (bookingId)

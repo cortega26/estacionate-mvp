@@ -12,6 +12,7 @@ import createBookingHandler from './api/bookings/create.js';
 import checkoutHandler from './api/payments/checkout.js';
 import webhookHandler from './api/payments/webhook.js';
 import listBuildingsHandler from './api/buildings/list.js';
+import healthHandler from './api/health.js';
 import statsHandler from './api/admin/stats.js';
 import pricesHandler from './api/admin/prices.js';
 import forgotPasswordHandler from './api/auth/forgot-password.js';
@@ -20,9 +21,11 @@ import workerHandler from './api/cron/worker.js';
 
 import cors from 'cors';
 import helmet from 'helmet';
+import { generalLimiter, authLimiter } from './middleware/rateLimiter.js';
 
 const app = express();
 app.use(helmet());
+app.use(generalLimiter);
 // CORS is handled by individual Vercel-style handlers (e.g. login.ts) via lib/cors.ts wrapper.
 // Do NOT add global CORS here to avoid duplicate headers and dev/prod parity issues.
 // app.use(cors({...}));
@@ -43,12 +46,12 @@ const asyncHandler = (fn: Function) => (req: any, res: any, next: any) => {
 
 // ... (app setup)
 
-app.post('/api/auth/login', asyncHandler((req: any, res: any) => {
+app.post('/api/auth/login', authLimiter, asyncHandler((req: any, res: any) => {
     // Cast to any to satisfy Vercel vs Express type mismatch if strict
     return loginHandler(req, res);
 }));
 
-app.post('/api/auth/signup', asyncHandler((req: any, res: any) => {
+app.post('/api/auth/signup', authLimiter, asyncHandler((req: any, res: any) => {
     return signupHandler(req, res);
 }));
 
@@ -106,6 +109,10 @@ app.post('/api/concierge/verify', asyncHandler((req: any, res: any) => {
 
 app.get('/api/cron/worker', asyncHandler((req: any, res: any) => {
     return workerHandler(req, res);
+}));
+
+app.get('/api/health', asyncHandler((req: any, res: any) => {
+    return healthHandler(req, res);
 }));
 
 // Global Error Handler
