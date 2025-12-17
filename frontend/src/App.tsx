@@ -18,6 +18,8 @@ import { SettingsPage } from './pages/Admin/SettingsPage';
 import { BuildingsPage } from './pages/Admin/BuildingsPage';
 import { GatekeeperLayout } from './layouts/GatekeeperLayout';
 import { GatekeeperDashboard } from './pages/Gatekeeper/Dashboard';
+import Analytics from './pages/Admin/Analytics';
+import UserManagement from './pages/Admin/UserManagement';
 // Layouts
 import { AdminLayout } from './layouts/AdminLayout';
 import { MainLayout } from './layouts/MainLayout';
@@ -54,9 +56,16 @@ function App() {
 
 
 
+          import Analytics from './pages/Admin/Analytics';
+          import UserManagement from './pages/Admin/UserManagement';
+
+          // ... (in Routes)
+
           {/* Admin Routes (Layout handles protection) */}
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<DashboardPage />} />
+            <Route path="analytics" element={<Analytics />} />
+            <Route path="users" element={<UserManagement />} />
             <Route path="buildings" element={<BuildingsPage />} />
             <Route path="settings" element={<SettingsPage />} />
           </Route>

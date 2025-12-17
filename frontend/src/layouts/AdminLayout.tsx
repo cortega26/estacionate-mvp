@@ -24,7 +24,11 @@ export const AdminLayout = () => {
 
     const navItems = [
         { name: 'Dashboard', path: '/admin' },
-        ...(user?.role === 'admin' ? [{ name: 'Edificios', path: '/admin/buildings' }] : []),
+        { name: 'Analytics', path: '/admin/analytics' },
+        ...(user?.role === 'admin' ? [
+            { name: 'Edificios', path: '/admin/buildings' },
+            { name: 'Usuarios', path: '/admin/users' }
+        ] : []),
         { name: 'Configuración', path: '/admin/settings' },
     ];
 

@@ -1,4 +1,4 @@
-import Redis from 'ioredis';
+import { Redis } from 'ioredis';
 import { logger } from './logger.js';
 
 const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
@@ -16,7 +16,7 @@ export const redis = new Redis(redisUrl, {
 
 redis.on('error', (err) => {
     // Suppress unhandled error events to prevent crash if Redis is down
-    logger.warn('Redis error', { error: err.message });
+    logger.warn({ error: err.message }, 'Redis error');
 });
 
 redis.on('connect', () => {

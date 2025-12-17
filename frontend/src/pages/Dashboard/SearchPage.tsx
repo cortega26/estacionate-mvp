@@ -8,14 +8,13 @@ import { BookingModal } from '../../features/bookings/components/BookingModal';
 import type { Building, Spot } from '../../types/app-models';
 import { Input } from '../../components/ui/Input';
 import { Select, type SelectOption } from '../../components/ui/Select';
-import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'; // Check path validity
-
-// Keeping logic commented for now to isolate imports
-// ...
+import { MagnifyingGlassIcon, MapIcon, ListBulletIcon } from '@heroicons/react/24/outline';
+import { ParkingMap } from '../../features/map/components/ParkingMap';
 
 export const SearchPage = () => {
     const user = useAuthStore((state) => state.user);
     const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+    const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
 
     // Select component uses object {id, label, value}
     const [selectedBuilding, setSelectedBuilding] = useState<SelectOption | null>(null);
@@ -147,58 +146,92 @@ export const SearchPage = () => {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {isLoading && (
-                    <div className="col-span-full py-12 text-center text-gray-400 animate-pulse">
-                        Cargando disponibilidad...
-                    </div>
-                )}
-
-                {spots?.map((block) => (
-                    <div key={block.id} className="group bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 hover:-translate-y-1">
-                        <div className="flex justify-between items-start mb-6">
-                            <div>
-                                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${block.status === 'available'
-                                    ? 'bg-green-100 text-green-800'
-                                    : 'bg-red-100 text-red-800'
-                                    }`}>
-                                    {block.status === 'available' ? 'Disponible' : 'Reservado'}
-                                </span>
-                                <h3 className="text-xl font-bold mt-3 text-gray-900">Nº {block.spot?.spotNumber}</h3>
-                                <p className="text-gray-500 text-sm mt-1">
-                                    {format(new Date(block.startDatetime), 'HH:mm')} - {format(new Date(block.endDatetime), 'HH:mm')}
-                                </p>
-                            </div>
-                            <div className="text-right">
-                                <p className="text-2xl font-bold text-indigo-600">${block.basePriceClp.toLocaleString()}</p>
-                                <p className="text-xs text-gray-400 font-medium tracking-wide uppercase mt-1">
-                                    {block.durationType === 'ELEVEN_HOURS' ? '11 Horas' : '23 Horas'}
-                                </p>
-                            </div>
-                        </div>
-                        <button
-                            onClick={() => setSelectedBlock(block)}
-                            disabled={block.status !== 'available' || user.role !== 'resident'}
-                            className="w-full py-3 bg-gray-900 text-white rounded-lg hover:bg-black disabled:bg-gray-100 disabled:text-gray-400 transition-colors font-medium text-sm"
-                        >
-                            {block.status !== 'available'
-                                ? 'No Disponible'
-                                : user.role !== 'resident'
-                                    ? 'Solo Residentes'
-                                    : 'Reservar Ahora'}
-                        </button>
-                    </div>
-                ))}
-
-                {!isLoading && spots?.length === 0 && selectedBuilding && (
-                    <div className="col-span-full text-center py-16 bg-gray-50 rounded-xl border border-dashed border-gray-300">
-                        <p className="text-gray-500 text-lg">No se encontraron estacionamientos disponibles para esta fecha.</p>
-                        <button onClick={() => setSelectedDate(new Date(Date.now() + 86400000).toISOString().split('T')[0])} className="mt-4 text-indigo-600 hover:text-indigo-800 font-medium">
-                            Ver para mañana &rarr;
-                        </button>
-                    </div>
-                )}
+            {/* View Toggle */}
+            <div className="flex justify-end mb-4">
+                <div className="bg-white p-1 rounded-lg border border-gray-200 inline-flex">
+                    <button
+                        onClick={() => setViewMode('list')}
+                        className={`px-3 py-1.5 rounded-md text-sm font-medium flex items-center gap-2 transition-colors ${viewMode === 'list' ? 'bg-indigo-50 text-indigo-700' : 'text-gray-500 hover:bg-gray-50'
+                            }`}
+                    >
+                        <ListBulletIcon className="h-4 w-4" />
+                        Lista
+                    </button>
+                    <button
+                        onClick={() => setViewMode('map')}
+                        className={`px-3 py-1.5 rounded-md text-sm font-medium flex items-center gap-2 transition-colors ${viewMode === 'map' ? 'bg-indigo-50 text-indigo-700' : 'text-gray-500 hover:bg-gray-50'
+                            }`}
+                    >
+                        <MapIcon className="h-4 w-4" />
+                        Mapa
+                    </button>
+                </div>
             </div>
+
+            {/* Content Area */}
+            {viewMode === 'map' ? (
+                <div className="fade-in">
+                    <ParkingMap
+                        spots={spots || []}
+                        onSelect={setSelectedBlock}
+                        selectedSpotId={selectedBlock?.id}
+                        buildingName={selectedBuilding?.label}
+                    />
+                </div>
+            ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {isLoading && (
+                        <div className="col-span-full py-12 text-center text-gray-400 animate-pulse">
+                            Cargando disponibilidad...
+                        </div>
+                    )}
+
+                    {spots?.map((block) => (
+                        <div key={block.id} className="group bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 hover:-translate-y-1">
+                            <div className="flex justify-between items-start mb-6">
+                                <div>
+                                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${block.status === 'available'
+                                        ? 'bg-green-100 text-green-800'
+                                        : 'bg-red-100 text-red-800'
+                                        }`}>
+                                        {block.status === 'available' ? 'Disponible' : 'Reservado'}
+                                    </span>
+                                    <h3 className="text-xl font-bold mt-3 text-gray-900">Nº {block.spot?.spotNumber}</h3>
+                                    <p className="text-gray-500 text-sm mt-1">
+                                        {format(new Date(block.startDatetime), 'HH:mm')} - {format(new Date(block.endDatetime), 'HH:mm')}
+                                    </p>
+                                </div>
+                                <div className="text-right">
+                                    <p className="text-2xl font-bold text-indigo-600">${block.basePriceClp.toLocaleString()}</p>
+                                    <p className="text-xs text-gray-400 font-medium tracking-wide uppercase mt-1">
+                                        {block.durationType === 'ELEVEN_HOURS' ? '11 Horas' : '23 Horas'}
+                                    </p>
+                                </div>
+                            </div>
+                            <button
+                                onClick={() => setSelectedBlock(block)}
+                                disabled={block.status !== 'available' || user.role !== 'resident'}
+                                className="w-full py-3 bg-gray-900 text-white rounded-lg hover:bg-black disabled:bg-gray-100 disabled:text-gray-400 transition-colors font-medium text-sm"
+                            >
+                                {block.status !== 'available'
+                                    ? 'No Disponible'
+                                    : user.role !== 'resident'
+                                        ? 'Solo Residentes'
+                                        : 'Reservar Ahora'}
+                            </button>
+                        </div>
+                    ))}
+
+                    {!isLoading && spots?.length === 0 && selectedBuilding && (
+                        <div className="col-span-full text-center py-16 bg-gray-50 rounded-xl border border-dashed border-gray-300">
+                            <p className="text-gray-500 text-lg">No se encontraron estacionamientos disponibles para esta fecha.</p>
+                            <button onClick={() => setSelectedDate(new Date(Date.now() + 86400000).toISOString().split('T')[0])} className="mt-4 text-indigo-600 hover:text-indigo-800 font-medium">
+                                Ver para mañana &rarr;
+                            </button>
+                        </div>
+                    )}
+                </div>
+            )}
 
             <BookingModal
                 isOpen={!!selectedBlock}

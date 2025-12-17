@@ -25,7 +25,8 @@ const whitelist = [
 const corsMiddleware = initMiddleware(
     Cors({
         origin: function (origin, callback) {
-            if (!origin || whitelist.indexOf(origin) !== -1 || origin.match(/^https:\/\/.*\.vercel\.app$/)) {
+            // Strict Regex: only allows https://<subdomain>.vercel.app (escaped dot)
+            if (!origin || whitelist.indexOf(origin) !== -1 || origin.match(/^https:\/\/[\w-]+\.vercel\.app$/)) {
                 callback(null, true)
             } else {
                 callback(new Error('Not allowed by CORS'))

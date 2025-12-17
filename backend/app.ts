@@ -19,13 +19,17 @@ import forgotPasswordHandler from './api/auth/forgot-password.js';
 import resetPasswordHandler from './api/auth/reset-password.js';
 import workerHandler from './api/cron/worker.js';
 import reconcileHandler from './api/cron/reconcile.js';
+import adminAnalyticsHandler from './api/admin/analytics.js';
+import adminUsersHandler from './api/admin/users.js';
 
 import cors from 'cors';
-import helmet from 'helmet';
+// import helmet from 'helmet'; // custom implementation used
+import { securityHeaders } from './middleware/security.js';
 import { generalLimiter, authLimiter } from './middleware/rateLimiter.js';
 
 const app = express();
-app.use(helmet());
+app.use(securityHeaders);
+// app.use(helmet());
 app.use(generalLimiter);
 // CORS is handled by individual Vercel-style handlers (e.g. login.ts) via lib/cors.ts wrapper.
 // Do NOT add global CORS here to avoid duplicate headers and dev/prod parity issues.
@@ -114,6 +118,15 @@ app.get('/api/cron/worker', asyncHandler((req: any, res: any) => {
 
 app.get('/api/cron/reconcile', asyncHandler((req: any, res: any) => {
     return reconcileHandler(req, res);
+}));
+
+// Admin Dashboard
+app.get('/api/admin/analytics', asyncHandler((req: any, res: any) => {
+    return adminAnalyticsHandler(req, res);
+}));
+
+app.all('/api/admin/users', asyncHandler((req: any, res: any) => {
+    return adminUsersHandler(req, res);
 }));
 
 app.get('/api/health', asyncHandler((req: any, res: any) => {
