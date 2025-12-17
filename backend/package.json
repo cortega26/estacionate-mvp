@@ -59,7 +59,7 @@
     "supertest": "^7.1.4",
     "tough-cookie": "^6.0.0",
     "typescript": "^5.9.2",
-    "vercel": "^28.18.5",
+    "vercel": "^50.1.0",
     "vitest": "^4.0.15"
   },
   "description": "",

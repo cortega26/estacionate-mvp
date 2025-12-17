@@ -16,7 +16,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     try {
         const { type, data } = webhookSchema.parse(req.body);
-        logger.info({ type, data }, `[Webhook] Received event`);
+
+        // PII Sanitization: Mask potential sensitive data before logging
+        const sanitizedData = { ...data };
+        if (sanitizedData.email) sanitizedData.email = '***';
+        if (sanitizedData.phone) sanitizedData.phone = '***';
+        if (sanitizedData.card) sanitizedData.card = '***';
+
+        logger.info({ type, data: sanitizedData }, `[Webhook] Received event`);
 
         // 1. SIMULATOR HANDLER (Dev/Demo Only)
         if (type === 'simulator') {
