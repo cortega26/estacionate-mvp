@@ -28,7 +28,7 @@ import { securityHeaders } from './middleware/security.js';
 import { generalLimiter, authLimiter } from './middleware/rateLimiter.js';
 
 const app = express();
-app.use(securityHeaders);
+app.use(securityHeaders as any);
 // app.use(helmet());
 app.use(generalLimiter);
 // CORS is handled by individual Vercel-style handlers (e.g. login.ts) via lib/cors.ts wrapper.
