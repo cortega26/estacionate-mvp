@@ -77,10 +77,11 @@ describe('S2 Security Fixes Verification', () => {
             mockResidentFind.mockResolvedValue(unverifiedResident);
             (comparePassword as any).mockResolvedValue(true)
 
-            await loginHandler(mockReq({ email: 'test@example.com', password: 'password' }) as any, mockRes as any)
-
-            expect(mockRes.status).toHaveBeenCalledWith(403)
-            expect(mockRes.json).toHaveBeenCalledWith(expect.objectContaining({ error: expect.stringContaining('verified') }))
+            await expect(loginHandler(mockReq({ email: 'test@example.com', password: 'password' }) as any, mockRes as any))
+                .rejects.toMatchObject({
+                    statusCode: 403,
+                    code: 'AUTH-LOGIN-1003' // AUTH_NOT_VERIFIED
+                })
         })
     })
 
@@ -88,19 +89,23 @@ describe('S2 Security Fixes Verification', () => {
         it('should reject locked account with 429', async () => {
             mockResidentFind.mockResolvedValue(lockedResident);
 
-            await loginHandler(mockReq({ email: 'test@example.com', password: 'password' }) as any, mockRes as any)
-
-            expect(mockRes.status).toHaveBeenCalledWith(429)
-            expect(mockRes.json).toHaveBeenCalledWith(expect.objectContaining({ error: expect.stringContaining('locked') }))
+            await expect(loginHandler(mockReq({ email: 'test@example.com', password: 'password' }) as any, mockRes as any))
+                .rejects.toMatchObject({
+                    statusCode: 429,
+                    code: 'AUTH-LOGIN-1002' // AUTH_ACCOUNT_LOCKED
+                })
         })
 
         it('should increment failed attempts on bad password', async () => {
             mockResidentFind.mockResolvedValue(verifiedResident);
             (comparePassword as any).mockResolvedValue(false) // Wrong password
 
-            await loginHandler(mockReq({ email: 'test@example.com', password: 'wrong' }) as any, mockRes as any)
+            await expect(loginHandler(mockReq({ email: 'test@example.com', password: 'wrong' }) as any, mockRes as any))
+                .rejects.toMatchObject({
+                    statusCode: 401,
+                    code: 'AUTH-LOGIN-1001' // AUTH_INVALID_CREDENTIALS
+                })
 
-            expect(mockRes.status).toHaveBeenCalledWith(401)
             expect(mockResidentUpdate).toHaveBeenCalledWith(expect.objectContaining({
                 data: expect.objectContaining({ failedLoginAttempts: 1 })
             }))

@@ -75,12 +75,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             })
         }
 
-        // S2 Fix: Verification Check
         if (!resident.isVerified) {
             throw new AppError({
                 code: ErrorCode.AUTH_NOT_VERIFIED,
                 statusCode: 403,
                 publicMessage: 'Account not verified. Please check your email or contact administration.'
+            });
+        }
+
+        if (!resident.isActive) {
+            throw new AppError({
+                code: ErrorCode.AUTH_INACTIVE,
+                statusCode: 403,
+                publicMessage: 'Account inactive'
             });
         }
 

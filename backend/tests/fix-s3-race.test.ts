@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { PrismaClient, DurationType } from '@prisma/client';
 import { calculateBookingPricing } from '../lib/domain/pricing.js';
+import crypto from 'crypto';
 
 // We need a real DB connection for concurrency testing
 const prisma = new PrismaClient();
@@ -14,15 +15,15 @@ describe('S3 Fix: Race Condition (Overlaps)', () => {
 
     beforeAll(async () => {
         // Setup Logic: Create Building, Unit, Resident, Spot, Block
-        const unique = Date.now();
+        const unique = crypto.randomUUID();
 
         const building = await prisma.building.create({
             data: {
-                name: `Race Test Building ${unique}`,
+                name: `Race Test Building ${unique.substring(0, 8)}`,
                 address: '123 Test St',
                 totalUnits: 10,
                 platformCommissionRate: 0.1,
-                contactEmail: 'race@test.com'
+                contactEmail: `race-${unique.substring(0, 8)}@test.com`
             }
         });
         buildingId = building.id;
@@ -38,7 +39,8 @@ describe('S3 Fix: Race Condition (Overlaps)', () => {
                 email: `racer-${unique}@test.com`,
                 firstName: 'Speedy',
                 lastName: 'Gonzales',
-                rut: `9999999-${unique.toString().slice(-1)}`, // Fake RUT
+                // RUT format: 12345678-K. Use random digits. 
+                rut: `${Math.floor(Math.random() * 100000000)}-K`,
                 isVerified: true
             }
         });
@@ -70,11 +72,15 @@ describe('S3 Fix: Race Condition (Overlaps)', () => {
 
     // Cleanup: Delete Bookings first, then Residents, then Building (Cascade)
     afterAll(async () => {
-        // Cleanup: Delete Bookings first, then Residents, then Building (Cascade)
-        await prisma.booking.deleteMany({ where: { availabilityBlockId: blockId } });
-        await prisma.resident.delete({ where: { id: residentId } });
-        await prisma.building.delete({ where: { id: buildingId } }); // Cascades
-        await prisma.$disconnect();
+        try {
+            if (blockId) await prisma.booking.deleteMany({ where: { availabilityBlockId: blockId } });
+            if (residentId) await prisma.resident.delete({ where: { id: residentId } });
+            if (buildingId) await prisma.building.delete({ where: { id: buildingId } }); // Cascades
+        } catch (e) {
+            console.error('Cleanup failed (likely partial setup):', e);
+        } finally {
+            await prisma.$disconnect();
+        }
     });
 
     it('should prevents double booking under high concurrency', async () => {

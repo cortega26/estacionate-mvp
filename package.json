@@ -13,7 +13,12 @@
     "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install",
     "clean": "rm -rf node_modules frontend/node_modules backend/node_modules",
     "deploy:staging": "./scripts/deploy.sh staging",
-    "deploy:production": "./scripts/deploy.sh production"
+    "deploy:production": "./scripts/deploy.sh production",
+    "test": "npm run test:backend && npm run test:frontend",
+    "test:backend": "cd backend && npm test",
+    "test:frontend": "cd frontend && npm test",
+    "test:coverage": "cd backend && npm run test:coverage",
+    "test:ui": "cd backend && npm run test:ui"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

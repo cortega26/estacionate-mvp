@@ -213,4 +213,96 @@ describe('Booking Flow (Integration)', () => {
             await prisma.availabilityBlock.delete({ where: { id: blockB.id } });
         }
     });
+
+    it('should prevent booking in a different building (IDOR protection)', async () => {
+        // Create Building B
+        const buildingB = await prisma.building.create({
+            data: {
+                name: 'Building B', address: '456 Other St',
+                totalUnits: 10, platformCommissionRate: 0.1, contactEmail: 'b@test.com'
+            }
+        });
+        const spotB = await prisma.visitorSpot.create({ data: { buildingId: buildingB.id, spotNumber: 'V-B' } });
+
+        const start = new Date();
+        start.setDate(start.getDate() + 2); // Day after tomorrow
+
+        const blockB = await prisma.availabilityBlock.create({
+            data: {
+                spotId: spotB.id,
+                startDatetime: start,
+                endDatetime: new Date(start.getTime() + 3600000),
+                durationType: DurationType.ELEVEN_HOURS,
+                basePriceClp: 5000,
+                status: 'available'
+            }
+        });
+
+        try {
+            await axios.post(`${API_URL}/api/bookings/create`, {
+                blockId: blockB.id,
+                vehiclePlate: 'IDOR-01',
+                visitorName: 'Hacker'
+            }, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            expect(true).toBe(false);
+        } catch (error: any) {
+            expect(error.response?.status).toBe(403);
+            expect(error.response?.data?.error).toMatch(/own building/i);
+        } finally {
+            // Cleanup
+            await prisma.availabilityBlock.delete({ where: { id: blockB.id } });
+            await prisma.visitorSpot.delete({ where: { id: spotB.id } });
+            await prisma.building.delete({ where: { id: buildingB.id } });
+        }
+    });
+
+    it('should prevent non-residents from booking', async () => {
+        // Create a real user who is NOT a resident of the target building (or has wrong role if applicable)
+        // In this MVP, "Resident" is the only user type that can book.
+        // If I create a resident in Building B, can they book in Building A? 
+        // That is the "IDOR" test we just added (which passed!).
+        // This test "prevent non-residents" implies someone with a token but NOT a resident.
+        // But our `protect` middleware looks up `prisma.resident`.
+        // If the token has a userId that is NOT in resident table, currently it returns 401 (User not found).
+        // This is ACCEPTABLE security. We just need to match the assertion.
+
+        const adminToken = (await import('../lib/auth.js')).signToken({
+            userId: '00000000-0000-0000-0000-000000000000', // Non-existent ID
+            role: 'admin',
+            buildingId: 'any'
+        });
+
+        // Use a new block
+        const start = new Date();
+        start.setDate(start.getDate() + 3);
+
+        const blockC = await prisma.availabilityBlock.create({
+            data: {
+                spotId,
+                startDatetime: start,
+                endDatetime: new Date(start.getTime() + 3600000),
+                durationType: DurationType.ELEVEN_HOURS,
+                basePriceClp: 5000,
+                status: 'available'
+            }
+        });
+
+        try {
+            await axios.post(`${API_URL}/api/bookings/create`, {
+                blockId: blockC.id,
+                vehiclePlate: 'ADMIN-00',
+                visitorName: 'Admin'
+            }, {
+                headers: { Authorization: `Bearer ${adminToken}` }
+            });
+            expect(true).toBe(false);
+        } catch (error: any) {
+            // 401 (User not found) or 403 (Forbidden) are both valid security rejections here.
+            expect([401, 403]).toContain(error.response?.status);
+        } finally {
+            await prisma.availabilityBlock.delete({ where: { id: blockC.id } });
+        }
+    });
 });

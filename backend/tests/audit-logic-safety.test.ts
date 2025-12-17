@@ -22,6 +22,9 @@ const mockTx = {
     },
     booking: {
         create: vi.fn()
+    },
+    visitorSpot: {
+        update: vi.fn()
     }
 }
 

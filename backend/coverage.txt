@@ -1,0 +1,81 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.16 [39m[90mC:/Users/corte/VS Code Projects/estacionate-mvp/backend[39m
+      [2mCoverage enabled with [22m[33mv8[39m
+
+ [32m✓[39m tests/fix-s1-commission.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m tests/verify-audit-fixes.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m tests/verify-security-hotfixes.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m tests/verify-s2-fixes.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m tests/login-integration.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m tests/audit-logic-safety.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+[90mstdout[2m | tests/fix-s3-race.test.ts[2m > [22m[2mS3 Fix: Race Condition (Overlaps)[2m > [22m[2mshould prevents double booking under high concurrency
+[22m[39mSuccesses: 1, Failures: 9
+
+ [32m✓[39m tests/fix-s3-race.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 5783[2mms[22m[39m
+     [33m[2m✓[22m[39m should prevents double booking under high concurrency [33m 4006[2mms[22m[39m
+ [32m✓[39m tests/bookings.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 5757[2mms[22m[39m
+     [33m[2m✓[22m[39m should create a booking successfully [33m 817[2mms[22m[39m
+     [33m[2m✓[22m[39m should prevent double booking (Optimistic Locking) [33m 358[2mms[22m[39m
+     [33m[2m✓[22m[39m should prevent booking a different block that overlaps in time [33m 860[2mms[22m[39m
+     [33m[2m✓[22m[39m should prevent booking in a different building (IDOR protection) [33m 1240[2mms[22m[39m
+{"level":50,"time":1765925409994,"pid":30268,"hostname":"i5-12600","code":"AUTH-LOGIN-1004","internalMessage":"Account inactive","stack":"AppError: Account inactive\n    at handler (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/api/auth/login.ts:166:15)","method":"POST","path":"/api/auth/login","ip":"::ffff:127.0.0.1","msg":"[AUTH-LOGIN-1004] Account inactive"}
+ [32m✓[39m tests/signup.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 3053[2mms[22m[39m
+     [33m[2m✓[22m[39m should register a new resident successfully [33m 1176[2mms[22m[39m
+{"level":50,"time":1765925412168,"pid":30268,"hostname":"i5-12600","code":"AUTH-LOGIN-1004","internalMessage":"Account inactive","stack":"AppError: Account inactive\n    at handler (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/api/auth/login.ts:87:19)","method":"POST","path":"/api/auth/login","ip":"::ffff:127.0.0.1","msg":"[AUTH-LOGIN-1004] Account inactive"}
+ [32m✓[39m tests/coverage-gap.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 5747[2mms[22m[39m
+     [33m[2m✓[22m[39m should login successfully as Admin (User Table coverage) [33m 1042[2mms[22m[39m
+     [33m[2m✓[22m[39m should reject inactive admin login [33m 409[2mms[22m[39m
+     [33m[2m✓[22m[39m should reject booking in the past (PAST_TIME) [33m 1779[2mms[22m[39m
+     [33m[2m✓[22m[39m should reject inactive resident login [33m 394[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m10 passed[39m[22m[90m (10)[39m
+[2m      Tests [22m [1m[32m32 passed[39m[22m[90m (32)[39m
+[2m   Start at [22m 19:50:02
+[2m   Duration [22m 10.59s[2m (transform 1.08s, setup 0ms, import 10.06s, tests 20.40s, environment 2ms)[22m
+
+[34m % [39m[2mCoverage report from [22m[33mv8[39m
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |   38.41 |    30.06 |   50.76 |   40.15 |                   
+ backend           |   68.42 |      100 |   29.41 |   67.56 |                   
+  app.ts           |   68.42 |      100 |   29.41 |   67.56 | ...93,100,104,108 
+ backend/api/admin |   18.07 |     14.7 |   16.66 |   18.66 |                   
+  buildings.ts     |       0 |        0 |       0 |       0 | 7-103             
+  prices.ts        |      60 |    52.63 |     100 |   66.66 | 32-34,69-73       
+  stats.ts         |       0 |        0 |       0 |       0 | 8-118             
+ backend/api/auth  |   47.54 |       50 |      40 |   49.57 |                   
+  ...t-password.ts |       4 |        0 |       0 |    4.34 | 13-63             
+  login.ts         |   71.42 |     77.5 |     100 |   71.42 | ...35,144-154,159 
+  ...t-password.ts |    4.54 |        0 |       0 |       5 | 14-64             
+  signup.ts        |   84.21 |       75 |     100 |   88.88 | 82-83             
+ ...d/api/bookings |   60.86 |       50 |     100 |   65.11 |                   
+  create.ts        |   60.86 |       50 |     100 |   65.11 | ...37,141,149-159 
+ .../api/buildings |       0 |        0 |       0 |       0 |                   
+  list.ts          |       0 |        0 |       0 |       0 | 5-22              
+ .../api/concierge |    1.88 |        0 |       0 |    2.12 |                   
+  dashboard.ts     |       0 |        0 |       0 |       0 | 7-97              
+  verify.ts        |    4.16 |        0 |       0 |    4.54 | 10-88             
+ backend/api/cron  |       0 |      100 |       0 |       0 |                   
+  worker.ts        |       0 |      100 |       0 |       0 | 7-9               
+ ...d/api/payments |    8.16 |     3.84 |       0 |    8.88 |                   
+  checkout.ts      |      12 |     7.14 |       0 |   13.63 | 16-94             
+  webhook.ts       |    4.16 |        0 |       0 |    4.34 | 13-90             
+ backend/api/spots |    4.16 |        0 |       0 |    4.34 |                   
+  search.ts        |    4.16 |        0 |       0 |    4.34 | 15-79             
+ backend/lib       |   70.32 |       50 |   89.47 |   70.93 |                   
+  auth.ts          |   79.16 |    46.15 |     100 |   78.26 | 8,29,41,43-45     
+  constants.ts     |     100 |      100 |     100 |     100 |                   
+  cors.ts          |   85.71 |       50 |     100 |   85.71 | 11                
+  db.ts            |     100 |       75 |     100 |     100 | 9                 
+  errors.ts        |   81.48 |     87.5 |     100 |   80.76 | 46,54,62-70       
+  logger.ts        |     100 |    83.33 |     100 |     100 | 7                 
+  sentry.ts        |      50 |    16.66 |      50 |   57.14 | 10,27-29          
+  twilio.ts        |   33.33 |    18.18 |       0 |   35.29 | 10,21-39          
+ ...end/lib/domain |     100 |      100 |     100 |     100 |                   
+  pricing.ts       |     100 |      100 |     100 |     100 |                   
+ ...end/middleware |   77.77 |       50 |     100 |   77.77 |                   
+  errorHandler.ts  |   77.77 |       50 |     100 |   77.77 | 11,22             
+ backend/services  |       0 |        0 |     100 |       0 |                   
+  ...ionService.ts |       0 |        0 |     100 |       0 | 16-64             
+-------------------|---------|----------|---------|---------|-------------------
