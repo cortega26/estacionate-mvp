@@ -30,3 +30,9 @@ yarn-error.log*
 # Project specific
 .qodo
 .antigravity
+.gemini
+
+# Playwright
+playwright-report/
+test-results/
+

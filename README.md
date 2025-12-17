@@ -1,41 +1,90 @@
-<!-- filename: README.md -->
+# Estacionate MVP
 
-# Estaciónate - Análisis Integral de Startup
+A comprehensive marketplace for renting residential parking spots. Connects building administrators, residents, and visitors.
 
-## Resumen Ejecutivo
+## Tech Stack
 
-- **Oportunidad:** Monetizar espacios de estacionamiento subutilizados para visitas en edificios residenciales mediante marketplace digital
-- **Modelo:** Plataforma B2B2C con take rate, conectando administradoras con residentes verificados para arriendo de espacios por 11h/23h
-- **MVP Técnico:** Front-end estático (GitHub Pages) + API serverless (Vercel) + pagos locales (MercadoPago/Fintoc) + Recuperación de cuenta (WhatsApp) + Rol de Conserjería (Dashboard móvil)
-- **Mercado:** Chile inicialmente, enfoque en edificios de alta densidad con déficit de estacionamientos para visitas
-- **Diferenciación:** Verificación de residentes, integración con administradoras, ventanas horarias adaptadas al mercado local
+- **Frontend:** React, Vite, TypeScript, TailwindCSS
+- **Backend:** Node.js, Express, TypeScript, Prisma (PostgreSQL)
+- **Infrastructure:** Redis (queues/caching), Docker
+- **Testing:** Playwright (E2E), Vitest (Unit)
 
-## Tabla de Contenidos
+## Prerequisites
 
-1. [Evaluación de la Idea](01-evaluacion-de-la-idea.md) - Oportunidad de mercado, competencia y casos de uso
-2. [Pros y Contras](02-pros-y-contras.md) - Análisis técnico y comercial del modelo propuesto
-3. [Implementación Técnica MVP](03-implementacion-tecnica-mvp.md) - Arquitectura completa, desarrollo y despliegue
-4. [Retos y Riesgos](04-retos-y-riesgos.md) - Identificación y mitigación de amenazas críticas
-5. [Recomendaciones Estratégicas](05-recomendaciones-estrategicas.md) - Roadmap de crecimiento y monetización
-6. [Extras Opcionales](06-extras-opcionales.md) - Modelo financiero y pivotes potenciales
+- Node.js (v18+)
+- PostgreSQL
+- Redis
 
-## Cómo Leer Este Análisis
+## Getting Started
 
-**Orden sugerido para founders:** Comienza con Evaluación de la Idea (01) para validar el concepto, revisa Pros y Contras (02) para entender trade-offs, profundiza en Implementación Técnica (03) para el plan de desarrollo, y consulta Retos (04) y Recomendaciones (05) para la estrategia de ejecución.
+### 1. Installation
 
-**Para equipos técnicos:** Enfócate en Implementación Técnica (03) que consolida arquitectura, modelo de datos, APIs y flujos completos.
+```bash
+# Install Backend Dependencies
+cd backend
+npm install
 
-**Para adaptación a nuevos mercados:** Revisa supuestos específicos de Chile en cada sección y ajusta regulaciones, pasarelas de pago y comportamientos de usuario locales.
+# Install Frontend Dependencies
+cd ../frontend
+npm install
+```
 
-## Glosario Técnico
+### 2. Environment Configuration
 
-- **CLP:** Peso chileno sin centavos (montos enteros únicamente)
-- **11h/23h:** Ventanas de arriendo (medio día 11 horas, día completo 23 horas)
-- **Take rate:** Porcentaje de comisión sobre cada transacción
-- **Conserjería:** Personal de edificio que valida acceso y estacionamiento
-- **Webhook:** Notificación automática de cambios de estado en pagos
-- **Conciliación:** Proceso de validación entre registros internos y pasarela de pagos
+Ensure you have the necessary environment variables set up. Check `backend/.env.example` and `frontend/.env.example` (if available) or ask the team for the current configuration keys.
 
-## Nota Legal
+**Backend Required Variables:**
+- `DATABASE_URL`
+- `REDIS_URL`
+- `JWT_SECRET`
+- `PORT` (default 3000)
 
-Este análisis contiene **supuestos técnicos y regulatorios** que requieren validación con expertos locales en Chile, incluyendo aspectos de copropiedad, responsabilidad civil, protección de datos y cumplimiento tributario. **No constituye asesoría legal o financiera.**
+### 3. Running the Project
+
+**Start Backend:**
+```bash
+cd backend
+npm run dev
+# Server starts on http://localhost:3000
+```
+
+**Start Frontend:**
+```bash
+cd frontend
+npm run dev
+# App starts on http://localhost:5173
+```
+
+## Testing
+
+### E2E Tests (Playwright)
+
+Running full end-to-end tests for the critical visitor booking flows.
+
+```bash
+cd frontend
+npm run test:e2e
+```
+
+To see the report:
+```bash
+npx playwright show-report
+```
+
+### Unit Tests
+
+```bash
+# Backend
+cd backend
+npm run test
+
+# Frontend
+cd frontend
+npm run test
+```
+
+## Project Structure
+
+- `frontend/`: React application, E2E tests (`/e2e`)
+- `backend/`: Express API, Prisma schema, Business Logic
+- `documentation/`: Detailed architectural and product documentation
