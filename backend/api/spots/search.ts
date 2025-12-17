@@ -56,7 +56,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         }
 
         if (query.durationType) {
-            whereClause.durationType = query.durationType
+            // Map '11h' -> 'ELEVEN_HOURS' for Prisma
+            const durationMap: Record<string, 'ELEVEN_HOURS' | 'TWENTY_THREE_HOURS'> = {
+                '11h': 'ELEVEN_HOURS',
+                '23h': 'TWENTY_THREE_HOURS'
+            }
+            whereClause.durationType = durationMap[query.durationType]
         }
 
         const blocks = await db.availabilityBlock.findMany({
