@@ -8,7 +8,7 @@ const verifySchema = z.object({
     plate: z.string().optional(),
     code: z.string().optional()
 }).refine(data => data.plate || data.code, {
-    message: "Either plate or code must be provided"
+    message: "Debe ingresar patente o código"
 });
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {

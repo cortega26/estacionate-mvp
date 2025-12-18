@@ -13,6 +13,7 @@ import { ResetPasswordPage } from './pages/Auth/ResetPasswordPage';
 import { PaymentSimulator } from './pages/PaymentSimulator';
 import { SuccessPage } from './pages/Checkout/SuccessPage';
 import { FailurePage } from './pages/Checkout/FailurePage';
+import { TermsPage } from './pages/Legal/TermsPage';
 import { DashboardPage } from './pages/Admin/DashboardPage';
 import { SettingsPage } from './pages/Admin/SettingsPage';
 import { BuildingsPage } from './pages/Admin/BuildingsPage';
@@ -44,6 +45,7 @@ function App() {
           <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/checkout/success" element={<SuccessPage />} />
           <Route path="/checkout/failure" element={<FailurePage />} />
+          <Route path="/terms" element={<TermsPage />} />
           <Route path="/payment-simulator" element={<PaymentSimulator />} />
 
           {/* Resident Protected Routes */}
@@ -56,10 +58,9 @@ function App() {
 
 
 
-          import Analytics from './pages/Admin/Analytics';
-          import UserManagement from './pages/Admin/UserManagement';
 
-          // ... (in Routes)
+
+
 
           {/* Admin Routes (Layout handles protection) */}
           <Route path="/admin" element={<AdminLayout />}>
