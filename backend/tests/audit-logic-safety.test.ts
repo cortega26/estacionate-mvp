@@ -34,7 +34,7 @@ vi.mock('../lib/db.js', () => ({
     }
 }))
 
-vi.mock('../lib/auth.js', () => ({
+vi.mock('../services/auth.js', () => ({
     getTokenFromRequest: vi.fn().mockReturnValue('token'),
     // Mock user as resident (buildingId match for IDOR check)
     verifyToken: vi.fn().mockReturnValue({

@@ -1,0 +1,54 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.16 [39m[90mC:/Users/corte/VS Code Projects/estacionate-mvp/backend[39m
+
+[90mstderr[2m | tests/bookings.test.ts
+[22m[39m⚠️ Twilio Credentials missing. WhatsApp notifications will be MOCKED.
+
+[90mstderr[2m | tests/bookings.test.ts
+[22m[39m⚠️ SENTRY_DSN not found. Sentry disabled.
+
+[90mstdout[2m | tests/bookings.test.ts[2m > [22m[2mBooking Flow (Integration)
+[22m[39mTest Server running at http://127.0.0.1:43185
+
+{"level":50,"time":1766090567990,"pid":24968,"hostname":"i5-12600","code":"VAL-INPUT-1001","internalMessage":"Zod Validation Failed","context":{"issues":[{"validation":"email","code":"invalid_string","message":"Invalid email","path":["email"]}]},"stack":"AppError: Zod Validation Failed\n    at errorHandler (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/middleware/errorHandler.ts:11:17)\n    at Layer.handleError (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\router\\lib\\layer.js:116:17)\n    at trimPrefix (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\router\\index.js:340:13)\n    at C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\router\\index.js:297:9\n    at processParams (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\router\\index.js:582:12)\n    at next (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\router\\index.js:291:5)\n    at next (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\router\\lib\\route.js:132:14)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","method":"POST","path":"/api/auth/login","ip":"127.0.0.1","msg":"[VAL-INPUT-1001] Zod Validation Failed"}
+[90mstderr[2m | tests/bookings.test.ts[2m > [22m[2mBooking Flow (Integration)
+[22m[39mBEFORE ALL FAILED: {
+  success: [33mfalse[39m,
+  code: [32m'VAL-INPUT-1001'[39m,
+  message: [32m'Invalid input data'[39m,
+  error: [32m'Invalid input data'[39m,
+  context: { issues: [ [36m[Object][39m ] }
+}
+
+ [31m❯[39m tests/bookings.test.ts [2m([22m[2m7 tests[22m[2m | [22m[33m7 skipped[39m[2m)[22m[33m 1085[2mms[22m[39m
+     [2m[90m↓[39m[22m should find the available spot via search
+     [2m[90m↓[39m[22m should create a booking successfully
+     [2m[90m↓[39m[22m should prevent double booking (Optimistic Locking)
+     [2m[90m↓[39m[22m should validate input types
+     [2m[90m↓[39m[22m should prevent booking a different block that overlaps in time
+     [2m[90m↓[39m[22m should prevent booking in a different building (IDOR protection)
+     [2m[90m↓[39m[22m should prevent non-residents from booking
+
+[31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Suites 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/bookings.test.ts[2m > [22mBooking Flow (Integration)
+[31m[1mAxiosError[22m: Request failed with status code 400[39m
+[90m [2m❯[22m settle ../../../VS%20Code%20Projects/estacionate-mvp/backend/node_modules/axios/lib/core/settle.js:[2m19:12[22m[39m
+[90m [2m❯[22m IncomingMessage.handleStreamEnd ../../../VS%20Code%20Projects/estacionate-mvp/backend/node_modules/axios/lib/adapters/http.js:[2m793:11[22m[39m
+[90m [2m❯[22m Axios.request ../../../VS%20Code%20Projects/estacionate-mvp/backend/node_modules/axios/lib/core/Axios.js:[2m45:41[22m[39m
+[36m [2m❯[22m tests/bookings.test.ts:[2m89:30[22m[39m
+    [90m 87| [39m            })[33m;[39m
+    [90m 88| [39m
+    [90m 89| [39m            const loginRes = await axios.post(`${API_URL}/api/auth/log…
+    [90m   | [39m                             [31m^[39m
+    [90m 90| [39m                email[33m,[39m
+    [90m 91| [39m                password[33m:[39m [32m'password123'[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [33m7 skipped[39m[90m (7)[39m
+[2m   Start at [22m 17:42:43
+[2m   Duration [22m 4.19s[2m (transform 352ms, setup 0ms, import 2.83s, tests 1.09s, environment 0ms)[22m
+

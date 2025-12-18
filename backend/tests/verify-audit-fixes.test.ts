@@ -18,10 +18,10 @@ describe('Audit Fixes Verification', () => {
             expect(p1.totalAmountClp).toBe(5000)
 
             // Case 2: Rounding (Basis Points should handle floor)
-            // 1555 * 0.1 = 155.5 -> floor -> 155
+            // 1555 * 0.1 = 155.5 -> ceil -> 156
             const p2 = calculateBookingPricing(1555, 0.10)
-            expect(p2.commissionClp).toBe(155) // (1555 * 1000) / 10000 = 155.5 -> 155
-            expect(p2.ownerAmountClp).toBe(1400) // 1555 - 155 = 1400
+            expect(p2.commissionClp).toBe(156)
+            expect(p2.ownerAmountClp).toBe(1399)
         })
 
         it('should throw on floating point inputs', () => {

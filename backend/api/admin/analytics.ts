@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { db } from '../../lib/db.js'
 import cors from '../../lib/cors.js'
-import { verifyToken, getTokenFromRequest } from '../../lib/auth.js'
+import { verifyToken, getTokenFromRequest } from '../../services/auth.js'
 import { subDays, format, startOfDay, endOfDay } from 'date-fns'
 import { BookingStatus } from '@prisma/client'
 

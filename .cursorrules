@@ -8,6 +8,7 @@
 1. `documentation/TECH_SPEC.md` (Context, Schema, API)
 2. `documentation/PROTOCOL.md` (Operational Rules, Limits)
 3. `documentation/LESSONS.md` (Past Mistakes, Best Practices)
+4. `documentation/AGENTS.md` (Agent Rules, Roles)
 
 *Do not ask for permission to read them. Just read them.*
 
@@ -42,6 +43,3 @@
 ## 5. TERMINAL LIMITS
 - **Output:** Max 50 lines. Use `head -n 50`.
 - **Line Length:** Max 200 chars. Use `cut -c1-200`.
-
----
-*Refer to `documentation/AGENTS.md` for the full detailed protocol.*

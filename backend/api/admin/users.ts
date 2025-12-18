@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { db } from '../../lib/db.js'
 import cors from '../../lib/cors.js'
-import { verifyToken, getTokenFromRequest } from '../../lib/auth.js'
+import { verifyToken, getTokenFromRequest } from '../../services/auth.js'
 import { z } from 'zod'
 import { Prisma } from '@prisma/client'
 

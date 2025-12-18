@@ -39,5 +39,8 @@ COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 # Expose port
 EXPOSE 3000
 
+# Switch to non-root user for security
+USER node
+
 # Start command
 CMD ["node", "dist/index.js"]

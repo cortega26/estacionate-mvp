@@ -5,22 +5,22 @@ import React from 'react';
 import { useAuthStore } from './store/authStore';
 
 // Pages
-import { SearchPage } from './pages/Dashboard/SearchPage';
-import { LoginPage } from './pages/Auth/LoginPage';
-import { SignupPage } from './pages/Auth/SignupPage';
-import { ForgotPasswordPage } from './pages/Auth/ForgotPasswordPage';
-import { ResetPasswordPage } from './pages/Auth/ResetPasswordPage';
+import { SearchPage } from './pages/dashboard/SearchPage';
+import { LoginPage } from './pages/auth/LoginPage';
+import { SignupPage } from './pages/auth/SignupPage';
+import { ForgotPasswordPage } from './pages/auth/ForgotPasswordPage';
+import { ResetPasswordPage } from './pages/auth/ResetPasswordPage';
 import { PaymentSimulator } from './pages/PaymentSimulator';
-import { SuccessPage } from './pages/Checkout/SuccessPage';
-import { FailurePage } from './pages/Checkout/FailurePage';
-import { TermsPage } from './pages/Legal/TermsPage';
-import { DashboardPage } from './pages/Admin/DashboardPage';
-import { SettingsPage } from './pages/Admin/SettingsPage';
-import { BuildingsPage } from './pages/Admin/BuildingsPage';
+import { SuccessPage } from './pages/checkout/SuccessPage';
+import { FailurePage } from './pages/checkout/FailurePage';
+import { TermsPage } from './pages/legal/TermsPage';
+import { DashboardPage } from './pages/admin/DashboardPage';
+import { SettingsPage } from './pages/admin/SettingsPage';
+import { BuildingsPage } from './pages/admin/BuildingsPage';
 import { GatekeeperLayout } from './layouts/GatekeeperLayout';
-import { GatekeeperDashboard } from './pages/Gatekeeper/Dashboard';
-import Analytics from './pages/Admin/Analytics';
-import UserManagement from './pages/Admin/UserManagement';
+import { GatekeeperDashboard } from './pages/gatekeeper/Dashboard';
+import Analytics from './pages/admin/Analytics';
+import UserManagement from './pages/admin/UserManagement';
 // Layouts
 import { AdminLayout } from './layouts/AdminLayout';
 import { MainLayout } from './layouts/MainLayout';

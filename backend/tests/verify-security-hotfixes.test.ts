@@ -33,7 +33,7 @@ vi.mock('../lib/db.js', () => ({
     }
 }))
 
-vi.mock('../lib/auth.js', () => ({
+vi.mock('../services/auth.js', () => ({
     getTokenFromRequest: vi.fn(),
     verifyToken: vi.fn()
 }))
@@ -45,7 +45,7 @@ vi.mock('../lib/cors.js', () => ({
 // Import handlers (using require to allow rehashing mocks if needed, but import works too)
 import adminPricesHandler from '../api/admin/prices.js'
 import createBookingHandler from '../api/bookings/create.js'
-import { getTokenFromRequest, verifyToken } from '../lib/auth.js'
+import { getTokenFromRequest, verifyToken } from '../services/auth.js'
 import { db } from '../lib/db.js'
 
 describe('Security Hotfixes Verification', () => {

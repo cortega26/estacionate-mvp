@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { z } from 'zod'
 import { db } from '../../lib/db.js'
-import { comparePassword, signToken } from '../../lib/auth.js'
+import { comparePassword, signToken } from '../../services/auth.js'
 import { serialize } from 'cookie'
 import cors from '../../lib/cors.js'
 import { AppError, ErrorCode } from '../../lib/errors.js'

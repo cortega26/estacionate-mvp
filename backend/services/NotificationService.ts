@@ -1,4 +1,4 @@
-import { sendWhatsAppMessage } from '../lib/twilio.js';
+import { sendWhatsAppMessage } from './twilio.js';
 
 
 interface BookingDetails {

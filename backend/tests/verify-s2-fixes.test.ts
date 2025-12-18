@@ -28,7 +28,7 @@ vi.mock('../lib/db', () => ({
     }
 }))
 
-vi.mock('../lib/auth', () => ({
+vi.mock('../services/auth.js', () => ({
     comparePassword: vi.fn(),
     signToken: vi.fn().mockReturnValue('mock-token'),
     getTokenFromRequest: vi.fn(),
@@ -44,7 +44,7 @@ vi.mock('cookie', () => ({
 }))
 
 import loginHandler from '../api/auth/login.js'
-import { comparePassword } from '../lib/auth.js'
+import { comparePassword } from '../services/auth.js'
 
 describe('S2 Security Fixes Verification', () => {
 

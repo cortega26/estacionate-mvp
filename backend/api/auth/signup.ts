@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { z } from 'zod'
 import { db } from '../../lib/db.js'
-import { hashPassword } from '../../lib/auth.js'
+import { hashPassword } from '../../services/auth.js'
 import cors from '../../lib/cors.js'
 
 // Schema

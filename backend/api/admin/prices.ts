@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { db } from '../../lib/db.js'
-import { verifyToken, getTokenFromRequest } from '../../lib/auth.js'
+import { verifyToken, getTokenFromRequest } from '../../services/auth.js'
 import cors from '../../lib/cors.js'
 import { z } from 'zod'
 

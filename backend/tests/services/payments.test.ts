@@ -1,5 +1,14 @@
 import { describe, it, expect } from 'vitest';
-import { calculateCommission, calculateBuildingShare } from '../../lib/payments.js';
+import { calculateBookingPricing } from '../../lib/domain/pricing.js';
+
+// Adapter to match old test signature to new domain function
+function calculateCommission(amount: number, rate: number = 0.10) {
+    return calculateBookingPricing(amount, rate).commissionClp;
+}
+
+function calculateBuildingShare(amount: number, rate: number = 0.10) {
+    return calculateBookingPricing(amount, rate).ownerAmountClp;
+}
 
 describe('Payment Utilities', () => {
     describe('calculateCommission', () => {

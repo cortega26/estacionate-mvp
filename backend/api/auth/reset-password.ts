@@ -2,7 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { z } from 'zod'
 import { db } from '../../lib/db.js'
 import cors from '../../lib/cors.js'
-import { hashPassword } from '../../lib/auth.js'
+import { hashPassword } from '../../services/auth.js'
 import { User, Resident } from '@prisma/client'
 
 const resetSchema = z.object({

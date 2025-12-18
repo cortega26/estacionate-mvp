@@ -1,0 +1,162 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.16 [39m[90mC:/Users/corte/VS Code Projects/estacionate-mvp/backend[39m
+
+[90mstderr[2m | tests/bookings.test.ts
+[22m[39m⚠️ Twilio Credentials missing. WhatsApp notifications will be MOCKED.
+
+[90mstderr[2m | tests/bookings.test.ts
+[22m[39m⚠️ SENTRY_DSN not found. Sentry disabled.
+
+[90mstdout[2m | tests/bookings.test.ts[2m > [22m[2mBooking Flow (Integration)
+[22m[39mTest Server running at http://127.0.0.1:25269
+
+[90mstdout[2m | tests/bookings.test.ts[2m > [22m[2mBooking Flow (Integration)
+[22m[39mAttempting request with email: vitest1766090636140@test.com
+
+ [31m❯[39m tests/bookings.test.ts [2m([22m[2m7 tests[22m[2m | [22m[31m7 failed[39m[2m)[22m[33m 3361[2mms[22m[39m
+[31m     [31m×[31m should find the available spot via search[39m[32m 5[2mms[22m[39m
+[31m     [31m×[31m should create a booking successfully[39m[32m 1[2mms[22m[39m
+[31m     [31m×[31m should prevent double booking (Optimistic Locking)[39m[32m 3[2mms[22m[39m
+[31m     [31m×[31m should validate input types[39m[32m 1[2mms[22m[39m
+[31m     [31m×[31m should prevent booking a different block that overlaps in time[39m[32m 210[2mms[22m[39m
+[31m     [31m×[31m should prevent booking in a different building (IDOR protection)[39m[33m 611[2mms[22m[39m
+[31m     [31m×[31m should prevent non-residents from booking[39m[32m 147[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 7 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/bookings.test.ts[2m > [22mBooking Flow (Integration)[2m > [22mshould find the available spot via search
+[31m[1mTypeError[22m: Invalid URL[39m
+[90m [2m❯[22m dispatchHttpRequest ../../../VS%20Code%20Projects/estacionate-mvp/backend/node_modules/axios/lib/adapters/http.js:[2m408:20[22m[39m
+[90m [2m❯[22m ../../../VS%20Code%20Projects/estacionate-mvp/backend/node_modules/axios/lib/adapters/http.js:[2m249:5[22m[39m
+[90m [2m❯[22m wrapAsync ../../../VS%20Code%20Projects/estacionate-mvp/backend/node_modules/axios/lib/adapters/http.js:[2m229:10[22m[39m
+[90m [2m❯[22m http ../../../VS%20Code%20Projects/estacionate-mvp/backend/node_modules/axios/lib/adapters/http.js:[2m314:10[22m[39m
+[90m [2m❯[22m Axios.dispatchRequest ../../../VS%20Code%20Projects/estacionate-mvp/backend/node_modules/axios/lib/core/dispatchRequest.js:[2m51:10[22m[39m
+[90m [2m❯[22m Axios._request ../../../VS%20Code%20Projects/estacionate-mvp/backend/node_modules/axios/lib/core/Axios.js:[2m185:33[22m[39m
+[90m [2m❯[22m Axios.request ../../../VS%20Code%20Projects/estacionate-mvp/backend/node_modules/axios/lib/core/Axios.js:[2m40:25[22m[39m
+[90m [2m❯[22m Axios.<computed> [as get] ../../../VS%20Code%20Projects/estacionate-mvp/backend/node_modules/axios/lib/core/Axios.js:[2m211:17[22m[39m
+[90m [2m❯[22m Axios.request ../../../VS%20Code%20Projects/estacionate-mvp/backend/node_modules/axios/lib/core/Axios.js:[2m45:41[22m[39m
+[36m [2m❯[22m tests/bookings.test.ts:[2m152:21[22m[39m
+    [90m150| [39m
+    [90m151| [39m    [34mit[39m([32m'should find the available spot via search'[39m[33m,[39m [35masync[39m () [33m=>[39m {
+    [90m152| [39m        [35mconst[39m res [33m=[39m [35mawait[39m axios[33m.[39m[35mget[39m([32m`[39m[36m${[39m[33mAPI_URL[39m[36m}[39m[32m /api/spots / search`[39m[33m,[39m {
+    [90m   | [39m                    [31m^[39m
+    [90m153| [39m            params[33m:[39m { buildingId }
+    [90m154| [39m        })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m tests/bookings.test.ts[2m > [22mBooking Flow (Integration)[2m > [22mshould create a booking successfully
+[31m[1mTypeError[22m: Invalid URL[39m
+[90m [2m❯[22m dispatchHttpRequest ../../../VS%20Code%20Projects/estacionate-mvp/backend/node_modules/axios/lib/adapters/http.js:[2m408:20[22m[39m
+[90m [2m❯[22m ../../../VS%20Code%20Projects/estacionate-mvp/backend/node_modules/axios/lib/adapters/http.js:[2m249:5[22m[39m
+[90m [2m❯[22m wrapAsync ../../../VS%20Code%20Projects/estacionate-mvp/backend/node_modules/axios/lib/adapters/http.js:[2m229:10[22m[39m
+[90m [2m❯[22m http ../../../VS%20Code%20Projects/estacionate-mvp/backend/node_modules/axios/lib/adapters/http.js:[2m314:10[22m[39m
+[90m [2m❯[22m Axios.dispatchRequest ../../../VS%20Code%20Projects/estacionate-mvp/backend/node_modules/axios/lib/core/dispatchRequest.js:[2m51:10[22m[39m
+[90m [2m❯[22m Axios._request ../../../VS%20Code%20Projects/estacionate-mvp/backend/node_modules/axios/lib/core/Axios.js:[2m185:33[22m[39m
+[90m [2m❯[22m Axios.request ../../../VS%20Code%20Projects/estacionate-mvp/backend/node_modules/axios/lib/core/Axios.js:[2m40:25[22m[39m
+[90m [2m❯[22m Axios.httpMethod [as post] ../../../VS%20Code%20Projects/estacionate-mvp/backend/node_modules/axios/lib/core/Axios.js:[2m224:19[22m[39m
+[90m [2m❯[22m Axios.request ../../../VS%20Code%20Projects/estacionate-mvp/backend/node_modules/axios/lib/core/Axios.js:[2m45:41[22m[39m
+[36m [2m❯[22m tests/bookings.test.ts:[2m161:21[22m[39m
+    [90m159| [39m
+    [90m160| [39m    [34mit[39m([32m'should create a booking successfully'[39m[33m,[39m [35masync[39m () [33m=>[39m {
+    [90m161| [39m        const res = await axios.post(`${API_URL} /api/bookings / creat…
+    [90m   | [39m                    [31m^[39m
+    [90m162| [39m            blockId[33m,[39m
+    [90m163| [39m            vehiclePlate[33m:[39m [32m'TEST-99'[39m[33m,[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m tests/bookings.test.ts[2m > [22mBooking Flow (Integration)[2m > [22mshould prevent double booking (Optimistic Locking)
+[31m[1mAssertionError[22m: expected undefined to be 409 // Object.is equality[39m
+
+[32m- Expected:[39m 
+409
+
+[31m+ Received:[39m 
+undefined
+
+[36m [2m❯[22m tests/bookings.test.ts:[2m192:44[22m[39m
+    [90m190| [39m        } [35mcatch[39m (error[33m:[39m any) {
+    [90m191| [39m            [90m// Expect 409 Conflict[39m
+    [90m192| [39m            [34mexpect[39m(error[33m.[39mresponse[33m?.[39mstatus)[33m.[39m[34mtoBe[39m([34m409[39m)[33m;[39m
+    [90m   | [39m                                           [31m^[39m
+    [90m193| [39m            // It could be BLOCK_UNAVAILABLE (Spot no longer available…
+    [90m194| [39m            expect(error.response?.data?.error).toMatch(/no longer ava…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m tests/bookings.test.ts[2m > [22mBooking Flow (Integration)[2m > [22mshould validate input types
+[31m[1mAssertionError[22m: expected undefined to be 400 // Object.is equality[39m
+
+[32m- Expected:[39m 
+400
+
+[31m+ Received:[39m 
+undefined
+
+[36m [2m❯[22m tests/bookings.test.ts:[2m209:44[22m[39m
+    [90m207| [39m            [34mexpect[39m([35mtrue[39m)[33m.[39m[34mtoBe[39m([35mfalse[39m)[33m;[39m [90m// Guard[39m
+    [90m208| [39m        } [35mcatch[39m (error[33m:[39m any) {
+    [90m209| [39m            [34mexpect[39m(error[33m.[39mresponse[33m?.[39mstatus)[33m.[39m[34mtoBe[39m([34m400[39m)[33m;[39m
+    [90m   | [39m                                           [31m^[39m
+    [90m210| [39m        }
+    [90m211| [39m    })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m tests/bookings.test.ts[2m > [22mBooking Flow (Integration)[2m > [22mshould prevent booking a different block that overlaps in time
+[31m[1mAssertionError[22m: expected undefined to be 409 // Object.is equality[39m
+
+[32m- Expected:[39m 
+409
+
+[31m+ Received:[39m 
+undefined
+
+[36m [2m❯[22m tests/bookings.test.ts:[2m246:44[22m[39m
+    [90m244| [39m            [34mexpect[39m([35mtrue[39m)[33m.[39m[34mtoBe[39m([35mfalse[39m)[33m;[39m
+    [90m245| [39m        } [35mcatch[39m (error[33m:[39m any) {
+    [90m246| [39m            [34mexpect[39m(error[33m.[39mresponse[33m?.[39mstatus)[33m.[39m[34mtoBe[39m([34m409[39m)[33m;[39m
+    [90m   | [39m                                           [31m^[39m
+    [90m247| [39m            expect(error.response?.data?.error).toMatch(/Double Bookin…
+    [90m248| [39m        } [35mfinally[39m {
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m tests/bookings.test.ts[2m > [22mBooking Flow (Integration)[2m > [22mshould prevent booking in a different building (IDOR protection)
+[31m[1mAssertionError[22m: expected undefined to be 403 // Object.is equality[39m
+
+[32m- Expected:[39m 
+403
+
+[31m+ Received:[39m 
+undefined
+
+[36m [2m❯[22m tests/bookings.test.ts:[2m287:44[22m[39m
+    [90m285| [39m            [34mexpect[39m([35mtrue[39m)[33m.[39m[34mtoBe[39m([35mfalse[39m)[33m;[39m
+    [90m286| [39m        } [35mcatch[39m (error[33m:[39m any) {
+    [90m287| [39m            [34mexpect[39m(error[33m.[39mresponse[33m?.[39mstatus)[33m.[39m[34mtoBe[39m([34m403[39m)[33m;[39m
+    [90m   | [39m                                           [31m^[39m
+    [90m288| [39m            expect(error.response?.data?.error).toMatch(/own building/…
+    [90m289| [39m        } [35mfinally[39m {
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m tests/bookings.test.ts[2m > [22mBooking Flow (Integration)[2m > [22mshould prevent non-residents from booking
+[31m[1mAssertionError[22m: expected [ 401, 403 ] to include undefined[39m
+[36m [2m❯[22m tests/bookings.test.ts:[2m339:32[22m[39m
+    [90m337| [39m        } [35mcatch[39m (error[33m:[39m any) {
+    [90m338| [39m            // 401 (User not found) or 403 (Forbidden) are both valid …
+    [90m339| [39m            [34mexpect[39m([[34m401[39m[33m,[39m [34m403[39m])[33m.[39m[34mtoContain[39m(error[33m.[39mresponse[33m?.[39mstatus)[33m;[39m
+    [90m   | [39m                               [31m^[39m
+    [90m340| [39m        } [35mfinally[39m {
+    [90m341| [39m            await prisma.availabilityBlock.delete({ where: { id: block…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m7 failed[39m[22m[90m (7)[39m
+[2m   Start at [22m 17:43:52
+[2m   Duration [22m 6.40s[2m (transform 355ms, setup 0ms, import 2.75s, tests 3.36s, environment 0ms)[22m
+

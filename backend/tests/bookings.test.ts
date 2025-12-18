@@ -1,10 +1,24 @@
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
 import axios from 'axios';
 import { PrismaClient, DurationType } from '@prisma/client';
+import type { Server } from 'http';
+
+// Mock Redis to prevent connection errors during tests
+vi.mock('../lib/redis.js', () => ({
+    redis: {
+        status: 'ready',
+        incr: vi.fn().mockResolvedValue(1),
+        expire: vi.fn().mockResolvedValue(1),
+        on: vi.fn(),
+    }
+}));
+
+import { app } from '../app.js';
 
 // Assumption: Backend is running at this URL (Integration Test)
-const API_URL = 'http://localhost:3000';
+let API_URL = 'http://127.0.0.1:3000';
 const prisma = new PrismaClient();
+let server: Server;
 
 describe('Booking Flow (Integration)', () => {
     let buildingId: string;
@@ -14,91 +28,109 @@ describe('Booking Flow (Integration)', () => {
     let createdBookingId: string;
 
     beforeAll(async () => {
-        // 1. Setup Building & Resident
-        const building = await prisma.building.findFirst();
-        if (!building) {
-            // Seed if empty (basic fallback)
-            const newBuilding = await prisma.building.create({
+        // Start Server
+        await new Promise<void>((resolve) => {
+            server = app.listen(0, '127.0.0.1', () => {
+                const addr = server.address();
+                // @ts-ignore
+                API_URL = 'http://127.0.0.1:' + (addr as any).port;
+                console.log('Test Server running at ' + API_URL);
+                resolve();
+            });
+        });
+
+        try {
+            // 1. Setup Building & Resident
+            const building = await prisma.building.findFirst();
+            if (!building) {
+                // Seed if empty (basic fallback)
+                const newBuilding = await prisma.building.create({
+                    data: {
+                        name: 'Test Building',
+                        address: '123 Test St',
+                        contactEmail: 'test@building.com',
+                        totalUnits: 10,
+                        timezone: 'America/Santiago'
+                    }
+                });
+                buildingId = newBuilding.id;
+            } else {
+                buildingId = building.id;
+            }
+
+            // 2. Create User for Auth (Direct DB)
+            const unique = Date.now();
+            // Simplify email to avoid complex string template issues
+            const email = 'vitest' + unique + '@test.com';
+            console.log('Attempting request with email:', email);
+            const rut = `${unique.toString().slice(-8)}-${unique.toString().slice(-1)}`;
+
+            const unit = await prisma.unit.create({
                 data: {
-                    name: 'Test Building',
-                    address: '123 Test St',
-                    contactEmail: 'test@building.com',
-                    totalUnits: 10,
-                    timezone: 'America/Santiago'
+                    buildingId: buildingId,
+                    unitNumber: `U-${unique.toString().slice(-4)}`
                 }
             });
-            buildingId = newBuilding.id;
-        } else {
-            buildingId = building.id;
-        }
 
-        // 2. Create User for Auth (Direct DB)
-        const unique = Date.now();
-        const email = `test-user-${unique}@test.com`;
-        const rut = `${unique.toString().slice(-8)}-${unique.toString().slice(-1)}`;
+            // Hash password manually
+            const bcrypt = await import('bcryptjs');
+            const passwordHash = await bcrypt.hash('password123', 10);
 
-        const unit = await prisma.unit.create({
-            data: {
-                buildingId: buildingId,
-                unitNumber: `U-${unique.toString().slice(-4)}`
-            }
-        });
+            await prisma.resident.create({
+                data: {
+                    email,
+                    passwordHash,
+                    rut,
+                    firstName: 'Test',
+                    lastName: 'User',
+                    unitId: unit.id,
+                    isVerified: true // Directly verified
+                }
+            });
 
-        // Hash password manually
-        const bcrypt = await import('bcryptjs');
-        const passwordHash = await bcrypt.hash('password123', 10);
-
-        await prisma.resident.create({
-            data: {
+            const loginRes = await axios.post(`${API_URL}/api/auth/login`, {
                 email,
-                passwordHash,
-                rut,
-                firstName: 'Test',
-                lastName: 'User',
-                unitId: unit.id,
-                isVerified: true // Directly verified
+                password: 'password123'
+            });
+            const cookies = loginRes.headers['set-cookie'];
+            if (cookies) {
+                const tokenCookie = cookies.find(c => c.startsWith('token='));
+                if (tokenCookie) {
+                    token = tokenCookie.split(';')[0].replace('token=', '');
+                }
             }
-        });
 
-        const loginRes = await axios.post(`${API_URL}/api/auth/login`, {
-            email,
-            password: 'password123'
-        });
-        const cookies = loginRes.headers['set-cookie'];
-        if (cookies) {
-            const tokenCookie = cookies.find(c => c.startsWith('token='));
-            if (tokenCookie) {
-                token = tokenCookie.split(';')[0].replace('token=', '');
-            }
+            // 3. Create Spot & Availability Block directly in DB
+            const spot = await prisma.visitorSpot.create({
+                data: {
+                    buildingId,
+                    spotNumber: `V-${unique.toString().slice(-4)}`,
+                    isActive: true
+                }
+            });
+            spotId = spot.id;
+
+            const start = new Date();
+            start.setDate(start.getDate() + 1); // Tomorrow
+            start.setHours(10, 0, 0, 0);
+            const end = new Date(start);
+            end.setHours(21, 0, 0, 0); // 11h later
+
+            const block = await prisma.availabilityBlock.create({
+                data: {
+                    spotId,
+                    startDatetime: start,
+                    endDatetime: end,
+                    durationType: DurationType.ELEVEN_HOURS,
+                    basePriceClp: 5000,
+                    status: 'available'
+                }
+            });
+            blockId = block.id;
+        } catch (error: any) {
+            console.error('BEFORE ALL FAILED:', error.response?.data || error.message);
+            throw error;
         }
-
-        // 3. Create Spot & Availability Block directly in DB
-        const spot = await prisma.visitorSpot.create({
-            data: {
-                buildingId,
-                spotNumber: `V-${unique.toString().slice(-4)}`,
-                isActive: true
-            }
-        });
-        spotId = spot.id;
-
-        const start = new Date();
-        start.setDate(start.getDate() + 1); // Tomorrow
-        start.setHours(10, 0, 0, 0);
-        const end = new Date(start);
-        end.setHours(21, 0, 0, 0); // 11h later
-
-        const block = await prisma.availabilityBlock.create({
-            data: {
-                spotId,
-                startDatetime: start,
-                endDatetime: end,
-                durationType: DurationType.ELEVEN_HOURS,
-                basePriceClp: 5000,
-                status: 'available'
-            }
-        });
-        blockId = block.id;
     });
 
     afterAll(async () => {
@@ -113,6 +145,7 @@ describe('Booking Flow (Integration)', () => {
             await prisma.visitorSpot.deleteMany({ where: { id: spotId } });
         }
         await prisma.$disconnect();
+        if (server) server.close();
     });
 
     it('should find the available spot via search', async () => {
@@ -157,6 +190,8 @@ describe('Booking Flow (Integration)', () => {
         } catch (error: any) {
             // Expect 409 Conflict
             expect(error.response?.status).toBe(409);
+            // It could be BLOCK_UNAVAILABLE (Spot no longer available) because status is reserved
+            expect(error.response?.data?.error).toMatch(/no longer available|Double Booking/i);
         }
     });
 
@@ -169,6 +204,7 @@ describe('Booking Flow (Integration)', () => {
             }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
+            expect(true).toBe(false); // Guard
         } catch (error: any) {
             expect(error.response?.status).toBe(400);
         }
@@ -268,7 +304,7 @@ describe('Booking Flow (Integration)', () => {
         // If the token has a userId that is NOT in resident table, currently it returns 401 (User not found).
         // This is ACCEPTABLE security. We just need to match the assertion.
 
-        const adminToken = (await import('../lib/auth.js')).signToken({
+        const adminToken = (await import('../services/auth.js')).signToken({
             userId: '00000000-0000-0000-0000-000000000000', // Non-existent ID
             role: 'admin',
             buildingId: 'any'
@@ -305,4 +341,6 @@ describe('Booking Flow (Integration)', () => {
             await prisma.availabilityBlock.delete({ where: { id: blockC.id } });
         }
     });
+
 });
+
