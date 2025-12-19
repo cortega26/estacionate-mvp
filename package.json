@@ -2,6 +2,7 @@
   "name": "estacionate-mvp",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "description": "Estaciónate MVP - Parking reservation platform for Chilean buildings",
   "scripts": {
     "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",

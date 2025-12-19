@@ -13,9 +13,14 @@ export class NotificationService {
 
     // Helper for QueueService to call
     static async sendWhatsAppMessage(to: string, body: string) {
-        console.log(`[Mock WhatsApp] To: ${to}, Body: ${body}`);
-        return;
-        // return sendWhatsAppMessage(to, body); 
+        // Production / Staging: Send real message
+        // Local: Log it unless FORCE_REAL_SMS is set
+        if (process.env.NODE_ENV !== 'production' && !process.env.FORCE_REAL_SMS) {
+            console.log(`[Mock WhatsApp] To: ${to}, Body: ${body}`);
+            return;
+        }
+
+        return sendWhatsAppMessage(to, body);
     }
 
     /**

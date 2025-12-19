@@ -50,6 +50,14 @@ enum GatewayStatus {
   refunded
 }
 
+enum BlocklistType {
+  EMAIL
+  PHONE
+  RUT
+  PLATE
+  IP
+}
+
 // Models
 
 model Building {
@@ -72,8 +80,46 @@ model Building {
   visitorSpots VisitorSpot[]
   payouts      Payout[]
   users        User[]
+  pricingRules PricingRule[] // Yield Management
+  blocklistItems Blocklist[] // Security
 
   @@map("buildings")
+}
+
+model Blocklist {
+  id         String        @id @default(uuid())
+  buildingId String?       @map("building_id") // Null = Global Ban
+  type       BlocklistType
+  value      String        @db.VarChar(255) // The email, plate, etc.
+  reason     String?
+  createdBy  String?       @map("created_by")
+  
+  createdAt  DateTime      @default(now()) @map("created_at")
+
+  building   Building?     @relation(fields: [buildingId], references: [id], onDelete: Cascade)
+
+  @@index([type, value])
+  @@index([buildingId])
+  @@map("blocklist")
+}
+
+model PricingRule {
+  id         String   @id @default(uuid())
+  buildingId String   @map("building_id")
+  name       String   @db.VarChar(100)
+  priority   Int      @default(1) // Higher priority overrides lower
+  startDate  DateTime @map("start_date")
+  endDate    DateTime @map("end_date")
+  multiplier Float    // e.g., 2.0 = double price, 0.5 = half price
+  
+  isActive   Boolean  @default(true) @map("is_active")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  building   Building @relation(fields: [buildingId], references: [id], onDelete: Cascade)
+
+  @@index([buildingId, isActive])
+  @@index([startDate, endDate])
+  @@map("pricing_rules")
 }
 
 model Unit {
@@ -96,10 +142,11 @@ model Resident {
   id               String    @id @default(uuid())
   unitId           String    @map("unit_id")
   email            String    @unique @db.VarChar(255)
-  rut              String    @unique @db.VarChar(12)
+  rut              String    @db.VarChar(255) // Encrypted (IV:Cipher) - removed @unique
+  rutHash          String?   @unique @map("rut_hash") @db.VarChar(64) // Blind Index for lookups
   firstName        String    @map("first_name") @db.VarChar(100)
   lastName         String    @map("last_name") @db.VarChar(100)
-  phone            String?   @db.VarChar(20)
+  phone            String?   @db.VarChar(255) // Encrypted (IV:Cipher)
   isVerified       Boolean   @default(false) @map("is_verified")
   verifiedAt       DateTime? @map("verified_at")
   verificationCode String?   @map("verification_code") @db.VarChar(10)
@@ -160,6 +207,7 @@ model AvailabilityBlock {
   @@map("availability_blocks")
   @@index([spotId, status])
   @@index([startDatetime, endDatetime])
+  @@index([status, startDatetime]) // Optimized for "Find Available Spots" query
 }
 
 model Booking {
@@ -230,10 +278,34 @@ enum Role {
   concierge
 }
 
+enum ActorType {
+  HUMAN
+  AGENT
+  SYSTEM
+}
+
+model AuditLog {
+  id          String    @id @default(uuid())
+  actorId     String    @map("actor_id") // ID of User or Name of Agent
+  actorType   ActorType @map("actor_type")
+  action      String    @db.VarChar(255)
+  entityId    String?   @map("entity_id")
+  entityType  String?   @map("entity_type")
+  metadata    Json?
+  ipAddress   String?   @map("ip_address") @db.VarChar(45)
+  userAgent   String?   @map("user_agent")
+  occurredAt  DateTime  @default(now()) @map("occurred_at")
+
+  @@map("audit_logs")
+  @@index([actorId])
+  @@index([action])
+  @@index([occurredAt])
+}
+
 model User {
   id           String   @id @default(uuid())
   email        String   @unique @db.VarChar(255)
-  phone        String?  @db.VarChar(20) // Added for WhatsApp Recovery
+  phone        String?  @db.VarChar(255) // Encrypted (WhatsApp Recovery)
   passwordHash String   @map("password_hash") @db.VarChar(255)
   role         Role     @default(admin)
   buildingId   String?  @map("building_id")

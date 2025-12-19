@@ -76,7 +76,18 @@
   - Use `ErrorBoundary` for crashes.
   - Display form errors inline using the Zod error message.
 
-## 7. Audits & Integrity
+## 7. Actor Definitions & Audit Protocol
+### Actor Distinction
+- **HUMAN**: A real user interacting via the Frontend.
+- **AGENT**: An AI Agent (Gemini/Cursor) executing tasks or modifying code.
+- **SYSTEM**: Automated cron jobs, webhooks, or internal triggers.
+
+### Audit Protocol
+- **CRITICAL**: All state-changing actions (Create, Update, Delete) MUST be emitted via the `EventBus`.
+- **Format**: use `EventBus.getInstance().publish({...})`.
+- **Identity**: Always correctly attribute the `actorType`.
+
+## 8. Audits & Integrity
 - **Logic Check:** For financial/availability logic, refer to `../audit-system/audits/A1_Business_Logic,_Code_Health_&_Behavioral_Integrity_Audit.md`.
 - **Currency:** Store money as **Integers** (CLP). No floating point math on prices.
 - **Transactions:** Wrap multi-table writes (e.g., Booking + Payment) in `prisma.$transaction`.

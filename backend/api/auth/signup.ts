@@ -2,6 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { z } from 'zod'
 import { db } from '../../lib/db.js'
 import { hashPassword } from '../../services/auth.js'
+import { encrypt, hashPII } from '../../lib/crypto.js'
 import cors from '../../lib/cors.js'
 
 // Schema
@@ -15,6 +16,7 @@ const signupSchema = z.object({
     unitNumber: z.string(),
     phone: z.string().optional()
 })
+
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
     await cors(req, res)
@@ -39,12 +41,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             return res.status(400).json({ error: 'Unit not found in this building' })
         }
 
+
         // 2. Check if Resident (RUT/Email) exists
+        // Use Blind Index for RUT lookup
+        const rutHash = await hashPII(data.rut)
+
         const existing = await db.resident.findFirst({
             where: {
                 OR: [
                     { email: data.email },
-                    { rut: data.rut }
+                    { rutHash: rutHash }
                 ]
             }
         })
@@ -55,16 +61,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         // 3. Create Resident
         const hashed = await hashPassword(data.password)
+        const encryptedRut = await encrypt(data.rut)
+        const encryptedPhone = data.phone ? await encrypt(data.phone) : null
+
         const resident = await db.resident.create({
             data: {
                 email: data.email,
                 passwordHash: hashed,
-                rut: data.rut,
+                rut: encryptedRut,
+                rutHash: rutHash, // Blind Index
                 firstName: data.firstName,
                 lastName: data.lastName,
-                phone: data.phone,
+                phone: encryptedPhone, // Encrypted
                 unitId: unit.id,
-                isVerified: false // Requires admin/sms verify
+                isVerified: false
             }
         })
 

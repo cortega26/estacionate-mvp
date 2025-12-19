@@ -28,9 +28,12 @@ export const securityHeaders = (req: VercelRequest, res: VercelResponse, next: (
     res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
 
     // 6. Content-Security-Policy (CSP)
-    // Start with a restrictive policy, but allow necessary sources
-    // Note: Adjust 'default-src' as backend grows.
-    res.setHeader('Content-Security-Policy', "default-src 'self'");
+    // Strict CSP for API: Fail closed.
+    // APIs typically don't serve HTML, images, or scripts.
+    res.setHeader(
+        'Content-Security-Policy',
+        "default-src 'none'; frame-ancestors 'none'; upgrade-insecure-requests"
+    );
 
     next();
 };

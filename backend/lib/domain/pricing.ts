@@ -5,9 +5,10 @@ import { APP_CONSTANTS } from '../constants.js'
  * 
  * @param basePriceClp - The base price of the parking spot in CLP (Integer)
  * @param commissionRate - The commission rate as a decimal (e.g., 0.10 for 10%)
+ * @param multiplier - Yield management multiplier (default: 1.0)
  * @returns Object containing commission and final payout distribution
  */
-export function calculateBookingPricing(basePriceClp: number, commissionRate: number) {
+export function calculateBookingPricing(basePriceClp: number, commissionRate: number, multiplier: number = 1.0) {
     if (!Number.isInteger(basePriceClp)) {
         throw new Error('Base Price must be an integer')
     }
@@ -15,18 +16,22 @@ export function calculateBookingPricing(basePriceClp: number, commissionRate: nu
         throw new Error('Amount cannot be negative')
     }
 
-    // Formula: (Price * Rate)
-    // Example: 5000 * 0.10 = 500
-    // We use Math.ceil to ensure we don't under-collect on fractional scenarios
-    // 12345 * 0.10 = 1234.5 -> 1235
-    const commissionClp = Math.ceil(basePriceClp * commissionRate)
+    // Apply Multiplier (Yield Management)
+    // Example: 5000 * 2.0 = 10000
+    const finalPriceClp = Math.ceil(basePriceClp * multiplier);
+
+    // Commission is based on the FINAL price
+    // Example: 10000 * 0.10 = 1000
+    const commissionClp = Math.ceil(finalPriceClp * commissionRate)
 
     // Remaining amount for the building/owner
-    const ownerAmountClp = basePriceClp - commissionClp
+    const ownerAmountClp = finalPriceClp - commissionClp
 
     return {
-        totalAmountClp: basePriceClp,
+        totalAmountClp: finalPriceClp,
         commissionClp,
-        ownerAmountClp
+        ownerAmountClp,
+        originalPriceClp: basePriceClp,
+        appliedMultiplier: multiplier
     }
 }
