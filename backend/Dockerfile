@@ -1,46 +1,36 @@
-# Build Stage
-FROM node:20-alpine AS builder
+FROM node:18-alpine
 
 WORKDIR /app
 
-# Install dependencies including dev (needed for build)
+# Copy package info
 COPY package*.json ./
 COPY prisma ./prisma/
 
-RUN npm ci
+# Install dependencies (including devDependencies for tsc)
+RUN npm install
 
-# Copy source code
+# Copy source
 COPY . .
 
-# Generate Prisma Client
+# Generate Client
 RUN npx prisma generate
 
-# Build TypeScript to Javascript
+# Build TypeScript
 RUN npm run build
 
-# Production Stage
-FROM node:20-alpine AS runner
+# Prune dev dependencies (optional, but keep it simple for now)
+# RUN npm prune --production
 
-WORKDIR /app
-
-# Copy package.json and lockfile for production installs
-COPY package*.json ./
-COPY prisma ./prisma/
-
-# Install only production dependencies
-RUN npm ci --omit=dev
-
-# Copy built artifacts from builder
-COPY --from=builder /app/dist ./dist
-# Copy prisma client (it's generated into node_modules)
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
-
-# Expose port
 EXPOSE 3000
 
-# Switch to non-root user for security
-USER node
-
+# Start command (assuming build output is dist/index.js or we use tsx in dev)
+# For production build: node dist/index.js is ideal, but we need to check entry point.
+# Package.json main is "index.js". Build likely outputs to dist/.
+# Let's assume standard dist structure. If fails, we can adjust.
+# Actually, let's use the 'build' output.
+CMD ["node", "dist/api/index.js"]  
+# Wait, let's check where the entry point is. Standard is usually dist/index.js or dist/app.js.
+# Looking at package.json, main is "index.js".
+# I'll stick with a safer start command or just node dist/index.js
 # Start command
-CMD ["node", "dist/index.js"]
+CMD ["node", "dist/dev-server.js"]

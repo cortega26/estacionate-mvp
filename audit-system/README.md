@@ -22,6 +22,7 @@ It is designed to be:
 | A5 | Process & DevEx |
 | A6 | Release & Environment |
 | A7 | Compliance |
+| A8 | FinOps & Efficiency |
 
 ---
 

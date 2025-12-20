@@ -15,7 +15,8 @@
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "audit:arch": "npx depcruise --config .dependency-cruiser.cjs . --exclude \"node_modules|dist\""
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",
@@ -43,6 +44,7 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
+    "dependency-cruiser": "^16.2.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/cookie": "^0.6.0",
     "@types/cors": "^2.8.19",

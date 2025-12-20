@@ -31,8 +31,14 @@ services:
     container_name: estacionate-backend
     environment:
       DATABASE_URL: postgres://postgres:password@postgres:5432/estacionate_dev
+      REDIS_URL: redis://redis:6379
       PORT: 3000
       JWT_SECRET: dev-secret-key
+      ENCRYPTION_KEY: 00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff # 64-char hex dummy
+      # Twilio/WhatsApp (Mocked unless FORCE_REAL_SMS=true)
+      TWILIO_ACCOUNT_SID: AC_mock
+      TWILIO_AUTH_TOKEN: mock_token
+      TWILIO_PHONE_NUMBER: whatsapp:+1234567890
     ports:
       - "3000:3000"
     depends_on:
@@ -42,6 +48,21 @@ services:
         condition: service_started
     volumes:
       - ./backend:/app
+      - /app/node_modules
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: estacionate-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:3000
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
       - /app/node_modules
 
 volumes:

@@ -93,6 +93,12 @@ This audit assumes **happy paths already exist** and actively searches for where
 - Detect race conditions.
 - Detect double-apply / double-spend risks.
 
+### Step 7 — Dependency Resilience (Chaos)
+- What happens if DB is slow (timeout behavior)?
+- What happens if 3rd party API (Integrations) returns 500 or 429?
+- Evaluate Circuit Breaker necessity.
+- Verify "Fail Closed" vs "Fail Open" decisions.
+
 ---
 
 ## 4. Mandatory Correctness Checks
