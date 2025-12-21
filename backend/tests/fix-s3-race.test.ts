@@ -167,6 +167,10 @@ describe('S3 Fix: Race Condition (Overlaps)', () => {
 
         // WITHOUT LOCK: We might get > 1 success.
         // WITH LOCK: We MUST get Exactly 1 success.
+        console.log(`Debug: Successes=${successes.length}, Failures=${failures.length}`);
+        if (successes.length !== 1) {
+            console.error('FAIL: Race condition not prevented! Successes:', successes.length);
+        }
         expect(successes.length).toBe(1);
     });
 });

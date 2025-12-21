@@ -45,7 +45,7 @@ import { AppError, ErrorCode } from './lib/errors.js';
 // ... (previous imports)
 
 // Helper to catch async errors
-const asyncHandler = (fn: Function) => (req: any, res: any, next: any) => {
+const asyncHandler = (fn: (...args: any[]) => any) => (req: any, res: any, next: any) => {
     Promise.resolve(fn(req, res, next)).catch(next);
 };
 
@@ -127,6 +127,17 @@ app.get('/api/admin/analytics', asyncHandler((req: any, res: any) => {
 
 app.all('/api/admin/users', asyncHandler((req: any, res: any) => {
     return adminUsersHandler(req, res);
+}));
+
+import salesDashboardHandler from './api/sales/dashboard.js';
+import salesBuildingsHandler from './api/sales/buildings.js';
+
+app.get('/api/sales/dashboard', asyncHandler((req: any, res: any) => {
+    return salesDashboardHandler(req, res);
+}));
+
+app.get('/api/sales/buildings', asyncHandler((req: any, res: any) => {
+    return salesBuildingsHandler(req, res);
 }));
 
 app.get('/api/health', asyncHandler((req: any, res: any) => {

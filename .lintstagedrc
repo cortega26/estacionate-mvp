@@ -1,0 +1,10 @@
+{
+  "backend/**/*.{ts,tsx}": [
+    "bash -c 'cd backend && npm run build'",
+    "bash -c 'cd backend && npm run lint'"
+  ],
+  "frontend/**/*.{ts,tsx}": [
+    "bash -c 'cd frontend && npm run type-check'",
+    "bash -c 'cd frontend && npm run lint'"
+  ]
+}

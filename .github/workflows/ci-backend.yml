@@ -49,14 +49,10 @@ jobs:
     - name: Generate Prisma Client
       run: npx prisma generate
 
-    - name: Run Linting
-      run: npm run build # tsc check is often used as linting in TS projects if no dedicated linter
-
-    - name: Run Tests
-      # We need to provide env vars for tests to run against the service container
+    - name: Run Full Regression Check
       env:
         DATABASE_URL: postgres://postgres:password@localhost:5432/test_db
         JWT_SECRET: super-secret-test-key
         PORT: 3001
-      run: npm test
+      run: npm run check:all
 

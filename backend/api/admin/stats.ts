@@ -87,7 +87,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         });
 
         // 5. [Super Admin Only] Platform Revenue Calculation (Approximation)
-        let platformRevenue = 0;
+        const platformRevenue = 0;
         if (user.role === 'admin' && !buildingId) {
             // If viewing all, simplified estimate: Sum of all completed bookings * avg commission?
             // Correct way: We need to join Building to get rates. 

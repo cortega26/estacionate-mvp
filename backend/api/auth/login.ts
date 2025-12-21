@@ -35,7 +35,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const { email, password } = loginSchema.parse(req.body)
 
     // 1. Try Resident Login
-    let resident = await db.resident.findUnique({
+    const resident = await db.resident.findUnique({
         where: { email },
         include: { unit: true }
     })

@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { db } from '../../lib/db.js'
 import { logger } from '../../lib/logger.js'
+import { SalesService } from '../../services/salesService.js'
 import { startOfYesterday, endOfYesterday } from 'date-fns'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -76,7 +77,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             const buildingShare = totalRevenue - totalCommission
 
             // Create Payout Record
-            await db.payout.create({
+            // Create Payout Record
+            const payout = await db.payout.create({
                 data: {
                     buildingId: building.id,
                     periodStart: startDate,
@@ -86,6 +88,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                     buildingShareClp: buildingShare,
                     status: 'calculated'
                 }
+            })
+
+            // Calculate and Record Sales Commission if applicable
+            await SalesService.calculateCommission(payout).catch(err => {
+                logger.error({ error: err, payoutId: payout.id }, '[Reconcile] Failed to calculate sales commission')
             })
 
             logger.info({

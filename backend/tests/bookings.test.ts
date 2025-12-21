@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
 import axios from 'axios';
 import { PrismaClient, DurationType } from '@prisma/client';
+import crypto from 'crypto';
 import type { Server } from 'http';
 
 // Mock Redis to prevent connection errors during tests
@@ -26,13 +27,14 @@ describe('Booking Flow (Integration)', () => {
     let blockId: string;
     let token: string;
     let createdBookingId: string;
+    let userId: string;
+    let unitId: string;
 
     beforeAll(async () => {
         // Start Server
         await new Promise<void>((resolve) => {
             server = app.listen(0, '127.0.0.1', () => {
                 const addr = server.address();
-                // @ts-ignore
                 API_URL = 'http://127.0.0.1:' + (addr as any).port;
                 console.log('Test Server running at ' + API_URL);
                 resolve();
@@ -58,19 +60,22 @@ describe('Booking Flow (Integration)', () => {
                 buildingId = building.id;
             }
 
-            // 2. Create User for Auth (Direct DB)
-            const unique = Date.now();
-            // Simplify email to avoid complex string template issues
-            const email = 'vitest' + unique + '@test.com';
+
+
+            // 2. Create User for Auth
+            const unique = crypto.randomUUID();
+            // Simplify email
+            const email = `vitest-${unique}@test.com`;
             console.log('Attempting request with email:', email);
-            const rut = `${unique.toString().slice(-8)}-${unique.toString().slice(-1)}`;
+            const rut = `${unique.substring(0, 8)}-K`;
 
             const unit = await prisma.unit.create({
                 data: {
                     buildingId: buildingId,
-                    unitNumber: `U-${unique.toString().slice(-4)}`
+                    unitNumber: `U-${unique.substring(0, 5)}`
                 }
             });
+            unitId = unit.id;
 
             // Hash password manually
             const bcrypt = await import('bcryptjs');
@@ -86,7 +91,7 @@ describe('Booking Flow (Integration)', () => {
                     unitId: unit.id,
                     isVerified: true // Directly verified
                 }
-            });
+            }).then(r => userId = r.id);
 
             const loginRes = await axios.post(`${API_URL}/api/auth/login`, {
                 email,
@@ -104,7 +109,7 @@ describe('Booking Flow (Integration)', () => {
             const spot = await prisma.visitorSpot.create({
                 data: {
                     buildingId,
-                    spotNumber: `V-${unique.toString().slice(-4)}`,
+                    spotNumber: `V-${unique.substring(0, 5)}`,
                     isActive: true
                 }
             });
@@ -144,6 +149,22 @@ describe('Booking Flow (Integration)', () => {
         if (spotId) {
             await prisma.visitorSpot.deleteMany({ where: { id: spotId } });
         }
+        if (userId) {
+            await prisma.resident.deleteMany({ where: { id: userId } });
+        }
+        if (unitId) {
+            await prisma.unit.deleteMany({ where: { id: unitId } });
+        }
+        // Only delete building if we created it (check if it matches our unique pattern or is the fallback)
+        // If we reused "Test Building", deleting it might affect other tests potentially?
+        // But for integration tests running sequentially it is safer to leave it if it was pre-existing?
+        // Actually, the setup code creates "Test Building" if NOT found.
+        // Let's strictly delete what we created if we track it.
+        // Since we didn't robustly track "didCreatedBuilding", let's skip deleting building to be safe against breaking other tests,
+        // OR we should have created a unique building.
+        // Ideally we should have created a unique building every time.
+        // For now, cleaning Resident/Unit/Spot is sufficient for repeating THIS test.
+
         await prisma.$disconnect();
         if (server) server.close();
     });
@@ -295,22 +316,12 @@ describe('Booking Flow (Integration)', () => {
     });
 
     it('should prevent non-residents from booking', async () => {
-        // Create a real user who is NOT a resident of the target building (or has wrong role if applicable)
-        // In this MVP, "Resident" is the only user type that can book.
-        // If I create a resident in Building B, can they book in Building A? 
-        // That is the "IDOR" test we just added (which passed!).
-        // This test "prevent non-residents" implies someone with a token but NOT a resident.
-        // But our `protect` middleware looks up `prisma.resident`.
-        // If the token has a userId that is NOT in resident table, currently it returns 401 (User not found).
-        // This is ACCEPTABLE security. We just need to match the assertion.
-
         const adminToken = (await import('../services/auth.js')).signToken({
-            userId: '00000000-0000-0000-0000-000000000000', // Non-existent ID
+            userId: '00000000-0000-0000-0000-000000000000',
             role: 'admin',
             buildingId: 'any'
         });
 
-        // Use a new block
         const start = new Date();
         start.setDate(start.getDate() + 3);
 
@@ -335,7 +346,6 @@ describe('Booking Flow (Integration)', () => {
             });
             expect(true).toBe(false);
         } catch (error: any) {
-            // 401 (User not found) or 403 (Forbidden) are both valid security rejections here.
             expect([401, 403]).toContain(error.response?.status);
         } finally {
             await prisma.availabilityBlock.delete({ where: { id: blockC.id } });

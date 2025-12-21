@@ -24,6 +24,8 @@ import UserManagement from './pages/admin/UserManagement';
 // Layouts
 import { AdminLayout } from './layouts/AdminLayout';
 import { MainLayout } from './layouts/MainLayout';
+import { SalesLayout } from './layouts/SalesLayout';
+import { SalesDashboard } from './pages/sales/SalesDashboard';
 
 const ProtectedLayout = () => {
   const user = useAuthStore((state) => state.user);
@@ -76,6 +78,12 @@ function App() {
           <Route path="/gatekeeper" element={<GatekeeperLayout />}>
             <Route index element={<GatekeeperDashboard />} />
           </Route>
+
+          {/* Sales Rep Routes */}
+          <Route path="/sales" element={<SalesLayout />}>
+            <Route index element={<SalesDashboard />} />
+          </Route>
+
 
           {/* Catch all */}
           <Route path="*" element={<Navigate to="/login" replace />} />

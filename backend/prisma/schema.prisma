@@ -75,6 +75,9 @@ model Building {
   platformCommissionRate Float    @default(0.10) @map("platform_commission_rate")
   softwareMonthlyFeeClp  Int      @default(0)    @map("software_monthly_fee_clp")
 
+  salesRepId             String?  @map("sales_rep_id")
+  salesRepCommissionRate Float    @default(0.05) @map("sales_rep_commission_rate")
+
   // Relations
   units        Unit[]
   visitorSpots VisitorSpot[]
@@ -82,7 +85,10 @@ model Building {
   users        User[]
   pricingRules PricingRule[] // Yield Management
   blocklistItems Blocklist[] // Security
+  salesRep     User?   @relation("BuildingSalesRep", fields: [salesRepId], references: [id])
+  salesRepCommissions SalesRepCommission[]
 
+  @@index([salesRepId])
   @@map("buildings")
 }
 
@@ -267,6 +273,7 @@ model Payout {
 
   // Relations
   building Building @relation(fields: [buildingId], references: [id], onDelete: Restrict)
+  salesRepCommissions SalesRepCommission[]
 
   @@map("payouts")
 }
@@ -276,6 +283,7 @@ enum Role {
   support
   building_admin
   concierge
+  sales_rep
 }
 
 enum ActorType {
@@ -302,6 +310,25 @@ model AuditLog {
   @@index([occurredAt])
 }
 
+model SalesRepCommission {
+  id          String   @id @default(uuid())
+  salesRepId  String   @map("sales_rep_id")
+  buildingId  String   @map("building_id")
+  payoutId    String?  @map("payout_id")
+  amountClp   Int      @map("amount_clp")
+  status      String   @default("pending") // pending, paid
+  periodStart DateTime @map("period_start")
+  periodEnd   DateTime @map("period_end")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  salesRep    User     @relation(fields: [salesRepId], references: [id])
+  building    Building @relation(fields: [buildingId], references: [id])
+  payout      Payout?  @relation(fields: [payoutId], references: [id])
+  
+  @@map("sales_rep_commissions")
+  @@index([salesRepId])
+}
+
 model User {
   id           String   @id @default(uuid())
   email        String   @unique @db.VarChar(255)
@@ -323,6 +350,8 @@ model User {
 
   // Relations
   building Building? @relation(fields: [buildingId], references: [id])
+  managedBuildings Building[] @relation("BuildingSalesRep")
+  commissions      SalesRepCommission[]
 
   @@map("users")
 }

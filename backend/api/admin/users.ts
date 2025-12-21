@@ -40,7 +40,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 ]
             } : {}
 
-            // @ts-ignore
+
             const users = await db.user.findMany({
                 where: whereClause,
                 take: limit,
@@ -58,7 +58,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 orderBy: { createdAt: 'desc' }
             })
 
-            // @ts-ignore
+
             const total = await db.user.count({ where: whereClause })
 
             return res.status(200).json({
@@ -76,7 +76,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         if (req.method === 'PATCH') {
             const body = updateUserSchema.parse(req.body)
 
-            let updateData: any = {}
+            const updateData: any = {}
             if (body.action === 'ban') updateData.isActive = false
             if (body.action === 'unban') updateData.isActive = true
             if (body.action === 'promote_admin') updateData.role = 'admin'
