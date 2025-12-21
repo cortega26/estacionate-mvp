@@ -2,6 +2,7 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../../lib/api';
 import { useAuthStore } from '../../store/authStore';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 export const DashboardPage = () => {
     const user = useAuthStore((state) => state.user);
@@ -52,6 +53,50 @@ export const DashboardPage = () => {
                 <div className="bg-white p-6 rounded-lg shadow border-l-4 border-purple-500">
                     <p className="text-gray-500 text-sm font-medium">Tasa de Ocupación</p>
                     <p className="text-3xl font-bold text-gray-800">{stats?.occupancyRate}%</p>
+                </div>
+            </div>
+
+            {/* Revenue Chart */}
+            <div className="bg-white p-6 rounded-lg shadow mb-8">
+                <h3 className="text-lg font-bold text-gray-800 mb-4">Ingresos Últimos 30 Días</h3>
+                <div className="h-72 w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                        <AreaChart
+                            data={stats?.revenueOverTime}
+                            margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+                        >
+                            <defs>
+                                <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="5%" stopColor="#10B981" stopOpacity={0.8} />
+                                    <stop offset="95%" stopColor="#10B981" stopOpacity={0} />
+                                </linearGradient>
+                            </defs>
+                            <XAxis
+                                dataKey="date"
+                                tickFormatter={(str) => {
+                                    const date = new Date(str + 'T00:00:00'); // Force local time handling or ensure ISO string parse
+                                    return `${date.getDate()}/${date.getMonth() + 1}`;
+                                }}
+                                style={{ fontSize: '12px' }}
+                            />
+                            <YAxis
+                                tickFormatter={(val) => `$${(val / 1000).toFixed(0)}k`}
+                                style={{ fontSize: '12px' }}
+                            />
+                            <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                            <Tooltip
+                                formatter={(value: number) => [`$${value.toLocaleString('es-CL')}`, 'Ingresos']}
+                                labelFormatter={(label) => new Date(label + 'T00:00:00').toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long' })}
+                            />
+                            <Area
+                                type="monotone"
+                                dataKey="amount"
+                                stroke="#10B981"
+                                fillOpacity={1}
+                                fill="url(#colorRevenue)"
+                            />
+                        </AreaChart>
+                    </ResponsiveContainer>
                 </div>
             </div>
 

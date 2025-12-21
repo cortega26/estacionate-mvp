@@ -23,13 +23,13 @@ import adminAnalyticsHandler from './api/admin/analytics.js';
 import adminUsersHandler from './api/admin/users.js';
 
 import cors from 'cors';
-// import helmet from 'helmet'; // custom implementation used
-import { securityHeaders } from './middleware/security.js';
+import compression from 'compression';
+import helmet from 'helmet';
 import { generalLimiter, authLimiter } from './middleware/rateLimiter.js';
 
 const app = express();
-app.use(securityHeaders as any);
-// app.use(helmet());
+app.use(compression());
+app.use(helmet());
 app.use(generalLimiter);
 // CORS is handled by individual Vercel-style handlers (e.g. login.ts) via lib/cors.ts wrapper.
 // Do NOT add global CORS here to avoid duplicate headers and dev/prod parity issues.

@@ -89,11 +89,49 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         // 5. [Super Admin Only] Platform Revenue Calculation (Approximation)
         const platformRevenue = 0;
         if (user.role === 'admin' && !buildingId) {
-            // If viewing all, simplified estimate: Sum of all completed bookings * avg commission?
-            // Correct way: We need to join Building to get rates. 
-            // For MVP, we will simplify or defer this to the Buildings list.
-            // Let's just return raw volume for now.
+            // Placeholder
         }
+
+        // 6. Revenue Trend (Daily - Last 30 Days)
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+        const rawDailyRevenue = await db.booking.findMany({
+            where: {
+                ...whereBuilding,
+                status: 'completed',
+                createdAt: {
+                    gte: thirtyDaysAgo
+                }
+            },
+            select: {
+                createdAt: true,
+                amountClp: true
+            },
+            orderBy: {
+                createdAt: 'asc'
+            }
+        });
+
+        // Group by day YYYY-MM-DD
+        const dailyMap = new Map<string, number>();
+        // Initialize last 30 days with 0
+        for (let i = 0; i < 30; i++) {
+            const d = new Date();
+            d.setDate(d.getDate() - (29 - i));
+            const key = d.toISOString().split('T')[0];
+            dailyMap.set(key, 0);
+        }
+
+        // Aggregate
+        rawDailyRevenue.forEach(b => {
+            const key = b.createdAt.toISOString().split('T')[0];
+            if (dailyMap.has(key)) {
+                dailyMap.set(key, (dailyMap.get(key) || 0) + b.amountClp);
+            }
+        });
+
+        const revenueOverTime = Array.from(dailyMap.entries()).map(([date, amount]) => ({ date, amount }));
 
         return res.status(200).json({
             success: true,
@@ -102,8 +140,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 activeBookings: activeBookingsCount,
                 totalSpots,
                 occupancyRate: totalSpots > 0 ? ((activeBookingsCount / totalSpots) * 100).toFixed(1) : 0,
+                revenueOverTime,
                 recentActivity: recentActivity.map(b => ({
                     id: b.id,
+
                     status: b.status,
                     amountClp: b.amountClp,
                     createdAt: b.createdAt,

@@ -275,6 +275,7 @@ model Payout {
   building Building @relation(fields: [buildingId], references: [id], onDelete: Restrict)
   salesRepCommissions SalesRepCommission[]
 
+  @@index([buildingId])
   @@map("payouts")
 }
 
