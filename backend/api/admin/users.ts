@@ -11,9 +11,17 @@ const updateUserSchema = z.object({
     buildingId: z.string().optional()
 })
 
+const createUserSchema = z.object({
+    email: z.string().email(),
+    password: z.string().min(6),
+    role: z.enum(['admin', 'sales_rep', 'building_admin', 'support']).default('sales_rep'),
+    firstName: z.string().optional(),
+    lastName: z.string().optional()
+})
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
     await cors(req, res)
-    if (req.method !== 'GET' && req.method !== 'PATCH') {
+    if (req.method !== 'GET' && req.method !== 'PATCH' && req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' })
     }
 
@@ -32,13 +40,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             const page = parseInt(req.query.page as string) || 1
             const limit = 20
             const search = req.query.search as string
+            const role = req.query.role as string
 
-            const whereClause = search ? {
-                OR: [
-                    { email: { contains: search, mode: Prisma.QueryMode.insensitive } },
-                    { phone: { contains: search, mode: Prisma.QueryMode.insensitive } }
-                ]
-            } : {}
+            const whereClause: Prisma.UserWhereInput = {
+                ...(search ? {
+                    OR: [
+                        { email: { contains: search, mode: Prisma.QueryMode.insensitive } },
+                        { phone: { contains: search, mode: Prisma.QueryMode.insensitive } }
+                    ]
+                } : {}),
+                ...(role ? { role: role as any } : {})
+            }
 
 
             const users = await db.user.findMany({
@@ -70,6 +82,40 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                     totalPages: Math.ceil(total / limit)
                 }
             })
+        }
+
+        // POST: Create User
+        if (req.method === 'POST') {
+            const body = createUserSchema.parse(req.body)
+
+            // Check if exists
+            const existing = await db.user.findUnique({ where: { email: body.email } })
+            if (existing) {
+                return res.status(409).json({ error: 'User already exists' })
+            }
+
+            // Import hash from auth service if available or implement basic hash
+            // Since we don't have access to bcrypt directly here without import, let's assume hashPassword fn exists or use bcryptjs
+            // I'll grab bcryptjs here since it is in package.json
+            const bcrypt = (await import('bcryptjs')).default
+            const passwordHash = await bcrypt.hash(body.password, 10)
+
+            const newUser = await db.user.create({
+                data: {
+                    email: body.email,
+                    role: body.role as any,
+                    passwordHash,
+                    isActive: true
+                },
+                select: {
+                    id: true,
+                    email: true,
+                    role: true,
+                    createdAt: true
+                }
+            })
+
+            return res.status(201).json({ success: true, data: newUser })
         }
 
         // PATCH: Update User

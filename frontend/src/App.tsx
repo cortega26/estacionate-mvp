@@ -21,6 +21,7 @@ import { GatekeeperLayout } from './layouts/GatekeeperLayout';
 import { GatekeeperDashboard } from './pages/gatekeeper/Dashboard';
 import Analytics from './pages/admin/Analytics';
 import UserManagement from './pages/admin/UserManagement';
+import SalesRepsPage from './pages/admin/SalesReps';
 // Layouts
 import { AdminLayout } from './layouts/AdminLayout';
 import { MainLayout } from './layouts/MainLayout';
@@ -69,6 +70,7 @@ function App() {
             <Route index element={<DashboardPage />} />
             <Route path="analytics" element={<Analytics />} />
             <Route path="users" element={<UserManagement />} />
+            <Route path="sales-reps" element={<SalesRepsPage />} />
             <Route path="buildings" element={<BuildingsPage />} />
             <Route path="settings" element={<SettingsPage />} />
           </Route>

@@ -23,7 +23,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 include: {
                     _count: {
                         select: { visitorSpots: true, units: true }
-                    }
+                    },
+                    salesRep: { select: { id: true, email: true } }
                 }
             });
 
@@ -60,10 +61,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                     name: b.name,
                     address: b.address,
                     adminCompany: b.adminCompany,
-                    contactEmail: b.contactEmail,
-                    totalUnits: b._count.units,
                     totalVisitorSpots: b._count.visitorSpots,
                     platformCommissionRate: b.platformCommissionRate,
+                    salesRepCommissionRate: b.salesRepCommissionRate,
+                    salesRep: b.salesRep,
                     softwareMonthlyFeeClp: b.softwareMonthlyFeeClp,
                     stats: {
                         totalRevenueClp: totalRevenue, // Total passing through building
@@ -88,6 +89,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 data: {
                     platformCommissionRate: platformCommissionRate !== undefined ? Number(platformCommissionRate) : undefined,
                     softwareMonthlyFeeClp: softwareMonthlyFeeClp !== undefined ? Number(softwareMonthlyFeeClp) : undefined,
+                    salesRepCommissionRate: req.body.salesRepCommissionRate !== undefined ? Number(req.body.salesRepCommissionRate) : undefined,
+                    salesRepId: req.body.salesRepId || undefined,
                     name,
                     address
                 }
