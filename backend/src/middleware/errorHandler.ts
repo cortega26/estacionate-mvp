@@ -43,6 +43,8 @@ export const errorHandler = (err: any, req: Request, res: Response, next: NextFu
         code: appError.code,
         message: appError.publicMessage,
         error: appError.publicMessage, // Back-compat
-        context: appError.context
+        context: appError.context,
+        debug_internal: appError.internalMessage,
+        debug_stack: appError.stack
     });
 };
