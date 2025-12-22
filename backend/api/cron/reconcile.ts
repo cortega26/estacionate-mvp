@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { db } from '../../lib/db.js'
 import { logger } from '../../lib/logger.js'
-import { SalesService } from '../../services/salesService.js'
+import { SalesService } from '../../services/SalesService.js'
 import { startOfYesterday, endOfYesterday } from 'date-fns'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -110,8 +110,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         return res.status(200).json({ success: true, results })
 
-    } catch (error: any) {
-        logger.error({ error: error.message }, '[Reconcile] Job Failed')
+    } catch (error: unknown) {
+        const msg = error instanceof Error ? error.message : String(error)
+        logger.error({ error: msg }, '[Reconcile] Job Failed')
         return res.status(500).json({ error: 'Internal Server Error' })
     }
 }

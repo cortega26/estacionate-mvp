@@ -1,7 +1,8 @@
 import 'dotenv/config';
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { initSentry } from './lib/sentry.js';
-import { logger } from './lib/logger.js';
+
 
 // Init Sentry
 initSentry();
@@ -22,14 +23,28 @@ import reconcileHandler from './api/cron/reconcile.js';
 import adminAnalyticsHandler from './api/admin/analytics.js';
 import adminUsersHandler from './api/admin/users.js';
 
-import cors from 'cors';
 import compression from 'compression';
 import helmet from 'helmet';
 import { generalLimiter, authLimiter } from './middleware/rateLimiter.js';
 
 const app = express();
 app.use(compression());
-app.use(helmet());
+app.use(helmet({
+    hsts: {
+        maxAge: 31536000,
+        includeSubDomains: true,
+        preload: true
+    },
+    referrerPolicy: {
+        policy: 'strict-origin-when-cross-origin'
+    },
+    xFrameOptions: { action: 'deny' },
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'none'"],
+        }
+    }
+}));
 app.use(generalLimiter);
 // CORS is handled by individual Vercel-style handlers (e.g. login.ts) via lib/cors.ts wrapper.
 // Do NOT add global CORS here to avoid duplicate headers and dev/prod parity issues.
@@ -40,111 +55,71 @@ app.use(express.json());
 // VercelRequest extends http.IncomingMessage, Express Request does too.
 
 import { errorHandler } from './middleware/errorHandler.js';
-import { AppError, ErrorCode } from './lib/errors.js';
 
 // ... (previous imports)
 
 // Helper to catch async errors
-const asyncHandler = (fn: (...args: any[]) => any) => (req: any, res: any, next: any) => {
-    Promise.resolve(fn(req, res, next)).catch(next);
+// Compatible with both Express Request and VercelRequest (which extends IncomingMessage)
+const asyncHandler = <Req extends VercelRequest | Request = VercelRequest, Res extends VercelResponse | Response = VercelResponse>(
+    fn: (req: Req, res: Res, next?: NextFunction) => Promise<any> | any
+) => (req: Request, res: Response, next: NextFunction) => {
+    // Cast strict Express req/res to compatible union for the handler
+    Promise.resolve(fn(req as unknown as Req, res as unknown as Res, next)).catch(next);
 };
 
 // ... (app setup)
 
-app.post('/api/auth/login', authLimiter, asyncHandler((req: any, res: any) => {
-    // Cast to any to satisfy Vercel vs Express type mismatch if strict
-    return loginHandler(req, res);
-}));
+app.post('/api/auth/login', authLimiter, asyncHandler(loginHandler));
 
-app.post('/api/auth/signup', authLimiter, asyncHandler((req: any, res: any) => {
-    return signupHandler(req, res);
-}));
+app.post('/api/auth/signup', authLimiter, asyncHandler(signupHandler));
 
-app.post('/api/auth/forgot-password', asyncHandler((req: any, res: any) => {
-    return forgotPasswordHandler(req, res);
-}));
+app.post('/api/auth/forgot-password', asyncHandler(forgotPasswordHandler));
 
-app.post('/api/auth/reset-password', asyncHandler((req: any, res: any) => {
-    return resetPasswordHandler(req, res);
-}));
+app.post('/api/auth/reset-password', asyncHandler(resetPasswordHandler));
 
-app.get('/api/spots/search', asyncHandler((req: any, res: any) => {
-    return searchHandler(req, res);
-}));
+app.get('/api/spots/search', asyncHandler(searchHandler));
 
-app.post('/api/bookings/create', asyncHandler((req: any, res: any) => {
-    return createBookingHandler(req, res);
-}));
+app.post('/api/bookings/create', asyncHandler(createBookingHandler));
 
-app.post('/api/payments/checkout', asyncHandler((req: any, res: any) => {
-    return checkoutHandler(req, res);
-}));
+app.post('/api/payments/checkout', asyncHandler(checkoutHandler));
 
-app.post('/api/payments/webhook', asyncHandler((req: any, res: any) => {
-    return webhookHandler(req, res);
-}));
+app.post('/api/payments/webhook', asyncHandler(webhookHandler));
 
-app.get('/api/buildings', asyncHandler((req: any, res: any) => {
-    return listBuildingsHandler(req, res);
-}));
+app.get('/api/buildings', asyncHandler(listBuildingsHandler));
 
-app.get('/api/admin/stats', asyncHandler((req: any, res: any) => {
-    return statsHandler(req, res);
-}));
+app.get('/api/admin/stats', asyncHandler(statsHandler));
 
-app.put('/api/admin/prices', asyncHandler((req: any, res: any) => {
-    return pricesHandler(req, res);
-}));
+app.put('/api/admin/prices', asyncHandler(pricesHandler));
 
 import buildingsAdminHandler from './api/admin/buildings.js';
-app.all('/api/admin/buildings', asyncHandler((req: any, res: any) => {
-    return buildingsAdminHandler(req, res);
-}));
+app.all('/api/admin/buildings', asyncHandler(buildingsAdminHandler));
 
 import conciergeDashboardHandler from './api/concierge/dashboard.js';
 import conciergeVerifyHandler from './api/concierge/verify.js';
 
-app.get('/api/concierge/dashboard', asyncHandler((req: any, res: any) => {
-    return conciergeDashboardHandler(req, res);
-}));
+app.get('/api/concierge/dashboard', asyncHandler(conciergeDashboardHandler));
 
-app.post('/api/concierge/verify', asyncHandler((req: any, res: any) => {
-    return conciergeVerifyHandler(req, res);
-}));
+app.post('/api/concierge/verify', asyncHandler(conciergeVerifyHandler));
 
-app.get('/api/cron/worker', asyncHandler((req: any, res: any) => {
-    return workerHandler(req, res);
-}));
+app.get('/api/cron/worker', asyncHandler(workerHandler));
 
-app.get('/api/cron/reconcile', asyncHandler((req: any, res: any) => {
-    return reconcileHandler(req, res);
-}));
+app.get('/api/cron/reconcile', asyncHandler(reconcileHandler));
 
 // Admin Dashboard
-app.get('/api/admin/analytics', asyncHandler((req: any, res: any) => {
-    return adminAnalyticsHandler(req, res);
-}));
+app.get('/api/admin/analytics', asyncHandler(adminAnalyticsHandler));
 
-app.all('/api/admin/users', asyncHandler((req: any, res: any) => {
-    return adminUsersHandler(req, res);
-}));
+app.all('/api/admin/users', asyncHandler(adminUsersHandler));
 
 import salesDashboardHandler from './api/sales/dashboard.js';
 import salesBuildingsHandler from './api/sales/buildings.js';
 
-app.get('/api/sales/dashboard', asyncHandler((req: any, res: any) => {
-    return salesDashboardHandler(req, res);
-}));
+app.get('/api/sales/dashboard', asyncHandler(salesDashboardHandler));
 
-app.get('/api/sales/buildings', asyncHandler((req: any, res: any) => {
-    return salesBuildingsHandler(req, res);
-}));
+app.get('/api/sales/buildings', asyncHandler(salesBuildingsHandler));
 
-app.get('/api/health', asyncHandler((req: any, res: any) => {
-    return healthHandler(req, res);
-}));
+app.get('/api/health', asyncHandler(healthHandler));
 
 // Global Error Handler
-app.use(errorHandler as any);
+app.use(errorHandler);
 
 export { app };

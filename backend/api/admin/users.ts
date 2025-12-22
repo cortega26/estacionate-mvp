@@ -3,7 +3,7 @@ import { db } from '../../lib/db.js'
 import cors from '../../lib/cors.js'
 import { verifyToken, getTokenFromRequest } from '../../services/auth.js'
 import { z } from 'zod'
-import { Prisma } from '@prisma/client'
+import { Prisma, Role } from '@prisma/client'
 
 const updateUserSchema = z.object({
     userId: z.string(),
@@ -49,29 +49,30 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                         { phone: { contains: search, mode: Prisma.QueryMode.insensitive } }
                     ]
                 } : {}),
-                ...(role ? { role: role as any } : {})
+                ...(role ? { role: role as Prisma.EnumRoleFilter } : {})
             }
 
 
-            const users = await db.user.findMany({
-                where: whereClause,
-                take: limit,
-                skip: (page - 1) * limit,
-                select: {
-                    id: true,
-                    email: true,
-                    role: true,
-                    isActive: true,
-                    createdAt: true,
-                    building: {
-                        select: { name: true }
-                    }
-                },
-                orderBy: { createdAt: 'desc' }
-            })
 
-
-            const total = await db.user.count({ where: whereClause })
+            const [users, total] = await Promise.all([
+                db.user.findMany({
+                    where: whereClause,
+                    take: limit,
+                    skip: (page - 1) * limit,
+                    select: {
+                        id: true,
+                        email: true,
+                        role: true,
+                        isActive: true,
+                        createdAt: true,
+                        building: {
+                            select: { name: true }
+                        }
+                    },
+                    orderBy: { createdAt: 'desc' }
+                }),
+                db.user.count({ where: whereClause })
+            ]);
 
             return res.status(200).json({
                 success: true,
@@ -103,7 +104,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             const newUser = await db.user.create({
                 data: {
                     email: body.email,
-                    role: body.role as any,
+                    role: body.role as Role,
                     passwordHash,
                     isActive: true
                 },
@@ -122,14 +123,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         if (req.method === 'PATCH') {
             const body = updateUserSchema.parse(req.body)
 
-            const updateData: any = {}
+            const updateData: Prisma.UserUpdateInput = {}
             if (body.action === 'ban') updateData.isActive = false
             if (body.action === 'unban') updateData.isActive = true
             if (body.action === 'promote_admin') updateData.role = 'admin'
             if (body.action === 'demote_admin') updateData.role = 'building_admin' // Or support
             if (body.action === 'assign_building') {
                 if (!body.buildingId) return res.status(400).json({ error: 'Building ID required' })
-                updateData.buildingId = body.buildingId
+                updateData.building = { connect: { id: body.buildingId } }
             }
 
             const updatedUser = await db.user.update({
@@ -140,8 +141,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             return res.status(200).json({ success: true, user: updatedUser })
         }
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('User Management Error:', error)
-        return res.status(500).json({ error: error.issues || 'Internal Server Error' })
+        if (error instanceof z.ZodError) return res.status(500).json({ error: error.issues })
+        return res.status(500).json({ error: 'Internal Server Error' })
     }
 }

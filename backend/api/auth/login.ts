@@ -1,6 +1,8 @@
+
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { z } from 'zod'
 import { db } from '../../lib/db.js'
+import { Prisma } from '@prisma/client'
 import { comparePassword, signToken } from '../../services/auth.js'
 import { serialize } from 'cookie'
 import cors from '../../lib/cors.js'
@@ -45,11 +47,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             });
         }
 
+
         const isValid = await comparePassword(password, resident.passwordHash)
+
         if (!isValid) {
             // Increment Failed Attempts
             const attempts = resident.failedLoginAttempts + 1
-            const data: any = { failedLoginAttempts: attempts }
+            const data: Prisma.ResidentUpdateInput = { failedLoginAttempts: attempts }
 
             if (attempts >= MAX_ATTEMPTS) {
                 const lockout = new Date()
@@ -85,8 +89,31 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             });
         }
 
-        // ... (Token generation)
 
+        const token = signToken({
+            userId: resident.id,
+            buildingId: resident.unit?.buildingId, // Ensure unit is included in findUnique
+            role: 'RESIDENT'
+        })
+
+        const serialized = serialize('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            maxAge: 60 * 60 * 24 * 7,
+            path: '/'
+        })
+        res.setHeader('Set-Cookie', serialized)
+
+        return res.status(200).json({
+            success: true,
+            user: {
+                id: resident.id,
+                email: resident.email,
+                role: 'RESIDENT',
+                isAuthenticated: true
+            }
+        })
     }
 
     // 2. Try Admin/User Login
@@ -111,7 +138,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const isValid = await comparePassword(password, user.passwordHash)
     if (!isValid) {
         const attempts = user.failedLoginAttempts + 1
-        const data: any = { failedLoginAttempts: attempts }
+        const data: Prisma.UserUpdateInput = { failedLoginAttempts: attempts }
 
         if (attempts >= MAX_ATTEMPTS) {
             const lockout = new Date()

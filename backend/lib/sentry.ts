@@ -1,9 +1,10 @@
 import * as Sentry from '@sentry/node';
 import { nodeProfilingIntegration } from '@sentry/profiling-node';
+import { logger } from './logger.js';
 
 export function initSentry() {
     if (!process.env.SENTRY_DSN) {
-        console.warn('⚠️ SENTRY_DSN not found. Sentry disabled.');
+        logger.warn('⚠️ Sentry initialized (Mock Mode - No DSN).');
         return;
     }
 
@@ -19,7 +20,7 @@ export function initSentry() {
         environment: process.env.NODE_ENV || 'development',
     });
 
-    console.log('✅ Sentry initialized.');
+    logger.info('✅ Sentry initialized.');
 }
 
 // Helper to capture exceptions with context

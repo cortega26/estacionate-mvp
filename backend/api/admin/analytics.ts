@@ -2,7 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { db } from '../../lib/db.js'
 import cors from '../../lib/cors.js'
 import { verifyToken, getTokenFromRequest } from '../../services/auth.js'
-import { subDays, format, startOfDay, endOfDay } from 'date-fns'
+import { subDays, format } from 'date-fns'
 import { BookingStatus } from '@prisma/client'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -97,7 +97,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             // fast ISO slice (approx UTC, assuming usage) - verify timezone requirements?
             // Existing code used `format(b.createdAt, ...)` which is correct but slow.
             // Let's keep it correct.
-            const dateStr = format(b.createdAt, 'yyyy-MM-dd')
+            const dateStr = format(b.createdAt as unknown as Date, 'yyyy-MM-dd')
             if (dailyStats.has(dateStr)) {
                 const entry = dailyStats.get(dateStr)!
                 entry.revenue += b.amountClp
@@ -118,7 +118,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             }
         })
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Analytics Error:', error)
         return res.status(500).json({ error: 'Internal Server Error' })
     }

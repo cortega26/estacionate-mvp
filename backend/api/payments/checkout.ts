@@ -30,7 +30,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         // Create Payment Record (Pending)
         // Upsert to handle retries?
         // Create or Update Payment Record
-        const payment = await db.payment.upsert({
+        const _payment = await db.payment.upsert({
             where: { bookingId: booking.id },
             update: {
                 // If retrying, maybe update timestamp or status if needed. 
@@ -86,7 +86,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             sandbox_init_point: result.sandbox_init_point
         })
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         if (error instanceof z.ZodError) {
             return res.status(400).json({ error: error.errors })
         }

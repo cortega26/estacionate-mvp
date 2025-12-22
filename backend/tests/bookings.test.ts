@@ -77,9 +77,9 @@ describe('Booking Flow (Integration)', () => {
             });
             unitId = unit.id;
 
-            // Hash password manually
-            const bcrypt = await import('bcryptjs');
-            const passwordHash = await bcrypt.hash('password123', 10);
+            // Hash password using service to ensure consistency
+            const { hashPassword } = await import('../services/auth.js');
+            const passwordHash = await hashPassword('password123');
 
             await prisma.resident.create({
                 data: {
@@ -96,13 +96,22 @@ describe('Booking Flow (Integration)', () => {
             const loginRes = await axios.post(`${API_URL}/api/auth/login`, {
                 email,
                 password: 'password123'
-            });
+            }); // Revert validateStatus
+
+            if (loginRes.status !== 200) {
+                console.error('LOGIN FAILED:', loginRes.status, loginRes.data);
+            }
+
             const cookies = loginRes.headers['set-cookie'];
             if (cookies) {
-                const tokenCookie = cookies.find(c => c.startsWith('token='));
+                const tokenCookie = cookies.find((c: any) => c.startsWith('token='));
                 if (tokenCookie) {
                     token = tokenCookie.split(';')[0].replace('token=', '');
                 }
+            }
+
+            if (!token) {
+                throw new Error(`DEBUG: Token missing. Login Status: ${loginRes.status}. Headers: ${JSON.stringify(loginRes.headers)}`);
             }
 
             // 3. Create Spot & Availability Block directly in DB
@@ -179,13 +188,19 @@ describe('Booking Flow (Integration)', () => {
     });
 
     it('should create a booking successfully', async () => {
-        const res = await axios.post(`${API_URL}/api/bookings/create`, {
-            blockId,
-            vehiclePlate: 'TEST-99',
-            visitorName: 'Vitest Visitor'
-        }, {
-            headers: { Authorization: `Bearer ${token}` }
-        });
+        let res;
+        try {
+            res = await axios.post(`${API_URL}/api/bookings/create`, {
+                blockId,
+                vehiclePlate: 'TEST-99',
+                visitorName: 'Vitest Visitor'
+            }, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+        } catch (error: any) {
+            console.error('CREATE BOOKING FAILED:', error.response?.status, error.response?.data);
+            throw error;
+        }
 
         expect(res.status).toBe(201);
         expect(res.data.booking.id).toBeDefined();

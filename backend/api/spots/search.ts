@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { z } from 'zod'
 import { db } from '../../lib/db.js'
+import { Prisma } from '@prisma/client'
 import { fromZonedTime } from 'date-fns-tz'
 import cors from '../../lib/cors.js'
 
@@ -19,7 +20,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         // Basic query parsing (req.query values are strings)
         const buildingId = req.query.buildingId as string
         const date = req.query.date as string
-        const durationType = req.query.durationType as any
+        const durationType = req.query.durationType as string | undefined
 
         const query = searchSchema.parse({
             buildingId,
@@ -28,7 +29,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         })
 
         // Filter Logic
-        const whereClause: any = {
+        const whereClause: Prisma.AvailabilityBlockWhereInput = {
             status: 'available',
             spot: {
                 buildingId: query.buildingId
@@ -76,7 +77,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         return res.status(200).json({ success: true, data: blocks })
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         if (error instanceof z.ZodError) {
             return res.status(400).json({ error: error.errors })
         }

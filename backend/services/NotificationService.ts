@@ -1,4 +1,5 @@
 import { sendWhatsAppMessage } from './twilio.js';
+import { logger } from '../lib/logger.js';
 
 
 interface BookingDetails {
@@ -16,7 +17,7 @@ export class NotificationService {
         // Production / Staging: Send real message
         // Local: Log it unless FORCE_REAL_SMS is set
         if (process.env.NODE_ENV !== 'production' && !process.env.FORCE_REAL_SMS) {
-            console.log(`[Mock WhatsApp] To: ${to}, Body: ${body}`);
+            logger.info(`[Mock WhatsApp] To: ${to}, Body: ${body}`);
             return;
         }
 

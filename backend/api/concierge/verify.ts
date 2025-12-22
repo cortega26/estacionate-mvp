@@ -80,7 +80,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             }
         })
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         if (error instanceof z.ZodError) {
             return res.status(400).json({ error: error.errors })
         }

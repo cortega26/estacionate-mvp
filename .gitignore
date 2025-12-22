@@ -5,6 +5,8 @@ node_modules
 
 # Testing
 coverage
+*_output.txt
+backend/coverage.txt
 
 # Production
 build

@@ -4,7 +4,7 @@ import request from 'supertest';
 import { app } from '../app.js';
 import { db } from '../lib/db.js';
 import { signToken } from '../services/auth.js';
-import { SalesService } from '../services/salesService.js';
+import { SalesService } from '../services/SalesService.js';
 
 
 describe('Sales System & Admin User Management', () => {

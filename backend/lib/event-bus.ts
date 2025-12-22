@@ -1,6 +1,7 @@
 
 import { db, ActorType } from './db.js';
 import { publisher, subscriber, connectPubSub } from './redis-pubsub.js';
+import { logger } from './logger.js';
 
 export enum EventType {
     // System Events
@@ -77,7 +78,7 @@ export class EventBus {
                 if (err) console.error('[EventBus] Redis Subscribe Error:', err);
                 else {
                     this.isRedisConnected = true;
-                    console.log(`[EventBus] Subscribed to ${CHANNEL_NAME} as ${INSTANCE_ID}`);
+                    logger.info(`[EventBus] Subscribed to ${CHANNEL_NAME} as ${INSTANCE_ID}`);
                 }
             });
 

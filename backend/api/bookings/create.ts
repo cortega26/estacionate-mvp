@@ -1,4 +1,5 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node'
+import type { VercelResponse } from '@vercel/node'
+import type { AuthenticatedRequest } from '../../types/express-shim.js'
 import { z } from 'zod'
 import { db, ActorType } from '../../lib/db.js'
 import { verifyToken, getTokenFromRequest } from '../../services/auth.js'
@@ -14,9 +15,9 @@ const createBookingSchema = z.object({
     visitorPhone: z.string().optional()
 })
 
-const AUTH_HEADER = 'authorization'
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+
+export default async function handler(req: AuthenticatedRequest, res: VercelResponse) {
     await cors(req, res)
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
 
@@ -28,7 +29,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (!user) return res.status(401).json({ error: 'Invalid token' })
 
     // Only residents can create bookings for themselves
-    if (user.role !== 'resident') {
+    if (user.role !== 'RESIDENT') {
         return res.status(403).json({ error: 'Only residents can make bookings' })
     }
 
@@ -72,7 +73,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         });
 
         if (bans.length > 0) {
-            const reasons = bans.map((b: any) => b.reason).filter(Boolean).join(', ');
+            const reasons = bans.map((b) => b.reason).filter(Boolean).join(', ');
             return res.status(403).json({
                 error: 'Booking Blocked',
                 message: `You or this vehicle are on a blocklist. Reason: ${reasons || 'Security Policy'}`
@@ -252,22 +253,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         return res.status(201).json({ success: true, booking })
 
     } catch (error: any) {
-        if (error.message === 'BLOCK_UNAVAILABLE') {
+        const err = error as Error & { code?: string };
+        if (err.message === 'BLOCK_UNAVAILABLE') {
             return res.status(409).json({ error: 'Spot is no longer available' })
         }
-        if (error.message === 'DOUBLE_BOOKING_DETECTED') {
+        if (err.message === 'DOUBLE_BOOKING_DETECTED') {
             return res.status(409).json({ error: 'Double Booking Detected' })
         }
-        if (error.message === 'PAST_TIME') {
+        if (err.message === 'PAST_TIME') {
             return res.status(400).json({ error: 'Cannot book past dates' })
         }
-        if (error.message === 'BUILDING_MISMATCH') {
+        if (err.message === 'BUILDING_MISMATCH') {
             return res.status(403).json({ error: 'You can only book spots in your own building' })
         }
         if (error instanceof z.ZodError) {
             return res.status(400).json({ error: error.errors })
         }
-        if (error.code === 'P2003') {
+        if (err.code === 'P2003') {
             return res.status(400).json({ error: 'Invalid Resident ID' })
         }
         console.error(error)

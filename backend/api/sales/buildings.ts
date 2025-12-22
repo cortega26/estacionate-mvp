@@ -1,5 +1,5 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { SalesService } from '../../services/salesService.js';
+import { SalesService } from '../../services/SalesService.js';
 import { verifyToken } from '../../services/auth.js';
 import { AppError, ErrorCode } from '../../lib/errors.js';
 

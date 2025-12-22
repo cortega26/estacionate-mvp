@@ -98,7 +98,7 @@ describe('Coverage Gap Fillers', () => {
             });
 
         expect(res.status).toBe(403);
-        expect(res.body.error || res.body.message).toMatch(/unavailable|inactive|not allowed/i);
+        expect(res.body.error || res.body.message).toMatch(/unavailable|inactive|inactiva|not allowed/i);
     });
 
     it('should reject booking in the past (PAST_TIME)', async () => {
@@ -165,6 +165,6 @@ describe('Coverage Gap Fillers', () => {
 
         // Expect 403 (Forbidden)
         expect(res.status).toBe(403);
-        expect(res.body.error || res.body.message).toMatch(/inactive|forbidden|not allowed/i);
+        expect(res.body.error || res.body.message).toMatch(/inactive|inactiva|forbidden|not allowed/i);
     });
 });

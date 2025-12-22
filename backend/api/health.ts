@@ -19,9 +19,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     try {
         await db.$queryRaw`SELECT 1`;
         health.database = 'connected';
-    } catch (error: any) {
+    } catch (error: unknown) {
         health.database = 'disconnected';
-        logger.error({ error: error.message }, 'Health Check: database fail');
+        const msg = error instanceof Error ? error.message : String(error)
+        logger.error({ error: msg }, 'Health Check: database fail');
         status = 503;
     }
 
@@ -34,9 +35,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             health.redis = `disconnected (${redis.status})`;
             status = 503;
         }
-    } catch (error: any) {
+    } catch (error: unknown) {
         health.redis = 'error';
-        logger.error({ error: error.message }, 'Health Check: redis fail');
+        const msg = error instanceof Error ? error.message : String(error)
+        logger.error({ error: msg }, 'Health Check: redis fail');
         status = 503;
     }
 

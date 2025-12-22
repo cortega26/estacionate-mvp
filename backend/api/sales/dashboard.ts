@@ -1,15 +1,16 @@
-import { VercelRequest, VercelResponse } from '@vercel/node';
-import { SalesService } from '../../services/salesService.js';
-import { verifyToken } from '../../services/auth.js';
+import { VercelResponse } from '@vercel/node';
+import type { AuthenticatedRequest } from '../../types/express-shim.js';
+import { SalesService } from '../../services/SalesService.js';
+import { verifyToken, getTokenFromRequest } from '../../services/auth.js';
 import { AppError, ErrorCode } from '../../lib/errors.js';
 import { logger } from '../../lib/logger.js';
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(req: AuthenticatedRequest, res: VercelResponse) {
     if (req.method !== 'GET') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    const token = req.headers.authorization?.split(' ')[1];
+    const token = getTokenFromRequest(req);
     if (!token) throw AppError.unauthorized(ErrorCode.AUTH_NO_TOKEN, 'Missing token');
 
     const decoded = verifyToken(token);

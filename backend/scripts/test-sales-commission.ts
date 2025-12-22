@@ -1,9 +1,9 @@
- 
- 
+
+
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
 import { db } from '../lib/db.js';
-import { SalesService } from '../services/salesService.js';
+import { SalesService } from '../services/SalesService.js';
 import { hashPassword } from '../services/auth.js';
 
 async function main() {

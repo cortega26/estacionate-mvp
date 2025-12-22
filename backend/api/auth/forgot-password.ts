@@ -33,7 +33,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         // Always return success to prevent enumeration
         return res.status(200).json({ success: true, message: 'If an account exists, a recovery code has been sent.' })
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         if (error instanceof z.ZodError) return res.status(400).json({ error: error.errors })
         console.error('Forgot Password Error:', error)
         return res.status(500).json({ error: 'Internal Server Error' })
@@ -41,7 +41,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 }
 
 async function handleRecovery(id: string, phone: string, type: 'resident' | 'user') {
-    const token = uuidv4().split('-')[0].toUpperCase(); // Short code for SMS/WhatsApp friendly (e.g. A1B2C3)
+    const _token = uuidv4().split('-')[0].toUpperCase(); // Short code for SMS/WhatsApp friendly (e.g. A1B2C3)
     // Actually full UUID might be safer but harder to type. Let's stick to short 6-char for MVP WhatsApp friendly.
     // Or generated 6-digit numeric.
     const shortCode = Math.floor(100000 + Math.random() * 900000).toString();

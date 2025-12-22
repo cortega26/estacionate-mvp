@@ -20,7 +20,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const user = verifyToken(token)
     if (!user) return res.status(401).json({ error: 'Invalid token' })
 
-    if (!user || typeof user !== 'object' || !['admin', 'building_admin'].includes((user as any).role)) {
+    if (!user || typeof user !== 'object' || !['admin', 'building_admin'].includes(user.role || '')) {
         return res.status(403).json({ error: 'Forbidden' })
     }
 
@@ -65,7 +65,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             updatedCount: updateResult.count
         })
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         if (error instanceof z.ZodError) {
             return res.status(400).json({ error: error.errors })
         }

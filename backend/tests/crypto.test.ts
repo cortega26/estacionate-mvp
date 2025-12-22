@@ -31,7 +31,9 @@ describe('Encryption Lib (AES-GCM)', () => {
         const valid = await encrypt('data');
         // Tamper with ciphertext
         const [iv, cipher] = valid.split(':');
-        const tampered = `${iv}:${cipher.replace('a', 'b')}`; // slightly change hex
+        const lastChar = cipher.slice(-1);
+        const newChar = lastChar === '0' ? '1' : '0'; // flip a bit/char guaranteed
+        const tampered = `${iv}:${cipher.slice(0, -1) + newChar}`;
 
         const decrypted = await decrypt(tampered);
         expect(decrypted).toBeNull();

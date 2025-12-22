@@ -1,3 +1,4 @@
+import { logger } from '../lib/logger.js';
 import twilio from 'twilio';
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
@@ -21,7 +22,7 @@ export async function sendWhatsAppMessage(to: string, body: string): Promise<boo
     const formattedTo = to.startsWith('whatsapp:') ? to : `whatsapp:${to}`;
 
     if (!client) {
-        console.log(`[MOCK WHATSAPP] To: ${formattedTo} | Body: ${body}`);
+        logger.info(`[MOCK WHATSAPP] To: ${formattedTo} | Body: ${body}`);
         return true;
     }
 
