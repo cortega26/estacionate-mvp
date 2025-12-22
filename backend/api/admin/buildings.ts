@@ -28,6 +28,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 }
             });
 
+            const isBrief = req.query.brief === 'true';
+            if (isBrief) {
+                const data = buildings.map(b => ({
+                    id: b.id,
+                    name: b.name,
+                    salesRepId: b.salesRepId,
+                    salesRepCommissionRate: b.salesRepCommissionRate,
+                    salesRep: b.salesRep
+                }));
+                return res.status(200).json({ success: true, data });
+            }
+
             // Calculate revenue per building (MVP: In-memory aggregation for now)
             // Ideally this should be a raw SQL query for performance
             const bookings = await db.booking.findMany({

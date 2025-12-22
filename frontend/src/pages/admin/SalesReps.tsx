@@ -38,7 +38,7 @@ const SalesRepsPage = () => {
     const { data: buildingsData, isLoading: isLoadingBuildings } = useQuery({
         queryKey: ['admin-buildings'],
         queryFn: async () => {
-            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/buildings`, {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/buildings?brief=true`, {
                 credentials: 'include'
             });
             return res.json();
