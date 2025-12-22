@@ -102,6 +102,8 @@ const SalesRepsPage = () => {
     const salesReps = usersData?.data || [];
     const buildings = buildingsData?.data || [];
 
+
+
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
@@ -225,7 +227,7 @@ const ManageRepBuildings = ({ rep, assignedBuildings, allBuildings, onUpdate }: 
     const [selectedBuildingId, setSelectedBuildingId] = useState('');
     const [commissionRate, setCommissionRate] = useState(0.05);
 
-    const availableBuildings = allBuildings.filter((b: Building) => !b.salesRepId || b.salesRepId === rep.id);
+    // const availableBuildings = allBuildings.filter((b: Building) => !b.salesRepId || b.salesRepId === rep.id);
 
     const handleAssign = () => {
         if (!selectedBuildingId) return;
