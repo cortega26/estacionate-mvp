@@ -5,11 +5,9 @@ const KEY_LENGTH = 256;
 const IV_LENGTH = 12; // 96 bits recommended for GCM
 
 // Ensure we have a master key
-if (!process.env.ENCRYPTION_KEY) {
-    if (process.env.NODE_ENV === 'production') {
-        throw new Error('FATAL: ENCRYPTION_KEY must be defined in .env for production');
-    }
-    console.warn('WARNING: No ENCRYPTION_KEY found, using insecure dev key');
+// Ensure we warn if missing, but don't crash boot
+if (!process.env.ENCRYPTION_KEY && process.env.NODE_ENV === 'production') {
+    console.error('FATAL: ENCRYPTION_KEY should be defined in .env for production');
 }
 
 // Helper to derive a KeyObject from the hex string

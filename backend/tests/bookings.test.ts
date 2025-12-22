@@ -5,7 +5,7 @@ import crypto from 'crypto';
 import type { Server } from 'http';
 
 // Mock Redis to prevent connection errors during tests
-vi.mock('../lib/redis.js', () => ({
+vi.mock('../src/lib/redis.js', () => ({
     redis: {
         status: 'ready',
         incr: vi.fn().mockResolvedValue(1),
@@ -78,7 +78,7 @@ describe('Booking Flow (Integration)', () => {
             unitId = unit.id;
 
             // Hash password using service to ensure consistency
-            const { hashPassword } = await import('../services/auth.js');
+            const { hashPassword } = await import('../src/services/auth.js');
             const passwordHash = await hashPassword('password123');
 
             await prisma.resident.create({
@@ -331,7 +331,7 @@ describe('Booking Flow (Integration)', () => {
     });
 
     it('should prevent non-residents from booking', async () => {
-        const adminToken = (await import('../services/auth.js')).signToken({
+        const adminToken = (await import('../src/services/auth.js')).signToken({
             userId: '00000000-0000-0000-0000-000000000000',
             role: 'admin',
             buildingId: 'any'

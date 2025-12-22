@@ -28,13 +28,13 @@ const mockTx = {
     }
 }
 
-vi.mock('../lib/db.js', () => ({
+vi.mock('../src/lib/db.js', () => ({
     db: {
         $transaction: async (cb: any) => cb(mockTx)
     }
 }))
 
-vi.mock('../services/auth.js', () => ({
+vi.mock('../src/services/auth.js', () => ({
     getTokenFromRequest: vi.fn().mockReturnValue('token'),
     // Mock user as resident (buildingId match for IDOR check)
     verifyToken: vi.fn().mockReturnValue({
@@ -44,11 +44,11 @@ vi.mock('../services/auth.js', () => ({
     })
 }))
 
-vi.mock('../lib/cors.js', () => ({
+vi.mock('../src/lib/cors.js', () => ({
     default: vi.fn()
 }))
 
-vi.mock('../lib/domain/pricing.js', () => ({
+vi.mock('../src/lib/domain/pricing.js', () => ({
     calculateBookingPricing: vi.fn().mockReturnValue({
         totalAmountClp: 5000,
         commissionClp: 500,
@@ -56,7 +56,7 @@ vi.mock('../lib/domain/pricing.js', () => ({
     })
 }))
 
-import createBookingHandler from '../api/bookings/create.js'
+import createBookingHandler from '../src/api/bookings/create.js'
 
 describe.skip('Audit: Business Logic Safety', () => {
 

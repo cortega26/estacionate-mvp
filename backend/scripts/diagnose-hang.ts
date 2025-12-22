@@ -9,18 +9,18 @@ async function diagnose() {
     console.log('2. Importing Libs');
     try {
         console.log('   > Importing crypto...');
-        await import('../lib/crypto.js');
+        await import('../src/lib/crypto.js');
         console.log('   < Crypto OK');
 
         console.log('   > Importing logger...');
-        await import('../lib/logger.js');
+        await import('../src/lib/logger.js');
         console.log('   < Logger OK');
     } catch (e) { console.error('   LIB ERROR:', e); }
 
     console.log('3. Importing Services');
     try {
         console.log('   > Importing Auth Service...');
-        await import('../services/auth.js');
+        await import('../src/services/auth.js');
         console.log('   < Auth Service OK');
     } catch (e) { console.error('   AUTH SERVICE ERROR:', e); }
 

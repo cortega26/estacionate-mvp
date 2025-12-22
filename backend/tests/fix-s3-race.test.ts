@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { PrismaClient, DurationType } from '@prisma/client';
-import { calculateBookingPricing } from '../lib/domain/pricing.js';
+import { calculateBookingPricing } from '../src/lib/domain/pricing.js';
 import crypto from 'crypto';
 
 // We need a real DB connection for concurrency testing

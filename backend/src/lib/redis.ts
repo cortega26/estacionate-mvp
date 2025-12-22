@@ -1,7 +1,7 @@
 import { Redis } from 'ioredis';
 import { logger } from './logger.js';
 
-const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
+const redisUrl = process.env.REDIS_URL || process.env.KV_URL || 'redis://localhost:6379';
 
 export const redis = new Redis(redisUrl, {
     maxRetriesPerRequest: 3,

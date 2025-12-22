@@ -2,9 +2,9 @@
 
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
-import { db } from '../lib/db.js';
-import { SalesService } from '../services/SalesService.js';
-import { hashPassword } from '../services/auth.js';
+import { db } from '../src/lib/db.js';
+import { SalesService } from '../src/services/SalesService.js';
+import { hashPassword } from '../src/services/auth.js';
 
 async function main() {
     console.log('Testing Sales Commission Logic...');

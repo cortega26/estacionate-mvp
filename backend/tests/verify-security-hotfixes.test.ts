@@ -12,7 +12,7 @@ const mockReq = (method: string, headers: any = {}, body: any = {}) => ({
 })
 
 // Mock Modules
-vi.mock('../lib/db.js', () => ({
+vi.mock('../src/lib/db.js', () => ({
     db: {
         availabilityBlock: {
             updateMany: vi.fn().mockResolvedValue({ count: 1 }),
@@ -33,20 +33,20 @@ vi.mock('../lib/db.js', () => ({
     }
 }))
 
-vi.mock('../services/auth.js', () => ({
+vi.mock('../src/services/auth.js', () => ({
     getTokenFromRequest: vi.fn(),
     verifyToken: vi.fn()
 }))
 
-vi.mock('../lib/cors.js', () => ({
+vi.mock('../src/lib/cors.js', () => ({
     default: vi.fn()
 }))
 
 // Import handlers (using require to allow rehashing mocks if needed, but import works too)
-import adminPricesHandler from '../api/admin/prices.js'
-import createBookingHandler from '../api/bookings/create.js'
-import { getTokenFromRequest, verifyToken } from '../services/auth.js'
-import { db } from '../lib/db.js'
+import adminPricesHandler from '../src/api/admin/prices.js'
+import createBookingHandler from '../src/api/bookings/create.js'
+import { getTokenFromRequest, verifyToken } from '../src/services/auth.js'
+import { db } from '../src/lib/db.js'
 
 describe('Security Hotfixes Verification', () => {
 

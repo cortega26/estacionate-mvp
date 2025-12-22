@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { db } from '../../lib/db.js';
+import { db } from '../../src/lib/db.js';
 import { DurationType } from '@prisma/client';
 import { startOfYesterday, endOfYesterday, subDays } from 'date-fns';
-import handler from '../../api/cron/reconcile.js';
+import handler from '../../src/api/cron/reconcile.js';
 
 // Mock Response
 const mockRes = () => {

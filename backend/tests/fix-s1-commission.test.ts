@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { calculateBookingPricing } from '../lib/domain/pricing.js'
+import { calculateBookingPricing } from '../src/lib/domain/pricing.js'
 
 describe('S1 Fix: Commission Logic', () => {
     it('should calculate commission based on dynamic rate provided', () => {

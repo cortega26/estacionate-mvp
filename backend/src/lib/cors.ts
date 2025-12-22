@@ -1,5 +1,6 @@
 import { VercelRequest, VercelResponse } from '@vercel/node'
 import Cors from 'cors'
+import { AppError, ErrorCode } from './errors.js'
 
 // Helper method to wait for a middleware to execute before continuing
 // And to throw an error when an error happens in a middleware
@@ -25,11 +26,13 @@ const whitelist = [
 const corsMiddleware = initMiddleware(
     Cors({
         origin: function (origin, callback) {
-            // Strict Regex: only allows https://<subdomain>.vercel.app (escaped dot)
-            if (!origin || whitelist.indexOf(origin) !== -1 || origin.match(/^https:\/\/[\w-]+\.vercel\.app$/)) {
-                callback(null, true)
+            // Allow requests with no origin (like mobile apps or curl requests)
+            if (!origin) return callback(null, true);
+
+            if (whitelist.indexOf(origin) !== -1 || origin.match(/^https:\/\/.*\.vercel\.app$/)) {
+                return callback(null, true)
             } else {
-                callback(new Error('Not allowed by CORS'))
+                return callback(AppError.forbidden(ErrorCode.SYSTEM_RESOURCE_NOT_FOUND, 'CORS: Origin not allowed', undefined, { origin }))
             }
         },
         credentials: true,

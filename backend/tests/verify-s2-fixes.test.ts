@@ -16,7 +16,7 @@ const mockReq = (body: any) => ({
 const mockResidentUpdate = vi.fn()
 const mockResidentFind = vi.fn()
 
-vi.mock('../lib/db', () => ({
+vi.mock('../src/lib/db', () => ({
     db: {
         resident: {
             findUnique: (...args: any[]) => mockResidentFind(...args),
@@ -28,14 +28,14 @@ vi.mock('../lib/db', () => ({
     }
 }))
 
-vi.mock('../services/auth.js', () => ({
+vi.mock('../src/services/auth.js', () => ({
     comparePassword: vi.fn(),
     signToken: vi.fn().mockReturnValue('mock-token'),
     getTokenFromRequest: vi.fn(),
     verifyToken: vi.fn()
 }))
 
-vi.mock('../lib/cors', () => ({
+vi.mock('../src/lib/cors', () => ({
     default: vi.fn()
 }))
 
@@ -43,8 +43,8 @@ vi.mock('cookie', () => ({
     serialize: vi.fn().mockReturnValue('cookie-string')
 }))
 
-import loginHandler from '../api/auth/login.js'
-import { comparePassword } from '../services/auth.js'
+import loginHandler from '../src/api/auth/login.js'
+import { comparePassword } from '../src/services/auth.js'
 
 describe('S2 Security Fixes Verification', () => {
 

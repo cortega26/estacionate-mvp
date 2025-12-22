@@ -3,7 +3,7 @@ import request from 'supertest';
 import { app } from '../app.js';
 import { PrismaClient } from '@prisma/client';
 import crypto from 'crypto';
-import { hashPII } from '../lib/crypto.js';
+import { hashPII } from '../src/lib/crypto.js';
 
 const prisma = new PrismaClient();
 

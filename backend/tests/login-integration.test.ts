@@ -1,14 +1,14 @@
 import { vi, describe, it, expect } from 'vitest';
-import loginHandler from '../api/auth/login.js';
+import loginHandler from '../src/api/auth/login.js';
 
 // Mock the cors helper to avoid dealing with network/middleware internals
-vi.mock('../lib/cors.js', () => ({
+vi.mock('../src/lib/cors.js', () => ({
     default: vi.fn().mockResolvedValue(true)
 }));
 
 // Mock DB to avoid needing a running database for this smoke test
 // We just want to verify the handler logic flow and lack of crashes
-vi.mock('../lib/db.js', () => ({
+vi.mock('../src/lib/db.js', () => ({
     db: {
         resident: {
             findUnique: vi.fn().mockResolvedValue(null) // Simulate user not found

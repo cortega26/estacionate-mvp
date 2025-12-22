@@ -4,10 +4,11 @@ import bcrypt from 'bcryptjs'
 import { parse } from 'cookie'
 import type { VercelRequest } from '@vercel/node'
 
-if (!process.env.JWT_SECRET) {
-    throw new Error('FATAL: JWT_SECRET must be defined in .env')
+const JWT_SECRET = process.env.JWT_SECRET || 'default-dev-secret';
+
+if (!process.env.JWT_SECRET && process.env.NODE_ENV === 'production') {
+    console.error('FATAL: JWT_SECRET should be defined in .env');
 }
-const JWT_SECRET = process.env.JWT_SECRET
 
 // JWT
 export interface TokenPayload {

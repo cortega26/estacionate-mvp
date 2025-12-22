@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { encrypt, decrypt } from '../lib/crypto.js';
+import { encrypt, decrypt } from '../src/lib/crypto.js';
 
 describe('Encryption Lib (AES-GCM)', () => {
     it('should encrypt and decrypt a string correctly', async () => {

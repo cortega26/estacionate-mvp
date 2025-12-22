@@ -4,7 +4,7 @@ import 'dotenv/config';
 
 async function run() {
     // Dynamic import to avoid top-level load execution
-    const { signToken } = await import('../services/auth.js');
+    const { signToken } = await import('../src/services/auth.js');
 
     // 1. Create Token
     const token = signToken({

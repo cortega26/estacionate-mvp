@@ -1,6 +1,6 @@
 
-import { EventBus, EventType, AuditEvent } from '../lib/event-bus.js';
-import { db, ActorType } from '../lib/db.js';
+import { EventBus, EventType, AuditEvent } from '../src/lib/event-bus.js';
+import { db, ActorType } from '../src/lib/db.js';
 
 async function main() {
     console.log('🧪 Starting Audit System Verification...');

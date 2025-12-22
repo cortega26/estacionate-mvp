@@ -17,7 +17,8 @@
     "test:coverage": "vitest run --coverage",
     "lint": "eslint .",
     "audit:arch": "npx depcruise --config .dependency-cruiser.cjs . --exclude \"node_modules|dist\"",
-    "check:all": "npm run lint && npm run build && npm run test && npm run audit:arch"
+    "check:all": "npm run lint && npm run build && npm run test && npm run audit:arch",
+    "postinstall": "npx prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",

@@ -2,9 +2,9 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import request from 'supertest';
 import { app } from '../app.js';
-import { db } from '../lib/db.js';
-import { signToken } from '../services/auth.js';
-import { SalesService } from '../services/SalesService.js';
+import { db } from '../src/lib/db.js';
+import { signToken } from '../src/services/auth.js';
+import { SalesService } from '../src/services/SalesService.js';
 
 
 describe('Sales System & Admin User Management', () => {

@@ -3,7 +3,7 @@ import request from 'supertest';
 import { app } from '../app.js'; // Ensure app export exists and doesn't auto-listen
 
 // Mock Redis to prevent connection errors during tests
-vi.mock('../lib/redis.js', () => ({
+vi.mock('../src/lib/redis.js', () => ({
     redis: {
         status: 'end',
         incr: vi.fn(),
