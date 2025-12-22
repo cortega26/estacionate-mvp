@@ -5,6 +5,7 @@ import { db } from '../lib/db.js';
 export default async function handler(req: VercelRequest, res: VercelResponse) {
     const health = {
         status: 'ok',
+        version: 'debug-2025-12-22-v1', // Tracer bullet
         timestamp: new Date().toISOString(),
         services: {
             database: 'unknown',
