@@ -1,18 +1,15 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
-import { useAuthStore } from '../../store/authStore';
+import { api } from '../../lib/api';
 
 const Analytics = () => {
     // Auth is handled via cookies
     const { data, isLoading, error } = useQuery({
         queryKey: ['admin-analytics'],
         queryFn: async () => {
-            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/analytics`, {
-                credentials: 'include'
-            });
-            if (!res.ok) throw new Error('Failed to fetch analytics');
-            return res.json();
+            const res = await api.get('/admin/analytics');
+            return res.data;
         }
     });
 
