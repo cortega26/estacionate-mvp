@@ -13,7 +13,7 @@ const updateUserSchema = z.object({
 
 const createUserSchema = z.object({
     email: z.string().email(),
-    password: z.string().min(6),
+    password: z.string().min(12, 'Password must be at least 12 characters'),
     role: z.enum(['admin', 'sales_rep', 'building_admin', 'support']).default('sales_rep'),
     firstName: z.string().optional(),
     lastName: z.string().optional()

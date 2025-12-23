@@ -4,12 +4,16 @@ import bcrypt from 'bcryptjs'
 import { parse } from 'cookie'
 import type { VercelRequest } from '@vercel/node'
 
-const JWT_SECRET = process.env.JWT_SECRET || 'default-dev-secret';
-
-if (!process.env.JWT_SECRET && process.env.NODE_ENV === 'production') {
-    console.error('FATAL: JWT_SECRET should be defined in .env');
-    process.exit(1);
+const secretEnv = process.env.JWT_SECRET;
+if (!secretEnv) {
+    if (process.env.NODE_ENV === 'production') {
+        console.error('FATAL: JWT_SECRET should be defined in .env');
+        process.exit(1);
+    } else {
+        throw new Error('Configuration Error: JWT_SECRET is missing');
+    }
 }
+const JWT_SECRET: string = secretEnv;
 
 // JWT
 export interface TokenPayload {
@@ -18,6 +22,9 @@ export interface TokenPayload {
     unitId?: string
     role?: string
 }
+
+// Generated valid bcrypt hash for timing mitigation
+export const DUMMY_HASH = '$2a$10$/oi3oafEvdOB2EHjAmzf/ui1MPuTo6Stjw7Q6mGztj/PdQmdCRuWS';
 
 export const signToken = (payload: TokenPayload, expiresIn: string | number = '7d') => {
     const signOptions: SignOptions = { expiresIn: expiresIn as any }

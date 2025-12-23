@@ -39,7 +39,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         }
 
         // Building Admin Restriction
-        if (requester.role === 'building_admin' && requester.buildingId) {
+        if (requester.role === 'building_admin') {
+            if (!requester.buildingId) {
+                // Critical Security Fix: Prevent unassigned admins from seeing all bookings
+                return res.status(403).json({ error: 'Building Admin has no assigned building' });
+            }
             // Enforce building filter
             whereClause.availabilityBlock = {
                 spot: { buildingId: requester.buildingId }
