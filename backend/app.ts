@@ -28,7 +28,7 @@ import compression from 'compression';
 import helmet from 'helmet';
 import { generalLimiter, authLimiter } from './src/middleware/rateLimiter.js';
 
-console.log("DEBUG: Initializing express app in app.ts");
+
 const app = express();
 
 // Request ID Middleware
@@ -102,7 +102,9 @@ app.post('/api/auth/signup', /* authLimiter, */ asyncHandler(signupHandler));
 app.post('/api/auth/forgot-password', asyncHandler(forgotPasswordHandler));
 app.post('/api/auth/reset-password', asyncHandler(resetPasswordHandler));
 app.get('/api/spots/search', asyncHandler(searchHandler));
+import cancelBookingHandler from './src/api/bookings/cancel.js';
 app.post('/api/bookings/create', asyncHandler(createBookingHandler));
+app.post('/api/bookings/cancel', asyncHandler(cancelBookingHandler));
 app.post('/api/payments/checkout', asyncHandler(checkoutHandler));
 app.post('/api/payments/webhook', asyncHandler(webhookHandler));
 app.get('/api/buildings', asyncHandler(listBuildingsHandler));
@@ -120,6 +122,10 @@ app.post('/api/concierge/verify', asyncHandler(conciergeVerifyHandler));
 app.get('/api/cron/worker', asyncHandler(workerHandler));
 app.get('/api/cron/reconcile', asyncHandler(reconcileHandler));
 app.get('/api/admin/analytics', asyncHandler(adminAnalyticsHandler));
+
+import adminBookingsHandler from './src/api/admin/bookings.js';
+app.get('/api/admin/bookings', asyncHandler(adminBookingsHandler));
+
 app.all('/api/admin/users', asyncHandler(adminUsersHandler));
 
 import salesDashboardHandler from './src/api/sales/dashboard.js';

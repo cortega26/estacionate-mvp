@@ -223,4 +223,31 @@ describe('Admin API Integration Tests', () => {
         const updatedBlock = await prisma.availabilityBlock.findUnique({ where: { id: blockId } });
         expect(updatedBlock?.basePriceClp).toBe(newPrice);
     });
+
+    // --- Bookings List API ---
+    it('should list bookings for Super Admin', async () => {
+        const res = await request(app)
+            .get('/api/admin/bookings')
+            .set('Authorization', `Bearer ${adminToken}`);
+
+        expect(res.status).toBe(200);
+        expect(res.body.success).toBe(true);
+        expect(Array.isArray(res.body.data)).toBe(true);
+        expect(res.body.data.length).toBeGreaterThan(0);
+        // Check fields
+        const booking = res.body.data[0];
+        expect(booking).toHaveProperty('visitorName');
+        expect(booking).toHaveProperty('amount');
+        expect(booking).toHaveProperty('status');
+    });
+
+    it('should filter bookings by status', async () => {
+        const res = await request(app)
+            .get('/api/admin/bookings')
+            .query({ status: 'completed' })
+            .set('Authorization', `Bearer ${adminToken}`);
+
+        expect(res.status).toBe(200);
+        expect(res.body.data.every((b: any) => b.status === 'completed')).toBe(true);
+    });
 });

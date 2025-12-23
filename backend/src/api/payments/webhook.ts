@@ -1,9 +1,9 @@
 import { z } from 'zod';
+import crypto from 'crypto';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { db } from '../../lib/db.js';
 import cors from '../../lib/cors.js';
-import { NotificationService } from '../../services/NotificationService.js';
 import { logger } from '../../lib/logger.js';
+import { PaymentService } from '../../services/PaymentService.js';
 
 const webhookSchema = z.object({
     type: z.enum(['payment', 'simulator']),
@@ -13,6 +13,46 @@ const webhookSchema = z.object({
 export default async function handler(req: VercelRequest, res: VercelResponse) {
     await cors(req, res);
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+    // Webhook Security: Verify HMAC Signature
+    const signature = req.headers['x-signature'] as string;
+    const requestId = req.headers['x-request-id'] as string;
+    const webhookSecret = process.env.MP_WEBHOOK_SECRET;
+
+    // Only skip verification if explicitly disabled (e.g. locally if needed) or if secret is missing but we want to fail open (unsafe, better to fail closed)
+    // Here we fail closed: if secret is missing, we can't verify, so we reject unless it's a simulator event which might not have signature? 
+    // Actually, simulator events might simulate the signature too. Let's assume strict verification if secret is present.
+
+    if (webhookSecret && signature && requestId) {
+        try {
+            const parts = signature.split(';');
+            let ts = '';
+            let v1 = '';
+
+            parts.forEach(part => {
+                const [key, value] = part.split('=');
+                if (key === 'ts') ts = value;
+                if (key === 'v1') v1 = value;
+            });
+
+            const manifest = `id:${req.body?.data?.id || ''};request-id:${requestId};ts:${ts};`;
+
+            const hmac = crypto.createHmac('sha256', webhookSecret);
+            const digest = hmac.update(manifest).digest('hex');
+
+            if (digest !== v1) {
+                logger.warn({ signature, requestId }, '[Webhook] Signature verification failed');
+                return res.status(403).json({ error: 'Invalid signature' });
+            }
+        } catch (e) {
+            logger.error(e, '[Webhook] Error verifying signature');
+            return res.status(403).json({ error: 'Signature verification error' });
+        }
+    } else if (webhookSecret) {
+        // Secret is configured but headers are missing
+        logger.warn('[Webhook] Missing signature headers');
+        return res.status(403).json({ error: 'Missing signature headers' });
+    }
 
     try {
         const { type, data } = webhookSchema.parse(req.body);
@@ -25,74 +65,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         logger.info({ type, data: sanitizedData }, `[Webhook] Received event`);
 
-        // 1. SIMULATOR HANDLER (Dev/Demo Only)
-        if (type === 'simulator') {
-            const { bookingId, status } = data; // status: 'approved' | 'rejected' | 'pending'
+        const result = await PaymentService.processWebhook(type, data);
 
-            await db.$transaction(async (tx) => {
-                // Update Payment
-                await tx.payment.upsert({
-                    where: { bookingId },
-                    create: {
-                        bookingId,
-                        amountClp: 0, // Should be passed/fetched, but strictly update logic here
-                        status,
-                        paymentMethod: 'mercadopago',
-                        gatewayResponse: { simulator: true }
-                    },
-                    update: {
-                        status,
-                        gatewayResponse: { simulator: true, timestamp: new Date() }
-                    }
-                });
-
-                // Update Booking if Approved
-                if (status === 'approved') {
-                    const updatedBooking = await tx.booking.update({
-                        where: { id: bookingId },
-                        data: {
-                            status: 'confirmed',
-                            paymentStatus: 'paid',
-                            specialInstructions: 'Paid via Simulator'
-                        },
-                        include: { availabilityBlock: true }
-                    });
-
-                    // Fire-and-forget notification (Mock or Real)
-                    const dateStr = new Date(updatedBooking.availabilityBlock.startDatetime).toLocaleString('es-CL');
-
-                    await NotificationService.sendBookingConfirmation(
-                        updatedBooking.visitorPhone || '',
-                        {
-                            id: updatedBooking.id,
-                            visitorName: updatedBooking.visitorName,
-                            amountClp: updatedBooking.amountClp,
-                            spotId: 'Spot #' + updatedBooking.availabilityBlock.spotId.substring(0, 4),
-                            date: dateStr
-                        }
-                    );
-                } else if (status === 'rejected') {
-                    // Optional: cancel booking or keep pending? Usually keep pending for retry.
-                    // But if explicit rejection, maybe we log it.
-                }
-            });
-
-            logger.info({ bookingId, status }, `[Webhook] Simulator processed`);
-            return res.status(200).json({ success: true, mode: 'simulator' });
-        }
-
-        // 2. REAL HANDLER (MercadoPago)
-        if (type === 'payment') {
-            const paymentId = data.id;
-            logger.info({ paymentId }, `[Webhook] Real Payment Notification`);
-            // TODO: Fetch payment from MP API using paymentId
-            // const paymentInfo = await mp.payment.get(paymentId);
-            // Update DB based on paymentInfo.external_reference (bookingId)
-        }
-
-        return res.status(200).send('OK');
+        return res.status(200).json(result || { success: true });
 
     } catch (error) {
+        if (error instanceof z.ZodError) {
+            return res.status(400).json({ error: error.errors });
+        }
         console.error('Webhook Error:', error);
         return res.status(500).json({ error: 'Internal Server Error' });
     }

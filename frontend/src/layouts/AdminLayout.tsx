@@ -27,6 +27,7 @@ export const AdminLayout = () => {
         { name: 'Analytics', path: '/admin/analytics' },
         ...(user?.role === 'admin' ? [
             { name: 'Edificios', path: '/admin/buildings' },
+            { name: 'Reservas', path: '/admin/bookings' },
             { name: 'Usuarios', path: '/admin/users' },
             { name: 'Vendedores', path: '/admin/sales-reps' }
         ] : []),

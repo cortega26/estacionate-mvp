@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { api } from '../../lib/api';
+import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
 
 interface Building {
@@ -18,6 +19,31 @@ interface User {
     createdAt: string;
 }
 
+interface CreateRepInput {
+    email?: string;
+    password?: string;
+    [key: string]: any; // Allow for other fields from FormData
+}
+
+interface UpdateBuildingInput {
+    buildingId: string;
+    salesRepId: string | null;
+    commissionRate: number;
+}
+
+interface ManageRepProps {
+    rep: User;
+    assignedBuildings: Building[];
+    allBuildings: Building[];
+    onUpdate: (data: UpdateBuildingInput) => void;
+}
+
+interface BuildingRowProps {
+    building: Building;
+    onUpdate: (data: UpdateBuildingInput) => void;
+    repId: string;
+}
+
 const SalesRepsPage = () => {
     const queryClient = useQueryClient();
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -27,10 +53,8 @@ const SalesRepsPage = () => {
     const { data: usersData, isLoading: isLoadingUsers } = useQuery({
         queryKey: ['admin-sales-reps'],
         queryFn: async () => {
-            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/users?role=sales_rep`, {
-                credentials: 'include'
-            });
-            return res.json();
+            const { data } = await api.get(`/admin/users`, { params: { role: 'sales_rep' } });
+            return data;
         }
     });
 
@@ -38,27 +62,16 @@ const SalesRepsPage = () => {
     const { data: buildingsData, isLoading: isLoadingBuildings } = useQuery({
         queryKey: ['admin-buildings'],
         queryFn: async () => {
-            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/buildings?brief=true`, {
-                credentials: 'include'
-            });
-            return res.json();
+            const { data } = await api.get(`/admin/buildings`, { params: { brief: true } });
+            return data;
         }
     });
 
     // Create Rep Mutation
     const createRepMutation = useMutation({
-        mutationFn: async (formData: any) => {
-            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/users`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ...formData, role: 'sales_rep' }),
-                credentials: 'include'
-            });
-            if (!res.ok) {
-                const err = await res.json();
-                throw new Error(err.error || 'Failed to create rep');
-            }
-            return res.json();
+        mutationFn: async (formData: CreateRepInput) => {
+            const { data } = await api.post(`/admin/users`, { ...formData, role: 'sales_rep' });
+            return data;
         },
         onSuccess: () => {
             toast.success('Sales Rep Created');
@@ -70,19 +83,13 @@ const SalesRepsPage = () => {
 
     // Update Building Mutation (Assign Rep / Set Commission)
     const updateBuildingMutation = useMutation({
-        mutationFn: async ({ buildingId, salesRepId, commissionRate }: any) => {
-            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/buildings`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    id: buildingId,
-                    salesRepId: salesRepId,
-                    salesRepCommissionRate: commissionRate
-                }),
-                credentials: 'include'
+        mutationFn: async ({ buildingId, salesRepId, commissionRate }: UpdateBuildingInput) => {
+            const { data } = await api.put(`/admin/buildings`, {
+                id: buildingId,
+                salesRepId: salesRepId,
+                salesRepCommissionRate: commissionRate
             });
-            if (!res.ok) throw new Error('Failed to update building');
-            return res.json();
+            return data;
         },
         onSuccess: () => {
             toast.success('Building Updated');
@@ -223,7 +230,7 @@ const SalesRepsPage = () => {
     );
 };
 
-const ManageRepBuildings = ({ rep, assignedBuildings, allBuildings, onUpdate }: any) => {
+const ManageRepBuildings = ({ rep, assignedBuildings, allBuildings, onUpdate }: ManageRepProps) => {
     const [selectedBuildingId, setSelectedBuildingId] = useState('');
     const [commissionRate, setCommissionRate] = useState(0.05);
 
@@ -307,7 +314,7 @@ const ManageRepBuildings = ({ rep, assignedBuildings, allBuildings, onUpdate }: 
     );
 };
 
-const BuildingRow = ({ building, onUpdate, repId }: any) => {
+const BuildingRow = ({ building, onUpdate, repId }: BuildingRowProps) => {
     const [isEditing, setIsEditing] = useState(false);
     const [rate, setRate] = useState(building.salesRepCommissionRate || 0.05);
 
@@ -342,7 +349,7 @@ const BuildingRow = ({ building, onUpdate, repId }: any) => {
                         onChange={e => setRate(parseFloat(e.target.value))}
                     />
                 ) : (
-                    <span>{(building.salesRepCommissionRate * 100).toFixed(1)}%</span>
+                    <span>{(building.salesRepCommissionRate! * 100).toFixed(1)}%</span>
                 )}
             </td>
             <td className="px-4 py-2 text-right text-sm space-x-2">

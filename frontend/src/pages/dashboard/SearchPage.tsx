@@ -63,7 +63,7 @@ export const SearchPage = () => {
             return api.post('/payments/checkout', { bookingId });
         },
         onSuccess: (res: any) => {
-            console.log('Checkout Init:', res.data);
+
             const url = res.data.init_point || res.data.sandbox_init_point;
             if (url) {
                 window.location.href = url;
@@ -72,7 +72,7 @@ export const SearchPage = () => {
             }
         },
         onError: (err: any) => {
-            console.error('Checkout error:', err);
+
             toast.error(err.response?.data?.details || err.response?.data?.error || 'Error al conectar con pago');
         }
     });

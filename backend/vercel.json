@@ -10,8 +10,18 @@
     "api/index.ts": {
       "maxDuration": 60,
       "memory": 512
+    },
+    "api/cron/generate-availability.ts": {
+      "maxDuration": 60,
+      "memory": 512
     }
   },
+  "crons": [
+    {
+      "path": "/api/cron/generate-availability",
+      "schedule": "0 0 * * *"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",

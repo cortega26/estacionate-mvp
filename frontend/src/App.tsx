@@ -22,6 +22,7 @@ import { GatekeeperDashboard } from './pages/gatekeeper/Dashboard';
 import Analytics from './pages/admin/Analytics';
 import UserManagement from './pages/admin/UserManagement';
 import SalesRepsPage from './pages/admin/SalesReps';
+import { BookingManagement } from './pages/admin/BookingManagement';
 // Layouts
 import { AdminLayout } from './layouts/AdminLayout';
 import { MainLayout } from './layouts/MainLayout';
@@ -71,7 +72,9 @@ function App() {
             <Route path="analytics" element={<Analytics />} />
             <Route path="users" element={<UserManagement />} />
             <Route path="sales-reps" element={<SalesRepsPage />} />
+            <Route path="sales-reps" element={<SalesRepsPage />} />
             <Route path="buildings" element={<BuildingsPage />} />
+            <Route path="bookings" element={<BookingManagement />} />
             <Route path="settings" element={<SettingsPage />} />
           </Route>
 

@@ -16,7 +16,7 @@ Sentry.init({
   replaysOnErrorSampleRate: 1.0,
 });
 
-console.log('Main app starting...');
+
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <App />

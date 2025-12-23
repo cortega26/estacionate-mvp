@@ -1,18 +1,26 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { api } from '../../lib/api';
+
+interface Commission {
+    id: string;
+    buildingName: string;
+    amountClp: number;
+    status: 'paid' | 'pending';
+    createdAt: string;
+}
 
 interface DashboardStats {
     totalEarnings: number;
     monthlyEarnings: number;
     activeBuildingsCount: number;
-    recentCommissions: any[];
+    recentCommissions: Commission[];
 }
 
 interface Building {
     id: string;
     name: string;
     address: string;
-    payouts: any[];
+    payouts: unknown[]; // Using unknown is safer than any if structure is loosely defined
 }
 
 export const SalesDashboard = () => {
@@ -85,7 +93,7 @@ export const SalesDashboard = () => {
                                 {stats?.recentCommissions.length === 0 && (
                                     <tr><td colSpan={4} className="py-4 text-center text-gray-400">No commissions yet</td></tr>
                                 )}
-                                {stats?.recentCommissions.map((c: any) => (
+                                {stats?.recentCommissions.map((c: Commission) => (
                                     <tr key={c.id}>
                                         <td className="py-2">{c.buildingName}</td>
                                         <td className="py-2 font-medium text-emerald-600">${c.amountClp.toLocaleString()}</td>

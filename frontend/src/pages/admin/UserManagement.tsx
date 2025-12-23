@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { api } from '../../lib/api';
 // import { useAuthStore } from '../../store/authStore';
 
 interface User {
@@ -20,28 +21,17 @@ const UserManagement = () => {
     const { data, isLoading } = useQuery({
         queryKey: ['admin-users', page, search],
         queryFn: async () => {
-            const params = new URLSearchParams({ page: page.toString() });
-            if (search) params.append('search', search);
-
-            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/users?${params}`, {
-                credentials: 'include'
-            });
-            return res.json();
+            const params: any = { page };
+            if (search) params.search = search;
+            const { data } = await api.get(`/admin/users`, { params });
+            return data;
         }
     });
 
     const mutation = useMutation({
         mutationFn: async ({ userId, action }: { userId: string, action: string }) => {
-            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/users`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ userId, action }),
-                credentials: 'include'
-            });
-            if (!res.ok) throw new Error('Action failed');
-            return res.json();
+            const { data } = await api.patch(`/admin/users`, { userId, action });
+            return data;
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['admin-users'] });
