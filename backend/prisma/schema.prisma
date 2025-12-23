@@ -175,6 +175,7 @@ model Resident {
   bookings Booking[]
 
   @@map("residents")
+  @@index([createdAt])
 }
 
 model VisitorSpot {
@@ -259,6 +260,7 @@ model Payment {
   booking Booking @relation(fields: [bookingId], references: [id], onDelete: Restrict)
 
   @@map("payments")
+  @@index([createdAt])
 }
 
 model Payout {

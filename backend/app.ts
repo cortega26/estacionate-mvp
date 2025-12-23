@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import express, { Request, Response, NextFunction } from 'express';
+import { v4 as uuidv4 } from 'uuid';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { initSentry } from './src/lib/sentry.js';
 
@@ -29,6 +30,13 @@ import { generalLimiter, authLimiter } from './src/middleware/rateLimiter.js';
 
 console.log("DEBUG: Initializing express app in app.ts");
 const app = express();
+
+// Request ID Middleware
+app.use((req: Request, res: Response, next: NextFunction) => {
+    (req as any).id = uuidv4();
+    next();
+});
+
 app.use(compression());
 
 // Enable Helmet

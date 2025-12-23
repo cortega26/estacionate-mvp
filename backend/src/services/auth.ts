@@ -8,6 +8,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'default-dev-secret';
 
 if (!process.env.JWT_SECRET && process.env.NODE_ENV === 'production') {
     console.error('FATAL: JWT_SECRET should be defined in .env');
+    process.exit(1);
 }
 
 // JWT

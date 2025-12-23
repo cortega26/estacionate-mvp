@@ -59,6 +59,14 @@ describe('Security Headers', () => {
         expect(res.status).toBe(500);
         expect(res.body.message).toBe('An internal server error occurred');
 
+        // Check that we captured the internal error message specifically
+        expect(res.body.debug_internal).toBe('Not allowed by CORS');
+
+        // Verify Trace ID matches UUID format
+        expect(res.body.trace_id).toBeDefined();
+        // Simple regex for UUID v4
+        expect(res.body.trace_id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i);
+
         // Crucially, the CORS header should NOT be present (or strictly not the origin)
         expect(res.headers['access-control-allow-origin']).toBeUndefined();
     });

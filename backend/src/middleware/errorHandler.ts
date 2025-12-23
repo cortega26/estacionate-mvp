@@ -19,7 +19,9 @@ export const errorHandler = (err: any, req: Request, res: Response, next: NextFu
 
     // 2. Wrap Unknown Errors
     if (!(error instanceof AppError)) {
-        error = AppError.internal('Unknown error occurred', err);
+        // Use the original error message for internal logs, but keep public message generic
+        const internalMsg = err instanceof Error ? err.message : 'Unknown error occurred';
+        error = AppError.internal(internalMsg, err);
     }
 
     const appError = error as AppError;
@@ -44,7 +46,8 @@ export const errorHandler = (err: any, req: Request, res: Response, next: NextFu
         message: appError.publicMessage,
         error: appError.publicMessage, // Back-compat
         context: appError.context,
-        debug_internal: appError.internalMessage,
-        debug_stack: appError.stack
+        debug_internal: appError.internalMessage, // Exposed for now (useful for debugging, maybe hide in prod?)
+        trace_id: (req as any).id, // Critical for support
+        // debug_stack: appError.stack // Consider removing stack in prod
     });
 };
