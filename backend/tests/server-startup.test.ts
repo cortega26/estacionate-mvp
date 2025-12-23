@@ -21,11 +21,15 @@ describe('Server Startup & Connectivity', () => {
         const serverPath = path.resolve(__dirname, '../dev-server.ts');
         console.log('Spawning server:', serverPath);
 
-        serverProcess = spawn('npx', ['tsx', serverPath], {
+        // Quote the path for Windows compatibility with spaces
+        serverProcess = spawn('npx', ['tsx', `"${serverPath}"`], {
             cwd: path.resolve(__dirname, '../'),
             env: { ...process.env, PORT: '3000', NODE_ENV: 'test' },
             shell: true
         });
+
+        serverProcess.stdout?.on('data', (data) => console.log(`[Server]: ${data}`));
+        serverProcess.stderr?.on('data', (data) => console.error(`[Server Error]: ${data}`));
 
         // 2. Poll for Health
         const startTime = Date.now();
