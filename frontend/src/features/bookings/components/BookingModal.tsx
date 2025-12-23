@@ -72,42 +72,66 @@ export const BookingModal: React.FC<BookingModalProps> = ({
 
                     {/* Form Fields */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Patente del Vehículo</label>
+                        <label htmlFor="vehiclePlate" className="block text-sm font-medium text-gray-700 mb-1">Patente del Vehículo</label>
                         <div className="relative">
                             <Car className="absolute left-3 top-2.5 text-gray-400" size={18} />
                             <input
+                                id="vehiclePlate"
                                 {...register('vehiclePlate')}
+                                aria-invalid={!!errors.vehiclePlate}
+                                aria-describedby={errors.vehiclePlate ? "vehiclePlate-error" : undefined}
                                 placeholder="ABCD12"
-                                className="pl-10 block w-full rounded-md border-gray-300 shadow-sm border p-2 focus:ring-indigo-500 focus:border-indigo-500 uppercase"
+                                className={`pl-10 block w-full rounded-md shadow-sm border p-2 focus:ring-indigo-500 focus:border-indigo-500 uppercase ${errors.vehiclePlate ? 'border-red-500' : 'border-gray-300'
+                                    }`}
                             />
                         </div>
-                        {errors.vehiclePlate && <p className="text-red-500 text-xs mt-1">{errors.vehiclePlate.message}</p>}
+                        {errors.vehiclePlate && (
+                            <p id="vehiclePlate-error" className="text-red-500 text-xs mt-1" role="alert">
+                                {errors.vehiclePlate.message}
+                            </p>
+                        )}
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Nombre Visita</label>
+                        <label htmlFor="visitorName" className="block text-sm font-medium text-gray-700 mb-1">Nombre Visita</label>
                         <div className="relative">
                             <User className="absolute left-3 top-2.5 text-gray-400" size={18} />
                             <input
+                                id="visitorName"
                                 {...register('visitorName')}
+                                aria-invalid={!!errors.visitorName}
+                                aria-describedby={errors.visitorName ? "visitorName-error" : undefined}
                                 placeholder="Nombre completo"
-                                className="pl-10 block w-full rounded-md border-gray-300 shadow-sm border p-2 focus:ring-indigo-500 focus:border-indigo-500"
+                                className={`pl-10 block w-full rounded-md shadow-sm border p-2 focus:ring-indigo-500 focus:border-indigo-500 ${errors.visitorName ? 'border-red-500' : 'border-gray-300'
+                                    }`}
                             />
                         </div>
-                        {errors.visitorName && <p className="text-red-500 text-xs mt-1">{errors.visitorName.message}</p>}
+                        {errors.visitorName && (
+                            <p id="visitorName-error" className="text-red-500 text-xs mt-1" role="alert">
+                                {errors.visitorName.message}
+                            </p>
+                        )}
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Teléfono (Opcional)</label>
+                        <label htmlFor="visitorPhone" className="block text-sm font-medium text-gray-700 mb-1">Teléfono (Opcional)</label>
                         <div className="relative">
                             <Phone className="absolute left-3 top-2.5 text-gray-400" size={18} />
                             <input
+                                id="visitorPhone"
                                 {...register('visitorPhone')}
+                                aria-invalid={!!errors.visitorPhone}
+                                aria-describedby={errors.visitorPhone ? "visitorPhone-error" : undefined}
                                 placeholder="+569..."
-                                className="pl-10 block w-full rounded-md border-gray-300 shadow-sm border p-2 focus:ring-indigo-500 focus:border-indigo-500"
+                                className={`pl-10 block w-full rounded-md shadow-sm border p-2 focus:ring-indigo-500 focus:border-indigo-500 ${errors.visitorPhone ? 'border-red-500' : 'border-gray-300'
+                                    }`}
                             />
                         </div>
-                        {errors.visitorPhone && <p className="text-red-500 text-xs mt-1">{errors.visitorPhone.message}</p>}
+                        {errors.visitorPhone && (
+                            <p id="visitorPhone-error" className="text-red-500 text-xs mt-1" role="alert">
+                                {errors.visitorPhone.message}
+                            </p>
+                        )}
                     </div>
 
                     {/* Actions */}

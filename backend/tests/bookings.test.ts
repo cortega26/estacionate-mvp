@@ -150,6 +150,7 @@ describe('Booking Flow (Integration)', () => {
     afterAll(async () => {
         // Cleanup
         if (createdBookingId) {
+            await prisma.payment.deleteMany({ where: { bookingId: createdBookingId } });
             await prisma.booking.deleteMany({ where: { id: createdBookingId } });
         }
         if (blockId) {
@@ -205,6 +206,8 @@ describe('Booking Flow (Integration)', () => {
         expect(res.status).toBe(201);
         expect(res.data.booking.id).toBeDefined();
         expect(res.data.booking.status).toBe('pending');
+        expect(res.data.payment).toBeDefined();
+        expect(res.data.payment.init_point).toBeDefined();
         createdBookingId = res.data.booking.id;
 
         // Verify DB status update

@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import { api } from '../../lib/api';
-import { useAuthStore } from '../../store/authStore';
+import toast from 'react-hot-toast';
 
 export const BookingManagement = () => {
-    const user = useAuthStore((state) => state.user);
-    const queryClient = useQueryClient();
     const [filter, setFilter] = useState('all');
     const [selectedBooking, setSelectedBooking] = useState<any>(null); // For Confirmation Modal
 
@@ -25,12 +23,12 @@ export const BookingManagement = () => {
             return data;
         },
         onSuccess: (data) => {
-            alert(`Booking cancelled. Refund Amount: $${data.refundAmount}`);
+            toast.success(`Reserva cancelada. Reembolso: $${data.refundAmount}`);
             setSelectedBooking(null);
-            refetch(); // Reload list
+            refetch();
         },
         onError: (err: any) => {
-            alert(err.response?.data?.error || 'Cancellation Failed');
+            toast.error(err.response?.data?.error || 'Error al cancelar');
         }
     });
 

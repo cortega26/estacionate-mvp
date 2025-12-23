@@ -13,12 +13,29 @@ import { ParkingMap } from '../../features/map/components/ParkingMap';
 
 export const SearchPage = () => {
     const user = useAuthStore((state) => state.user);
-    const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
-    const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
+    // State with initializer from sessionStorage
+    const [selectedDate, setSelectedDate] = useState(() => sessionStorage.getItem('search_date') || new Date().toISOString().split('T')[0]);
+    const [viewMode, setViewMode] = useState<'list' | 'map'>(() => (sessionStorage.getItem('search_viewMode') as 'list' | 'map') || 'list');
 
     // Select component uses object {id, label, value}
     const [selectedBuilding, setSelectedBuilding] = useState<SelectOption | null>(null);
     const [selectedBlock, setSelectedBlock] = useState<Spot | null>(null);
+    const [restoredBuildingId, setRestoredBuildingId] = useState<string | null>(() => sessionStorage.getItem('search_buildingId'));
+
+    // Persist changes
+    React.useEffect(() => {
+        sessionStorage.setItem('search_date', selectedDate);
+    }, [selectedDate]);
+
+    React.useEffect(() => {
+        sessionStorage.setItem('search_viewMode', viewMode);
+    }, [viewMode]);
+
+    React.useEffect(() => {
+        if (selectedBuilding?.value) {
+            sessionStorage.setItem('search_buildingId', selectedBuilding.value);
+        }
+    }, [selectedBuilding]);
 
     // Fetch Buildings...
     const { data: buildings, isSuccess } = useQuery<Building[]>({
@@ -38,10 +55,20 @@ export const SearchPage = () => {
     }, [buildings]);
 
     React.useEffect(() => {
-        if (isSuccess && buildingOptions.length > 0 && !selectedBuilding) {
-            setSelectedBuilding(buildingOptions[0]);
+        if (isSuccess && buildingOptions.length > 0) {
+            if (restoredBuildingId) {
+                const restored = buildingOptions.find(b => b.value === restoredBuildingId);
+                if (restored) {
+                    setSelectedBuilding(restored);
+                    return;
+                }
+            }
+            // Default to first if nothing selected/restored
+            if (!selectedBuilding) {
+                setSelectedBuilding(buildingOptions[0]);
+            }
         }
-    }, [isSuccess, buildingOptions, selectedBuilding]);
+    }, [isSuccess, buildingOptions, restoredBuildingId, selectedBuilding]);
 
     const { data: spots, isPending: isLoading, refetch } = useQuery<Spot[]>({
         queryKey: ['spots', selectedBuilding?.value, selectedDate],
@@ -57,40 +84,29 @@ export const SearchPage = () => {
 
     const queryClient = useQueryClient();
 
-    // 2. Checkout Mutation
-    const checkoutMutation = useMutation({
-        mutationFn: async (bookingId: string) => {
-            return api.post('/payments/checkout', { bookingId });
-        },
-        onSuccess: (res: any) => {
-
-            const url = res.data.init_point || res.data.sandbox_init_point;
-            if (url) {
-                window.location.href = url;
-            } else {
-                toast.error('Error al iniciar pago');
-            }
-        },
-        onError: (err: any) => {
-
-            toast.error(err.response?.data?.details || err.response?.data?.error || 'Error al conectar con pago');
-        }
-    });
-
-    // 1. Booking Mutation
+    // Unified Booking+Payment Mutation
+    // Now the backend creates booking AND returns payment init_point in one go.
     const bookMutation = useMutation({
         mutationFn: async (data: { blockId: string, vehiclePlate: string, visitorName: string, visitorPhone?: string }) => {
             return api.post('/bookings/create', data);
         },
         onSuccess: (res: any) => {
             toast.success('¡Reserva creada! Redirigiendo a pago...');
+            // Invalidate spots to update UI (mark as reserved)
             queryClient.invalidateQueries({ queryKey: ['spots'] });
             setSelectedBlock(null);
-            // Trigger Checkout
-            checkoutMutation.mutate(res.data.booking.id);
+
+            // Redirect to Payment
+            const url = res.data.payment?.init_point || res.data.payment?.sandbox_init_point;
+            if (url) {
+                window.location.href = url;
+            } else {
+                toast.error('Error: No se recibió link de pago');
+            }
         },
         onError: (err: any) => {
-            toast.error(err.response?.data?.error || 'Error al reservar');
+            // Backend now cleans up Zombie bookings, so we just show the error.
+            toast.error(err.response?.data?.error || err.response?.data?.publicMessage || 'Error al reservar');
         }
     });
 
@@ -237,7 +253,7 @@ export const SearchPage = () => {
                 isOpen={!!selectedBlock}
                 onClose={() => setSelectedBlock(null)}
                 onSubmit={handleBookingSubmit}
-                isLoading={bookMutation.isPending || checkoutMutation.isPending}
+                isLoading={bookMutation.isPending}
                 spotNumber={selectedBlock?.spot?.spotNumber}
                 price={selectedBlock?.basePriceClp}
                 defaultName={user.firstName ? `${user.firstName} ${user.lastName}` : ''}

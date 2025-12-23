@@ -15,7 +15,11 @@ export enum ErrorCode {
     // System
     SYSTEM_INTERNAL_ERROR = 'SYS-INTERNAL-5000',
     SYSTEM_METHOD_NOT_ALLOWED = 'SYS-HTTP-405',
-    SYSTEM_RESOURCE_NOT_FOUND = 'SYS-RESOURCE-404'
+    SYSTEM_RESOURCE_NOT_FOUND = 'SYS-RESOURCE-404',
+    SYSTEM_CONFLICT = 'SYS-CONFLICT-409',
+
+    // Payment
+    PAYMENT_GATEWAY_ERROR = 'PAY-GATEWAY-502'
 }
 
 export class AppError extends Error {
@@ -64,6 +68,10 @@ export class AppError extends Error {
 
     static notFound(code: string, publicMessage: string, internalMessage?: string, context?: Record<string, any>) {
         return new AppError({ code, statusCode: 404, publicMessage, internalMessage, context });
+    }
+
+    static conflict(code: string, publicMessage: string, internalMessage?: string, context?: Record<string, any>) {
+        return new AppError({ code, statusCode: 409, publicMessage, internalMessage, context });
     }
 
     static internal(internalMessage: string, originalError?: any, context?: Record<string, any>) {

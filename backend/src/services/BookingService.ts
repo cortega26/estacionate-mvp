@@ -1,21 +1,24 @@
 import { db, ActorType } from '../lib/db.js';
 import { calculateBookingPricing } from '../lib/domain/pricing.js';
 import crypto from 'crypto';
+import { z } from 'zod';
 import { EventBus, EventType } from '../lib/event-bus.js';
 import { logger } from '../lib/logger.js';
 import { PaymentService } from './PaymentService.js';
+import { AppError, ErrorCode } from '../lib/errors.js';
+import { ServiceErrorCode } from '../lib/error-codes.js';
+
+const createBookingSchema = z.object({
+    blockId: z.string().uuid(),
+    vehiclePlate: z.string().min(5),
+    visitorName: z.string().min(3),
+    visitorPhone: z.string().optional()
+});
 
 interface BookingUser {
     userId: string;
     role: string;
     buildingId?: string | null;
-}
-
-interface CreateBookingInput {
-    blockId: string;
-    vehiclePlate: string;
-    visitorName: string;
-    visitorPhone?: string;
 }
 
 interface RequestMetadata {
@@ -25,14 +28,17 @@ interface RequestMetadata {
 }
 
 export class BookingService {
-    static async createBooking(user: BookingUser, data: CreateBookingInput, meta: RequestMetadata) {
+    static async createBooking(user: BookingUser, rawData: unknown, meta: RequestMetadata) {
+        // 1. Validation
+        const data = createBookingSchema.parse(rawData);
+
         // --- 0. BLACKLIST CHECK ---
         const resident = await db.resident.findUnique({
             where: { id: user.userId },
             select: { email: true, rutHash: true, unit: { select: { buildingId: true } } }
         });
 
-        if (!resident) throw new Error('RESIDENT_NOT_FOUND');
+        if (!resident) throw AppError.unauthorized(ServiceErrorCode.RESIDENT_NOT_FOUND, 'Resident not found');
 
         const bans = await db.blocklist.findMany({
             where: {
@@ -52,9 +58,7 @@ export class BookingService {
 
         if (bans.length > 0) {
             const reasons = bans.map((b) => b.reason).filter(Boolean).join(', ');
-            const error = new Error('BOOKING_BLOCKED');
-            (error as any).reasons = reasons; // Attach metadata
-            throw error;
+            throw AppError.forbidden(ServiceErrorCode.BOOKING_BLOCKED, 'Booking Blocked', reasons, { reasons });
         }
 
         // 2. Optimistic Locking Transaction
@@ -83,7 +87,7 @@ export class BookingService {
             });
 
             if (result.count === 0) {
-                throw new Error('BLOCK_UNAVAILABLE');
+                throw AppError.conflict(ServiceErrorCode.BLOCK_UNAVAILABLE, 'Spot is no longer available');
             }
 
             // Fetch the block to get details for booking (price)
@@ -100,12 +104,12 @@ export class BookingService {
 
             // Fix 1: Temporal Safety (Prevent Booking Past)
             if (new Date(block.startDatetime) < new Date()) {
-                throw new Error('PAST_TIME');
+                throw AppError.badRequest(ServiceErrorCode.PAST_TIME, 'Cannot book past dates');
             }
 
             // Fix 2: IDOR Prevention
             if (user.buildingId && block.spot.buildingId !== user.buildingId) {
-                throw new Error('BUILDING_MISMATCH');
+                throw AppError.forbidden(ServiceErrorCode.BUILDING_MISMATCH, 'You can only book spots in your own building');
             }
 
             // Fix 3: Double Booking Overlap Check
@@ -120,7 +124,7 @@ export class BookingService {
             });
 
             if (overlap) {
-                throw new Error('DOUBLE_BOOKING_DETECTED');
+                throw AppError.conflict(ServiceErrorCode.DOUBLE_BOOKING_DETECTED, 'Double Booking Detected');
             }
 
             // --- YIELD MANAGEMENT ---
@@ -198,7 +202,25 @@ export class BookingService {
             });
         }
 
-        return booking;
+        // 4. Atomic Payment Initialization & Rollback
+        try {
+            const paymentPreference = await PaymentService.createPreference(booking.id);
+            return { booking, payment: paymentPreference };
+        } catch (paymentErr) {
+            // Compensating Transaction: Cancel the booking if payment init fails
+            // We use the system actor to cancel it immediately
+            await BookingService.cancelBooking(booking.id, user.userId, 'system-rollback').catch(rollbackErr => {
+                // If rollback fails, we have a true zombie. Log CRITICAL error.
+                console.error('CRITICAL: ZOMBIE BOOKING CREATED', { bookingId: booking.id, error: rollbackErr });
+            });
+
+            throw new AppError({
+                code: ErrorCode.PAYMENT_GATEWAY_ERROR,
+                statusCode: 502, // Bad Gateway
+                publicMessage: 'Booking created but payment gateway failed. Please try again.',
+                originalError: paymentErr
+            });
+        }
     }
     static async cancelBooking(bookingId: string, actorId: string, role: string) {
         // 1. Fetch Booking
@@ -207,14 +229,14 @@ export class BookingService {
             include: { availabilityBlock: true }
         });
 
-        if (!booking) throw new Error('BOOKING_NOT_FOUND');
+        if (!booking) throw AppError.notFound(ServiceErrorCode.BOOKING_NOT_FOUND, 'Booking not found');
 
         // 2. Authorization Check
         const isOwner = booking.residentId === actorId;
         const isAdmin = role === 'admin' || role === 'building_admin' || role === 'support'; // Simplified Role Check
 
         if (!isOwner && !isAdmin) {
-            throw new Error('UNAUTHORIZED_CANCELLATION');
+            throw AppError.forbidden(ServiceErrorCode.UNAUTHORIZED_CANCELLATION, 'Unauthorized cancellation');
         }
 
         // 3. State Invariants
@@ -222,7 +244,7 @@ export class BookingService {
             return booking; // Idempotent success
         }
         if (booking.status === 'completed' || booking.status === 'no_show') {
-            throw new Error('CANNOT_CANCEL_COMPLETED_BOOKING');
+            throw AppError.badRequest(ServiceErrorCode.CANNOT_CANCEL_COMPLETED_BOOKING, 'Cannot cancel completed booking');
         }
 
         // 4. Calculate Refund

@@ -106,28 +106,7 @@ describe('Payments API Integration Tests', () => {
         }
     });
 
-    it('should initiate checkout and return simulator URL (Mock Mode)', async () => {
-        const res = await request(app)
-            .post('/api/payments/checkout')
-            .send({ bookingId });
 
-        expect(res.status).toBe(200);
-        expect(res.body.init_point).toMatch(/localhost:5173\/payment-simulator/);
-
-        // Verify Payment record created as 'pending'
-        const payment = await prisma.payment.findUnique({ where: { bookingId } });
-        expect(payment).toBeDefined();
-        expect(payment?.status).toBe('pending');
-        expect(payment?.amountClp).toBe(11000);
-    });
-
-    it('should fail checkout if booking not found', async () => {
-        const res = await request(app)
-            .post('/api/payments/checkout')
-            .send({ bookingId: crypto.randomUUID() });
-
-        expect(res.status).toBe(404);
-    });
 
     it('should process Simulator Webhook (Approved)', async () => {
         const webhookPayload = {
