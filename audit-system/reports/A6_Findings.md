@@ -1,39 +1,26 @@
-# Audit Report: A6 - Release & Environment Safety
-
-**Date:** 2025-12-22
-**Auditor:** Agentic Assistant (A6 Orchestrator)
-**Status:** In Progress (Partial)
-
----
+# Audit A6: Release & Environment Findings
 
 ## 1. Executive Summary
-The Release Safety posture is **Healthy**. Environment parity is maintained at the runtime level (Node 18 on both Docker and Vercel). Deployment is automated via Vercel for Production.
+**Score:** B-
+Deployment is handled via standard scripts (`npm run deploy:production`), likely wrapping Vercel CLI. However, **Environment Parity** is weak due to the absence of `.env.example` files in the backend. This forces developers to rely on external docs or tribal knowledge.
 
 ## 2. Findings
 
-### [A6-1] Runtime Parity (Pass)
-**Location:** `vercel.json` vs `Dockerfile`
-**Description:** Both configured for Node 18.
-**Status:** Consistent.
+### 2.1 Environment Configuration
+- **[S2] Missing `.env.example`**
+    - **Location**: `backend/`
+    - **Problem**: No sample environment file.
+    - **Impact**: Onboarding friction; risk of missing keys in production if not documented.
+    - **Recommendation**: Create `backend/.env.example` with keys but dummy values.
 
-### [A6-2] Architectural Divergence (S2)
-**Location:** Release Artifacts
-**Description:**
-- **Production (Vercel):** Serverless Functions (`api/**/*.ts`).
-- **Local/Container (Docker):** Monolithic Server (`dist/dev-server.js`).
-**Impact:** Some bugs (e.g., global state retention, cold starts) might only appear in one environment.
-**Fix:** None immediate. Be aware that `req` context rules apply strictly in Serverless.
+### 2.2 Secrets Management
+- **[PASSED] Gitignore**: `.gitignore` correctly excludes `.env` and `.env.local`.
+- **[S1] Secrets in Code**: (Repeated from A2) Fallback to default secrets in `auth.ts` is risky for release if envs fail.
 
-### [A6-3] Hardened Headers (Pass)
-**Location:** `vercel.json`
-**Description:** Headers like `X-Frame-Options` and `HSTS` are configured at the edge.
-**Note:** This duplicates `helmet` config in `app.ts` but is good for defense-in-depth.
+### 2.3 Deployment
+- **[PASSED] Build Scripts**: `package.json` contains standard build scripts.
+- **[S2] No Staging Environment**: Scripts mention `deploy:staging`, but is there a persistent staging URL? Vercel provides Preview URLs, which is good, but a dedicated staging environment (syncing with `staging` branch) is preferred for integration testing.
 
-## 3. Configuration Management
-- **Secrets:** Handled by platform (Vercel Env Vars), not committed.
-- **Drift:** Low risk as infrastructure is minimal.
-
-## 4. Next Steps
-1.  Proceed to **A7 (Compliance)**.
-
-**This audit is complete.**
+## 3. Recommendations
+1.  **Create `.env.example`**: IMMEDIATE action.
+2.  **Formalize Staging**: Ensure `deploy:staging` maps to a consistent non-prod URL.

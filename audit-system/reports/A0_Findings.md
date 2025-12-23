@@ -1,67 +1,32 @@
-# Audit Report: A0 - Project Structure & Organization
-
-**Date:** 2025-12-22
-**Auditor:** Agentic Assistant (A0 Orchestrator)
-**Status:** Completed
-
----
+# Audit A0: Project Structure & Organization Findings
 
 ## 1. Executive Summary
-The project follows a Monorepo structure with distinct `frontend` and `backend` directories. The frontend demonstrates a modern "Screaming Architecture" with a feature-based structure (`frontend/src/features`). The backend, however, lacks a `src` directory, leading to some root clutter, and exhibits minor naming inconsistencies in the Service layer.
+**Score:** B
+The project demonstrates a mixed maturity level. The **Frontend** is well-structured, utilizing a `features/` directory pattern, which aligns with modern scalability practices. The **Backend**, however, remains strictly **layer-based** (`api/`, `services/`), which will impede scalability as domain complexity grows. Root hygiene is generally good, but the duplicate documentation folders are a cleanup priority.
 
 ## 2. Findings
 
-### [A0-1] Backend Root Hygiene (S1)
-**Description:** The `backend` directory contains loose log files and build artifacts that clutter the root level.
-**Location:** `backend/`
-**Evidence:**
-- `test_output.txt`
-- `lint_output.txt`
-- `build_output.txt`
-- `coverage.txt`
-**Recommendation:** Add these patterns to `.gitignore` or move them to a `logs/` directory.
+### 2.1 Root Directory Hygiene
+- **[PASSED]** Clear separation of `backend` and `frontend`.
+- **[PASSED]** Minimal config sprawl at root.
+- **[WARNING]** **Ambiguous Documentation Folders**: Both `docs/` and `documentation/` exist at the root.
+    - *Action*: Merge `documentation/` into `docs/` and remove the former.
 
-### [A0-2] Naming Inconsistency in Services (S2)
-**Description:** Service files use inconsistent casing. Some use PascalCase (matching the Class name), while others use camelCase.
-**Location:** `backend/services/`
-**Evidence:**
-- `NotificationService.ts` (PascalCase)
-- `salesService.ts` (camelCase)
-**Recommendation:** Rename `salesService.ts` to `SalesService.ts` to match the Class export `SalesService`.
+### 2.2 Backend Structure (`backend/src`)
+- **[OBSERVATION]** Strict Layer-based architecture (`api`, `services`, `middleware`).
+- **[ISSUE]** **Low Cohesion for Features**: Business logic for a single feature (e.g., "Booking") is split across `api/bookings`, `services/BookingService`, etc.
+    - *Severity*: S1 (High Friction)
+    - *Recommendation*: Gradually migrate to a modular structure (e.g., `backend/src/modules/bookings/`).
 
-### [A0-3] Missing Source Directory in Backend (S1)
-**Description:** Backend code is located at the root of `backend/` (`api`, `services`, `lib`), mixing source code with configuration and scripts.
-**Location:** `backend/`
-**Recommendation:** Move source code into a `backend/src/` directory to strictly separate configuration from logic. (High effort, requires updating all imports).
+### 2.3 Frontend Structure (`frontend/src`)
+- **[PASSED]** **Feature-based Architecture Detected**: The presence of `src/features` dictates a clean separation of concerns.
+- **[PASSED]** **UI Separation**: `src/components/ui` suggests a separation between "dumb" UI components and "smart" feature components.
 
-### [A0-4] "Lib" as Junk Drawer (S2)
-**Description:** The `backend/lib` folder acts as a generic utility bucket.
-**Location:** `backend/lib`
-**Evidence:** Contains `db.ts` (infra), `domain/` (business logic), `logger.ts` (utils).
-**Recommendation:** Split `lib` into `infrastructure` (db, redis) and `utils` (logger, crypto).
+### 2.4 Naming & Consistency
+- **[PASSED]** Consistent kebab-case naming in root.
 
-## 3. Proposed Refactor Plan
-1.  **Immediate (Low Risk):**
-    -   Rename `backend/services/salesService.ts` -> `SalesService.ts`.
-    -   Update `.gitignore` or delete loose log files.
-2.  **Strategic (High Risk):**
-    -   Create `backend/src`.
-    -   Move `api`, `services`, `lib`, `middleware`, `prisma` into `backend/src`.
-    -   Update `tsconfig.json` and imports.
-
-## 4. ASCII Tree (Current Top Level)
-```
-.
-├── audit-system
-├── backend
-│   ├── api
-│   ├── lib
-│   ├── services
-│   └── tests
-├── documentation
-├── frontend
-│   ├── e2e
-│   └── src
-│       └── features
-└── scripts
-```
+## 3. Remediation Plan
+1.  **Immediate**: Delete `documentation/` (after checking if it contains unique content) or merge into `docs/`.
+2.  **Strategic**: Refactor Backend to use Module pattern.
+    - Create `backend/src/modules`.
+    - Move `auth` related code from `api/auth` and `services/auth.ts` to `modules/auth`.

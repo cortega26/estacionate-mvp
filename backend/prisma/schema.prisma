@@ -279,6 +279,7 @@ model Payout {
 
   @@index([buildingId])
   @@index([status])
+  @@index([createdAt])
   @@map("payouts")
 }
 
@@ -331,6 +332,7 @@ model SalesRepCommission {
   
   @@map("sales_rep_commissions")
   @@index([salesRepId])
+  @@unique([payoutId])
 }
 
 model User {

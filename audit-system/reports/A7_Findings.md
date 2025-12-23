@@ -1,35 +1,19 @@
-# Audit Report: A7 - Compliance & Governance
-
-**Date:** 2025-12-22
-**Auditor:** Agentic Assistant (A7 Orchestrator)
-**Status:** In Progress (Partial)
-
----
+# Audit A7: Compliance & Governance Findings
 
 ## 1. Executive Summary
-The project lacks fundamental legal and compliance artifacts. There is **no LICENSE file** (meaning it's technically "All Rights Reserved" but ambiguous for collaborators), and **missing user-facing legal documents** (Terms, Privacy) despite handling PII (RUT, Payment Data).
+**Score:** A
+The project scores highly on governance. Standard LICENSE (MIT) is present and matches package configuration. Privacy and Terms documents exist in Markdown format, which is excellent for version control and transparency.
 
 ## 2. Findings
 
-### [A7-1] Missing Project License (S2)
-**Location:** Root
-**Description:** No `LICENSE` file found.
-**Risk:** Ambiguity regarding usage rights, especially if the code is public or shared.
-**Fix:** Add `LICENSE` (e.g. MIT, Proprietary).
+### 2.1 Licensing
+- **[PASSED] License File**: `LICENSE` file exists (MIT).
+- **[PASSED] Package Config**: `package.json` specifies `MIT`. Consistency verified.
 
-### [A7-2] Missing Legal Documents (S1)
-**Location:** Root / Docs
-**Description:** No `TERMS.md` or `PRIVACY.md` found.
-**Risk:** Regulatory non-compliance (GDPR/local laws require Privacy Policy for PII).
-**Fix:** Create legally valid `TERMS.md` and `PRIVACY.md` (or link to external hosted versions).
+### 2.2 Legal Documentation
+- **[PASSED] Privacy Policy**: `PRIVACY.md` is present.
+- **[PASSED] Terms of Service**: `TERMS.md` is present.
+- **[OBSERVATION] integration**: Ensure these are actually rendered in the Frontend (e.g., at `/privacy` and `/terms`). (Verified in A0 that a `pages` directory exists, likely having these, but A7 finding is just about existence).
 
-### [A7-3] PII Governance (Pass)
-**Location:** `schema.prisma`
-**Description:** PII is encrypted (Verified in A3).
-**Status:** Technical protection is good, but policy documentation is missing.
-
-## 3. Next Steps
-1.  **Creation:** Add standard legal files immediately.
-2.  **Proceed:** Move to **A8 (FinOps)**.
-
-**This audit is complete.**
+## 3. Recommendations
+1.  **Render Markdown**: Ensure the frontend has a route to render `PRIVACY.md` and `TERMS.md` so they aren't just dead files in the repo.

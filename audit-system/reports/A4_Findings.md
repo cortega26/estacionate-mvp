@@ -1,39 +1,29 @@
-# Audit Report: A4 - Code & Product Quality
-
-**Date:** 2025-12-22
-**Auditor:** Agentic Assistant (A4 Orchestrator)
-**Status:** In Progress (Partial)
-
----
+# Audit A4: Code & Product Quality Findings
 
 ## 1. Executive Summary
-The codebase is functional but exhibits significant technical debt in terms of type safety. There are over 200 lint warnings, primarily explicit `any` usage and `console.log` statements left in production code. This hinders maintainability and refactoring confidence. The structure is otherwise improving (A0 applied), but strict typing needs to be prioritized.
+**Score:** C
+The codebase is functioning but carries significant technical debt. TypeScript strictness is likely disabled or bypassed frequently. There is heavy reliance on `any`, defeating the purpose of TypeScript. Test coverage exists but appears spotty based on file analysis.
 
 ## 2. Findings
 
-### [A4-1] Extensive Use of `any` (S2)
-**Location:** General (Backend)
-**Description:** Lint checks report ~230 warnings, many of which are explicitly typed `any` (e.g. `req: any`).
-**Impact:** Defeats the purpose of TypeScript, leading to runtime errors that should be caught at compile time.
-**Fix:** Define shared interfaces for Requests (e.g. `AuthenticatedRequest`) and use them.
+### 2.1 Type Safety
+- **[S2] Excessive use of `any`**
+    - **Observation**: `grep` search reveals multiple instances of `: any`.
+    - **Impact**: Loss of type safety, potential runtime errors.
+    - **Recommendation**: Replace `any` with specific interfaces or `unknown` + validation.
+- **[S2] TSConfig Strictness**
+    - **Location**: `backend/tsconfig.json`
+    - **Check**: (Pending verification of `strict: true`). If `strict` is false, this is a major finding.
 
-### [A4-2] Console Logs in Production Code (S3)
-**Location:** Multiple files
-**Description:** `console.log` is used instead of the structured `logger`.
-**Impact:** Clutters logs, misses metadata (timestamps, context) provided by Pino.
-**Fix:** Replace `console.log` with `logger.info/debug`.
+### 2.2 Code Style & Linting
+- **[S3] Lint Reports Ignored**: The presence of a large `lint_output.txt` suggests linting is run but issues are accumulating rather than being fixed.
 
-### [A4-3] File Size / Complexity (S3)
-**Note:** `check-users.ts` or `app.ts` often grow large.
-**Description:** Several scripts/handlers are growing in complexity.
-**Action:** Extract logic into services (as begun with `SalesService`).
+### 2.3 Testing
+- **[S2] Test Gaps**:
+    - **Observation**: `backend/tests` exists, but coverage needs to be enforced in CI.
+    - **Fix**: Add `jest --coverage` threshold to CI pipeline.
 
-## 3. Product Quality (Heuristics)
-- **Error Handling:** Central `errorHandler` exists (Good).
-- **Feedback:** Frontend uses Toast notifications (Observed in general usage/previous context).
-
-## 4. Next Steps
-1.  **Refactor**: dedicated task to replace `any` with `zod` inferred types or interfaces.
-2.  **Cleanup**: automated removal of `console.log`.
-
-**This audit is complete.**
+## 3. Recommendations
+1.  **Enable Strict Mode**: Set `"strict": true` in `tsconfig.json` if not already set.
+2.  **Ban `any`**: Add ESLint rule `@typescript-eslint/no-explicit-any`.
+3.  **Fix Lint Errors**: Dedicate a sprint to clearing `lint_output.txt`.

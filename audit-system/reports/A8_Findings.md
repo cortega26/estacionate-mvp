@@ -1,36 +1,30 @@
-# Audit Report: A8 - FinOps & Resource Efficiency
-
-**Date:** 2025-12-22
-**Auditor:** Agentic Assistant (A8 Orchestrator)
-**Status:** In Progress (Partial)
-
----
+# Audit A8: FinOps & Efficiency Findings
 
 ## 1. Executive Summary
-The application is generally cost-efficient due to its Serverless architecture (paying only for invocation). However, the default function memory allocation (1024MB) is likely over-provisioned for simple CRUD operations, representing a potential cost saving of ~4x-8x on compute duration pricing if reduced.
+**Score:** C
+The project lacks Data Lifecycle Management policies, meaning the database will grow indefinitely (increasing costs). Serverless configuration in `vercel.json` uses default memory settings which is acceptable for MVP but should be tuned.
 
 ## 2. Findings
 
-### [A8-1] Vercel Function Over-provisioning (S2)
-**Location:** `vercel.json`
-**Description:** `memory: 1024` is set globally for all functions.
-**Analysis:** Simple Node.js APIs usually require 128-256MB. 1GB is excessive unless image processing is involved.
-**Optimization:** Lower execution cost roughly proportional to memory size (GB-Seconds).
-**Recommendation:** Test lowering to 256MB or 512MB for `api/` routes. Keep higher for `cron` if needed.
+### 2.1 Data Retention (Cost + Performance)
+- **[S1] Unbounded Data Growth**
+    - **Location**: `AuditLog`, `Booking` tables.
+    - **Observation**: No cron job found to archive or delete old records.
+    - **Impact**: Database storage costs will rise linearly; query performance will degrade.
+    - **Recommendation**: Add a cron job to delete `AuditLog` > 90 days.
 
-### [A8-2] Database Type Efficiency (Pass)
-**Location:** `schema.prisma`
-**Description:** Currency is stored as `Int` (4 bytes) vs `Decimal` (variable/larger).
-**Status:** Efficient storage.
+### 2.2 Compute Efficiency
+- **[S2] Serverless Cold Starts**
+    - **Observation**: `app.ts` imports all handlers at the top level.
+    - **Impact**: Larger bundle size increases cold start latency and billing duration.
+    - **Fix**: Use dynamic imports or lazy loading if supported, though standard for Express apps on Vercel is acceptable.
 
-### [A8-3] Log Volume Risk (S3)
-**Location:** `lib/logger.ts`
-**Description:** Verify `level` respects `LOG_LEVEL` env var.
-**Risk:** Debug logs in production increase ingestion, storage, and processing costs.
-**Action:** Ensure `LOG_LEVEL=info` or `warn` in Production.
+### 2.3 Database Connections
+- **[S1] Connection Pooling**
+    - **Location**: `backend/src/lib/db.ts`
+    - **Observation**: Comment explicitly states "Use a connection pooler".
+    - **Risk**: Without Supabase transaction pooler or similar, high concurrency will exhaust connections and crash the app during peak hours.
 
-## 3. Next Steps
-1.  **Action:** Lower Vercel memory settings after load testing.
-2.  **Completion:** This concludes the Master Audit Sequence (A0-A8).
-
-**This audit is complete.**
+## 3. Recommendations
+1.  **Implement Data Pruning**: Add a `cleanup.ts` cron to `src/api/cron`.
+2.  **Enable Pooling**: Configure `DATABASE_URL` to use the pooler string (port 6543 for Supabase).

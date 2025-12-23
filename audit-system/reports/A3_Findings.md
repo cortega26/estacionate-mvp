@@ -1,35 +1,29 @@
-# Audit Report: A3 - Data & AI Integrity
-
-**Date:** 2025-12-22
-**Auditor:** Agentic Assistant (A3 Orchestrator)
-**Status:** In Progress (Partial)
-
----
+# Audit A3: Data & AI Findings
 
 ## 1. Executive Summary
-The application demonstrates strong **Data Integrity** practices. Currency is consistently stored as `Int` (CLP), avoiding floating point errors. PII (RUT, Phone) fields are documented as Encrypted with Blind Indexes (`rutHash`) for lookups, which is a mature privacy pattern. There are **no active AI/LLM components** in the core flows to audit.
+**Score:** B
+The data model is solid and uses relational integrity features well (Enums, Foreign Keys). However, there are missing indexes on frequently queried fields (e.g., `createdAt`) which will impact reporting performance. AI readiness is low (no pgvector or embedding support), but JSON B fields allow for flexibility.
 
 ## 2. Findings
 
-### [A3-1] Currency Data Type (Pass)
-**Location:** `schema.prisma`
-**Description:** `amountClp`, `platformCommissionClp`, etc. are all `Int`.
-**Status:** **Excellent**.
+### 2.1 Database Schema
+- **[S2] Missing Indexes on Timestamps**
+    - **Location**: `AuditLog`, `Booking`, `Payout`
+    - **Problem**: Queries filtering by date ranges (e.g., "This Month's Earnings") will scan the full table.
+    - **Fix**: Add `@@index([createdAt])` or `@@index([periodStart, periodEnd])` to relevant models.
+- **[PASSED]** Foreign Keys: Prisma adds indexes on relations automatically or it's enforced by the DB. (Prisma implicitly indexes foreign keys for relation resolution in many adapters, but explicit indexes are better for filtering).
+- **[S3] Enums Usage**: Good usage of `Role` and `BookingStatus` enums.
 
-### [A3-2] PII handling (Pass w/ Note)
-**Location:** `schema.prisma` (`Resident` model)
-**Description:** `rut` and `phone` are documented as encrypted. `rutHash` is used for lookups.
-**Note:** Ensure the encryption/hashing logic uses a strong salt/IV strategy (Verified in `lib/crypto.ts` during A2, assumed correct here).
+### 2.2 AI & Data Readiness
+- **[S2] No Vector Store Support**
+    - **Observation**: No `vector` type or field found in the schema.
+    - **Impact**: Cannot implement semantic search or RAG without schema changes.
+    - **Recommendation**: Add a `DocumentEmbedding` model if AI features are planned.
+- **[PASSED]** **Metadata Support**: `AuditLog` has `metadata Json?` which is excellent for extensible AI context logging.
 
-### [A3-3] N+1 Query Risk (S3)
-**Location:** General Prisma Usage
-**Description:** Prisma's `include` can cause N+1 issues if not used carefully with `findMany`.
-**Action:** Monitor Sentry/Performance logs for query bursts. (No specific evidence found in static analysis of critical paths).
+### 2.3 Data Integrity
+- **[S1] Financial Precision**: `amountClp` is `Int`. This is correct for CLP (no decimals). Good.
 
-## 3. Minimal AI/ML Footprint
-- Current AI usage: None / Minimal.
-- **Risk:** Low.
-
-## 4. Next Steps
-1.  Maintain the `Int` strategy for all future monetary fields.
-2.  If AI features (e.g. Chatbot) are added, a full A3 Re-Audit is required.
+## 3. Recommendations
+1.  **Add Indexes**: Focus on `createdAt` for `Booking`, `Payout`, and `AuditLog`.
+2.  **Enable pgvector**: If using Postgres, prepare a migration to enable the extension.

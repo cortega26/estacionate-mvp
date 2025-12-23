@@ -1,44 +1,36 @@
-# Audit Report: A1 - Business Logic & Code Health
-
-**Date:** 2025-12-22
-**Auditor:** Agentic Assistant (A1 Orchestrator)
-**Status:** In Progress (Partial)
-
----
+# Audit A1: Business Logic & Code Health Findings
 
 ## 1. Executive Summary
-The business logic around **Bookings** is relatively robust, using transactions for race condition prevention (verified in `fix-s3-race.test.ts` previously). However, there are potential issues in the state transitions and cron idempotency that need addressing.
+**Score:** B-
+The core business logic is relatively clean but lacks robustness in critical financial flows. Specifically, the commission calculation is not idempotent, posing a risk of double-payments. Error handling in services is minimal, often relying on the caller or global handlers without specific error types.
 
 ## 2. Findings
 
-### [A1-1] Booking Cleanup Cron - Potential Idempotency Issue (S2)
-**Location:** `backend/api/cron/cleanup-bookings.ts`
-**Description:** The cron job checks `status: 'pending'` and `createdAt < 15 mins ago`.
-**Why It Fails:** If the cron executes, it updates `Booking` to `cancelled` AND `AvailabilityBlock` to `available`. This *is* transactional. However, if the `AvailabilityBlock` was somehow *already* released (manual admin intervention), the transaction might still proceed if not checking specific invariants.
-**Impact:** Low. The transaction ensures consistency.
-**Fix:** Ensure the query checks that `AvailabilityBlock` is NOT already `available` if we prefer strictness, but currently it seems safe as it blindly resets to `available`.
+### 2.1 Financial Integry (Critical)
+- **[S1] Idempotency Failure in Commission Calculation**
+    - **Location**: `backend/src/services/SalesService.ts:10` (calculateCommission)
+    - **Problem**: The function does not check if a `Commission` record already exists for the given `Payout`.
+    - **Impact**: If `calculateCommission` is triggered twice (e.g., retry logic, race condition), the Sales Rep will receive double commission.
+    - **Fix**: Add a check at the start:
+      ```typescript
+      const existing = await prisma.salesRepCommission.findFirst({ where: { payoutId: payout.id } });
+      if (existing) return existing;
+      ```
 
-### [A1-2] Double Booking Prevention (Positive)
-**Location:** `backend/tests/fix-s3-race.test.ts` (Reference)
-**Description:** Previous audits fixed the critical race condition using parent locking (`VisitorSpot` lock).
-**Status:** Verified.
+### 2.2 Error Handling
+- **[S2] Generic Error Handling**
+    - **Location**: `backend/src/services/auth.ts:29`
+    - **Problem**: `verifyToken` generic `catch` block returns `null` for *any* error (expired, malformed, signing key mismatch).
+    - **Impact**: Hard to debug why tokens are rejected.
+    - **Fix**: Differentiate TokenExpiredError vs JsonWebTokenError.
 
-### [A1-3] Payment State Machine Completeness (FIXED)
-**Location:** `backend/api/cron/complete-bookings.ts`
-**Description:** Created cron job to transition `confirmed` bookings to `completed` after `endDatetime`.
-**Status:** **Fixed** (File created).
+### 2.3 State Management
+- **[S2] Missing Transactional Boundaries**
+    - **Location**: `SalesService.ts`
+    - **Problem**: Commission creation is separated from Payout updates. If one fails, data could be inconsistent.
+    - **Recommendation**: Use `prisma.$transaction` when linking financial records.
 
-### [A1-4] Missing "Force Release" for Manual overrides (S3)
-**Location:** `backend/api/bookings/cancel.ts` (Hypothetical/Missing)
-**Description:** If a resident cancels a booking manually, we must ensure the `AvailabilityBlock` is set back to `available`.
-**Recommendation:** Verify `cancel` endpoint logic (delegated to next step).
+## 3. Recommendations
+1.  **Fix Idempotency**: Immediately patch `SalesService.ts` to prevent duplicate commissions.
+2.  **Transactions**: Wrap related DB mutations in interactions.
 
-## 3. Mandatory Correctness Checks
-
-- **Math:** Currency is Integer (CLP). **Pass.**
-- **State Machines:** Transitions needed for `confirmed` -> `completed`.
-- **Error Semantics:** `cleanup-bookings.ts` swallows errors into `logger.error` but returns 500. This is acceptable for a cron.
-
-## 4. Next Steps
-1.  Verify the existence of `complete-bookings` logic.
-2.  If missing, create it.

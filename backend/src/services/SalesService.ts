@@ -1,5 +1,5 @@
 import { db as prisma } from '../lib/db.js';
-import { Payout } from '@prisma/client';
+import { Payout, Prisma } from '@prisma/client';
 import { logger } from '../lib/logger.js';
 
 export class SalesService {
@@ -9,6 +9,15 @@ export class SalesService {
      */
     static async calculateCommission(payout: Payout) {
         logger.info(`Calculating commission for Payout ${payout.id} (Building ${payout.buildingId})`);
+
+        // Idempotency Check: Don't double pay
+        const existing = await prisma.salesRepCommission.findFirst({
+            where: { payoutId: payout.id }
+        });
+        if (existing) {
+            logger.info(`Commission already exists for Payout ${payout.id}. Skipping.`);
+            return existing;
+        }
 
         const building = await prisma.building.findUnique({
             where: { id: payout.buildingId },
@@ -39,20 +48,34 @@ export class SalesService {
         }
 
         // Create Commission Record
-        const commission = await prisma.salesRepCommission.create({
-            data: {
-                salesRepId: building.salesRepId,
-                buildingId: building.id,
-                payoutId: payout.id,
-                amountClp: commissionAmount,
-                status: 'pending',
-                periodStart: payout.periodStart,
-                periodEnd: payout.periodEnd
-            }
-        });
 
-        logger.info(`Created Commission ${commission.id} for Sales Rep ${building.salesRep?.email}: ${commissionAmount} CLP`);
-        return commission;
+        try {
+            const commission = await prisma.salesRepCommission.create({
+                data: {
+                    salesRepId: building.salesRepId,
+                    buildingId: building.id,
+                    payoutId: payout.id,
+                    amountClp: commissionAmount,
+                    status: 'pending',
+                    periodStart: payout.periodStart,
+                    periodEnd: payout.periodEnd
+                }
+            });
+            logger.info(`Created Commission ${commission.id} for Sales Rep ${building.salesRep?.email}: ${commissionAmount} CLP`);
+            return commission;
+        } catch (error) {
+            if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+                logger.info(`Commission creation race condition caught for Payout ${payout.id}. Returning existing record.`);
+                const existing = await prisma.salesRepCommission.findFirst({
+                    where: { payoutId: payout.id }
+                });
+                return existing;
+            }
+            throw error;
+        }
+
+
+
     }
 
     static async getDashboardStats(salesRepId: string) {
