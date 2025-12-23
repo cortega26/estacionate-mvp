@@ -78,17 +78,35 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
             // Create Payout Record
             // Create Payout Record
-            const payout = await db.payout.create({
-                data: {
-                    buildingId: building.id,
-                    periodStart: startDate,
-                    periodEnd: endDate,
-                    totalRevenueClp: totalRevenue,
-                    platformCommissionClp: totalCommission,
-                    buildingShareClp: buildingShare,
-                    status: 'calculated'
+            let payout;
+            try {
+                payout = await db.payout.create({
+                    data: {
+                        buildingId: building.id,
+                        periodStart: startDate,
+                        periodEnd: endDate,
+                        totalRevenueClp: totalRevenue,
+                        platformCommissionClp: totalCommission,
+                        buildingShareClp: buildingShare,
+                        status: 'calculated'
+                    }
+                })
+            } catch (err: any) {
+                if (err.code === 'P2002') {
+                    logger.warn({ buildingId: building.id }, '[Reconcile] Race condition detected: Payout created by another process. Skipping.')
+                    results.push({ building: building.name, status: 'skipped_race_condition' })
+                    continue
                 }
-            })
+                if (err.code === 'P2003') {
+                    logger.warn({ buildingId: building.id }, '[Reconcile] Race condition detected: Building deleted during processing. Skipping.')
+                    results.push({ building: building.name, status: 'skipped_building_deleted' })
+                    continue
+                }
+                // Catch other errors to avoid crashing the whole job
+                logger.error({ error: err.message, buildingId: building.id }, '[Reconcile] Error processing building')
+                results.push({ building: building.name, status: 'error', error: err.message })
+                continue
+            }
 
             // Calculate and Record Sales Commission if applicable
             await SalesService.calculateCommission(payout).catch(err => {
@@ -112,7 +130,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     } catch (error: unknown) {
         const msg = error instanceof Error ? error.message : String(error)
-        logger.error({ error: msg }, '[Reconcile] Job Failed')
+        const stack = error instanceof Error ? error.stack : 'No stack'
+        logger.error({ error: msg, stack }, '[Reconcile] Job Failed')
         return res.status(500).json({ error: 'Internal Server Error' })
     }
 }

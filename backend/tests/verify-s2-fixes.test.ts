@@ -43,8 +43,20 @@ vi.mock('cookie', () => ({
     serialize: vi.fn().mockReturnValue('cookie-string')
 }))
 
+vi.mock('../src/lib/redis.js', () => ({
+    redis: {
+        status: 'ready',
+        incr: vi.fn(),
+        expire: vi.fn(),
+        get: vi.fn(),
+        del: vi.fn(),
+        on: vi.fn()
+    }
+}))
+
 import loginHandler from '../src/api/auth/login.js'
 import { comparePassword } from '../src/services/auth.js'
+import { redis } from '../src/lib/redis.js'
 
 describe('S2 Security Fixes Verification', () => {
 
@@ -87,16 +99,19 @@ describe('S2 Security Fixes Verification', () => {
 
     describe('Fix 5 (S2): Rate Limiting', () => {
         it('should reject locked account with 429', async () => {
-            mockResidentFind.mockResolvedValue(lockedResident);
+            // Mock Redis lockout
+            vi.mocked(redis.get).mockResolvedValue('5');
 
             await expect(loginHandler(mockReq({ email: 'test@example.com', password: 'password' }) as any, mockRes as any))
                 .rejects.toMatchObject({
                     statusCode: 429,
-                    code: 'AUTH-LOGIN-1002' // AUTH_ACCOUNT_LOCKED
+                    code: 'AUTH-LOGIN-1002'
                 })
         })
 
         it('should increment failed attempts on bad password', async () => {
+            vi.mocked(redis.get).mockResolvedValue('0');
+
             mockResidentFind.mockResolvedValue(verifiedResident);
             (comparePassword as any).mockResolvedValue(false) // Wrong password
 
@@ -106,9 +121,8 @@ describe('S2 Security Fixes Verification', () => {
                     code: 'AUTH-LOGIN-1001' // AUTH_INVALID_CREDENTIALS
                 })
 
-            expect(mockResidentUpdate).toHaveBeenCalledWith(expect.objectContaining({
-                data: expect.objectContaining({ failedLoginAttempts: 1 })
-            }))
+            // Verify Redis was incremented
+            expect(redis.incr).toHaveBeenCalled();
         })
     })
 })

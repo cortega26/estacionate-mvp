@@ -4,6 +4,24 @@
 > **Goal:** Build a robust, secure, and performant parking management platform.
 > **Context:** This project is a Monorepo. Frontend is in `/frontend`, Backend is in `/backend`.
 
+## 🚨 RULE 1: THE TURN-BASED LOCK
+The Agent is strictly forbidden from providing a solution diff in Turn 1.
+- **Turn 1 (Reproduction):** Create a test file (*.test.ts) and run it. Provide terminal output (max 20 lines) showing the test **FAILING**.
+- **Turn 2 (Fix):** Provide the code fix.
+- **Turn 3 (Verification):** Run `bash scripts/verify.sh`. Provide the terminal output showing **SUCCESS**.
+
+## 🛡️ RULE 2: THE "EVIDENCE" MANDATE
+Every response ending a task MUST contain the "Audit Trail" footer with a **raw snippet** of the test results.
+
+## 📋 MANDATORY AUDIT TRAIL
+---
+### 🤖 Agentic Verification Report
+- **Reasoning Tier:** [1|2|3]
+- **Failing Test Proof:** `[Paste 1-2 lines of the initial FAIL]`
+- **Passing Test Proof:** `[Paste 1-2 lines of the final PASS]`
+- **Monorepo Safety:** [Checked FE/BE/Prisma? Y/N]
+- **Verification Command:** `bash scripts/verify.sh`
+
 ## 0. Knowledge Hub (Context & Memory)
 **Before starting any task, you must check these files:**
 
@@ -33,8 +51,15 @@
   - **Functional Style:** Prefer pure functions. Avoid classes unless necessary.
   - **Early Returns:** Reduce indentation. Guard clauses first.
   - **Boy Scout Rule:** If you touch a file, fix adjacent lint warnings.
+  - **Metrics:** ≤80 LOC per function, Cyclomatic complexity ≤10.
 
-## 3. Operational Guardrails
+## 3. Compliance & Operational Guardrails
+
+### 📏 METRICS & STANDARDS (STRICT)
+- **Coverage:** Aim for 80% overall, **90% for changed/new code**.
+- **Commits:** Follow Conventional Commits: `<type>(<scope>): <subject>`.
+  - Types: `feat`, `fix`, `refactor`, `docs`, `test`, `perf`, `chore`.
+- **Terminal Output:** NEVER emit single lines >200 characters (Compliance R9).
 
 ### 🛑 CRITICAL PROHIBITIONS (DO NOT):
 - **DO NOT** run `npm audit fix --force`. It breaks dependencies.
@@ -45,7 +70,7 @@
 
 ### ✅ REQUIRED ACTIONS (DO):
 - **DO** read the terminal output after every command. If an error occurs, STOP and fix it.
-- **DO** run `npm test` related to the file you changed before declaring a task done.
+- **DO** run `npm run test` related to the file you changed before declaring a task done.
 - **DO** check for existing utility functions in `src/utils` before writing new ones.
 
 ## 4. Specific Workflows

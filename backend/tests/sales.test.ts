@@ -44,7 +44,7 @@ describe('Sales System & Admin User Management', () => {
                 .set('Cookie', `token=${adminToken}`)
                 .send({
                     email: salesRepEmail,
-                    password: 'password123',
+                    password: 'password123456',
                     role: 'sales_rep',
                     firstName: 'John',
                     lastName: 'Doe'
@@ -141,8 +141,8 @@ describe('Sales System & Admin User Management', () => {
             const payout2 = await db.payout.create({
                 data: {
                     buildingId: buildingId,
-                    periodStart: new Date(),
-                    periodEnd: new Date(),
+                    periodStart: new Date(new Date().setDate(new Date().getDate() - 30)), // Last month
+                    periodEnd: new Date(new Date().setDate(new Date().getDate() - 1)),
                     totalRevenueClp: 50000,
                     platformCommissionClp: 5000,
                     buildingShareClp: 45000,

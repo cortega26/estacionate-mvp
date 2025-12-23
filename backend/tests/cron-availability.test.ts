@@ -39,7 +39,7 @@ describe('Availability Generator Cron (Integration)', () => {
     });
 
     it('should generate blocks for the next 30 days', async () => {
-        const req = { method: 'POST', headers: {} } as any;
+        const req = { method: 'POST', body: { spotId }, headers: {} } as any;
         const res = {
             status: (code: number) => ({
                 json: (data: any) => ({ code, data })
@@ -59,7 +59,7 @@ describe('Availability Generator Cron (Integration)', () => {
     });
 
     it('should be idempotent (not create duplicates)', async () => {
-        const req = { method: 'POST', headers: {} } as any;
+        const req = { method: 'POST', body: { spotId }, headers: {} } as any;
         const res = {
             status: (code: number) => ({
                 json: (data: any) => ({ code, data })

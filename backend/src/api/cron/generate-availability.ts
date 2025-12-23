@@ -2,7 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { db } from '../../lib/db.js';
 import { logger } from '../../lib/logger.js';
 import { DurationType } from '@prisma/client';
-import { addDays, setHours, setMinutes, setSeconds, setMilliseconds, isBefore } from 'date-fns';
+import { addDays, setHours, setMinutes, setSeconds, setMilliseconds } from 'date-fns';
 import { toZonedTime } from 'date-fns-tz';
 
 const TIMEZONE = 'America/Santiago';
@@ -20,8 +20,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     logger.info('[Availability Job] Starting generation...');
 
     try {
+        const { spotId } = req.body || req.query || {};
+        const where: any = { isActive: true };
+        if (spotId) where.id = spotId;
+
         const spots = await db.visitorSpot.findMany({
-            where: { isActive: true },
+            where,
             select: { id: true }
         });
 
@@ -50,10 +54,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             }
         });
 
-        // Create a fast lookup map: spotId -> "start_end" strings
-        const existingMap = new Set<string>();
+        // Group existing blocks by SpotId for faster overlap check
+        const existingBlocksMap = new Map<string, { start: number, end: number }[]>();
+
         for (const b of existingBlocks) {
-            existingMap.add(`${b.spotId}_${b.startDatetime.getTime()}_${b.endDatetime.getTime()}`);
+            if (!existingBlocksMap.has(b.spotId)) {
+                existingBlocksMap.set(b.spotId, []);
+            }
+            existingBlocksMap.get(b.spotId)!.push({
+                start: b.startDatetime.getTime(),
+                end: b.endDatetime.getTime()
+            });
         }
 
         const newBlocks = [];
@@ -77,19 +88,26 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             ];
 
             for (const spot of spots) {
-                for (const slot of slots) {
-                    const key = `${spot.id}_${slot.start.getTime()}_${slot.end.getTime()}`;
+                const existingIntervals = existingBlocksMap.get(spot.id) || [];
 
-                    // Exact Match Check (Simplified for performance, assuming rigid grid)
-                    // If we wanted robust overlap check, we'd need interval tree or filter, but grid is rigid.
-                    if (existingMap.has(key)) {
+                for (const slot of slots) {
+                    const slotStart = slot.start.getTime();
+                    const slotEnd = slot.end.getTime();
+
+                    // Check for ANY Overlap
+                    // (SlotStart < ExistingEnd) && (SlotEnd > ExistingStart)
+                    let isOverlapping = false;
+                    for (const existing of existingIntervals) {
+                        if (slotStart < existing.end && slotEnd > existing.start) {
+                            isOverlapping = true;
+                            break;
+                        }
+                    }
+
+                    if (isOverlapping) {
                         skippedCount++;
                         continue;
                     }
-
-                    // For more robust overlap (e.g. if partial block exists), we could check:
-                    // But for MVP automated generation, we assume we own the grid. 
-                    // Let's stick to exact match for 10x speedup.
 
                     newBlocks.push({
                         spotId: spot.id,

@@ -214,6 +214,7 @@ model AvailabilityBlock {
   @@map("availability_blocks")
   @@index([spotId, status])
   @@index([startDatetime, endDatetime])
+  @@index([spotId, startDatetime, endDatetime]) // Hardening: Optimize overlap checks
   @@index([status, startDatetime]) // Optimized for "Find Available Spots" query
 }
 
@@ -241,6 +242,7 @@ model Booking {
   @@map("bookings")
   @@index([residentId])
   @@index([status])
+  @@index([paymentStatus]) // Hardening: Reconciliation performance
   @@index([createdAt])
   @@index([availabilityBlockId])
 }
@@ -282,6 +284,7 @@ model Payout {
   @@index([buildingId])
   @@index([status])
   @@index([createdAt])
+  @@unique([buildingId, periodStart, periodEnd]) // Hardening: Prevent duplicate payouts
   @@map("payouts")
 }
 
