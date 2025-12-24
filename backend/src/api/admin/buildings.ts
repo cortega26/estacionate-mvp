@@ -17,8 +17,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     try {
         if (req.method === 'GET') {
             // List all buildings with detailed revenue/financial info
+            const activeOnly = req.query.activeOnly === 'true';
+
             // Fetch buildings
             const buildings = await db.building.findMany({
+                where: activeOnly ? { isActive: true } : {},
                 orderBy: { name: 'asc' },
                 include: {
                     _count: {
@@ -33,6 +36,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 const data = buildings.map(b => ({
                     id: b.id,
                     name: b.name,
+                    isActive: b.isActive,
                     salesRepId: b.salesRepId,
                     salesRepCommissionRate: b.salesRepCommissionRate,
                     salesRep: b.salesRep
@@ -67,6 +71,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                     id: b.id,
                     name: b.name,
                     address: b.address,
+                    isActive: b.isActive,
                     adminCompany: b.adminCompany,
                     totalVisitorSpots: b._count.visitorSpots,
                     platformCommissionRate: b.platformCommissionRate,
@@ -87,7 +92,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         if (req.method === 'PUT') {
             // Update Building Settings
-            const { id, platformCommissionRate, softwareMonthlyFeeClp, name, address } = req.body;
+            const { id, platformCommissionRate, softwareMonthlyFeeClp, name, address, isActive } = req.body;
 
             if (!id) return res.status(400).json({ error: 'Missing building ID' });
 
@@ -99,7 +104,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                     salesRepCommissionRate: req.body.salesRepCommissionRate !== undefined ? Number(req.body.salesRepCommissionRate) : undefined,
                     salesRepId: req.body.salesRepId || undefined,
                     name,
-                    address
+                    address,
+                    isActive: isActive !== undefined ? Boolean(isActive) : undefined
                 }
             });
 

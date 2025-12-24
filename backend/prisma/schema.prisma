@@ -74,6 +74,7 @@ model Building {
   updatedAt         DateTime @default(now()) @updatedAt @map("updated_at")
   platformCommissionRate Float    @default(0.10) @map("platform_commission_rate")
   softwareMonthlyFeeClp  Int      @default(0)    @map("software_monthly_fee_clp")
+  isActive               Boolean  @default(true) @map("is_active")
 
   salesRepId             String?  @map("sales_rep_id")
   salesRepCommissionRate Float    @default(0.05) @map("sales_rep_commission_rate")

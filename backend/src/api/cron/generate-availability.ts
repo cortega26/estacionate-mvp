@@ -21,7 +21,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     try {
         const { spotId } = req.body || req.query || {};
-        const where: any = { isActive: true };
+        const where: any = {
+            isActive: true,
+            building: { isActive: true }
+        };
         if (spotId) where.id = spotId;
 
         const spots = await db.visitorSpot.findMany({

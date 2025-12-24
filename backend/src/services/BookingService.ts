@@ -61,6 +61,11 @@ export class BookingService {
                 }
             });
 
+            // Check if Building is Active checks
+            if ((block.spot.building as any).isActive === false) {
+                throw AppError.conflict(ServiceErrorCode.BLOCK_UNAVAILABLE, 'Building is archived/inactive');
+            }
+
             // Business Rules Validation
             BookingValidator.validateBusinessRules(user, block.spot.buildingId, block.startDatetime);
 

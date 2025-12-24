@@ -370,5 +370,48 @@ describe('Booking Flow (Integration)', () => {
         }
     });
 
+    it('should prevent booking if the building is archived (isActive=false)', async () => {
+        // 1. Archive the building
+        await prisma.building.update({
+            where: { id: buildingId },
+            data: { isActive: false }
+        });
+
+        // 2. Create an Available Block
+        const start = new Date();
+        start.setDate(start.getDate() + 5);
+        const blockArchived = await prisma.availabilityBlock.create({
+            data: {
+                spotId,
+                startDatetime: start,
+                endDatetime: new Date(start.getTime() + 3600000),
+                durationType: DurationType.ELEVEN_HOURS,
+                basePriceClp: 5000,
+                status: 'available'
+            }
+        });
+
+        try {
+            await axios.post(`${API_URL}/api/bookings/create`, {
+                blockId: blockArchived.id,
+                vehiclePlate: 'ARCH-00',
+                visitorName: 'Archived Visitor'
+            }, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            expect(true).toBe(false); // Should fail
+        } catch (error: any) {
+            expect(error.response?.status).toBe(409);
+            expect(error.response?.data?.error).toMatch(/Building is archived/i);
+        } finally {
+            // Restore Active
+            await prisma.building.update({
+                where: { id: buildingId },
+                data: { isActive: true }
+            });
+            await prisma.availabilityBlock.delete({ where: { id: blockArchived.id } });
+        }
+    });
+
 });
 

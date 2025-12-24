@@ -9,6 +9,7 @@ interface Building {
     id: string;
     name: string;
     address: string;
+    isActive: boolean;
     platformCommissionRate: number;
     softwareMonthlyFeeClp: number;
     totalUnits: number;
@@ -25,6 +26,7 @@ export const BuildingsPage = () => {
     const queryClient = useQueryClient();
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [selectedBuilding, setSelectedBuilding] = useState<Building | null>(null);
+    const [showArchived, setShowArchived] = useState(false); // Default: Hide archived
 
     // Form state
     const [editForm, setEditForm] = useState({
@@ -35,9 +37,9 @@ export const BuildingsPage = () => {
     });
 
     const { data: buildings, isLoading } = useQuery({
-        queryKey: ['admin-buildings'],
+        queryKey: ['admin-buildings', showArchived], // Refetch when filter changes
         queryFn: async () => {
-            const res = await api.get<{ data: Building[] }>('/admin/buildings');
+            const res = await api.get<{ data: Building[] }>(`/admin/buildings?activeOnly=${!showArchived}`);
             return res.data.data;
         }
     });
@@ -56,40 +58,19 @@ export const BuildingsPage = () => {
         }
     });
 
-    const deleteMutation = useMutation({
-        mutationFn: async ({ id, force }: { id: string, force?: boolean }) => {
-            await api.delete(`/admin/buildings?id=${id}${force ? '&force=true' : ''}`);
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['admin-buildings'] });
-            toast.success('Edificio eliminado correctamente');
-        },
-        onError: (error: any) => {
-            // Only show toast if it's NOT a 409 (which we handle manually) or if we are already forcing
-            if (error.response?.status !== 409) {
-                const msg = error.response?.data?.error || 'Error al eliminar edificio';
-                toast.error(msg);
-            }
-        }
-    });
+    // ... deleteMutation ...
 
-    const handleDelete = async (id: string) => {
-        if (!confirm('¿Estás seguro de que quieres eliminar este edificio?')) return;
-
-        try {
-            await deleteMutation.mutateAsync({ id, force: false });
-        } catch (error: any) {
-            if (error.response?.status === 409) {
-                if (confirm('Atención: Este edificio tiene registros asociados (residentes, reservas, etc.).\n\n¿Deseas FORZAR la eliminación de TODO el historial y datos asociados?\n\nEsta acción es irreversible.')) {
-                    try {
-                        await deleteMutation.mutateAsync({ id, force: true });
-                    } catch (forceError: any) {
-                        toast.error(forceError.response?.data?.error || 'Error al forzar eliminación');
-                    }
-                }
-            }
+    const handleToggleActive = (building: Building) => {
+        const action = building.isActive ? 'Archivar' : 'Activar';
+        if (confirm(`¿Seguro que quieres ${action} el edificio "${building.name}"?`)) {
+            updateMutation.mutate({
+                id: building.id,
+                isActive: !building.isActive
+            });
         }
     };
+
+    // ... handleDelete ...
 
     const handleEdit = (building: Building) => {
         setSelectedBuilding(building);
@@ -114,13 +95,27 @@ export const BuildingsPage = () => {
 
     return (
         <div className="space-y-6">
-            <h1 className="text-2xl font-bold text-slate-800">Gestión de Edificios (Super Admin)</h1>
+            <div className="flex justify-between items-center">
+                <h1 className="text-2xl font-bold text-slate-800">Gestión de Edificios (Super Admin)</h1>
+                <div className="flex items-center gap-2">
+                    <label className="text-sm text-gray-600 flex items-center gap-2 cursor-pointer">
+                        <input
+                            type="checkbox"
+                            checked={showArchived}
+                            onChange={(e) => setShowArchived(e.target.checked)}
+                            className="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                        />
+                        Mostrar Archivados
+                    </label>
+                </div>
+            </div>
 
             <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                 <table className="min-w-full divide-y divide-slate-200">
                     <thead className="bg-slate-50">
                         <tr>
                             <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Edificio</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Estado</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Configuración Financiera</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Estadísticas (Volumen / Ganancias Platform)</th>
                             <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Acciones</th>
@@ -128,13 +123,18 @@ export const BuildingsPage = () => {
                     </thead>
                     <tbody className="bg-white divide-y divide-slate-200">
                         {buildings?.map((building) => (
-                            <tr key={building.id} className="hover:bg-slate-50">
+                            <tr key={building.id} className={`hover:bg-slate-50 ${!building.isActive ? 'bg-gray-50' : ''}`}>
                                 <td className="px-6 py-4">
                                     <div className="text-sm font-medium text-slate-900">{building.name}</div>
                                     <div className="text-sm text-slate-500">{building.address}</div>
                                     <div className="text-xs text-slate-400 mt-1">
                                         Units: {building.totalUnits} | Spots: {building.totalVisitorSpots}
                                     </div>
+                                </td>
+                                <td className="px-6 py-4">
+                                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${building.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                                        {building.isActive ? 'Activo' : 'Archivado'}
+                                    </span>
                                 </td>
                                 <td className="px-6 py-4">
                                     <div className="text-sm text-slate-900">
@@ -155,7 +155,13 @@ export const BuildingsPage = () => {
                                         (Comisión: ${building.stats.platformCommissionClp.toLocaleString()} + Fee)
                                     </div>
                                 </td>
-                                <td className="px-6 py-4 text-right">
+                                <td className="px-6 py-4 text-right flex items-center justify-end gap-3">
+                                    <button
+                                        onClick={() => handleToggleActive(building)}
+                                        className="text-xs font-medium text-gray-500 hover:text-gray-900"
+                                    >
+                                        {building.isActive ? 'Archivar' : 'Restaurar'}
+                                    </button>
                                     <button
                                         onClick={() => handleEdit(building)}
                                         className="text-indigo-600 hover:text-indigo-900 text-sm font-medium"
@@ -164,11 +170,11 @@ export const BuildingsPage = () => {
                                     </button>
                                     <button
                                         onClick={() => handleDelete(building.id)}
-                                        className="text-red-600 hover:text-red-900 text-sm font-medium ml-4 flex items-center float-right"
+                                        className="text-red-600 hover:text-red-900 text-sm font-medium"
+                                        title="Eliminar permanentemente"
                                         disabled={deleteMutation.isPending}
                                     >
-                                        <Trash2 className="w-4 h-4 mr-1" />
-                                        Eliminar
+                                        <Trash2 className="w-4 h-4" />
                                     </button>
                                 </td>
                             </tr>
