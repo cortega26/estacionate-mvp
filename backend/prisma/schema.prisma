@@ -245,6 +245,11 @@ model Booking {
   @@index([paymentStatus]) // Hardening: Reconciliation performance
   @@index([createdAt])
   @@index([availabilityBlockId])
+  
+  // Phase 2: Scalability Indexes for Search
+  @@index([visitorName])
+  @@index([vehiclePlate])
+  @@index([confirmationCode])
 }
 
 model Payment {

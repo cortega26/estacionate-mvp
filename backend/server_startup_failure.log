@@ -1,0 +1,17 @@
+
+> estacionate-backend@1.0.0 test
+> vitest run tests/server-startup.test.ts
+
+
+[1m[46m RUN [49m[22m [36mv4.0.16 [39m[90mC:/Users/corte/VS Code Projects/estacionate-mvp/backend[39m
+
+[90mstdout[2m | tests/server-startup.test.ts[2m > [22m[2mServer Startup & Connectivity[2m > [22m[2mshould start the server and accept connections within timeout
+[22m[39mSpawning server: C:\Users\corte\VS Code Projects\estacionate-mvp\backend\dev-server.ts
+
+ [32m✓[39m tests/server-startup.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 543[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+[2m   Start at [22m 11:25:58
+[2m   Duration [22m 820ms[2m (transform 27ms, setup 0ms, import 134ms, tests 543ms, environment 0ms)[22m
+

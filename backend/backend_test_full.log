@@ -1,0 +1,450 @@
+
+> estacionate-backend@1.0.0 test
+> vitest run
+
+
+[1m[46m RUN [49m[22m [36mv4.0.16 [39m[90mC:/Users/corte/VS Code Projects/estacionate-mvp/backend[39m
+
+[90mstderr[2m | tests/payment-service-real.test.ts[2m > [22m[2mPaymentService (Real Mode Integration)
+[22m[39m⚠️ Twilio Credentials missing. WhatsApp notifications will be MOCKED.
+
+{"level":40,"time":1766586394684,"pid":33560,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":40,"time":1766586394687,"pid":35812,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":40,"time":1766586394690,"pid":32772,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":40,"time":1766586394691,"pid":23356,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":40,"time":1766586394695,"pid":6032,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":40,"time":1766586394699,"pid":33164,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":40,"time":1766586394718,"pid":18936,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":40,"time":1766586394718,"pid":1524,"hostname":"i5-12600","error":"","msg":"Redis error"}
+[90mstderr[2m | tests/bookings.test.ts
+[22m[39m⚠️ Twilio Credentials missing. WhatsApp notifications will be MOCKED.
+
+[90mstderr[2m | tests/coverage-gap.test.ts
+[22m[39m⚠️ Twilio Credentials missing. WhatsApp notifications will be MOCKED.
+
+{"level":40,"time":1766586394812,"pid":23356,"hostname":"i5-12600","error":"","msg":"Redis error"}
+[90mstderr[2m | tests/integration/webhook-payment-flow.test.ts
+[22m[39m⚠️ Twilio Credentials missing. WhatsApp notifications will be MOCKED.
+
+[90mstderr[2m | tests/admin.test.ts
+[22m[39m⚠️ Twilio Credentials missing. WhatsApp notifications will be MOCKED.
+
+[90mstderr[2m | tests/payments.test.ts
+[22m[39m⚠️ Twilio Credentials missing. WhatsApp notifications will be MOCKED.
+
+[90mstderr[2m | tests/cancellation.test.ts
+[22m[39m⚠️ Twilio Credentials missing. WhatsApp notifications will be MOCKED.
+
+{"level":40,"time":1766586394817,"pid":33164,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":40,"time":1766586394817,"pid":33560,"hostname":"i5-12600","error":"","msg":"Redis error"}
+[90mstderr[2m | tests/sales.test.ts
+[22m[39m⚠️ Twilio Credentials missing. WhatsApp notifications will be MOCKED.
+
+[90mstderr[2m | tests/admin-buildings.test.ts
+[22m[39m⚠️ Twilio Credentials missing. WhatsApp notifications will be MOCKED.
+
+[90mstderr[2m | tests/signup.test.ts
+[22m[39m⚠️ Twilio Credentials missing. WhatsApp notifications will be MOCKED.
+
+{"level":30,"time":1766586394815,"pid":36012,"hostname":"i5-12600","msg":"Calculating commission for Payout 85c08623-5601-4463-b639-2d968485d237 (Building commission-test-building)"}
+[90mstderr[2m | tests/search.test.ts
+[22m[39m⚠️ Twilio Credentials missing. WhatsApp notifications will be MOCKED.
+
+{"level":40,"time":1766586394842,"pid":35812,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":40,"time":1766586394843,"pid":18936,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":40,"time":1766586394843,"pid":1524,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":40,"time":1766586394843,"pid":32772,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":40,"time":1766586394844,"pid":6032,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":40,"time":1766586395080,"pid":1524,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":40,"time":1766586395085,"pid":33164,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":40,"time":1766586395091,"pid":18936,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":40,"time":1766586395097,"pid":35812,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":40,"time":1766586395111,"pid":23356,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":40,"time":1766586395122,"pid":32772,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":40,"time":1766586395151,"pid":33560,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":40,"time":1766586395166,"pid":6032,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":40,"time":1766586395254,"pid":1524,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":50,"time":1766586395254,"pid":1524,"hostname":"i5-12600","msg":"Redis connection failed after 3 retries"}
+{"level":40,"time":1766586395255,"pid":33164,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":50,"time":1766586395255,"pid":33164,"hostname":"i5-12600","msg":"Redis connection failed after 3 retries"}
+{"level":40,"time":1766586395255,"pid":35812,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":50,"time":1766586395255,"pid":35812,"hostname":"i5-12600","msg":"Redis connection failed after 3 retries"}
+{"level":40,"time":1766586395267,"pid":23356,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":50,"time":1766586395267,"pid":23356,"hostname":"i5-12600","msg":"Redis connection failed after 3 retries"}
+{"level":40,"time":1766586395282,"pid":32772,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":50,"time":1766586395282,"pid":32772,"hostname":"i5-12600","msg":"Redis connection failed after 3 retries"}
+{"level":40,"time":1766586395283,"pid":18936,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":50,"time":1766586395283,"pid":18936,"hostname":"i5-12600","msg":"Redis connection failed after 3 retries"}
+{"level":40,"time":1766586395319,"pid":33560,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":50,"time":1766586395319,"pid":33560,"hostname":"i5-12600","msg":"Redis connection failed after 3 retries"}
+{"level":40,"time":1766586395325,"pid":6032,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":50,"time":1766586395325,"pid":6032,"hostname":"i5-12600","msg":"Redis connection failed after 3 retries"}
+{"level":30,"time":1766586395377,"pid":36012,"hostname":"i5-12600","msg":"Created Commission 299ff475-3a28-4540-ba1a-86bf22a9e475 for Sales Rep commission-test-rep@example.com: 5000 CLP"}
+{"level":30,"time":1766586395606,"pid":36012,"hostname":"i5-12600","msg":"Calculating commission for Payout 44426050-000d-4924-a8c4-95f08fd337f0 (Building commission-test-building)"}
+{"level":30,"time":1766586395607,"pid":36012,"hostname":"i5-12600","msg":"Calculating commission for Payout 44426050-000d-4924-a8c4-95f08fd337f0 (Building commission-test-building)"}
+{"level":30,"time":1766586395607,"pid":36012,"hostname":"i5-12600","msg":"Calculating commission for Payout 44426050-000d-4924-a8c4-95f08fd337f0 (Building commission-test-building)"}
+{"level":40,"time":1766586395673,"pid":6032,"hostname":"i5-12600","msg":"⚠️ Sentry initialized (Mock Mode - No DSN)."}
+{"level":40,"time":1766586395675,"pid":1524,"hostname":"i5-12600","msg":"⚠️ Sentry initialized (Mock Mode - No DSN)."}
+{"level":40,"time":1766586395675,"pid":33164,"hostname":"i5-12600","msg":"⚠️ Sentry initialized (Mock Mode - No DSN)."}
+{"level":40,"time":1766586395677,"pid":23356,"hostname":"i5-12600","msg":"⚠️ Sentry initialized (Mock Mode - No DSN)."}
+{"level":40,"time":1766586395681,"pid":33560,"hostname":"i5-12600","msg":"⚠️ Sentry initialized (Mock Mode - No DSN)."}
+{"level":40,"time":1766586395680,"pid":32772,"hostname":"i5-12600","msg":"⚠️ Sentry initialized (Mock Mode - No DSN)."}
+{"level":40,"time":1766586395684,"pid":18936,"hostname":"i5-12600","msg":"⚠️ Sentry initialized (Mock Mode - No DSN)."}
+{"level":40,"time":1766586395684,"pid":35812,"hostname":"i5-12600","msg":"⚠️ Sentry initialized (Mock Mode - No DSN)."}
+{"level":40,"time":1766586395678,"pid":31844,"hostname":"i5-12600","msg":"⚠️ Sentry initialized (Mock Mode - No DSN)."}
+{"level":40,"time":1766586395680,"pid":16960,"hostname":"i5-12600","msg":"⚠️ Sentry initialized (Mock Mode - No DSN)."}
+[90mstdout[2m | tests/bookings.test.ts[2m > [22m[2mBooking Flow (Integration)
+[22m[39mTest Server running at http://127.0.0.1:63087
+
+{"level":30,"time":1766586395899,"pid":36012,"hostname":"i5-12600","msg":"Created Commission c431ab08-2ff5-4964-be41-b1ad9ef220bc for Sales Rep commission-test-rep@example.com: 2500 CLP"}
+{"level":30,"time":1766586396206,"pid":23184,"hostname":"i5-12600","type":"payment","data":{"type":"payment","data":{"id":"999888777"}},"msg":"[PaymentService] Processing Webhook"}
+{"level":30,"time":1766586396259,"pid":36012,"hostname":"i5-12600","msg":"Commission already exists for Payout 44426050-000d-4924-a8c4-95f08fd337f0. Skipping."}
+{"level":30,"time":1766586396265,"pid":36012,"hostname":"i5-12600","msg":"Commission already exists for Payout 44426050-000d-4924-a8c4-95f08fd337f0. Skipping."}
+ [32m✓[39m tests/booking-concurrency.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 3025[2mms[22m[39m
+     [33m[2m✓[22m[39m should PREVENT double booking of the SAME block concurrently [33m 3022[2mms[22m[39m
+[90mstdout[2m | tests/bookings.test.ts[2m > [22m[2mBooking Flow (Integration)
+[22m[39mAttempting request with email: vitest-9570c106-40bc-4b60-ad89-894e7e3dc315@test.com
+
+{"level":40,"time":1766586396920,"pid":32772,"hostname":"i5-12600","err":{"type":"Error","message":"Connection is closed.","stack":"Error: Connection is closed.\n    at EventEmitter.sendCommand (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\ioredis\\built\\Redis.js:333:28)\n    at EventEmitter.get (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\ioredis\\built\\utils\\Commander.js:90:25)\n    at handler (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/api/spots/search.ts:76:41)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)"},"msg":"Redis Cache Get Failed"}
+{"level":30,"time":1766586396957,"pid":36012,"hostname":"i5-12600","msg":"Calculating commission for Payout 82fab613-3342-4a09-81a7-fb266e4276d6 (Building commission-test-building)"}
+{"level":40,"time":1766586396975,"pid":31844,"hostname":"i5-12600","msg":"Redis unreachable for rate limiting"}
+[90mstderr[2m | tests/payment-service-real.test.ts[2m > [22m[2mPaymentService (Real Mode Integration)[2m > [22m[2mshould process Real Webhook (Approved)
+[22m[39mNo phone number provided for notification
+
+ [31m❯[39m tests/admin-buildings.test.ts [2m([22m[2m1 test[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 1326[2mms[22m[39m
+[31m     [31m×[31m should calculate revenue using raw SQL correctly[39m[33m 1320[2mms[22m[39m
+ [32m✓[39m tests/admin-analytics.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 3662[2mms[22m[39m
+     [33m[2m✓[22m[39m should return analytics for Admin (Global) [33m 652[2mms[22m[39m
+{"level":30,"time":1766586397163,"pid":36012,"hostname":"i5-12600","msg":"Building Commission Test Building has no Sales Rep. Skipping commission."}
+{"level":30,"time":1766586397204,"pid":35812,"hostname":"i5-12600","type":"simulator","data":{"bookingId":"6757a3c9-46bd-4e54-a061-6ad91f984a98","status":"approved"},"msg":"[Webhook] Received event"}
+{"level":30,"time":1766586397204,"pid":35812,"hostname":"i5-12600","type":"simulator","data":{"bookingId":"6757a3c9-46bd-4e54-a061-6ad91f984a98","status":"approved"},"msg":"[PaymentService] Processing Webhook"}
+{"level":40,"time":1766586397292,"pid":23356,"hostname":"i5-12600","msg":"Redis unreachable for rate limiting"}
+{"level":30,"time":1766586397339,"pid":23184,"hostname":"i5-12600","bookingId":"3bd43e51-84e9-47ec-b0bb-e421504e8480","amount":22000,"paymentId":"8b6530ea-ca1f-4fd3-a49d-2289fb66c495","msg":"[PaymentService] Initiating Refund"}
+{"level":30,"time":1766586397344,"pid":33560,"hostname":"i5-12600","type":"payment","data":{"id":"123456789"},"msg":"[Webhook] Received event"}
+{"level":30,"time":1766586397344,"pid":33560,"hostname":"i5-12600","type":"payment","data":{"id":"123456789"},"msg":"[PaymentService] Processing Webhook"}
+{"level":30,"time":1766586397576,"pid":36012,"hostname":"i5-12600","msg":"Calculating commission for Payout a1cc3f02-8820-408f-880d-e15967a77af9 (Building commission-test-building)"}
+{"level":40,"time":1766586397682,"pid":32772,"hostname":"i5-12600","err":{"type":"Error","message":"Connection is closed.","stack":"Error: Connection is closed.\n    at EventEmitter.sendCommand (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\ioredis\\built\\Redis.js:333:28)\n    at EventEmitter.setex (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\ioredis\\built\\utils\\Commander.js:90:25)\n    at handler (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/api/spots/search.ts:100:30)"},"msg":"Redis Cache Set Failed"}
+{"level":30,"time":1766586397684,"pid":3476,"hostname":"i5-12600","msg":"[Availability Job] Starting generation..."}
+{"level":40,"time":1766586397705,"pid":32772,"hostname":"i5-12600","err":{"type":"Error","message":"Connection is closed.","stack":"Error: Connection is closed.\n    at EventEmitter.sendCommand (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\ioredis\\built\\Redis.js:333:28)\n    at EventEmitter.get (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\ioredis\\built\\utils\\Commander.js:90:25)\n    at handler (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/api/spots/search.ts:76:41)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)"},"msg":"Redis Cache Get Failed"}
+{"level":40,"time":1766586397791,"pid":32772,"hostname":"i5-12600","err":{"type":"Error","message":"Connection is closed.","stack":"Error: Connection is closed.\n    at EventEmitter.sendCommand (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\ioredis\\built\\Redis.js:333:28)\n    at EventEmitter.get (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\ioredis\\built\\utils\\Commander.js:90:25)\n    at handler (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/api/spots/search.ts:76:41)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)"},"msg":"Redis Cache Get Failed"}
+{"level":30,"time":1766586397840,"pid":36012,"hostname":"i5-12600","msg":"Calculated commission is 0 (Base: 0, Rate: 0.05). Skipping."}
+{"level":40,"time":1766586397993,"pid":32772,"hostname":"i5-12600","err":{"type":"Error","message":"Connection is closed.","stack":"Error: Connection is closed.\n    at EventEmitter.sendCommand (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\ioredis\\built\\Redis.js:333:28)\n    at EventEmitter.setex (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\ioredis\\built\\utils\\Commander.js:90:25)\n    at handler (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/api/spots/search.ts:100:30)"},"msg":"Redis Cache Set Failed"}
+{"level":40,"time":1766586398007,"pid":32772,"hostname":"i5-12600","err":{"type":"Error","message":"Connection is closed.","stack":"Error: Connection is closed.\n    at EventEmitter.sendCommand (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\ioredis\\built\\Redis.js:333:28)\n    at EventEmitter.get (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\ioredis\\built\\utils\\Commander.js:90:25)\n    at handler (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/api/spots/search.ts:76:41)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)"},"msg":"Redis Cache Get Failed"}
+{"level":30,"time":1766586398064,"pid":1524,"hostname":"i5-12600","msg":"Calculating commission for Payout f5e607be-08a7-437a-9913-06dcdb8f8ed6 (Building 75b50ed8-5494-464e-a7db-aa4987f2264e)"}
+{"level":40,"time":1766586398129,"pid":6644,"hostname":"i5-12600","error":"","msg":"Redis error"}
+[90mstderr[2m | tests/security-fixes.test.ts
+[22m[39m⚠️ Twilio Credentials missing. WhatsApp notifications will be MOCKED.
+
+{"level":40,"time":1766586398210,"pid":32772,"hostname":"i5-12600","err":{"type":"Error","message":"Connection is closed.","stack":"Error: Connection is closed.\n    at EventEmitter.sendCommand (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\ioredis\\built\\Redis.js:333:28)\n    at EventEmitter.setex (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\ioredis\\built\\utils\\Commander.js:90:25)\n    at handler (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/api/spots/search.ts:100:30)"},"msg":"Redis Cache Set Failed"}
+[90mstdout[2m | tests/fix-s3-race.test.ts[2m > [22m[2mS3 Fix: Race Condition (Overlaps)[2m > [22m[2mshould prevents double booking under high concurrency
+[22m[39mSuccesses: 1, Failures: 9
+Debug: Successes=1, Failures=9
+
+ [32m✓[39m tests/integration/commissions.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 5052[2mms[22m[39m
+     [33m[2m✓[22m[39m should calculate correct 5% commission for standard payout [33m 962[2mms[22m[39m
+     [33m[2m✓[22m[39m should be idempotent (handle race conditions) [33m 1029[2mms[22m[39m
+     [33m[2m✓[22m[39m should skip commission if building has no sales rep [33m 961[2mms[22m[39m
+     [33m[2m✓[22m[39m should skip commission if amount is zero [33m 472[2mms[22m[39m
+{"level":40,"time":1766586398297,"pid":6644,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":40,"time":1766586398327,"pid":31844,"hostname":"i5-12600","err":{"type":"TypeError","message":"__vite_ssr_import_6__.redis.del is not a function","stack":"TypeError: __vite_ssr_import_6__.redis.del is not a function\n    at handler (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/api/auth/login.ts:96:21)"},"msg":"Redis unreachable for delete"}
+{"level":30,"time":1766586398342,"pid":3476,"hostname":"i5-12600","msg":"[Availability Job] Found 1 active spots."}
+{"level":40,"time":1766586398399,"pid":6644,"hostname":"i5-12600","msg":"⚠️ Sentry initialized (Mock Mode - No DSN)."}
+{"level":40,"time":1766586398413,"pid":6644,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":40,"time":1766586398424,"pid":23356,"hostname":"i5-12600","err":{"type":"Error","message":"Connection is closed.","stack":"Error: Connection is closed.\n    at EventEmitter.sendCommand (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\ioredis\\built\\Redis.js:333:28)\n    at EventEmitter.del (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\ioredis\\built\\utils\\Commander.js:90:25)\n    at handler (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/api/auth/login.ts:96:21)"},"msg":"Redis unreachable for delete"}
+{"level":30,"time":1766586398441,"pid":16960,"hostname":"i5-12600","bookingId":"382739bf-9e78-4473-b439-813d903a797a","amount":9000,"paymentId":"70a33ecd-3da4-49e0-8247-c98c101f7dd6","msg":"[PaymentService] Initiating Refund"}
+{"level":40,"time":1766586398570,"pid":6644,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":50,"time":1766586398570,"pid":6644,"hostname":"i5-12600","msg":"Redis connection failed after 3 retries"}
+ [32m✓[39m tests/payment-service-real.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 5599[2mms[22m[39m
+     [33m[2m✓[22m[39m should create preference in Real Mode [33m 1272[2mms[22m[39m
+     [33m[2m✓[22m[39m should process Real Webhook (Approved) [33m 1062[2mms[22m[39m
+{"level":40,"time":1766586398621,"pid":16960,"hostname":"i5-12600","error":"","msg":"Redis Publisher Error"}
+{"level":50,"time":1766586398622,"pid":16960,"hostname":"i5-12600","err":{"type":"Error","message":"Connection is closed.","stack":"Error: Connection is closed.\n    at EventEmitter.connectionCloseHandler (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\ioredis\\built\\Redis.js:208:28)\n    at Object.onceWrapper (node:events:634:26)\n    at EventEmitter.emit (node:events:519:28)\n    at processTicksAndRejections (node:internal/process/task_queues:85:11)"},"msg":"Failed to connect Redis Pub/Sub"}
+{"level":40,"time":1766586398627,"pid":16960,"hostname":"i5-12600","error":"","msg":"Redis Subscriber Error"}
+[90mstderr[2m | tests/payments.test.ts[2m > [22m[2mPayments API Integration Tests[2m > [22m[2mshould process Simulator Webhook (Approved)
+[22m[39mNo phone number provided for notification
+
+{"level":30,"time":1766586398631,"pid":1524,"hostname":"i5-12600","msg":"Created Commission f825869f-251d-4474-97d9-f45868d5495e for Sales Rep rep_1766586396484@test.com: 1000 CLP"}
+{"level":40,"time":1766586398643,"pid":31844,"hostname":"i5-12600","err":{"type":"TypeError","message":"__vite_ssr_import_4__.redis?.get is not a function","stack":"TypeError: __vite_ssr_import_4__.redis?.get is not a function\n    at handler (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/api/spots/search.ts:76:41)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)"},"msg":"Redis Cache Get Failed"}
+ [32m✓[39m tests/search.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 2918[2mms[22m[39m
+     [33m[2m✓[22m[39m should return blocks for a valid building [33m 808[2mms[22m[39m
+ [32m✓[39m tests/signup.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 2928[2mms[22m[39m
+     [33m[2m✓[22m[39m should register a new resident successfully [33m 1167[2mms[22m[39m
+{"level":40,"time":1766586398653,"pid":23356,"hostname":"i5-12600","msg":"Redis unreachable for rate limiting"}
+{"level":40,"time":1766586398687,"pid":16960,"hostname":"i5-12600","error":"","msg":"Redis Publisher Error"}
+{"level":40,"time":1766586398687,"pid":16960,"hostname":"i5-12600","error":"","msg":"Redis Subscriber Error"}
+[90mstderr[2m | tests/integration/webhook-payment-flow.test.ts[2m > [22m[2mWebhook -> Payment -> DB Integration[2m > [22m[2mshould full-cycle: Verify Signature -> Process Logic -> Update DB
+[22m[39mNo phone number provided for notification
+
+ [32m✓[39m tests/fix-s3-race.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 5772[2mms[22m[39m
+     [33m[2m✓[22m[39m should prevents double booking under high concurrency [33m 3987[2mms[22m[39m
+{"level":30,"time":1766586398786,"pid":3476,"hostname":"i5-12600","msg":"[Availability Job] Completed. Created: 60, Skipped: 0"}
+{"level":40,"time":1766586398813,"pid":16960,"hostname":"i5-12600","error":"","msg":"Redis Subscriber Error"}
+{"level":40,"time":1766586398813,"pid":16960,"hostname":"i5-12600","error":"","msg":"Redis Publisher Error"}
+{"level":30,"time":1766586398855,"pid":1524,"hostname":"i5-12600","msg":"Calculating commission for Payout 2f82791c-6d0e-43a1-8add-536d6a4abb6a (Building 75b50ed8-5494-464e-a7db-aa4987f2264e)"}
+{"level":50,"time":1766586398874,"pid":23356,"hostname":"i5-12600","code":"AUTH-LOGIN-1004","internalMessage":"Cuenta inactiva","stack":"AppError: Cuenta inactiva\n    at handler (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/api/auth/login.ts:87:15)","method":"POST","path":"/api/auth/login","ip":"::ffff:127.0.0.1","requestId":"3d02858c-f40b-4e93-abdc-edb24c9ad9f3","msg":"[AUTH-LOGIN-1004] Cuenta inactiva"}
+{"level":30,"time":1766586398942,"pid":3476,"hostname":"i5-12600","msg":"[Availability Job] Starting generation..."}
+{"level":40,"time":1766586398942,"pid":31844,"hostname":"i5-12600","err":{"type":"TypeError","message":"__vite_ssr_import_4__.redis?.setex is not a function","stack":"TypeError: __vite_ssr_import_4__.redis?.setex is not a function\n    at handler (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/api/spots/search.ts:100:30)"},"msg":"Redis Cache Set Failed"}
+{"level":40,"time":1766586398978,"pid":16960,"hostname":"i5-12600","error":"","msg":"Redis Publisher Error"}
+{"level":40,"time":1766586398979,"pid":16960,"hostname":"i5-12600","error":"","msg":"Redis Subscriber Error"}
+{"level":30,"time":1766586399010,"pid":3476,"hostname":"i5-12600","msg":"[Availability Job] Found 1 active spots."}
+{"level":30,"time":1766586399012,"pid":1524,"hostname":"i5-12600","msg":"Building Sales Test Building 1766586397793 has no Sales Rep. Skipping commission."}
+[90mstdout[2m | tests/server-startup.test.ts[2m > [22m[2mServer Startup & Connectivity[2m > [22m[2mshould start the server and accept connections within timeout
+[22m[39mSpawning server: C:\Users\corte\VS Code Projects\estacionate-mvp\backend\dev-server.ts
+
+{"level":30,"time":1766586399094,"pid":35812,"hostname":"i5-12600","type":"simulator","data":{"bookingId":"a98f1a86-51f1-4610-af58-ea04b0c82fe0","status":"rejected"},"msg":"[Webhook] Received event"}
+{"level":40,"time":1766586399094,"pid":33560,"hostname":"i5-12600","signature":"ts=1766586399084;v1=bad_sig","requestId":"req-bad","msg":"[Webhook] Signature verification failed"}
+{"level":30,"time":1766586399095,"pid":35812,"hostname":"i5-12600","type":"simulator","data":{"bookingId":"a98f1a86-51f1-4610-af58-ea04b0c82fe0","status":"rejected"},"msg":"[PaymentService] Processing Webhook"}
+{"level":30,"time":1766586399145,"pid":3476,"hostname":"i5-12600","msg":"[Availability Job] Completed. Created: 0, Skipped: 60"}
+{"level":40,"time":1766586399167,"pid":33292,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":40,"time":1766586399194,"pid":16960,"hostname":"i5-12600","error":"","msg":"Redis Subscriber Error"}
+{"level":40,"time":1766586399195,"pid":16960,"hostname":"i5-12600","error":"","msg":"Redis Publisher Error"}
+ [32m✓[39m tests/repro-schema-issues.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 1754[2mms[22m[39m
+{"level":40,"time":1766586399224,"pid":33292,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":40,"time":1766586399330,"pid":33292,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":40,"time":1766586399378,"pid":23356,"hostname":"i5-12600","msg":"Redis unreachable for rate limiting"}
+{"level":40,"time":1766586399463,"pid":16960,"hostname":"i5-12600","error":"","msg":"Redis Subscriber Error"}
+{"level":40,"time":1766586399464,"pid":16960,"hostname":"i5-12600","error":"","msg":"Redis Publisher Error"}
+{"level":40,"time":1766586399485,"pid":33292,"hostname":"i5-12600","error":"","msg":"Redis error"}
+ [32m✓[39m tests/server-startup.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 439[2mms[22m[39m
+[90mstderr[2m | tests/security-headers.test.ts
+[22m[39m⚠️ Twilio Credentials missing. WhatsApp notifications will be MOCKED.
+
+{"level":50,"time":1766586399485,"pid":33292,"hostname":"i5-12600","msg":"Redis connection failed after 3 retries"}
+{"level":40,"time":1766586399485,"pid":33292,"hostname":"i5-12600","msg":"Redis unreachable for rate limiting"}
+{"level":40,"time":1766586399557,"pid":33292,"hostname":"i5-12600","err":{"type":"Error","message":"Connection is closed.","stack":"Error: Connection is closed.\n    at EventEmitter.sendCommand (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\ioredis\\built\\Redis.js:333:28)\n    at EventEmitter.incr (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\ioredis\\built\\utils\\Commander.js:90:25)\n    at Module.handler (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/api/auth/login.ts:68:25)\n    at C:/Users/corte/VS Code Projects/estacionate-mvp/backend/tests/login-integration.test.ts:45:9\n    at file:///C:/Users/corte/VS%20Code%20Projects/estacionate-mvp/backend/node_modules/@vitest/runner/dist/index.js:915:20"},"msg":"Redis unreachable for increment"}
+ [32m✓[39m tests/login-integration.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 404[2mms[22m[39m
+     [33m[2m✓[22m[39m should return 401 for user not found (Invalid credentials) [33m 399[2mms[22m[39m
+ [32m✓[39m tests/cron-availability.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 2753[2mms[22m[39m
+     [33m[2m✓[22m[39m should generate blocks for the next 30 days [33m 1259[2mms[22m[39m
+{"level":40,"time":1766586399676,"pid":23356,"hostname":"i5-12600","err":{"type":"Error","message":"Connection is closed.","stack":"Error: Connection is closed.\n    at EventEmitter.sendCommand (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\ioredis\\built\\Redis.js:333:28)\n    at EventEmitter.del (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\ioredis\\built\\utils\\Commander.js:90:25)\n    at handler (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/api/auth/login.ts:96:21)"},"msg":"Redis unreachable for delete"}
+{"level":40,"time":1766586399773,"pid":16960,"hostname":"i5-12600","error":"","msg":"Redis Publisher Error"}
+{"level":40,"time":1766586399774,"pid":16960,"hostname":"i5-12600","error":"","msg":"Redis Subscriber Error"}
+[90mstderr[2m | tests/unit/PaymentService.test.ts
+[22m[39m⚠️ Twilio Credentials missing. WhatsApp notifications will be MOCKED.
+
+{"level":30,"time":1766586399811,"pid":24140,"hostname":"i5-12600","type":"simulator","data":{"bookingId":"booking-1","status":"approved"},"msg":"[PaymentService] Processing Webhook"}
+{"level":30,"time":1766586399836,"pid":24140,"hostname":"i5-12600","type":"simulator","data":{"bookingId":"booking-1","status":"approved"},"msg":"[PaymentService] Processing Webhook"}
+{"level":30,"time":1766586399836,"pid":24140,"hostname":"i5-12600","bookingId":"booking-1","status":"approved","msg":"[PaymentService] Webhook Idempotency: Payment already in target status. Skipping."}
+{"level":30,"time":1766586399837,"pid":24140,"hostname":"i5-12600","type":"payment","data":{"data":{"id":"pay-123"}},"msg":"[PaymentService] Processing Webhook"}
+{"level":30,"time":1766586399840,"pid":24140,"hostname":"i5-12600","bookingId":"booking-1","amount":5000,"paymentId":"pay-db-1","msg":"[PaymentService] Initiating Refund"}
+ [32m✓[39m tests/unit/PaymentService.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 37[2mms[22m[39m
+{"level":40,"time":1766586399949,"pid":30928,"hostname":"i5-12600","msg":"⚠️ Sentry initialized (Mock Mode - No DSN)."}
+{"level":40,"time":1766586399989,"pid":31324,"hostname":"i5-12600","error":"","msg":"Redis error"}
+[90mstderr[2m | tests/integration/cors.test.ts
+[22m[39m⚠️ Twilio Credentials missing. WhatsApp notifications will be MOCKED.
+
+ [32m✓[39m tests/integration/webhook-payment-flow.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 4383[2mms[22m[39m
+     [33m[2m✓[22m[39m should full-cycle: Verify Signature -> Process Logic -> Update DB [33m 1781[2mms[22m[39m
+{"level":40,"time":1766586400133,"pid":16960,"hostname":"i5-12600","error":"","msg":"Redis Publisher Error"}
+{"level":40,"time":1766586400136,"pid":16960,"hostname":"i5-12600","error":"","msg":"Redis Subscriber Error"}
+{"level":40,"time":1766586400140,"pid":36148,"hostname":"i5-12600","error":"","msg":"Redis error"}
+[90mstderr[2m | tests/crypto.test.ts[2m > [22m[2mEncryption Lib (AES-GCM)[2m > [22m[2mshould return null on bad decryption (integrity check)
+[22m[39mDecryption failed: DOMException [OperationError]: The operation failed for an operation-specific reason
+[90m    at AESCipherJob.onDone (node:internal/crypto/util:453:19)[39m {
+  [cause]: [Error: Cipher job failed]
+}
+
+ [32m✓[39m tests/crypto.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+[90mstderr[2m | tests/unit/BookingService.test.ts
+[22m[39m⚠️ Twilio Credentials missing. WhatsApp notifications will be MOCKED.
+
+[90mstderr[2m | tests/verify-webhook.test.ts
+[22m[39m⚠️ Twilio Credentials missing. WhatsApp notifications will be MOCKED.
+
+{"level":30,"time":1766586400252,"pid":23168,"hostname":"i5-12600","startDate":"2025-12-23T03:00:00.000Z","endDate":"2025-12-24T02:59:59.999Z","msg":"[Reconcile] Starting Daily Reconciliation"}
+{"level":30,"time":1766586400254,"pid":23168,"hostname":"i5-12600","buildingId":"b1","revenue":10000,"commission":1000,"msg":"[Reconcile] Payout Created"}
+{"level":30,"time":1766586400259,"pid":23168,"hostname":"i5-12600","startDate":"2025-12-23T03:00:00.000Z","endDate":"2025-12-24T02:59:59.999Z","msg":"[Reconcile] Starting Daily Reconciliation"}
+{"level":30,"time":1766586400259,"pid":23168,"hostname":"i5-12600","buildingId":"b1","msg":"[Reconcile] Payout already exists, skipping"}
+{"level":30,"time":1766586400261,"pid":23168,"hostname":"i5-12600","startDate":"2025-12-23T03:00:00.000Z","endDate":"2025-12-24T02:59:59.999Z","msg":"[Reconcile] Starting Daily Reconciliation"}
+{"level":40,"time":1766586400262,"pid":23168,"hostname":"i5-12600","buildingId":"b1","msg":"[Reconcile] Race condition detected: Payout created by another process. Skipping."}
+{"level":30,"time":1766586400263,"pid":23168,"hostname":"i5-12600","startDate":"2025-12-23T03:00:00.000Z","endDate":"2025-12-24T02:59:59.999Z","msg":"[Reconcile] Starting Daily Reconciliation"}
+{"level":40,"time":1766586400263,"pid":23168,"hostname":"i5-12600","buildingId":"b1","msg":"[Reconcile] Race condition detected: Building deleted during processing. Skipping."}
+ [32m✓[39m tests/reconcile.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+{"level":40,"time":1766586400291,"pid":31324,"hostname":"i5-12600","error":"","msg":"Redis error"}
+ [32m✓[39m tests/unit/BookingService.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 27[2mms[22m[39m
+{"level":40,"time":1766586400405,"pid":31324,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":40,"time":1766586400461,"pid":36148,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":40,"time":1766586400464,"pid":31324,"hostname":"i5-12600","msg":"⚠️ Sentry initialized (Mock Mode - No DSN)."}
+{"level":40,"time":1766586400551,"pid":16960,"hostname":"i5-12600","error":"","msg":"Redis Subscriber Error"}
+ [32m✓[39m tests/verify-s2-fixes.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+{"level":40,"time":1766586400552,"pid":16960,"hostname":"i5-12600","error":"","msg":"Redis Publisher Error"}
+{"level":40,"time":1766586400564,"pid":31324,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":50,"time":1766586400564,"pid":31324,"hostname":"i5-12600","msg":"Redis connection failed after 3 retries"}
+ [32m✓[39m tests/verify-security-hotfixes.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m tests/payments.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 4833[2mms[22m[39m
+     [33m[2m✓[22m[39m should process Simulator Webhook (Approved) [33m 1844[2mms[22m[39m
+     [33m[2m✓[22m[39m should process Simulator Webhook (Rejected) [33m 777[2mms[22m[39m
+{"level":40,"time":1766586400577,"pid":36148,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":40,"time":1766586400638,"pid":36148,"hostname":"i5-12600","msg":"⚠️ Sentry initialized (Mock Mode - No DSN)."}
+{"level":40,"time":1766586400651,"pid":31844,"hostname":"i5-12600","error":"","msg":"Redis Publisher Error"}
+{"level":50,"time":1766586400651,"pid":31844,"hostname":"i5-12600","err":{"type":"Error","message":"Connection is closed.","stack":"Error: Connection is closed.\n    at EventEmitter.connectionCloseHandler (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\ioredis\\built\\Redis.js:208:28)\n    at Object.onceWrapper (node:events:634:26)\n    at EventEmitter.emit (node:events:519:28)\n    at processTicksAndRejections (node:internal/process/task_queues:85:11)"},"msg":"Failed to connect Redis Pub/Sub"}
+{"level":40,"time":1766586400657,"pid":31844,"hostname":"i5-12600","error":"","msg":"Redis Subscriber Error"}
+ [32m✓[39m tests/verify-audit-fixes.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+{"level":40,"time":1766586400682,"pid":36148,"hostname":"i5-12600","msg":"[Webhook] Missing signature headers"}
+ [32m✓[39m tests/services/payments.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+{"level":40,"time":1766586400702,"pid":36148,"hostname":"i5-12600","signature":"ts=123;v1=invalid_hash","requestId":"req-1","msg":"[Webhook] Signature verification failed"}
+{"level":30,"time":1766586400713,"pid":36148,"hostname":"i5-12600","type":"simulator","data":{"id":"123456"},"msg":"[Webhook] Received event"}
+{"level":30,"time":1766586400713,"pid":36148,"hostname":"i5-12600","type":"simulator","data":{"id":"123456"},"msg":"[PaymentService] Processing Webhook"}
+{"level":40,"time":1766586400720,"pid":31844,"hostname":"i5-12600","error":"","msg":"Redis Publisher Error"}
+{"level":40,"time":1766586400720,"pid":31844,"hostname":"i5-12600","error":"","msg":"Redis Subscriber Error"}
+{"level":40,"time":1766586400732,"pid":36148,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":50,"time":1766586400732,"pid":36148,"hostname":"i5-12600","msg":"Redis connection failed after 3 retries"}
+ [32m✓[39m tests/sales.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 5070[2mms[22m[39m
+       [33m[2m✓[22m[39m should create a new Sales Rep via POST /api/admin/users [33m 461[2mms[22m[39m
+       [33m[2m✓[22m[39m should list users filtering by role [33m 624[2mms[22m[39m
+       [33m[2m✓[22m[39m should calculate commission correctly when a Payout is processed [33m 705[2mms[22m[39m
+       [33m[2m✓[22m[39m should not calculate commission if building has no sales rep [33m 447[2mms[22m[39m
+       [33m[2m✓[22m[39m should return correct Dashboard Stats [33m 791[2mms[22m[39m
+{"level":40,"time":1766586400831,"pid":31844,"hostname":"i5-12600","error":"","msg":"Redis Subscriber Error"}
+{"level":40,"time":1766586400835,"pid":31844,"hostname":"i5-12600","error":"","msg":"Redis Publisher Error"}
+ [32m✓[39m tests/fix-s1-commission.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 2[2mms[22m[39m
+{"level":50,"time":1766586400982,"pid":23356,"hostname":"i5-12600","code":"PAST_TIME","internalMessage":"Cannot book past dates","stack":"AppError: Cannot book past dates\n    at Function.badRequest (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/lib/errors.ts:58:16)\n    at Function.validateBusinessRules (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/services/booking/BookingValidator.ts:66:28)\n    at C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/services/BookingService.ts:65:30\n    at Proxy._transactionWithCallback (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\@prisma\\client\\runtime\\library.js:130:8000)\n    at Function.createBooking (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/services/BookingService.ts:30:25)\n    at handler (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/api/bookings/create.ts:43:20)","method":"POST","path":"/api/bookings/create","ip":"::ffff:127.0.0.1","requestId":"c5a469e2-36a2-4568-8228-7dd75806ce69","msg":"[PAST_TIME] Cannot book past dates"}
+{"level":40,"time":1766586401002,"pid":31844,"hostname":"i5-12600","error":"","msg":"Redis Subscriber Error"}
+{"level":40,"time":1766586401002,"pid":31844,"hostname":"i5-12600","error":"","msg":"Redis Publisher Error"}
+ [32m✓[39m tests/security-fixes.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 2591[2mms[22m[39m
+{"level":40,"time":1766586401017,"pid":16960,"hostname":"i5-12600","error":"","msg":"Redis Publisher Error"}
+{"level":40,"time":1766586401017,"pid":16960,"hostname":"i5-12600","error":"","msg":"Redis Subscriber Error"}
+{"level":50,"time":1766586401031,"pid":30928,"hostname":"i5-12600","code":"SYS-RESOURCE-404","internalMessage":"CORS: Origin not allowed","context":{"origin":"http://evil-site.com"},"stack":"AppError: CORS: Origin not allowed\n    at Function.forbidden (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/lib/errors.ts:66:16)\n    at checkOrigin (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/lib/cors.ts:21:34)\n    at C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\cors\\lib\\index.js:219:13\n    at optionsCallback (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\cors\\lib\\index.js:199:9)\n    at corsMiddleware (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\cors\\lib\\index.js:204:7)\n    at Layer.handleRequest (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\router\\index.js:342:13)\n    at C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\router\\index.js:297:9\n    at processParams (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\router\\index.js:582:12)\n    at next (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\router\\index.js:291:5)","method":"GET","path":"/api/health","ip":"::ffff:127.0.0.1","requestId":"20cbaf14-d740-49b4-86e9-f8cfa1b8819e","msg":"[SYS-RESOURCE-404] CORS: Origin not allowed"}
+ [32m✓[39m tests/security-headers.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 1072[2mms[22m[39m
+     [33m[2m✓[22m[39m should set Strict Content-Security-Policy [33m 751[2mms[22m[39m
+{"level":40,"time":1766586401067,"pid":31844,"hostname":"i5-12600","msg":"⚠️ Mock Mode: Returning fake Init Point"}
+ [2m[90m↓[39m[22m tests/cron/reconcile.test.ts [2m([22m[2m2 tests[22m[2m | [22m[33m2 skipped[39m[2m)[22m
+[90mstderr[2m | tests/search-cache.test.ts
+[22m[39m⚠️ Twilio Credentials missing. WhatsApp notifications will be MOCKED.
+
+{"level":50,"time":1766586401225,"pid":31324,"hostname":"i5-12600","code":"SYS-RESOURCE-404","internalMessage":"CORS: Origin not allowed","context":{"origin":"http://evil.com"},"stack":"AppError: CORS: Origin not allowed\n    at Function.forbidden (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/lib/errors.ts:66:16)\n    at checkOrigin (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/lib/cors.ts:21:34)\n    at C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\cors\\lib\\index.js:219:13\n    at optionsCallback (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\cors\\lib\\index.js:199:9)\n    at corsMiddleware (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\cors\\lib\\index.js:204:7)\n    at Layer.handleRequest (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\router\\index.js:342:13)\n    at C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\router\\index.js:297:9\n    at processParams (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\router\\index.js:582:12)\n    at next (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\router\\index.js:291:5)","method":"GET","path":"/api/health","ip":"::ffff:127.0.0.1","requestId":"0125f22e-a296-4faf-9b25-89d13bd803a7","msg":"[SYS-RESOURCE-404] CORS: Origin not allowed"}
+{"level":40,"time":1766586401225,"pid":31844,"hostname":"i5-12600","error":"","msg":"Redis Publisher Error"}
+{"level":40,"time":1766586401228,"pid":31844,"hostname":"i5-12600","error":"","msg":"Redis Subscriber Error"}
+{"level":40,"time":1766586401229,"pid":23356,"hostname":"i5-12600","msg":"Redis unreachable for rate limiting"}
+{"level":30,"time":1766586401277,"pid":16960,"hostname":"i5-12600","bookingId":"b256692b-4aff-4642-b24d-ddc27cf704d8","amount":5000,"paymentId":"c71c9a9a-995e-45b5-99a5-9cf0489d2b20","msg":"[PaymentService] Initiating Refund"}
+[90mstderr[2m | tests/audit-logic-safety.test.ts
+[22m[39m⚠️ Twilio Credentials missing. WhatsApp notifications will be MOCKED.
+
+ [32m✓[39m tests/integration/cors.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 832[2mms[22m[39m
+     [33m[2m✓[22m[39m should allow requests from whitelisted origin (localhost:5173) [33m 738[2mms[22m[39m
+ [2m[90m↓[39m[22m tests/audit-logic-safety.test.ts [2m([22m[2m2 tests[22m[2m | [22m[33m2 skipped[39m[2m)[22m
+[90mstderr[2m | tests/verify-webhook.test.ts[2m > [22m[2mWebhook Security Verification[2m > [22m[2mshould accept requests with valid signature
+[22m[39mWebhook Error: PrismaClientValidationError: 
+Invalid `tx.payment.findUnique()` invocation in
+C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/services/payment/SimulatorAdapter.ts:49:54
+
+  46 const { bookingId, status } = simulatorData;
+  47 
+  48 return db.$transaction(async (tx) => {
+→ 49     const existingPayment = await tx.payment.findUnique({
+           where: {
+             bookingId: undefined,
+         ?   id?: String,
+         ?   AND?: PaymentWhereInput | PaymentWhereInput[],
+         ?   OR?: PaymentWhereInput[],
+         ?   NOT?: PaymentWhereInput | PaymentWhereInput[],
+         ?   externalPaymentId?: StringNullableFilter | String | Null,
+         ?   paymentMethod?: EnumPaymentMethodNullableFilter | PaymentMethod | Null,
+         ?   amountClp?: IntFilter | Int,
+         ?   status?: EnumGatewayStatusFilter | GatewayStatus,
+         ?   gatewayResponse?: JsonNullableFilter,
+         ?   processedAt?: DateTimeNullableFilter | DateTime | Null,
+         ?   createdAt?: DateTimeFilter | DateTime,
+         ?   booking?: BookingRelationFilter | BookingWhereInput
+           }
+         })
+
+Argument `where` of type PaymentWhereUniqueInput needs at least one of `id` or `bookingId` arguments. Available options are marked with ?.
+    at wn [90m(C:\Users\corte\VS Code Projects\estacionate-mvp\backend\[39mnode_modules\[4m@prisma\client[24m\runtime\library.js:29:1363[90m)[39m
+    at $n.handleRequestError [90m(C:\Users\corte\VS Code Projects\estacionate-mvp\backend\[39mnode_modules\[4m@prisma\client[24m\runtime\library.js:121:6958[90m)[39m
+    at $n.handleAndLogRequestError [90m(C:\Users\corte\VS Code Projects\estacionate-mvp\backend\[39mnode_modules\[4m@prisma\client[24m\runtime\library.js:121:6623[90m)[39m
+    at $n.request [90m(C:\Users\corte\VS Code Projects\estacionate-mvp\backend\[39mnode_modules\[4m@prisma\client[24m\runtime\library.js:121:6307[90m)[39m
+    at l [90m(C:\Users\corte\VS Code Projects\estacionate-mvp\backend\[39mnode_modules\[4m@prisma\client[24m\runtime\library.js:130:9633[90m)[39m
+    at C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/services/payment/SimulatorAdapter.ts:49:37
+    at Proxy._transactionWithCallback [90m(C:\Users\corte\VS Code Projects\estacionate-mvp\backend\[39mnode_modules\[4m@prisma\client[24m\runtime\library.js:130:8000[90m)[39m
+    at handler (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/api/payments/webhook.ts:68:24) {
+  clientVersion: [32m'5.22.0'[39m
+}
+
+ [32m✓[39m tests/verify-webhook.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 733[2mms[22m[39m
+     [33m[2m✓[22m[39m should accept requests with valid signature [33m 676[2mms[22m[39m
+{"level":50,"time":1766586401443,"pid":23356,"hostname":"i5-12600","code":"AUTH-LOGIN-1004","internalMessage":"Cuenta inactiva","stack":"AppError: Cuenta inactiva\n    at handler (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/api/auth/login.ts:87:15)","method":"POST","path":"/api/auth/login","ip":"::ffff:127.0.0.1","requestId":"40bffbe3-3ef6-4801-bb6c-ddeb152285fe","msg":"[AUTH-LOGIN-1004] Cuenta inactiva"}
+{"level":40,"time":1766586401480,"pid":23020,"hostname":"i5-12600","msg":"⚠️ Sentry initialized (Mock Mode - No DSN)."}
+{"level":40,"time":1766586401492,"pid":31844,"hostname":"i5-12600","error":"","msg":"Redis Subscriber Error"}
+{"level":40,"time":1766586401493,"pid":31844,"hostname":"i5-12600","error":"","msg":"Redis Publisher Error"}
+{"level":40,"time":1766586401524,"pid":16960,"hostname":"i5-12600","error":"","msg":"Redis Subscriber Error"}
+{"level":40,"time":1766586401524,"pid":16960,"hostname":"i5-12600","error":"","msg":"Redis Publisher Error"}
+ [32m✓[39m tests/search-cache.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 50[2mms[22m[39m
+{"level":40,"time":1766586401807,"pid":31844,"hostname":"i5-12600","error":"","msg":"Redis Subscriber Error"}
+{"level":40,"time":1766586401807,"pid":31844,"hostname":"i5-12600","error":"","msg":"Redis Publisher Error"}
+{"level":50,"time":1766586402058,"pid":31844,"hostname":"i5-12600","code":"BLOCK_UNAVAILABLE","internalMessage":"Spot is no longer available","stack":"AppError: Spot is no longer available\n    at Function.conflict (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/lib/errors.ts:74:16)\n    at C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/services/BookingService.ts:49:32\n    at Proxy._transactionWithCallback (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\@prisma\\client\\runtime\\library.js:130:8000)\n    at Function.createBooking (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/services/BookingService.ts:30:25)\n    at handler (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/api/bookings/create.ts:43:20)","method":"POST","path":"/api/bookings/create","ip":"127.0.0.1","requestId":"ba4a0a01-d2b7-4f48-8696-156241239d22","msg":"[BLOCK_UNAVAILABLE] Spot is no longer available"}
+{"level":50,"time":1766586402070,"pid":31844,"hostname":"i5-12600","code":"VAL-INPUT-1001","internalMessage":"Zod Validation Failed","context":{"issues":[{"code":"too_small","minimum":5,"type":"string","inclusive":true,"exact":false,"message":"String must contain at least 5 character(s)","path":["vehiclePlate"]}]},"stack":"AppError: Zod Validation Failed\n    at errorHandler (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/middleware/errorHandler.ts:13:17)\n    at Layer.handleError (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\router\\lib\\layer.js:116:17)\n    at trimPrefix (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\router\\index.js:340:13)\n    at C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\router\\index.js:297:9\n    at processParams (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\router\\index.js:582:12)\n    at next (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\router\\index.js:291:5)\n    at C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\router\\index.js:688:15\n    at next (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\router\\index.js:276:14)\n    at next (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\router\\lib\\route.js:132:14)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","method":"POST","path":"/api/bookings/create","ip":"127.0.0.1","requestId":"c60973d6-2409-4829-a6c1-bd42ae80f39e","msg":"[VAL-INPUT-1001] Zod Validation Failed"}
+{"level":40,"time":1766586402087,"pid":16960,"hostname":"i5-12600","error":"","msg":"Redis Publisher Error"}
+{"level":40,"time":1766586402087,"pid":16960,"hostname":"i5-12600","error":"","msg":"Redis Subscriber Error"}
+ [32m✓[39m tests/cancellation.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 6400[2mms[22m[39m
+     [33m[2m✓[22m[39m should allow user to cancel >24h booking with 90% refund [33m 2157[2mms[22m[39m
+     [33m[2m✓[22m[39m should allow user to cancel <24h booking with 0% refund [33m 1207[2mms[22m[39m
+     [33m[2m✓[22m[39m should allow Admin to cancel <24h booking with 100% refund (Override) [33m 787[2mms[22m[39m
+{"level":40,"time":1766586402165,"pid":31844,"hostname":"i5-12600","error":"","msg":"Redis Subscriber Error"}
+{"level":40,"time":1766586402165,"pid":31844,"hostname":"i5-12600","error":"","msg":"Redis Publisher Error"}
+ [32m✓[39m tests/coverage-gap.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 6583[2mms[22m[39m
+     [33m[2m✓[22m[39m should login successfully as Admin (User Table coverage) [33m 1344[2mms[22m[39m
+     [33m[2m✓[22m[39m should reject inactive admin login [33m 437[2mms[22m[39m
+     [33m[2m✓[22m[39m should reject booking in the past (PAST_TIME) [33m 2111[2mms[22m[39m
+     [33m[2m✓[22m[39m should reject inactive resident login [33m 456[2mms[22m[39m
+{"level":40,"time":1766586402571,"pid":31844,"hostname":"i5-12600","error":"","msg":"Redis Publisher Error"}
+{"level":40,"time":1766586402572,"pid":31844,"hostname":"i5-12600","error":"","msg":"Redis Subscriber Error"}
+{"level":40,"time":1766586403035,"pid":31844,"hostname":"i5-12600","error":"","msg":"Redis Publisher Error"}
+{"level":40,"time":1766586403036,"pid":31844,"hostname":"i5-12600","error":"","msg":"Redis Subscriber Error"}
+{"level":50,"time":1766586403193,"pid":31844,"hostname":"i5-12600","code":"DOUBLE_BOOKING_DETECTED","internalMessage":"Double Booking Detected","stack":"AppError: Double Booking Detected\n    at Function.conflict (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/lib/errors.ts:74:16)\n    at Function.checkDoubleBooking (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/services/booking/BookingValidator.ts:91:28)\n    at C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/services/BookingService.ts:68:13\n    at Proxy._transactionWithCallback (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\@prisma\\client\\runtime\\library.js:130:8000)\n    at Function.createBooking (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/services/BookingService.ts:30:25)\n    at handler (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/api/bookings/create.ts:43:20)","method":"POST","path":"/api/bookings/create","ip":"127.0.0.1","requestId":"debf9473-ad70-4fc1-b6fc-fe15d9fc4406","msg":"[DOUBLE_BOOKING_DETECTED] Double Booking Detected"}
+{"level":40,"time":1766586403547,"pid":31844,"hostname":"i5-12600","error":"","msg":"Redis Publisher Error"}
+{"level":40,"time":1766586403548,"pid":31844,"hostname":"i5-12600","error":"","msg":"Redis Subscriber Error"}
+{"level":40,"time":1766586404107,"pid":31844,"hostname":"i5-12600","error":"","msg":"Redis Publisher Error"}
+{"level":40,"time":1766586404108,"pid":31844,"hostname":"i5-12600","error":"","msg":"Redis Subscriber Error"}
+ [32m✓[39m tests/admin.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 8441[2mms[22m[39m
+     [33m[2m✓[22m[39m should return stats for Super Admin (All Buildings) [33m 1715[2mms[22m[39m
+     [33m[2m✓[22m[39m should return stats for Building Admin (Own Building) [33m 1117[2mms[22m[39m
+     [33m[2m✓[22m[39m should list buildings for Super Admin [33m 502[2mms[22m[39m
+     [33m[2m✓[22m[39m should update prices for future blocks [33m 460[2mms[22m[39m
+     [33m[2m✓[22m[39m should list bookings for Super Admin [33m 792[2mms[22m[39m
+     [33m[2m✓[22m[39m should filter bookings by status [33m 854[2mms[22m[39m
+{"level":50,"time":1766586404519,"pid":31844,"hostname":"i5-12600","code":"BUILDING_MISMATCH","internalMessage":"You can only book spots in your own building","stack":"AppError: You can only book spots in your own building\n    at Function.forbidden (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/lib/errors.ts:66:16)\n    at Function.validateBusinessRules (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/services/booking/BookingValidator.ts:72:28)\n    at C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/services/BookingService.ts:65:30\n    at Proxy._transactionWithCallback (C:\\Users\\corte\\VS Code Projects\\estacionate-mvp\\backend\\node_modules\\@prisma\\client\\runtime\\library.js:130:8000)\n    at Function.createBooking (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/services/BookingService.ts:30:25)\n    at handler (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/api/bookings/create.ts:43:20)","method":"POST","path":"/api/bookings/create","ip":"127.0.0.1","requestId":"60c53336-dc42-49e8-adce-83e6109a6f67","msg":"[BUILDING_MISMATCH] You can only book spots in your own building"}
+{"level":40,"time":1766586404719,"pid":31844,"hostname":"i5-12600","error":"","msg":"Redis Publisher Error"}
+{"level":40,"time":1766586404719,"pid":31844,"hostname":"i5-12600","error":"","msg":"Redis Subscriber Error"}
+{"level":50,"time":1766586404967,"pid":31844,"hostname":"i5-12600","code":"AUTH-LOGIN-1001","internalMessage":"Only residents can make bookings","stack":"AppError: Only residents can make bookings\n    at Function.forbidden (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/lib/errors.ts:66:16)\n    at handler (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/api/bookings/create.ts:27:24)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","method":"POST","path":"/api/bookings/create","ip":"127.0.0.1","requestId":"2afd298c-ab4c-4946-bbdb-4ec54a1b9cc1","msg":"[AUTH-LOGIN-1001] Only residents can make bookings"}
+{"level":40,"time":1766586405385,"pid":31844,"hostname":"i5-12600","error":"","msg":"Redis Subscriber Error"}
+{"level":40,"time":1766586405385,"pid":31844,"hostname":"i5-12600","error":"","msg":"Redis Publisher Error"}
+ [32m✓[39m tests/bookings.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 10195[2mms[22m[39m
+     [33m[2m✓[22m[39m should find the available spot via search [33m 316[2mms[22m[39m
+     [33m[2m✓[22m[39m should create a booking successfully [33m 2254[2mms[22m[39m
+     [33m[2m✓[22m[39m should prevent double booking (Optimistic Locking) [33m 855[2mms[22m[39m
+     [33m[2m✓[22m[39m should prevent booking a different block that overlaps in time [33m 1339[2mms[22m[39m
+     [33m[2m✓[22m[39m should prevent booking in a different building (IDOR protection) [33m 1480[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/admin-buildings.test.ts[2m > [22mGET /api/admin/buildings[2m > [22mshould calculate revenue using raw SQL correctly
+[31m[1mPrismaClientKnownRequestError[22m: 
+Invalid `db.resident.create()` invocation in
+C:/Users/corte/VS Code Projects/estacionate-mvp/backend/tests/admin-buildings.test.ts:52:44
+
+  49     }
+  50 });
+  51 
+→ 52 const resident = await db.resident.create(
+Unique constraint failed on the fields: (`email`)[39m
+[90m [2m❯[22m $n.handleRequestError node_modules/@prisma/client/runtime/library.js:[2m121:7315[22m[39m
+[90m [2m❯[22m $n.handleAndLogRequestError node_modules/@prisma/client/runtime/library.js:[2m121:6623[22m[39m
+[90m [2m❯[22m $n.request node_modules/@prisma/client/runtime/library.js:[2m121:6307[22m[39m
+[90m [2m❯[22m l node_modules/@prisma/client/runtime/library.js:[2m130:9633[22m[39m
+[36m [2m❯[22m tests/admin-buildings.test.ts:[2m52:26[22m[39m
+    [90m 50| [39m        })[33m;[39m
+    [90m 51| [39m
+    [90m 52| [39m        [35mconst[39m resident [33m=[39m [35mawait[39m db[33m.[39mresident[33m.[39m[34mcreate[39m({
+    [90m   | [39m                         [31m^[39m
+    [90m 53| [39m            data[33m:[39m {
+    [90m 54| [39m                unitId[33m:[39m unit[33m.[39mid[33m,[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m32 passed[39m[22m[2m | [22m[33m2 skipped[39m[90m (35)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m118 passed[39m[22m[2m | [22m[33m4 skipped[39m[90m (123)[39m
+[2m   Start at [22m 11:26:32
+[2m   Duration [22m 13.56s[2m (transform 5.08s, setup 0ms, import 43.38s, tests 86.94s, environment 5ms)[22m
+

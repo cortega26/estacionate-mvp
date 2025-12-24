@@ -4,6 +4,8 @@ import { db } from '../../lib/db.js'
 import { Prisma } from '@prisma/client'
 import { fromZonedTime } from 'date-fns-tz'
 import cors from '../../lib/cors.js'
+import { redis } from '../../lib/redis.js' // Phase 3: Caching
+import { logger } from '../../lib/logger.js'
 
 // Query Schema
 const searchSchema = z.object({
@@ -21,6 +23,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         const buildingId = req.query.buildingId as string
         const date = req.query.date as string
         const durationType = req.query.durationType as string | undefined
+        // Pagination (Stability Fix)
+        const limit = parseInt(req.query.limit as string) || 100
 
         const query = searchSchema.parse({
             buildingId,
@@ -65,6 +69,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             whereClause.durationType = durationMap[query.durationType]
         }
 
+        // --- CACHE CHECK (Phase 3) ---
+        const cacheKey = `avail:search:${query.buildingId}:${query.date || 'today'}:${query.durationType || 'all'}`
+
+        try {
+            const cached = await redis?.get(cacheKey)
+            if (cached) {
+                return res.status(200).json({ success: true, data: JSON.parse(cached), cached: true })
+            }
+        } catch (err) {
+            logger.warn({ err }, 'Redis Cache Get Failed')
+        }
+        // -----------------------------
+
         const blocks = await db.availabilityBlock.findMany({
             where: whereClause,
             include: {
@@ -72,8 +89,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             },
             orderBy: {
                 startDatetime: 'asc'
-            }
+            },
+            take: limit, // Prevent payload explosion
         })
+
+        // --- CACHE SET (Phase 3) ---
+        // Cache for 60 seconds (Short TTL for availability accuracy)
+        try {
+            if (blocks.length > 0) {
+                await redis?.setex(cacheKey, 60, JSON.stringify(blocks))
+            }
+        } catch (err) {
+            logger.warn({ err }, 'Redis Cache Set Failed')
+        }
+        // ---------------------------
 
         return res.status(200).json({ success: true, data: blocks })
 

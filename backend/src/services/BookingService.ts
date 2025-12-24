@@ -7,19 +7,10 @@ import { logger } from '../lib/logger.js';
 import { PaymentService } from './PaymentService.js';
 import { AppError, ErrorCode } from '../lib/errors.js';
 import { ServiceErrorCode } from '../lib/error-codes.js';
+import { BookingValidator, BookingUser } from './booking/BookingValidator.js';
 
-const createBookingSchema = z.object({
-    blockId: z.string().uuid(),
-    vehiclePlate: z.string().min(5),
-    visitorName: z.string().min(3),
-    visitorPhone: z.string().optional()
-});
 
-interface BookingUser {
-    userId: string;
-    role: string;
-    buildingId?: string | null;
-}
+
 
 interface RequestMetadata {
     ip: string;
@@ -30,36 +21,10 @@ interface RequestMetadata {
 export class BookingService {
     static async createBooking(user: BookingUser, rawData: unknown, meta: RequestMetadata) {
         // 1. Validation
-        const data = createBookingSchema.parse(rawData);
+        const data = BookingValidator.parseCreatePayload(rawData);
 
         // --- 0. BLACKLIST CHECK ---
-        const resident = await db.resident.findUnique({
-            where: { id: user.userId },
-            select: { email: true, rutHash: true, unit: { select: { buildingId: true } } }
-        });
-
-        if (!resident) throw AppError.unauthorized(ServiceErrorCode.RESIDENT_NOT_FOUND, 'Resident not found');
-
-        const bans = await db.blocklist.findMany({
-            where: {
-                OR: [
-                    { buildingId: null }, // Global
-                    { buildingId: resident.unit.buildingId } // This Building
-                ],
-                AND: {
-                    OR: [
-                        { type: 'EMAIL', value: resident.email },
-                        { type: 'RUT', value: resident.rutHash || '' },
-                        { type: 'PLATE', value: data.vehiclePlate }
-                    ]
-                }
-            }
-        });
-
-        if (bans.length > 0) {
-            const reasons = bans.map((b) => b.reason).filter(Boolean).join(', ');
-            throw AppError.forbidden(ServiceErrorCode.BOOKING_BLOCKED, 'Booking Blocked', reasons, { reasons });
-        }
+        await BookingValidator.validateBlacklist(user, data.vehiclePlate);
 
         // 2. Optimistic Locking Transaction
         const booking = await db.$transaction(async (tx) => {
@@ -67,12 +32,6 @@ export class BookingService {
             const preBlock = await tx.availabilityBlock.findUniqueOrThrow({
                 where: { id: data.blockId },
                 select: { spotId: true }
-            });
-
-            // 1. LOCK PARENT RESOURCE (VisitorSpot)
-            await tx.visitorSpot.update({
-                where: { id: preBlock.spotId },
-                data: { updatedAt: new Date() }
             });
 
             // Atomic Update: Only succeeds if status is currently 'available'
@@ -102,30 +61,12 @@ export class BookingService {
                 }
             });
 
-            // Fix 1: Temporal Safety (Prevent Booking Past)
-            if (new Date(block.startDatetime) < new Date()) {
-                throw AppError.badRequest(ServiceErrorCode.PAST_TIME, 'Cannot book past dates');
-            }
+            // Business Rules Validation
+            BookingValidator.validateBusinessRules(user, block.spot.buildingId, block.startDatetime);
 
-            // Fix 2: IDOR Prevention
-            if (user.buildingId && block.spot.buildingId !== user.buildingId) {
-                throw AppError.forbidden(ServiceErrorCode.BUILDING_MISMATCH, 'You can only book spots in your own building');
-            }
+            // Check Double Booking
+            await BookingValidator.checkDoubleBooking(tx, block.id, block.spotId, block.startDatetime, block.endDatetime);
 
-            // Fix 3: Double Booking Overlap Check
-            const overlap = await tx.availabilityBlock.findFirst({
-                where: {
-                    spotId: block.spotId,
-                    id: { not: block.id },
-                    status: 'reserved',
-                    startDatetime: { lt: block.endDatetime },
-                    endDatetime: { gt: block.startDatetime }
-                }
-            });
-
-            if (overlap) {
-                throw AppError.conflict(ServiceErrorCode.DOUBLE_BOOKING_DETECTED, 'Double Booking Detected');
-            }
 
             // --- YIELD MANAGEMENT ---
             const rules = await tx.pricingRule.findMany({

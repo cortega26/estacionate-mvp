@@ -5,6 +5,8 @@ const redisUrl = process.env.REDIS_URL || process.env.KV_URL || 'redis://localho
 
 export const redis = new Redis(redisUrl, {
     maxRetriesPerRequest: 3,
+    enableOfflineQueue: false, // Fail fast if Redis is down (prevents hanging in tests)
+    connectTimeout: 5000,
     retryStrategy(times) {
         if (times > 3) {
             logger.error('Redis connection failed after 3 retries');

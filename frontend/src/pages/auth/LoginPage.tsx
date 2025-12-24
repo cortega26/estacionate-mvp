@@ -37,8 +37,9 @@ export const LoginPage = () => {
                 <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">Iniciar Sesión</h1>
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Correo Electrónico</label>
+                        <label htmlFor="email" className="block text-sm font-medium text-gray-700">Correo Electrónico</label>
                         <input
+                            id="email"
                             {...register('email', { required: true })}
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border"
                             type="email"
@@ -46,8 +47,9 @@ export const LoginPage = () => {
                         {errors.email && <span className="text-red-500 text-xs">El correo es obligatorio</span>}
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Contraseña</label>
+                        <label htmlFor="password" className="block text-sm font-medium text-gray-700">Contraseña</label>
                         <input
+                            id="password"
                             {...register('password', { required: true })}
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border"
                             type="password"

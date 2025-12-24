@@ -12,7 +12,7 @@ test.describe('Smoke Tests', () => {
         await page.getByRole('button', { name: /Ingresar/i }).click();
 
         // Expect error toast
-        await expect(page.getByText('Falló el inicio de sesión')).toBeVisible();
+        await expect(page.getByText(/Credenciales inválidas|Falló el inicio de sesión/)).toBeVisible();
     });
 
     test('should login successfully as admin', async ({ page }) => {

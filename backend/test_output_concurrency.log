@@ -1,0 +1,68 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.16 [39m[90mC:/Users/corte/VS Code Projects/estacionate-mvp/backend[39m
+
+[90mstderr[2m | tests/booking-concurrency.test.ts[2m > [22m[2mBookingService Concurrency (Phase 2)[2m > [22m[2mshould PREVENT double booking of the SAME block concurrently
+[22m[39mBOTH REJECTED: [
+  AppError: Spot is no longer available
+      at Function.conflict (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/lib/errors.ts:74:16)
+      at C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/services/BookingService.ts:91:32
+      at Proxy._transactionWithCallback [90m(C:\Users\corte\VS Code Projects\estacionate-mvp\backend\[39mnode_modules\[4m@prisma\client[24m\runtime\library.js:130:8000[90m)[39m
+      at Function.createBooking (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/services/BookingService.ts:65:25)
+      at async Promise.allSettled (index 0)
+      at C:/Users/corte/VS Code Projects/estacionate-mvp/backend/tests/booking-concurrency.test.ts:84:25
+      at [90mfile:///C:/Users/corte/VS%20Code%20Projects/estacionate-mvp/backend/[39mnode_modules/[4m@vitest/runner[24m/dist/index.js:915:20 {
+    code: [32m'BLOCK_UNAVAILABLE'[39m,
+    statusCode: [33m409[39m,
+    publicMessage: [32m'Spot is no longer available'[39m,
+    internalMessage: [32m'Spot is no longer available'[39m,
+    context: [90mundefined[39m
+  },
+  Error: [vitest] No "EventType" export is defined on the "../src/lib/event-bus.js" mock. Did you forget to return it from "vi.mock"?
+  If you need to partially mock a module, you can use "importOriginal" helper inside:
+  
+      at VitestMocker.createError [90m(file:///C:/Users/corte/VS%20Code%20Projects/estacionate-mvp/backend/[39mnode_modules/[4mvitest[24m/dist/chunks/startModuleRunner.DpqpB8k3.js:311:17[90m)[39m
+      at Object.get [90m(file:///C:/Users/corte/VS%20Code%20Projects/estacionate-mvp/backend/[39mnode_modules/[4mvitest[24m/dist/chunks/startModuleRunner.DpqpB8k3.js:384:16[90m)[39m
+      at Function.createBooking (C:/Users/corte/VS Code Projects/estacionate-mvp/backend/src/services/BookingService.ts:176:21)
+      at async Promise.allSettled (index 1)
+      at C:/Users/corte/VS Code Projects/estacionate-mvp/backend/tests/booking-concurrency.test.ts:84:25
+      at [90mfile:///C:/Users/corte/VS%20Code%20Projects/estacionate-mvp/backend/[39mnode_modules/[4m@vitest/runner[24m/dist/index.js:915:20 {
+    codeFrame: [32m'vi.mock(import("../src/lib/event-bus.js"), async (importOriginal) => {\n'[39m +
+      [32m'  const actual = await importOriginal()\n'[39m +
+      [32m'  return {\n'[39m +
+      [32m'    ...actual,\n'[39m +
+      [32m'    // your mocked methods\n'[39m +
+      [32m'  }\n'[39m +
+      [32m'})'[39m
+  }
+]
+
+ [31m❯[39m tests/booking-concurrency.test.ts [2m([22m[2m1 test[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 3014[2mms[22m[39m
+[31m     [31m×[31m should PREVENT double booking of the SAME block concurrently[39m[33m 3012[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/booking-concurrency.test.ts[2m > [22mBookingService Concurrency (Phase 2)[2m > [22mshould PREVENT double booking of the SAME block concurrently
+[31m[1mAssertionError[22m: expected +0 to be 1 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 1[39m
+[31m+ 0[39m
+
+[36m [2m❯[22m tests/booking-concurrency.test.ts:[2m94:34[22m[39m
+    [90m 92| [39m        }
+    [90m 93| [39m
+    [90m 94| [39m        [34mexpect[39m(fulfilled[33m.[39mlength)[33m.[39m[34mtoBe[39m([34m1[39m)[33m;[39m
+    [90m   | [39m                                 [31m^[39m
+    [90m 95| [39m        [34mexpect[39m(rejected[33m.[39mlength)[33m.[39m[34mtoBe[39m([34m1[39m)[33m;[39m
+    [90m 96| [39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m   Start at [22m 09:37:20
+[2m   Duration [22m 3.48s[2m (transform 116ms, setup 0ms, import 300ms, tests 3.01s, environment 0ms)[22m
+

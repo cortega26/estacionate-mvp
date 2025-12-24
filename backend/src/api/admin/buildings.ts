@@ -40,27 +40,22 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 return res.status(200).json({ success: true, data });
             }
 
-            // Calculate revenue per building (MVP: In-memory aggregation for now)
-            // Ideally this should be a raw SQL query for performance
-            const bookings = await db.booking.findMany({
-                where: { status: 'completed' },
-                select: {
-                    amountClp: true,
-                    availabilityBlock: {
-                        select: {
-                            spot: {
-                                select: { buildingId: true }
-                            }
-                        }
-                    }
-                }
-            });
+            // Calculate revenue per building using Raw SQL for performance (O(1) memory vs O(N))
+            const revenueStats = await db.$queryRaw<{ building_id: string, total_revenue: bigint }[]>`
+                SELECT 
+                    s.building_id,
+                    COALESCE(SUM(b.amount_clp), 0) as total_revenue
+                FROM bookings b
+                JOIN availability_blocks ab ON b.availability_block_id = ab.id
+                JOIN visitor_spots s ON ab.spot_id = s.id
+                WHERE b.status = 'completed'
+                GROUP BY s.building_id
+            `;
 
             const revenueMap = new Map<string, number>();
-            bookings.forEach(b => {
-                const bId = b.availabilityBlock.spot.buildingId;
-                const current = revenueMap.get(bId) || 0;
-                revenueMap.set(bId, current + b.amountClp);
+            revenueStats.forEach(stat => {
+                // Prisma returns BigInt for SUM, convert to Number (safe for currency < 9 quadrillion)
+                revenueMap.set(stat.building_id, Number(stat.total_revenue));
             });
 
             const data = buildings.map(b => {

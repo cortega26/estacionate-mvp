@@ -2,6 +2,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '../../lib/api';
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
+import { ManageRepBuildings } from './components/ManageBuildingsList';
+import { CreateRepModal } from './components/CreateRepModal';
 
 interface Building {
     id: string;
@@ -22,7 +24,7 @@ interface User {
 interface CreateRepInput {
     email?: string;
     password?: string;
-    [key: string]: any; // Allow for other fields from FormData
+    [key: string]: any;
 }
 
 interface UpdateBuildingInput {
@@ -31,18 +33,6 @@ interface UpdateBuildingInput {
     commissionRate: number;
 }
 
-interface ManageRepProps {
-    rep: User;
-    assignedBuildings: Building[];
-    allBuildings: Building[];
-    onUpdate: (data: UpdateBuildingInput) => void;
-}
-
-interface BuildingRowProps {
-    building: Building;
-    onUpdate: (data: UpdateBuildingInput) => void;
-    repId: string;
-}
 
 const SalesRepsPage = () => {
     const queryClient = useQueryClient();
@@ -58,7 +48,7 @@ const SalesRepsPage = () => {
         }
     });
 
-    // Fetch all buildings (to link/unlink). Optimized approach would be specific endpoint, but reuse is fine for now.
+    // Fetch all buildings
     const { data: buildingsData, isLoading: isLoadingBuildings } = useQuery({
         queryKey: ['admin-buildings'],
         queryFn: async () => {
@@ -81,7 +71,7 @@ const SalesRepsPage = () => {
         onError: (err: any) => toast.error(err.message)
     });
 
-    // Update Building Mutation (Assign Rep / Set Commission)
+    // Update Building Mutation
     const updateBuildingMutation = useMutation({
         mutationFn: async ({ buildingId, salesRepId, commissionRate }: UpdateBuildingInput) => {
             const { data } = await api.put(`/admin/buildings`, {
@@ -108,8 +98,6 @@ const SalesRepsPage = () => {
 
     const salesReps = usersData?.data || [];
     const buildings = buildingsData?.data || [];
-
-
 
     return (
         <div className="space-y-6">
@@ -181,192 +169,15 @@ const SalesRepsPage = () => {
                 </table>
             </div>
 
-            {/* Create Modal */}
-            {isCreateModalOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-                    <div className="bg-white rounded-lg p-6 w-full max-w-md">
-                        <h2 className="text-xl font-bold mb-4">Create New Sales Rep</h2>
-                        <form onSubmit={handleCreateSubmit} className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700">Email</label>
-                                <input
-                                    name="email"
-                                    type="email"
-                                    required
-                                    className="mt-1 block w-full border rounded-md p-2"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700">Password</label>
-                                <input
-                                    name="password"
-                                    type="password"
-                                    required
-                                    minLength={6}
-                                    className="mt-1 block w-full border rounded-md p-2"
-                                />
-                            </div>
-                            <div className="flex justify-end space-x-2 pt-4">
-                                <button
-                                    type="button"
-                                    onClick={() => setIsCreateModalOpen(false)}
-                                    className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="submit"
-                                    disabled={createRepMutation.isPending}
-                                    className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:opacity-50"
-                                >
-                                    {createRepMutation.isPending ? 'Creating...' : 'Create Rep'}
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            )}
+            <CreateRepModal
+                isOpen={isCreateModalOpen}
+                onClose={() => setIsCreateModalOpen(false)}
+                onSubmit={handleCreateSubmit}
+                isPending={createRepMutation.isPending}
+            />
         </div>
-    );
-};
-
-const ManageRepBuildings = ({ rep, assignedBuildings, allBuildings, onUpdate }: ManageRepProps) => {
-    const [selectedBuildingId, setSelectedBuildingId] = useState('');
-    const [commissionRate, setCommissionRate] = useState(0.05);
-
-    // const availableBuildings = allBuildings.filter((b: Building) => !b.salesRepId || b.salesRepId === rep.id);
-
-    const handleAssign = () => {
-        if (!selectedBuildingId) return;
-        onUpdate({
-            buildingId: selectedBuildingId,
-            salesRepId: rep.id,
-            commissionRate: commissionRate // When assigning, set default or chosen rate
-        });
-        setSelectedBuildingId('');
-    };
-
-    return (
-        <div className="space-y-4">
-            <h3 className="font-semibold text-gray-700">Managed Buildings for {rep.email}</h3>
-
-            {/* Assign New */}
-            <div className="flex items-end gap-2 bg-white p-3 rounded border">
-                <div className="flex-1">
-                    <label className="block text-xs text-gray-500 mb-1">Assign Building</label>
-                    <select
-                        className="w-full border rounded p-1 text-sm"
-                        value={selectedBuildingId}
-                        onChange={(e) => setSelectedBuildingId(e.target.value)}
-                    >
-                        <option value="">Select Building...</option>
-                        {allBuildings
-                            .filter((b: Building) => b.salesRepId !== rep.id) // Show all not assigned to THIS rep
-                            .map((b: Building) => (
-                                <option key={b.id} value={b.id}>
-                                    {b.name} {b.salesRepId ? '(Has other rep)' : ''}
-                                </option>
-                            ))}
-                    </select>
-                </div>
-                <div>
-                    <label className="block text-xs text-gray-500 mb-1">Comm. Rate (0-1)</label>
-                    <input
-                        type="number"
-                        step="0.01"
-                        className="w-24 border rounded p-1 text-sm"
-                        value={commissionRate}
-                        onChange={e => setCommissionRate(parseFloat(e.target.value))}
-                    />
-                </div>
-                <button
-                    onClick={handleAssign}
-                    disabled={!selectedBuildingId}
-                    className="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700 disabled:opacity-50"
-                >
-                    Assign
-                </button>
-            </div>
-
-            {/* List Assigned */}
-            <div className="border rounded overflow-hidden">
-                <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-100">
-                        <tr>
-                            <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600">Building Name</th>
-                            <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600">Commission Rate</th>
-                            <th className="px-4 py-2 text-right text-xs font-semibold text-gray-600">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                        {assignedBuildings.map((b: Building) => (
-                            <BuildingRow key={b.id} building={b} onUpdate={onUpdate} repId={rep.id} />
-                        ))}
-                        {assignedBuildings.length === 0 && (
-                            <tr>
-                                <td colSpan={3} className="px-4 py-2 text-sm text-gray-500 text-center">No buildings assigned.</td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    );
-};
-
-const BuildingRow = ({ building, onUpdate, repId }: BuildingRowProps) => {
-    const [isEditing, setIsEditing] = useState(false);
-    const [rate, setRate] = useState(building.salesRepCommissionRate || 0.05);
-
-    const handleSave = () => {
-        onUpdate({
-            buildingId: building.id,
-            salesRepId: repId, // Keep same rep
-            commissionRate: rate
-        });
-        setIsEditing(false);
-    };
-
-    const handleRemove = () => {
-        if (!confirm('Remove Rep from this building?')) return;
-        onUpdate({
-            buildingId: building.id,
-            salesRepId: null, // Clear rep
-            commissionRate: 0.05 // Reset to default or keep?
-        });
-    };
-
-    return (
-        <tr>
-            <td className="px-4 py-2 text-sm text-gray-900">{building.name}</td>
-            <td className="px-4 py-2 text-sm text-gray-900">
-                {isEditing ? (
-                    <input
-                        type="number"
-                        step="0.01"
-                        className="w-20 border rounded p-1"
-                        value={rate}
-                        onChange={e => setRate(parseFloat(e.target.value))}
-                    />
-                ) : (
-                    <span>{(building.salesRepCommissionRate! * 100).toFixed(1)}%</span>
-                )}
-            </td>
-            <td className="px-4 py-2 text-right text-sm space-x-2">
-                {isEditing ? (
-                    <>
-                        <button onClick={handleSave} className="text-green-600 font-medium">Save</button>
-                        <button onClick={() => setIsEditing(false)} className="text-gray-500">Cancel</button>
-                    </>
-                ) : (
-                    <>
-                        <button onClick={() => setIsEditing(true)} className="text-indigo-600 hover:text-indigo-900">Edit %</button>
-                        <button onClick={handleRemove} className="text-red-600 hover:text-red-900 ml-2">Remove</button>
-                    </>
-                )}
-            </td>
-        </tr>
     );
 };
 
 export default SalesRepsPage;
+

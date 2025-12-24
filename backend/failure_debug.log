@@ -1,0 +1,51 @@
+
+> estacionate-backend@1.0.0 test
+> vitest run tests/admin-buildings.test.ts
+
+
+[1m[46m RUN [49m[22m [36mv4.0.16 [39m[90mC:/Users/corte/VS Code Projects/estacionate-mvp/backend[39m
+
+{"level":40,"time":1766586941831,"pid":24448,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":40,"time":1766586941885,"pid":24448,"hostname":"i5-12600","error":"","msg":"Redis error"}
+[90mstderr[2m | tests/admin-buildings.test.ts
+[22m[39m⚠️ Twilio Credentials missing. WhatsApp notifications will be MOCKED.
+
+{"level":40,"time":1766586942099,"pid":24448,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":40,"time":1766586942320,"pid":24448,"hostname":"i5-12600","error":"","msg":"Redis error"}
+{"level":50,"time":1766586942320,"pid":24448,"hostname":"i5-12600","msg":"Redis connection failed after 3 retries"}
+{"level":40,"time":1766586942691,"pid":24448,"hostname":"i5-12600","msg":"⚠️ Sentry initialized (Mock Mode - No DSN)."}
+ [31m❯[39m tests/admin-buildings.test.ts [2m([22m[2m1 test[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 1308[2mms[22m[39m
+[31m     [31m×[31m should calculate revenue using raw SQL correctly[39m[33m 1307[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/admin-buildings.test.ts[2m > [22mGET /api/admin/buildings[2m > [22mshould calculate revenue using raw SQL correctly
+[31m[1mPrismaClientKnownRequestError[22m: 
+Invalid `db.booking.create()` invocation in
+C:/Users/corte/VS Code Projects/estacionate-mvp/backend/tests/admin-buildings.test.ts:63:26
+
+  60 });
+  61 
+  62 // Create a completed booking
+→ 63 await db.booking.create(
+Unique constraint failed on the fields: (`confirmation_code`)[39m
+[90m [2m❯[22m $n.handleRequestError node_modules/@prisma/client/runtime/library.js:[2m121:7315[22m[39m
+[90m [2m❯[22m $n.handleAndLogRequestError node_modules/@prisma/client/runtime/library.js:[2m121:6623[22m[39m
+[90m [2m❯[22m $n.request node_modules/@prisma/client/runtime/library.js:[2m121:6307[22m[39m
+[90m [2m❯[22m l node_modules/@prisma/client/runtime/library.js:[2m130:9633[22m[39m
+[36m [2m❯[22m tests/admin-buildings.test.ts:[2m63:9[22m[39m
+    [90m 61| [39m
+    [90m 62| [39m        [90m// Create a completed booking[39m
+    [90m 63| [39m        [35mawait[39m db[33m.[39mbooking[33m.[39m[34mcreate[39m({
+    [90m   | [39m        [31m^[39m
+    [90m 64| [39m            data[33m:[39m {
+    [90m 65| [39m                residentId[33m:[39m resident[33m.[39mid[33m,[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m   Start at [22m 11:35:40
+[2m   Duration [22m 3.38s[2m (transform 360ms, setup 0ms, import 1.89s, tests 1.31s, environment 0ms)[22m
+
