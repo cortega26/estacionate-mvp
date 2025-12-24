@@ -3,6 +3,8 @@ import { AppError, ErrorCode } from '../lib/errors.js';
 import { logger } from '../lib/logger.js';
 import { ZodError } from 'zod';
 
+import { captureException } from '../lib/sentry.js';
+
 export const errorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
     let error = err;
 
@@ -25,6 +27,15 @@ export const errorHandler = (err: any, req: Request, res: Response, next: NextFu
     }
 
     const appError = error as AppError;
+
+    // Capture in Sentry
+    captureException(err, {
+        code: appError.code,
+        internalMessage: appError.internalMessage,
+        requestId: (req as any).id,
+        method: req.method,
+        path: req.path
+    });
 
     // 3. Structured Logging
     logger.error({
