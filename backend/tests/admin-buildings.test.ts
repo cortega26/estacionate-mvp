@@ -190,4 +190,100 @@ describe('DELETE /api/admin/buildings', () => {
         expect(res.status).toBe(409);
         expect(res.body.error).toContain('Cannot delete building');
     });
+
+    it('should fail to delete building with just a resident (no bookings) due to Resident->Unit constraint', async () => {
+        const building = await db.building.create({
+            data: { name: 'Res Constraint', address: '123 R St', contactEmail: 'r@test.com', totalUnits: 1 }
+        });
+        const unit = await db.unit.create({
+            data: { buildingId: building.id, unitNumber: 'U-R' }
+        });
+        await db.resident.create({
+            data: { unitId: unit.id, email: `res-only-${Date.now()}@test.com`, rut: '1-9', firstName: 'Res', lastName: 'Only' }
+        });
+
+        const res = await request(app)
+            .delete(`/api/admin/buildings?id=${building.id}`)
+            .set('Authorization', `Bearer ${adminToken}`);
+
+        expect(res.status).toBe(409);
+    });
+
+
+    it('should force delete building with complex dependencies when force=true', async () => {
+        // Setup Complex Building
+        const building = await db.building.create({
+            data: {
+                name: 'Force Delete',
+                address: '123 F St',
+                contactEmail: 'f@test.com',
+                totalUnits: 1
+            }
+        });
+
+        const unit = await db.unit.create({
+            data: { buildingId: building.id, unitNumber: 'U-F' }
+        });
+
+        const resident = await db.resident.create({
+            data: {
+                unitId: unit.id,
+                email: `force-${Date.now()}@test.com`,
+                rut: '1-9',
+                firstName: 'F',
+                lastName: 'D'
+            }
+        });
+
+        const spot = await db.visitorSpot.create({
+            data: { buildingId: building.id, spotNumber: 'S-F' }
+        });
+
+        const block = await db.availabilityBlock.create({
+            data: {
+                spotId: spot.id,
+                startDatetime: new Date(),
+                endDatetime: new Date(),
+                durationType: 'ELEVEN_HOURS',
+                basePriceClp: 5000,
+                status: 'reserved'
+            }
+        });
+
+        const booking = await db.booking.create({
+            data: {
+                residentId: resident.id,
+                availabilityBlockId: block.id,
+                visitorName: 'Force Visitor',
+                vehiclePlate: 'FORCE',
+                amountClp: 5000,
+                commissionClp: 500,
+                status: 'pending',
+                confirmationCode: `FC${Math.floor(Math.random() * 10000)}`
+            }
+        });
+
+        // Add payment to verify it gets cleaned up (Payment restricts Booking)
+        await db.payment.create({
+            data: {
+                bookingId: booking.id,
+                amountClp: 5000,
+                status: 'pending'
+            }
+        });
+
+        const res = await request(app)
+            .delete(`/api/admin/buildings?id=${building.id}&force=true`)
+            .set('Authorization', `Bearer ${adminToken}`);
+
+        expect(res.status).toBe(200);
+        expect(res.body.success).toBe(true);
+
+        const check = await db.building.findUnique({ where: { id: building.id } });
+        expect(check).toBeNull();
+
+        // Check dependencies gone
+        const checkUnit = await db.unit.findUnique({ where: { id: unit.id } });
+        expect(checkUnit).toBeNull();
+    });
 });

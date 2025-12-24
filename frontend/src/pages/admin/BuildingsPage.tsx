@@ -57,19 +57,39 @@ export const BuildingsPage = () => {
     });
 
     const deleteMutation = useMutation({
-        mutationFn: async (id: string) => {
-            await api.delete(`/admin/buildings?id=${id}`);
+        mutationFn: async ({ id, force }: { id: string, force?: boolean }) => {
+            await api.delete(`/admin/buildings?id=${id}${force ? '&force=true' : ''}`);
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['admin-buildings'] });
             toast.success('Edificio eliminado correctamente');
         },
         onError: (error: any) => {
-            // Safe access to error message
-            const msg = error.response?.data?.error || 'Error al eliminar edificio';
-            toast.error(msg);
+            // Only show toast if it's NOT a 409 (which we handle manually) or if we are already forcing
+            if (error.response?.status !== 409) {
+                const msg = error.response?.data?.error || 'Error al eliminar edificio';
+                toast.error(msg);
+            }
         }
     });
+
+    const handleDelete = async (id: string) => {
+        if (!confirm('¿Estás seguro de que quieres eliminar este edificio?')) return;
+
+        try {
+            await deleteMutation.mutateAsync({ id, force: false });
+        } catch (error: any) {
+            if (error.response?.status === 409) {
+                if (confirm('Atención: Este edificio tiene registros asociados (residentes, reservas, etc.).\n\n¿Deseas FORZAR la eliminación de TODO el historial y datos asociados?\n\nEsta acción es irreversible.')) {
+                    try {
+                        await deleteMutation.mutateAsync({ id, force: true });
+                    } catch (forceError: any) {
+                        toast.error(forceError.response?.data?.error || 'Error al forzar eliminación');
+                    }
+                }
+            }
+        }
+    };
 
     const handleEdit = (building: Building) => {
         setSelectedBuilding(building);
@@ -143,11 +163,7 @@ export const BuildingsPage = () => {
                                         Editar
                                     </button>
                                     <button
-                                        onClick={() => {
-                                            if (confirm('¿Estás seguro de que quieres eliminar este edificio? Esta acción no se puede deshacer.')) {
-                                                deleteMutation.mutate(building.id);
-                                            }
-                                        }}
+                                        onClick={() => handleDelete(building.id)}
                                         className="text-red-600 hover:text-red-900 text-sm font-medium ml-4 flex items-center float-right"
                                         disabled={deleteMutation.isPending}
                                     >
