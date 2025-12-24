@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
+import { api } from '../../lib/api';
 import { toast } from 'react-hot-toast';
 import { Dialog } from '@headlessui/react';
 import { X } from 'lucide-react';
@@ -37,14 +37,14 @@ export const BuildingsPage = () => {
     const { data: buildings, isLoading } = useQuery({
         queryKey: ['admin-buildings'],
         queryFn: async () => {
-            const res = await axios.get<{ data: Building[] }>('/api/admin/buildings');
+            const res = await api.get<{ data: Building[] }>('/admin/buildings');
             return res.data.data;
         }
     });
 
     const updateMutation = useMutation({
         mutationFn: async (data: any) => {
-            await axios.put('/api/admin/buildings', data);
+            await api.put('/admin/buildings', data);
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['admin-buildings'] });

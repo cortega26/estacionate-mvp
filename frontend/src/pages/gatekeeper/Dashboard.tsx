@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import axios from 'axios';
+import { api } from '../../lib/api';
 import { Search, CheckCircle, Clock, AlertTriangle, AlertCircle } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
@@ -23,7 +23,7 @@ export const GatekeeperDashboard = () => {
     const { data: bookings, isLoading, refetch } = useQuery({
         queryKey: ['concierge-dashboard'],
         queryFn: async () => {
-            const res = await axios.get<{ data: Booking[] }>('/api/concierge/dashboard');
+            const res = await api.get<{ data: Booking[] }>('/concierge/dashboard');
             return res.data.data;
         },
         refetchInterval: 30000 // Refresh every 30s
@@ -34,7 +34,7 @@ export const GatekeeperDashboard = () => {
         mutationFn: async (plateOrCode: string) => {
             const isCode = plateOrCode.length <= 6 && !plateOrCode.includes('-'); // Guess heuristic
             const payload = isCode ? { code: plateOrCode } : { plate: plateOrCode };
-            const res = await axios.post('/api/concierge/verify', payload);
+            const res = await api.post('/concierge/verify', payload);
             return res.data;
         },
         onSuccess: (data) => {

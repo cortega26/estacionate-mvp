@@ -1,7 +1,8 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+// import axios from 'axios';
+import { api } from '../../lib/api';
 import { toast } from 'react-hot-toast';
 import { Mail, ArrowLeft, Send } from 'lucide-react';
 
@@ -17,7 +18,7 @@ export const ForgotPasswordPage = () => {
     const onSubmit = async (data: FormData) => {
         setLoading(true);
         try {
-            await axios.post('http://localhost:3000/api/auth/forgot-password', data);
+            await api.post('/auth/forgot-password', data);
             setSuccess(true);
             toast.success('¡Enlace de recuperación enviado!');
         } catch (error) {

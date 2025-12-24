@@ -1,7 +1,8 @@
 import React from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { CheckCircle, XCircle, Clock } from 'lucide-react';
-import axios from 'axios';
+// import axios from 'axios';
+import { api } from '../lib/api';
 import { toast } from 'react-hot-toast';
 
 export const PaymentSimulator = () => {
@@ -25,7 +26,7 @@ export const PaymentSimulator = () => {
 
         try {
             // Call our own backend webhook directly
-            await axios.post('http://localhost:3000/api/payments/webhook', {
+            await api.post('/payments/webhook', {
                 type: 'simulator',
                 data: {
                     bookingId,

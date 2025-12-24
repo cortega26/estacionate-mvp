@@ -1,7 +1,8 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import axios from 'axios';
+// import axios from 'axios'; 
+import { api } from '../../lib/api';
 import { toast } from 'react-hot-toast';
 import { Lock, ArrowLeft } from 'lucide-react';
 
@@ -24,7 +25,7 @@ export const ResetPasswordPage = () => {
     const onSubmit = async (data: FormData) => {
         setLoading(true);
         try {
-            await axios.post('http://localhost:3000/api/auth/reset-password', {
+            await api.post('/auth/reset-password', {
                 token: data.token,
                 newPassword: data.password
             });
