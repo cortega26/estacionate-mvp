@@ -3,10 +3,6 @@ import { db } from '../lib/db.js';
 import { logger } from '../lib/logger.js';
 import { NotificationService } from './NotificationService.js';
 
-// Initialize MP client
-const MP_ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN;
-const client = MP_ACCESS_TOKEN ? new MercadoPagoConfig({ accessToken: MP_ACCESS_TOKEN }) : null;
-
 // Type Definitions
 interface SimulatorWebhookData {
     bookingId: string;
@@ -27,6 +23,12 @@ interface RealWebhookData {
 }
 
 export class PaymentService {
+    // Initialize MP client lazily or per request to allow Env mocking
+    private static getClient() {
+        const MP_ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN;
+        return MP_ACCESS_TOKEN ? new MercadoPagoConfig({ accessToken: MP_ACCESS_TOKEN }) : null;
+    }
+
     /**
      * Creates a payment preference for a booking.
      * Handles both Real (MercadoPago) and Mock (Simulator) modes.
@@ -56,6 +58,7 @@ export class PaymentService {
         });
 
         // 1. MOCK MODE
+        const client = this.getClient();
         if (!client) {
             logger.warn('⚠️ Mock Mode: Returning fake Init Point');
             const simulatorUrl = `http://localhost:5173/payment-simulator?booking_id=${booking.id}&amount=${booking.amountClp}`;
@@ -175,6 +178,7 @@ export class PaymentService {
     }
 
     private static async handleRealWebhook(data: RealWebhookData) {
+        const client = this.getClient();
         if (!client) throw new Error('MP_CLIENT_NOT_INITIALIZED');
 
         // MP sends data.id in the body, or data.id depending on the topic.
@@ -261,6 +265,7 @@ export class PaymentService {
             throw error;
         }
     }
+
     /**
      * Refunds a payment.
      * Handles both Simulator and Real modes.
@@ -281,6 +286,7 @@ export class PaymentService {
         logger.info({ bookingId, amount, paymentId: payment.id }, '[PaymentService] Initiating Refund');
 
         // 1. MOCK MODE
+        const client = this.getClient();
         if (!client || (payment.gatewayResponse as any)?.simulator) {
             await db.payment.update({
                 where: { id: payment.id },
