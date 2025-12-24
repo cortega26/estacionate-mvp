@@ -16,6 +16,21 @@
     UPDATE "Booking" SET status = 'cancelled', payment_status = 'refunded' WHERE id = '...';
     ```
 
+## 🗓️ Billing Lifecycle (Pricing Model)
+**Trial Period**: Months 1-3 ($0 Fee).
+**Active Billing**: Month 4+ (0.5 UF Fee).
+
+**Manual Activation (Day 90):**
+1.  Connect to Database.
+2.  Update the Building record to set the monthly fee (in CLP equivalent of 0.5 UF).
+    *(Example: 0.5 UF ~= $18,500 CLP)*
+    ```sql
+    UPDATE buildings 
+    SET software_monthly_fee_clp = 18500 
+    WHERE id = 'BUILDING_ID';
+    ```
+3.  The next `cron:reconcile` run will automatically deduct this amount from the payout.
+
 ## 🔐 Secrets Rotation
 **Cycle**: 90 Days or upon compromise.
 1.  **Update `.env`** (Local) & Vercel Env Vars (Prod).
