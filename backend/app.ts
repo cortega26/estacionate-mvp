@@ -11,6 +11,7 @@ import helmet from 'helmet';
 import cors from 'cors';
 import { errorHandler } from './src/middleware/errorHandler.js';
 import v1Router from './src/api/routes.js';
+import { corsOptions } from './src/lib/cors.js';
 
 const app = express();
 
@@ -40,25 +41,8 @@ app.use((helmet as any)({
     }
 }));
 
-const whitelist = [
-    'http://localhost:5173',
-    'https://cortega26.github.io',
-    ...(process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : [])
-];
-
-app.use(cors({
-    origin: function (origin, callback) {
-        if (!origin) return callback(null, true);
-        if (whitelist.indexOf(origin) !== -1 || origin.match(/^https:\/\/.*\.vercel\.app$/)) {
-            return callback(null, true)
-        } else {
-            console.error(`Blocked by CORS: ${origin}`);
-            return callback(new Error('Not allowed by CORS'))
-        }
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-}));
+// Enable CORS with centralized options
+app.use(cors(corsOptions));
 
 app.use(express.json());
 
