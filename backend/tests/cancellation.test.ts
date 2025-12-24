@@ -281,4 +281,38 @@ describe('Booking Cancellation & Refunds', () => {
         expect(updatedBooking?.status).toBe('cancelled');
         expect(updatedBooking?.paymentStatus).toBe('refunded');
     });
+    it('should allow cancellation via Cookie auth (Browser client)', async () => {
+        // Reuse blockIdFuture, need re-book
+        const booking = await db.booking.create({
+            data: {
+                residentId: userId,
+                availabilityBlockId: blockIdFuture,
+                status: 'confirmed',
+                paymentStatus: 'paid',
+                amountClp: 10000,
+                commissionClp: 1000,
+                vehiclePlate: 'CK-99-99',
+                visitorName: 'Cookie Visitor',
+                confirmationCode: 'CONF-' + uuidv4().substring(0, 5)
+            }
+        });
+
+        await db.payment.create({
+            data: {
+                bookingId: booking.id,
+                amountClp: 10000,
+                status: 'approved',
+                externalPaymentId: 'mock-pay-cookie',
+                gatewayResponse: { simulator: true, id: 'mock-pay-cookie' }
+            }
+        });
+
+        const res = await request(app)
+            .post('/api/bookings/cancel')
+            .set('Cookie', `token=${userToken}`) // Simulate Browser Cookie
+            .send({ bookingId: booking.id });
+
+        expect(res.status).toBe(200);
+        expect(res.body.success).toBe(true);
+    });
 });

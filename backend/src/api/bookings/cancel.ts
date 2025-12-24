@@ -3,7 +3,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import cors from '../../lib/cors.js';
 import { logger } from '../../lib/logger.js';
 import { BookingService } from '../../services/BookingService.js';
-import { verifyToken } from '../../services/auth.js';
+import { getTokenFromRequest, verifyToken } from '../../services/auth.js';
 
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -17,11 +17,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         const body = schema.parse(req.body);
 
-        const authHeader = req.headers.authorization;
-        if (!authHeader) return res.status(401).json({ error: 'Unauthorized' });
+        const token = getTokenFromRequest(req);
+        if (!token) return res.status(401).json({ error: 'Unauthorized' });
 
         // Use static import
-        const user = verifyToken(authHeader.replace('Bearer ', ''));
+        const user = verifyToken(token);
         if (!user) return res.status(401).json({ error: 'Invalid Token' });
 
         const result = await BookingService.cancelBooking(body.bookingId, user.userId, user.role || '');
