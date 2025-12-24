@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '../../lib/api';
 import { toast } from 'react-hot-toast';
 import { Dialog } from '@headlessui/react';
-import { X } from 'lucide-react';
+import { X, Trash2 } from 'lucide-react';
 
 interface Building {
     id: string;
@@ -53,6 +53,21 @@ export const BuildingsPage = () => {
         },
         onError: () => {
             toast.error('Error al actualizar edificio');
+        }
+    });
+
+    const deleteMutation = useMutation({
+        mutationFn: async (id: string) => {
+            await api.delete(`/admin/buildings?id=${id}`);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['admin-buildings'] });
+            toast.success('Edificio eliminado correctamente');
+        },
+        onError: (error: any) => {
+            // Safe access to error message
+            const msg = error.response?.data?.error || 'Error al eliminar edificio';
+            toast.error(msg);
         }
     });
 
@@ -126,6 +141,18 @@ export const BuildingsPage = () => {
                                         className="text-indigo-600 hover:text-indigo-900 text-sm font-medium"
                                     >
                                         Editar
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            if (confirm('¿Estás seguro de que quieres eliminar este edificio? Esta acción no se puede deshacer.')) {
+                                                deleteMutation.mutate(building.id);
+                                            }
+                                        }}
+                                        className="text-red-600 hover:text-red-900 text-sm font-medium ml-4 flex items-center float-right"
+                                        disabled={deleteMutation.isPending}
+                                    >
+                                        <Trash2 className="w-4 h-4 mr-1" />
+                                        Eliminar
                                     </button>
                                 </td>
                             </tr>

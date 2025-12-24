@@ -100,3 +100,94 @@ describe('GET /api/admin/buildings', () => {
         vi.restoreAllMocks();
     });
 });
+
+describe('DELETE /api/admin/buildings', () => {
+    const adminToken = signToken({ userId: 'admin-1', role: 'admin' });
+
+    it('should delete an empty building', async () => {
+        const building = await db.building.create({
+            data: {
+                name: 'To Delete',
+                address: '123 Del St',
+                contactEmail: 'del@test.com',
+                totalUnits: 0
+            }
+        });
+
+        const res = await request(app)
+            .delete(`/api/admin/buildings?id=${building.id}`)
+            .set('Authorization', `Bearer ${adminToken}`);
+
+        expect(res.status).toBe(200);
+
+        const check = await db.building.findUnique({ where: { id: building.id } });
+        expect(check).toBeNull();
+    });
+
+    it('should fail to delete building with active bookings', async () => {
+        // Setup Building with Dependency
+        const building = await db.building.create({
+            data: {
+                name: 'Delete Fail',
+                address: '123 Fail St',
+                contactEmail: 'fail@test.com',
+                totalUnits: 1
+            }
+        });
+
+        const spot = await db.visitorSpot.create({
+            data: {
+                buildingId: building.id,
+                spotNumber: 'F-1'
+            }
+        });
+
+        const block = await db.availabilityBlock.create({
+            data: {
+                spotId: spot.id,
+                startDatetime: new Date(),
+                endDatetime: new Date(),
+                durationType: 'ELEVEN_HOURS',
+                basePriceClp: 5000,
+                status: 'reserved'
+            }
+        });
+
+        const unit = await db.unit.create({
+            data: {
+                buildingId: building.id,
+                unitNumber: 'U-F'
+            }
+        });
+
+        const resident = await db.resident.create({
+            data: {
+                unitId: unit.id,
+                email: `fail-${Date.now()}@test.com`,
+                rut: '1-9',
+                firstName: 'Fail',
+                lastName: 'Resident'
+            }
+        });
+
+        await db.booking.create({
+            data: {
+                residentId: resident.id,
+                availabilityBlockId: block.id,
+                visitorName: 'Fail',
+                vehiclePlate: 'FAIL',
+                amountClp: 5000,
+                commissionClp: 500,
+                status: 'pending',
+                confirmationCode: `F${Math.floor(Math.random() * 10000)}`
+            }
+        });
+
+        const res = await request(app)
+            .delete(`/api/admin/buildings?id=${building.id}`)
+            .set('Authorization', `Bearer ${adminToken}`);
+
+        expect(res.status).toBe(409);
+        expect(res.body.error).toContain('Cannot delete building');
+    });
+});

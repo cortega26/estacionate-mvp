@@ -106,10 +106,41 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             return res.status(200).json({ success: true, data: updated });
         }
 
+        if (req.method === 'DELETE') {
+            const { id } = req.query;
+
+            if (!id || typeof id !== 'string') {
+                return res.status(400).json({ error: 'Missing building ID' });
+            }
+
+            // Check if building exists
+            const building = await db.building.findUnique({
+                where: { id }
+            });
+
+            if (!building) {
+                return res.status(404).json({ error: 'Building not found' });
+            }
+
+            // Delete building
+            // Note: This will fail if there are related records with Restricted deletion (e.g. Bookings, Payouts)
+            // This is intentional to prevent accidental data loss of active buildings.
+            await db.building.delete({
+                where: { id }
+            });
+
+            return res.status(200).json({ success: true, message: 'Building deleted successfully' });
+        }
+
         return res.status(405).json({ error: 'Method not allowed' })
 
-    } catch (error) {
+    } catch (error: any) {
         console.error(error)
+        if (error.code === 'P2003') {
+            return res.status(409).json({
+                error: 'Cannot delete building because it has associated records (bookings, payouts, etc.).'
+            })
+        }
         return res.status(500).json({ error: 'Internal Server Error' })
     }
 }
