@@ -215,6 +215,7 @@ export class PaymentService {
                     where: { bookingId },
                     create: {
                         bookingId,
+                        externalPaymentId: String(paymentInfo.id),
                         amountClp: paymentInfo.transaction_amount || 0,
                         status: status,
                         paymentMethod: 'mercadopago',
@@ -222,6 +223,7 @@ export class PaymentService {
                     },
                     update: {
                         status: status,
+                        externalPaymentId: String(paymentInfo.id),
                         gatewayResponse: paymentInfo as any
                     }
                 });

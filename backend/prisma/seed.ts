@@ -11,10 +11,10 @@ async function main() {
 
     // 1. Building
     const building = await prisma.building.upsert({
-        where: { id: 'demo-building' },
+        where: { id: '478c9ef2-7087-42cc-a255-70200d1e7618' },
         update: {},
         create: {
-            id: 'demo-building',
+            id: '478c9ef2-7087-42cc-a255-70200d1e7618',
             name: 'Torres del Parque (Demo)',
             address: 'Av. Kennedy 1234',
             contactEmail: 'admin@torres.cl',

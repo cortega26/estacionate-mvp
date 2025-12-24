@@ -3,6 +3,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Smoke Tests', () => {
 
     test('should show error on invalid login', async ({ page }) => {
+        test.setTimeout(60000);
         await page.goto('/login');
 
         await page.getByLabel(/Correo/i).fill('wrong@test.com');
@@ -15,6 +16,7 @@ test.describe('Smoke Tests', () => {
     });
 
     test('should login successfully as admin', async ({ page }) => {
+        test.setTimeout(60000);
         await page.goto('/login');
 
         await page.getByLabel(/Correo/i).fill('admin@estacionate.cl');

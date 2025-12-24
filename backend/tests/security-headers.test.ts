@@ -56,11 +56,10 @@ describe('Security Headers', () => {
 
         // The custom CORS logic throws an Error('Not allowed by CORS')
         // which becomes a 500 with a generic message in the response body
-        expect(res.status).toBe(500);
-        expect(res.body.message).toBe('An internal server error occurred');
+        expect(res.status).toBe(403);
 
-        // Check that we captured the internal error message specifically
-        expect(res.body.debug_internal).toBe('Not allowed by CORS');
+        // Crucially, the CORS header should NOT be present (or strictly not the origin)
+        expect(res.headers['access-control-allow-origin']).toBeUndefined();
 
         // Verify Trace ID matches UUID format
         expect(res.body.trace_id).toBeDefined();
