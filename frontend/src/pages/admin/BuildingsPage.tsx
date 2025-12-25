@@ -58,7 +58,18 @@ export const BuildingsPage = () => {
         }
     });
 
-    // ... deleteMutation ...
+    const deleteMutation = useMutation({
+        mutationFn: async (id: string) => {
+            await api.delete(`/admin/buildings?id=${id}`);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['admin-buildings'] });
+            toast.success('Edificio eliminado correctamente');
+        },
+        onError: (err: any) => {
+            toast.error(err.response?.data?.error || 'Error al eliminar edificio');
+        }
+    });
 
     const handleToggleActive = (building: Building) => {
         const action = building.isActive ? 'Archivar' : 'Activar';
@@ -70,7 +81,11 @@ export const BuildingsPage = () => {
         }
     };
 
-    // ... handleDelete ...
+    const handleDelete = (id: string) => {
+        if (confirm('¿Estás seguro de que deseas eliminar este edificio? Esta acción no se puede deshacer.')) {
+            deleteMutation.mutate(id);
+        }
+    };
 
     const handleEdit = (building: Building) => {
         setSelectedBuilding(building);
