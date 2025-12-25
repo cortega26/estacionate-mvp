@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { X, Car, User, Phone } from 'lucide-react';
+import { X, Car, User, Phone, Lock, ShieldCheck } from 'lucide-react';
 
 const bookingSchema = z.object({
     visitorName: z.string().min(3, 'El nombre debe tener al menos 3 caracteres'),
@@ -135,21 +135,37 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                     </div>
 
                     {/* Actions */}
-                    <div className="flex gap-3 mt-6">
-                        <button
-                            type="button"
-                            onClick={onClose}
-                            className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 font-medium"
-                        >
-                            Cancelar
-                        </button>
-                        <button
-                            type="submit"
-                            disabled={isLoading}
-                            className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 font-medium disabled:bg-indigo-400 flex justify-center items-center gap-2"
-                        >
-                            {isLoading ? 'Procesando...' : 'Ir a Pagar'}
-                        </button>
+                    {/* Actions */}
+                    <div className="space-y-3 mt-6">
+                        <div className="flex gap-3">
+                            <button
+                                type="button"
+                                onClick={onClose}
+                                className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 font-medium"
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                type="submit"
+                                disabled={isLoading}
+                                className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 font-medium disabled:bg-indigo-400 flex justify-center items-center gap-2"
+                            >
+                                {isLoading ? (
+                                    'Procesando...'
+                                ) : (
+                                    <>
+                                        <Lock size={16} />
+                                        Ir a Pagar
+                                    </>
+                                )}
+                            </button>
+                        </div>
+
+                        {/* Trust Signal */}
+                        <div className="flex items-center justify-center gap-1.5 text-xs text-gray-500">
+                            <ShieldCheck size={14} className="text-green-600" />
+                            <span>Pagos seguros vía MercadoPago</span>
+                        </div>
                     </div>
                 </form>
             </div>

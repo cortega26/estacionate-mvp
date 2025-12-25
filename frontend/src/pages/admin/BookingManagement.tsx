@@ -134,19 +134,33 @@ export const BookingManagement = () => {
 };
 
 const StatusBadge = ({ status, paymentStatus }: { status: string; paymentStatus: string }) => {
-    let color = 'bg-gray-100 text-gray-800';
-    if (status === 'confirmed') color = 'bg-green-100 text-green-800';
-    if (status === 'cancelled') color = 'bg-red-100 text-red-800';
-    if (status === 'pending') color = 'bg-yellow-100 text-yellow-800';
-    if (status === 'completed') color = 'bg-blue-100 text-blue-800';
+    // Traffic Light UI Logic for Concierge "Head's Up" Display
+    // Green = GO, Red = STOP, Amber = CHECK
+
+    let styles = 'bg-gray-100 text-gray-800'; // Fallback
+    let icon = '•';
+
+    if (status === 'confirmed' || status === 'completed') {
+        styles = 'bg-green-600 text-white shadow-sm ring-1 ring-green-700'; // GO
+        icon = '✓';
+    } else if (status === 'cancelled' || status === 'no_show') {
+        styles = 'bg-red-600 text-white shadow-sm ring-1 ring-red-700'; // STOP
+        icon = '✕';
+    } else if (status === 'pending') {
+        styles = 'bg-amber-300 text-black ring-1 ring-amber-400'; // WAIT
+        icon = '⏳';
+    }
 
     return (
-        <div className="flex flex-col items-start gap-1">
-            <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${color}`}>
+        <div className="flex flex-col items-start gap-2">
+            <span className={`px-3 py-1.5 inline-flex items-center gap-2 text-xs uppercase font-bold tracking-wider rounded-md ${styles}`}>
+                <span className="text-sm">{icon}</span>
                 {status}
             </span>
             {paymentStatus === 'refunded' && (
-                <span className="text-[10px] text-red-600 font-bold">REFUNDED</span>
+                <span className="px-1.5 py-0.5 text-[10px] bg-red-100 text-red-800 font-bold border border-red-200 rounded">
+                    REFUNDED
+                </span>
             )}
         </div>
     );
