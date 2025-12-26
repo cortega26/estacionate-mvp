@@ -67,24 +67,24 @@ export const SalesDashboard = () => {
 
     return (
         <div className="space-y-6">
-            <h1 className="text-3xl font-bold text-gray-800">Sales Dashboard</h1>
+            <h1 className="text-3xl font-bold text-gray-800">Panel de Ventas</h1>
 
             {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                    <h3 className="text-gray-500 text-sm font-medium">Total Earnings</h3>
+                    <h3 className="text-gray-500 text-sm font-medium">Ganancias Totales</h3>
                     <p className="text-3xl font-bold text-emerald-600">
                         ${stats?.totalEarnings.toLocaleString() || '0'}
                     </p>
                 </div>
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                    <h3 className="text-gray-500 text-sm font-medium">This Month</h3>
+                    <h3 className="text-gray-500 text-sm font-medium">Este Mes</h3>
                     <p className="text-3xl font-bold text-blue-600">
                         ${stats?.monthlyEarnings.toLocaleString() || '0'}
                     </p>
                 </div>
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                    <h3 className="text-gray-500 text-sm font-medium">Active Clients</h3>
+                    <h3 className="text-gray-500 text-sm font-medium">Clientes Activos</h3>
                     <p className="text-3xl font-bold text-slate-800">
                         {stats?.activeBuildingsCount || 0}
                     </p>
@@ -94,20 +94,20 @@ export const SalesDashboard = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Recent Commissions */}
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                    <h2 className="text-xl font-bold mb-4">Recent Commissions</h2>
+                    <h2 className="text-xl font-bold mb-4">Comisiones Recientes</h2>
                     <div className="overflow-x-auto">
                         <table className="w-full text-left">
                             <thead>
                                 <tr className="border-b">
-                                    <th className="pb-2">Building</th>
-                                    <th className="pb-2">Amount</th>
-                                    <th className="pb-2">Status</th>
-                                    <th className="pb-2">Date</th>
+                                    <th className="pb-2">Edificio</th>
+                                    <th className="pb-2">Monto</th>
+                                    <th className="pb-2">Estado</th>
+                                    <th className="pb-2">Fecha</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y">
                                 {stats?.recentCommissions.length === 0 && (
-                                    <tr><td colSpan={4} className="py-4 text-center text-gray-400">No commissions yet</td></tr>
+                                    <tr><td colSpan={4} className="py-4 text-center text-gray-400">No hay comisiones aún</td></tr>
                                 )}
                                 {stats?.recentCommissions.map((c: Commission) => (
                                     <tr key={c.id}>
@@ -115,7 +115,7 @@ export const SalesDashboard = () => {
                                         <td className="py-2 font-medium text-emerald-600">${c.amountClp.toLocaleString()}</td>
                                         <td className="py-2">
                                             <span className={`px-2 py-1 rounded text-xs ${c.status === 'paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
-                                                {c.status}
+                                                {c.status === 'paid' ? 'Pagado' : 'Pendiente'}
                                             </span>
                                         </td>
                                         <td className="py-2 text-sm text-gray-500">{new Date(c.createdAt).toLocaleDateString()}</td>
@@ -128,9 +128,9 @@ export const SalesDashboard = () => {
 
                 {/* Managed Buildings */}
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                    <h2 className="text-xl font-bold mb-4">My Clients</h2>
+                    <h2 className="text-xl font-bold mb-4">Mis Clientes</h2>
                     <div className="space-y-4">
-                        {buildings.length === 0 && <p className="text-gray-400">No clients assigned yet.</p>}
+                        {buildings.length === 0 && <p className="text-gray-400">No hay clientes asignados.</p>}
                         {buildings.map((b) => (
                             <div key={b.id} className="p-4 border rounded-lg hover:bg-gray-50 transition">
                                 <div className="flex justify-between items-start">
@@ -140,7 +140,7 @@ export const SalesDashboard = () => {
                                     </div>
                                     <div className="text-right">
                                         <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
-                                            {b.payouts?.length || 0} Payouts
+                                            {b.payouts?.length || 0} Pagos
                                         </span>
                                     </div>
                                 </div>

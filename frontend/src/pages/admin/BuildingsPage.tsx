@@ -159,7 +159,7 @@ export const BuildingsPage = () => {
                                     <div className="text-sm font-medium text-slate-900">{building.name}</div>
                                     <div className="text-sm text-slate-500">{building.address}</div>
                                     <div className="text-xs text-slate-400 mt-1">
-                                        Units: {building.totalUnits} | Spots: {building.totalVisitorSpots}
+                                        Unidades: {building.totalUnits} | Espacios: {building.totalVisitorSpots}
                                     </div>
                                 </td>
                                 <td className="px-6 py-4">
@@ -287,7 +287,7 @@ export const BuildingsPage = () => {
                     <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all border-2 border-red-500">
                         <Dialog.Title as="h3" className="text-lg font-bold leading-6 text-red-600 flex items-center gap-2">
                             <Trash2 className="h-6 w-6" />
-                            Conflicto: Registros Asociados detected
+                            Conflicto: Registros Asociados detectados
                         </Dialog.Title>
                         <div className="mt-2">
                             <p className="text-sm text-gray-500">

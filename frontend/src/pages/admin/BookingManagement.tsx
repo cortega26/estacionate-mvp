@@ -42,11 +42,11 @@ export const BookingManagement = () => {
         }
     };
 
-    if (isLoading) return <div className="p-8">Loading Bookings...</div>;
+    if (isLoading) return <div className="p-8">Cargando Reservas...</div>;
 
     return (
         <div className="space-y-6">
-            <h1 className="text-2xl font-bold text-gray-800">Booking Management</h1>
+            <h1 className="text-2xl font-bold text-gray-800">Gestión de Reservas</h1>
 
             {/* Filter Controls (Localized) */}
             <div className="flex gap-2">
@@ -61,13 +61,13 @@ export const BookingManagement = () => {
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                         <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Spot</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Visitor</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Plate</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-                            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Espacio</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Visita</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Patente</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+                            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Monto</th>
+                            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
@@ -94,7 +94,7 @@ export const BookingManagement = () => {
                                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                     {booking.status !== 'cancelled' && booking.status !== 'completed' && (
                                         <button onClick={() => handleCancelClick(booking)} className="text-red-600 hover:text-red-900">
-                                            Cancel
+                                            Cancelar
                                         </button>
                                     )}
                                 </td>
@@ -108,23 +108,23 @@ export const BookingManagement = () => {
             {selectedBooking && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
                     <div className="bg-white rounded-lg p-6 max-w-sm w-full">
-                        <h3 className="text-lg font-bold mb-4">Confirm Cancellation</h3>
+                        <h3 className="text-lg font-bold mb-4">Confirmar Cancelación</h3>
                         <p className="mb-4 text-gray-600">
-                            Are you sure you want to cancel booking <b>{selectedBooking.id.slice(0, 8)}...</b>?
-                            Refund will be calculated automatically based on 24h policy.
+                            ¿Estás seguro de cancelar la reserva de <b>{selectedBooking.visitorName}</b>?
+                            El reembolso se calculará automáticamente según la política de 24h.
                         </p>
                         <div className="flex justify-end gap-2">
                             <button
                                 onClick={() => setSelectedBooking(null)}
                                 className="px-4 py-2 border rounded hover:bg-gray-50"
                             >
-                                Keep It
+                                Mantener
                             </button>
                             <button
                                 onClick={confirmCancel}
                                 className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
                             >
-                                Zero Refund / 90% Refund (Auto)
+                                Confirmar Cancelación
                             </button>
                         </div>
                     </div>
