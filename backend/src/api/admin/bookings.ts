@@ -97,6 +97,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             residentName: b.resident ? `${b.resident.firstName} ${b.resident.lastName}` : 'N/A',
             residentUnit: b.resident?.unit?.unitNumber || 'N/A',
             confirmationCode: b.confirmationCode,
+            specialInstructions: b.specialInstructions,
             createdAt: b.createdAt
         }));
 

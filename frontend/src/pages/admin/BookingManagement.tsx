@@ -11,7 +11,10 @@ export const BookingManagement = () => {
         queryKey: ['admin-bookings', filter],
         queryFn: async () => {
             const params = new URLSearchParams();
-            if (filter !== 'all') params.append('status', filter);
+            // Map frontend 'expired' filter to backend 'cancelled' status
+            const statusToSend = filter === 'expired' ? 'cancelled' : filter;
+
+            if (statusToSend !== 'all') params.append('status', statusToSend);
             const { data } = await api.get(`/admin/bookings?${params.toString()}`);
             return data.data; // API returns { success: true, data: [...] }
         }
@@ -55,6 +58,7 @@ export const BookingManagement = () => {
                 <button onClick={() => setFilter('completed')} className={`px-4 py-2 rounded ${filter === 'completed' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>Finalizadas</button>
                 <button onClick={() => setFilter('pending')} className={`px-4 py-2 rounded ${filter === 'pending' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>Pendientes</button>
                 <button onClick={() => setFilter('cancelled,no_show')} className={`px-4 py-2 rounded ${filter === 'cancelled,no_show' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>Canceladas</button>
+                <button onClick={() => setFilter('expired')} className={`px-4 py-2 rounded ${filter === 'expired' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>Expiradas</button>
             </div>
 
             <div className="bg-white rounded-lg shadow overflow-hidden">
@@ -71,35 +75,43 @@ export const BookingManagement = () => {
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
-                        {bookingsData?.map((booking: any) => (
-                            <tr key={booking.id}>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {new Date(booking.startDatetime).toLocaleString()}
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {booking.buildingName} - {booking.spotNumber}
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {booking.visitorName}
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">
-                                    {booking.vehiclePlate}
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap">
-                                    <StatusBadge status={booking.status} paymentStatus={booking.paymentStatus} />
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-900">
-                                    ${booking.amount}
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                    {booking.status !== 'cancelled' && booking.status !== 'completed' && (
-                                        <button onClick={() => handleCancelClick(booking)} className="text-red-600 hover:text-red-900">
-                                            Cancelar
-                                        </button>
-                                    )}
-                                </td>
-                            </tr>
-                        ))}
+                        {bookingsData
+                            ?.filter((booking: any) => {
+                                const isExpired = booking.specialInstructions?.includes('timeout') || booking.specialInstructions?.includes('Manual Cleanup');
+                                if (filter === 'expired') return isExpired; // Only show expired
+                                if (filter === 'all') return !isExpired; // Hide expired from All
+                                if (filter === 'cancelled,no_show') return !isExpired; // Hide expired from Cancelled
+                                return true; // Show for other filters (confirmed, pending, etc)
+                            })
+                            .map((booking: any) => (
+                                <tr key={booking.id}>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {new Date(booking.startDatetime).toLocaleString()}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {booking.buildingName} - {booking.spotNumber}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {booking.visitorName}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">
+                                        {booking.vehiclePlate}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        <StatusBadge status={booking.status} paymentStatus={booking.paymentStatus} />
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-900">
+                                        ${booking.amount}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        {booking.status !== 'cancelled' && booking.status !== 'completed' && (
+                                            <button onClick={() => handleCancelClick(booking)} className="text-red-600 hover:text-red-900">
+                                                Cancelar
+                                            </button>
+                                        )}
+                                    </td>
+                                </tr>
+                            ))}
                     </tbody>
                 </table>
             </div>
