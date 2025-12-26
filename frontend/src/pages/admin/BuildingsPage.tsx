@@ -180,7 +180,7 @@ export const BuildingsPage = () => {
                                         Total Procesado: ${building.stats.totalRevenueClp.toLocaleString()}
                                     </div>
                                     <div className="text-sm font-bold text-green-600 mt-1">
-                                        Ganancia Platform: ${building.stats.totalEarningsClp.toLocaleString()}
+                                        Ganancia Plataforma: ${building.stats.totalEarningsClp.toLocaleString()}
                                     </div>
                                     <div className="text-xs text-slate-400">
                                         (Comisión: ${building.stats.platformCommissionClp.toLocaleString()} + Fee)

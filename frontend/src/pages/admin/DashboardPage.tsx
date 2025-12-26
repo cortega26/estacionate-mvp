@@ -129,9 +129,14 @@ export const DashboardPage = () => {
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${activity.status === 'completed' ? 'bg-green-100 text-green-800' :
-                                        activity.status === 'confirmed' ? 'bg-blue-100 text-blue-800' : 'bg-yellow-100 text-yellow-800'
+                                            activity.status === 'confirmed' ? 'bg-blue-100 text-blue-800' :
+                                                activity.status === 'cancelled' ? 'bg-red-100 text-red-800' :
+                                                    'bg-yellow-100 text-yellow-800'
                                         }`}>
-                                        {activity.status}
+                                        {activity.status === 'completed' ? 'Finalizada' :
+                                            activity.status === 'confirmed' ? 'Confirmada' :
+                                                activity.status === 'cancelled' ? 'Cancelada' :
+                                                    activity.status === 'pending' ? 'Pendiente' : activity.status}
                                     </span>
                                 </td>
                             </tr>
