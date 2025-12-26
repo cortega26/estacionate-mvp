@@ -27,6 +27,8 @@ export const BuildingsPage = () => {
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [selectedBuilding, setSelectedBuilding] = useState<Building | null>(null);
     const [showArchived, setShowArchived] = useState(false); // Default: Hide archived
+    const [isForceDeleteOpen, setIsForceDeleteOpen] = useState(false);
+    const [buildingToDelete, setBuildingToDelete] = useState<string | null>(null);
 
     // Form state
     const [editForm, setEditForm] = useState({
@@ -59,15 +61,22 @@ export const BuildingsPage = () => {
     });
 
     const deleteMutation = useMutation({
-        mutationFn: async (id: string) => {
-            await api.delete(`/admin/buildings?id=${id}`);
+        mutationFn: async ({ id, force }: { id: string; force?: boolean }) => {
+            await api.delete(`/admin/buildings?id=${id}${force ? '&force=true' : ''}`);
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['admin-buildings'] });
             toast.success('Edificio eliminado correctamente');
+            setIsForceDeleteOpen(false);
+            setBuildingToDelete(null);
         },
         onError: (err: any) => {
-            toast.error(err.response?.data?.error || 'Error al eliminar edificio');
+            if (err.response?.status === 409 && !isForceDeleteOpen) {
+                // Conflict detected (dependencies exist), open Force Delete Modal
+                setIsForceDeleteOpen(true);
+            } else {
+                toast.error(err.response?.data?.error || 'Error al eliminar edificio');
+            }
         }
     });
 
@@ -82,8 +91,15 @@ export const BuildingsPage = () => {
     };
 
     const handleDelete = (id: string) => {
+        setBuildingToDelete(id);
         if (confirm('¿Estás seguro de que deseas eliminar este edificio? Esta acción no se puede deshacer.')) {
-            deleteMutation.mutate(id);
+            deleteMutation.mutate({ id });
+        }
+    };
+
+    const confirmForceDelete = () => {
+        if (buildingToDelete) {
+            deleteMutation.mutate({ id: buildingToDelete, force: true });
         }
     };
 
@@ -258,6 +274,50 @@ export const BuildingsPage = () => {
                                 disabled={updateMutation.isPending}
                             >
                                 {updateMutation.isPending ? 'Guardando...' : 'Guardar'}
+                            </button>
+                        </div>
+                    </Dialog.Panel>
+                </div>
+            </Dialog>
+
+            {/* Force Delete Confirmation Modal */}
+            <Dialog open={isForceDeleteOpen} onClose={() => setIsForceDeleteOpen(false)} className="relative z-50">
+                <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+                <div className="fixed inset-0 flex items-center justify-center p-4">
+                    <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all border-2 border-red-500">
+                        <Dialog.Title as="h3" className="text-lg font-bold leading-6 text-red-600 flex items-center gap-2">
+                            <Trash2 className="h-6 w-6" />
+                            Conflicto: Registros Asociados detected
+                        </Dialog.Title>
+                        <div className="mt-2">
+                            <p className="text-sm text-gray-500">
+                                No se puede eliminar este edificio porque tiene <b>historial financiero</b> (Reservas o Pagos).
+                            </p>
+                            <p className="text-sm text-gray-500 mt-2">
+                                ¿Deseas <b>FORZAR la eliminación</b>? Esto borrará permanentemente:
+                            </p>
+                            <ul className="list-disc list-inside text-sm text-red-600 mt-1 font-medium pl-2">
+                                <li>Todas las reservas históricas</li>
+                                <li>Registro de Pagos y Comisiones</li>
+                                <li>Residentes y Unidades</li>
+                            </ul>
+                        </div>
+
+                        <div className="mt-6 flex justify-end space-x-3">
+                            <button
+                                type="button"
+                                className="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none"
+                                onClick={() => setIsForceDeleteOpen(false)}
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                type="button"
+                                className="inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 focus:outline-none"
+                                onClick={confirmForceDelete}
+                                disabled={deleteMutation.isPending}
+                            >
+                                {deleteMutation.isPending ? 'Eliminando...' : 'SÍ, BORRAR TODO'}
                             </button>
                         </div>
                     </Dialog.Panel>

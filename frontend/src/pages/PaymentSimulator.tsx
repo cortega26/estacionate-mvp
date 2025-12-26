@@ -38,9 +38,9 @@ export const PaymentSimulator = () => {
 
             // Redirect logic mimicking MP
             setTimeout(() => {
-                if (status === 'approved') navigate('/checkout/success');
-                else if (status === 'rejected') navigate('/checkout/failure');
-                else navigate('/checkout/pending'); // You might need to create this page
+                if (status === 'approved') navigate('/pago/exito?mock=true&booking_id=' + bookingId);
+                else if (status === 'rejected') navigate('/pago/fallido');
+                else navigate('/pago/exito?pending=true'); // MP often redirects to success with pending status
             }, 1000);
 
         } catch (error) {

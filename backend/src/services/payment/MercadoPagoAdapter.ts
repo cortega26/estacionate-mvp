@@ -28,9 +28,9 @@ export class MercadoPagoAdapter implements PaymentGateway {
 
         // Define back_urls (Hardcoded in original, we keep it consistent or move to env later)
         const backUrls = {
-            success: 'http://localhost:5173/checkout/success',
-            failure: 'http://localhost:5173/checkout/failure',
-            pending: 'http://localhost:5173/checkout/pending'
+            success: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/pago/exito`,
+            failure: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/pago/fallido`,
+            pending: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/pago/exito`
         };
 
         const result = await preference.create({

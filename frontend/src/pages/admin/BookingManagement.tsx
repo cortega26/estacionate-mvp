@@ -48,12 +48,12 @@ export const BookingManagement = () => {
         <div className="space-y-6">
             <h1 className="text-2xl font-bold text-gray-800">Booking Management</h1>
 
-            {/* Filter Controls (Basic) */}
+            {/* Filter Controls (Localized) */}
             <div className="flex gap-2">
-                <button onClick={() => setFilter('all')} className={`px-4 py-2 rounded ${filter === 'all' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>All</button>
-                <button onClick={() => setFilter('confirmed')} className={`px-4 py-2 rounded ${filter === 'confirmed' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>Confirmed</button>
-                <button onClick={() => setFilter('pending')} className={`px-4 py-2 rounded ${filter === 'pending' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>Pending</button>
-                <button onClick={() => setFilter('cancelled')} className={`px-4 py-2 rounded ${filter === 'cancelled' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>Cancelled</button>
+                <button onClick={() => setFilter('all')} className={`px-4 py-2 rounded ${filter === 'all' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>Todas</button>
+                <button onClick={() => setFilter('confirmed,completed')} className={`px-4 py-2 rounded ${filter === 'confirmed,completed' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>Confirmadas</button>
+                <button onClick={() => setFilter('pending')} className={`px-4 py-2 rounded ${filter === 'pending' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>Pendientes</button>
+                <button onClick={() => setFilter('cancelled,no_show')} className={`px-4 py-2 rounded ${filter === 'cancelled,no_show' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>Canceladas</button>
             </div>
 
             <div className="bg-white rounded-lg shadow overflow-hidden">
@@ -139,27 +139,36 @@ const StatusBadge = ({ status, paymentStatus }: { status: string; paymentStatus:
 
     let styles = 'bg-gray-100 text-gray-800'; // Fallback
     let icon = '•';
+    let label = status;
 
-    if (status === 'confirmed' || status === 'completed') {
+    if (status === 'confirmed') {
         styles = 'bg-green-600 text-white shadow-sm ring-1 ring-green-700'; // GO
         icon = '✓';
+        label = 'CONFIRMADA';
+    } else if (status === 'completed') {
+        styles = 'bg-emerald-600 text-white shadow-sm ring-1 ring-emerald-700'; // DONE
+        icon = '🏁';
+        label = 'COMPLETADA'; // "Finalizada" is also good, keeping "Completada" to map 1:1 if preferred? "FINALIZADA" is more natural. Let's use FINALIZADA.
+        label = 'FINALIZADA';
     } else if (status === 'cancelled' || status === 'no_show') {
         styles = 'bg-red-600 text-white shadow-sm ring-1 ring-red-700'; // STOP
         icon = '✕';
+        label = status === 'no_show' ? 'NO SHOW' : 'CANCELADA';
     } else if (status === 'pending') {
         styles = 'bg-amber-300 text-black ring-1 ring-amber-400'; // WAIT
         icon = '⏳';
+        label = 'PENDIENTE';
     }
 
     return (
         <div className="flex flex-col items-start gap-2">
             <span className={`px-3 py-1.5 inline-flex items-center gap-2 text-xs uppercase font-bold tracking-wider rounded-md ${styles}`}>
                 <span className="text-sm">{icon}</span>
-                {status}
+                {label}
             </span>
             {paymentStatus === 'refunded' && (
                 <span className="px-1.5 py-0.5 text-[10px] bg-red-100 text-red-800 font-bold border border-red-200 rounded">
-                    REFUNDED
+                    REEMBOLSADA
                 </span>
             )}
         </div>

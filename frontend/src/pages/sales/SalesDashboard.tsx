@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { api } from '../../lib/api';
+import { Skeleton } from '../../components/ui/Skeleton';
 
 interface Commission {
     id: string;
@@ -47,7 +48,22 @@ export const SalesDashboard = () => {
         fetchData();
     }, []);
 
-    if (loading) return <div>Loading...</div>;
+    if (loading) {
+        return (
+            <div className="space-y-6">
+                <Skeleton className="h-10 w-64" /> {/* Title */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <Skeleton className="h-32 rounded-xl" />
+                    <Skeleton className="h-32 rounded-xl" />
+                    <Skeleton className="h-32 rounded-xl" />
+                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <Skeleton className="h-64 rounded-xl" />
+                    <Skeleton className="h-64 rounded-xl" />
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-6">

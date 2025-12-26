@@ -34,8 +34,8 @@ export const routes: RouteObject[] = [
     { path: '/signup', element: <SignupPage /> },
     { path: '/forgot-password', element: <ForgotPasswordPage /> },
     { path: '/reset-password', element: <ResetPasswordPage /> },
-    { path: '/checkout/success', element: <SuccessPage /> },
-    { path: '/checkout/failure', element: <FailurePage /> },
+    { path: '/pago/exito', element: <SuccessPage /> },
+    { path: '/pago/fallido', element: <FailurePage /> },
     { path: '/terms', element: <TermsPage /> },
     { path: '/payment-simulator', element: <PaymentSimulator /> },
 

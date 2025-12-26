@@ -22,12 +22,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         const page = parseInt(req.query.page as string) || 1
         const limit = 20
-        const status = req.query.status as string
+        const statusParam = req.query.status as string
+        const statusList = statusParam ? statusParam.split(',') : []
         const search = req.query.search as string
         const buildingId = req.query.buildingId as string
 
         const whereClause: Prisma.BookingWhereInput = {
-            ...(status ? { status: status as any } : {}), // 'any' to avoid strict enum mismatch issues during dev, strict checks via Zod preferably but query params are strings
+            ...(statusList.length > 0 ? { status: { in: statusList as any[] } } : {}),
             ...(buildingId ? { availabilityBlock: { spot: { buildingId } } } : {}),
             ...(search ? {
                 OR: [

@@ -1,7 +1,7 @@
-import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { api } from '../../lib/api';
+import { Skeleton } from '../../components/ui/Skeleton';
 
 const Analytics = () => {
     // Auth is handled via cookies
@@ -13,7 +13,23 @@ const Analytics = () => {
         }
     });
 
-    if (isLoading) return <div className="p-8 text-center">Loading Analytics...</div>;
+    if (isLoading) {
+        return (
+            <div className="space-y-8">
+                <Skeleton className="h-8 w-48" />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Skeleton className="h-24 rounded-lg" />
+                    <Skeleton className="h-24 rounded-lg" />
+                </div>
+                <div className="bg-white p-6 rounded-lg shadow-md">
+                    <Skeleton className="h-80 w-full" />
+                </div>
+                <div className="bg-white p-6 rounded-lg shadow-md">
+                    <Skeleton className="h-80 w-full" />
+                </div>
+            </div>
+        );
+    }
     if (error) return <div className="p-8 text-center text-red-500">Error loading data</div>;
 
     const { chartData, summary } = data.data;

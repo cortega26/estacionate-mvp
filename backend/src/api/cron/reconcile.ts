@@ -76,7 +76,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
             const buildingShare = totalRevenue - totalCommission
 
-            // Create Payout Record
+            // Skip Payout creation if there is no revenue (Prevent "Zombie" Payouts)
+            if (totalRevenue === 0) {
+                logger.info({ buildingId: building.id }, '[Reconcile] No revenue for period, skipping Payout creation')
+                results.push({ building: building.name, status: 'skipped_no_revenue' })
+                continue
+            }
+
             // Create Payout Record
             let payout;
             try {
