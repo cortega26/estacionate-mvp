@@ -51,7 +51,8 @@ export const BookingManagement = () => {
             {/* Filter Controls (Localized) */}
             <div className="flex gap-2">
                 <button onClick={() => setFilter('all')} className={`px-4 py-2 rounded ${filter === 'all' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>Todas</button>
-                <button onClick={() => setFilter('confirmed,completed')} className={`px-4 py-2 rounded ${filter === 'confirmed,completed' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>Confirmadas</button>
+                <button onClick={() => setFilter('confirmed')} className={`px-4 py-2 rounded ${filter === 'confirmed' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>Confirmadas</button>
+                <button onClick={() => setFilter('completed')} className={`px-4 py-2 rounded ${filter === 'completed' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>Finalizadas</button>
                 <button onClick={() => setFilter('pending')} className={`px-4 py-2 rounded ${filter === 'pending' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>Pendientes</button>
                 <button onClick={() => setFilter('cancelled,no_show')} className={`px-4 py-2 rounded ${filter === 'cancelled,no_show' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>Canceladas</button>
             </div>
