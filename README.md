@@ -11,27 +11,37 @@ A comprehensive marketplace for renting residential parking spots. Connects buil
 
 ## Prerequisites
 
-- Node.js (v18+)
-- PostgreSQL
-- Redis
+- Node.js (v18+; v20 recommended to match CI)
+- Docker and Docker Compose for local PostgreSQL/Redis
 
 ## Getting Started
 
-### 1. Installation
+### Fast Bootstrap
+
+For a fresh local environment, run:
 
 ```bash
-# Install Backend Dependencies
-cd backend
-npm install
-
-# Install Frontend Dependencies
-cd ../frontend
-npm install
+npm run bootstrap
 ```
 
-### 2. Environment Configuration
+This installs dependencies, creates local `.env` files when missing, starts PostgreSQL and Redis, applies Prisma migrations, and seeds the database.
 
-Ensure you have the necessary environment variables set up. Check `backend/.env.example` and `frontend/.env.example` (if available) or ask the team for the current configuration keys.
+### Manual Setup
+
+#### 1. Installation
+
+```bash
+npm run install:all
+```
+
+#### 2. Environment Configuration
+
+Create local environment files from the examples:
+
+```bash
+cp backend/.env.local.example backend/.env
+cp frontend/.env.example frontend/.env
+```
 
 **Backend Required Variables:**
 - `DATABASE_URL`
@@ -39,21 +49,32 @@ Ensure you have the necessary environment variables set up. Check `backend/.env.
 - `JWT_SECRET`
 - `PORT` (default 3000)
 
-### 3. Running the Project
+For local infrastructure defaults, see `docker-compose.yml` and `documentation/INFRASTRUCTURE.md`.
 
-**Start Backend:**
+#### 3. Running the Project
+
+Start PostgreSQL and Redis:
+
+```bash
+docker compose up -d postgres redis
+```
+
+Prepare the database:
+
 ```bash
 cd backend
-npm run dev
-# Server starts on http://localhost:3000
+npx prisma migrate dev
+npm run db:seed
 ```
 
-**Start Frontend:**
+Start backend and frontend together:
+
 ```bash
-cd frontend
 npm run dev
-# App starts on http://localhost:5173
 ```
+
+- Backend: http://localhost:3000
+- Frontend: http://localhost:5173
 
 ## Testing
 
@@ -74,13 +95,13 @@ npx playwright show-report
 ### Unit Tests
 
 ```bash
-# Backend
-cd backend
 npm run test
+```
 
-# Frontend
-cd frontend
-npm run test
+### Full Validation
+
+```bash
+npm run check:all
 ```
 
 ## Project Structure
@@ -88,3 +109,8 @@ npm run test
 - `frontend/`: React application, E2E tests (`/e2e`)
 - `backend/`: Express API, Prisma schema, Business Logic
 - `documentation/`: Detailed architectural and product documentation
+- `documentation/CODEMAP.md`: File and workflow map for agents/contributors
+- `documentation/TASKS.md`: Task-specific entry points and validation hints
+- `documentation/VALIDATION.md`: Validation command guide
+- `documentation/adr/`: Architecture decision records
+- `AGENTS.md`: Fast-start guide for agents and new contributors

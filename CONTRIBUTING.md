@@ -2,12 +2,27 @@
 
 ## Getting Started
 
+For a fresh local environment, run:
+
+```bash
+npm run bootstrap
+```
+
+Manual equivalent:
+
 1.  **Install Dependencies:**
     ```bash
-    cd backend && npm install
-    cdfrontend && npm install
+    npm run install:all
     ```
-2.  **Environment:** Copy `.env.example` to `.env` in both folders.
+2.  **Environment:** Copy the local environment examples to `.env`:
+    ```bash
+    cp backend/.env.local.example backend/.env
+    cp frontend/.env.example frontend/.env
+    ```
+3.  **Local Services:** Start Postgres and Redis:
+    ```bash
+    docker compose up -d postgres redis
+    ```
 
 ## Development Workflow
 
@@ -23,18 +38,17 @@ Use [Conventional Commits](https://www.conventionalcommits.org/):
 - `docs: add privacy policy`
 
 ### Pull Request Requirements
-Before pushing, you **MUST** run the full regression check in the `backend` folder:
+Before pushing, you **MUST** run the full regression check from the repository root:
 
 ```bash
-cd backend
 npm run check:all
 ```
 
 This script runs:
-1.  Linting (`eslint`)
-2.  Build (`tsc`)
-3.  Unit Tests (`vitest`)
-4.  Architecture Audit (`dependency-cruiser`)
+1.  Backend and frontend linting (`eslint`)
+2.  Backend and frontend builds
+3.  Backend and frontend tests (`vitest`)
+4.  Backend architecture audit (`dependency-cruiser`)
 
 **If `check:all` fails, do not open a PR.**
 

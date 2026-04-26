@@ -3,9 +3,11 @@
 ## Overview
 Estaciónate uses a hybrid infrastructure model:
 - **Backend**: Node.js/Express on Vercel (Production) / Docker (Local).
-- **Frontend**: React SPA on GitHub Pages.
+- **Frontend**: React SPA on Vercel (Production) / Vite (Local).
 - **Database**: PostgreSQL on Neon (Production) / Docker (Local).
 - **Caching/Rate Limiting**: Upstash Redis (Production) / Redis Docker (Local).
+
+See `documentation/adr/0003-deployment-topology.md` for the deployment topology decision.
 
 ## Local Development (Docker)
 
@@ -17,13 +19,26 @@ We use `docker-compose` to replicate the production environment locally.
 
 ### Setup
 1.  **Clone the repository**.
-2.  **Start Services**:
+2.  **Bootstrap the local environment**:
+    ```bash
+    npm run bootstrap
+    ```
+
+    This installs dependencies, creates local `.env` files when missing, starts PostgreSQL and Redis, applies Prisma migrations, and seeds the database.
+
+### Manual Setup
+1.  **Start Services**:
     ```bash
     docker-compose up -d
     ```
     This spins up:
     - `postgres` (Port 5432, User: `postgres`, DB: `estacionate_dev`)
     - `redis` (Port 6379)
+2.  **Create Local Env Files**:
+    ```bash
+    cp backend/.env.local.example backend/.env
+    cp frontend/.env.example frontend/.env
+    ```
 3.  **Run Backend Locally** (Outside Docker - Recommended for Dev):
     ```bash
     cd backend
@@ -60,7 +75,7 @@ We use GitHub Actions for continuous integration and deployment.
 - **`ci-backend.yml`**: Runs linting and unit/integration tests on every push. Uses a Postgres service container.
 - **`ci-frontend.yml`**: Runs linting and builds the React app to verify integrity.
 - **`cd-backend.yml`**: Deploys to Vercel when changes are merged to `main`.
-- **`cd-frontend.yml`**: Deploys to `gh-pages` branch when changes are merged to `main`.
+- **`cd-frontend.yml`**: Deploys the frontend to Vercel when changes are merged to `main`.
 
 ### Secrets Required (GitHub Repo Settings)
 To enable deployments, add these secrets to your repository:
