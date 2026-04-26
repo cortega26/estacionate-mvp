@@ -1,9 +1,11 @@
 # Consultoría Estratégica: Estaciónate MVP
+
 **Análisis integral para el desarrollo de una plataforma de estacionamientos compartidos en edificios residenciales chilenos**
 
 ---
 
 ## Tabla de contenidos
+
 - [1) Evaluación de la idea](#1-evaluación-de-la-idea)
 - [2) Pros y Contras](#2-pros-y-contras)
 - [3) Plan de MVP (Producto Mínimo Viable)](#3-plan-de-mvp-producto-mínimo-viable)
@@ -29,6 +31,7 @@ El Gran Santiago cuenta con aproximadamente 15,000 edificios residenciales con m
 Los residentes urbanos enfrentan creciente dificultad para encontrar estacionamiento, especialmente en comunas como Las Condes, Providencia y Ñuñoa, donde la demanda supera consistentemente la oferta de espacios públicos. Simultáneamente, los edificios mantienen puestos de visitas desocupados que representan capital improductivo.
 
 **Por qué ahora:**
+
 - **Digitalización acelerada:** La pandemia consolidó el uso de aplicaciones móviles para servicios locales
 - **Escasez urbana:** Las restricciones municipales han reducido estacionamientos gratuitos en vía pública
 - **Economía colaborativa madura:** Plataformas como Uber, Cornershop y MercadoLibre han educado al usuario chileno
@@ -37,6 +40,7 @@ Los residentes urbanos enfrentan creciente dificultad para encontrar estacionami
 ### Casos de uso y escenarios de mayor impacto
 
 **Escenarios de alta demanda:**
+
 1. **Edificios en zonas comerciales/profesionales:** Providencia, Las Condes, donde trabajadores necesitan estacionamiento diario
 2. **Eventos nocturnos:** Residentes que reciben visitas para cenas, celebraciones o reuniones familiares
 3. **Servicios profesionales a domicilio:** Técnicos, profesores particulares, cuidadores que requieren estacionamiento por períodos específicos
@@ -45,17 +49,18 @@ Los residentes urbanos enfrentan creciente dificultad para encontrar estacionami
 
 ### Competidores y sustitutos
 
-| Competidor/Sustituto | Segmento | Propuesta | Pricing (CLP) | Foco | Ventajas | Desventajas |
-|---------------------|----------|-----------|---------------|------|----------|-------------|
-| **Parkimeter** (Internacional) | B2B Corporativo | Gestión inteligente de estacionamientos | $50,000+ mes/edificio | B2B | Tecnología madura, sensores IoT | Sin presencia Chile, alto costo |
-| **Parkopedia** (Global) | B2C Público | Mapeo y reserva de estacionamientos | Gratuito + comisiones | B2C | Cobertura global, buena UX | Solo estacionamientos públicos |
-| **Estacionamientos municipales** | B2C | Espacios públicos | $600-1,500/hora | Público | Ubicación central | Limitado en horarios, alta rotación |
-| **Estacionamientos privados comerciales** | B2C | Edificios comerciales/centros | $2,000-5,000/día | Privado | Seguridad, disponibilidad | Costoso, ubicación fija |
-| **Aplicaciones de carpooling** | B2C | Compartir viajes | $1,000-3,000/viaje | Alternativo | Reduce necesidad de estacionar | No siempre disponible, menos conveniente |
+| Competidor/Sustituto                      | Segmento        | Propuesta                               | Pricing (CLP)         | Foco        | Ventajas                        | Desventajas                              |
+| ----------------------------------------- | --------------- | --------------------------------------- | --------------------- | ----------- | ------------------------------- | ---------------------------------------- |
+| **Parkimeter** (Internacional)            | B2B Corporativo | Gestión inteligente de estacionamientos | $50,000+ mes/edificio | B2B         | Tecnología madura, sensores IoT | Sin presencia Chile, alto costo          |
+| **Parkopedia** (Global)                   | B2C Público     | Mapeo y reserva de estacionamientos     | Gratuito + comisiones | B2C         | Cobertura global, buena UX      | Solo estacionamientos públicos           |
+| **Estacionamientos municipales**          | B2C             | Espacios públicos                       | $600-1,500/hora       | Público     | Ubicación central               | Limitado en horarios, alta rotación      |
+| **Estacionamientos privados comerciales** | B2C             | Edificios comerciales/centros           | $2,000-5,000/día      | Privado     | Seguridad, disponibilidad       | Costoso, ubicación fija                  |
+| **Aplicaciones de carpooling**            | B2C             | Compartir viajes                        | $1,000-3,000/viaje    | Alternativo | Reduce necesidad de estacionar  | No siempre disponible, menos conveniente |
 
 ### Diferenciación clave de Estaciónate
 
 **Ventajas competitivas iniciales:**
+
 - **Modelo híbrido B2B2C:** Captación a través de administradoras (escalable) con experiencia final B2C (sticky)
 - **Seguridad implícita:** Solo residentes verificados eliminan riesgos de vandalismo o mal uso
 - **Modalidades adaptadas al mercado:** Las ventanas de 11h y 23h coinciden con patrones reales de uso chileno
@@ -69,12 +74,14 @@ Los residentes urbanos enfrentan creciente dificultad para encontrar estacionami
 ### Técnicos
 
 **Pros:**
+
 - **Infraestructura escalable y económica:** GitHub Pages + Vercel permite crecimiento orgánico con costos marginales mínimos hasta 10,000+ usuarios
 - **Stack moderno y mantenible:** React/Next.js + Node.js facilita desarrollo iterativo y contratación de talento local
 - **Integración de pagos robusta:** MercadoPago tiene 85%+ adopción en Chile, Fintoc cubre bancos principales (Banco de Chile, BCI, Santander)
 - **PWA nativa:** Experiencia móvil optimizada sin dependencia de app stores inicialmente
 
 **Contras:**
+
 - **Límites de planes gratuitos:** GitHub Pages (1GB), Vercel (100GB bandwidth/mes, 10s timeout functions) requieren upgrade con crecimiento
 - **Latencia base de datos:** Conexiones serverless pueden introducir cold starts 200-500ms, crítico para disponibilidad en tiempo real
 - **Dependencia externa crítica:** MercadoPago/Fintoc representan single points of failure para transacciones
@@ -83,12 +90,14 @@ Los residentes urbanos enfrentan creciente dificultad para encontrar estacionami
 ### De negocio
 
 **Pros:**
+
 - **Barriers to entry moderadas:** Network effects y relaciones B2B crean defensibilidad temporal
 - **Modelo de ingresos comprobado:** Take rates 10-15% son aceptados en marketplaces maduros (Airbnb, Uber Eats)
 - **Mercado poco disputado:** No existe competencia directa local establecida
 - **Cumplimiento normativo simplificado:** Evitar terceros reduce complejidad legal inicial
 
 **Contras:**
+
 - **Adopción B2B lenta:** Administradoras son conservadoras, ciclos de decisión 2-6 meses típicos
 - **Dependencia de masa crítica:** Necesitas 3+ edificios por zona para generar liquidez suficiente
 - **Seasonalidad potencial:** Demanda puede reducirse 40-60% en vacaciones (enero-febrero, septiembre)
@@ -110,12 +119,12 @@ Identificar 2-3 edificios en comunas de alta demanda (Las Condes, Providencia, �
 
 **Timeline de implementación:**
 
-| Semana | Entregable | Responsable | KPI de Éxito |
-|--------|------------|-------------|--------------|
-| **1** | 10 entrevistas administradoras + 50 encuestas residentes | Founder/Co-founder | 60% interés administradoras, 40% validación residentes |
-| **2** | 3 edificios piloto confirmados + reglamentos revisados | Founder | 100% acuerdos firmados |
-| **3** | MVP técnico funcional + integración MercadoPago sandbox | Tech Lead | Demo funcional end-to-end |
-| **4** | Lanzamiento piloto + primeras 10 reservas | Equipo completo | 10 reservas, NPS >7 |
+| Semana | Entregable                                               | Responsable        | KPI de Éxito                                           |
+| ------ | -------------------------------------------------------- | ------------------ | ------------------------------------------------------ |
+| **1**  | 10 entrevistas administradoras + 50 encuestas residentes | Founder/Co-founder | 60% interés administradoras, 40% validación residentes |
+| **2**  | 3 edificios piloto confirmados + reglamentos revisados   | Founder            | 100% acuerdos firmados                                 |
+| **3**  | MVP técnico funcional + integración MercadoPago sandbox  | Tech Lead          | Demo funcional end-to-end                              |
+| **4**  | Lanzamiento piloto + primeras 10 reservas                | Equipo completo    | 10 reservas, NPS >7                                    |
 
 **Diseño UX móvil-first:**
 
@@ -278,7 +287,7 @@ CREATE TABLE audit_logs (
 
 ```sql
 -- 1. Buscar disponibilidad para fecha específica
-SELECT 
+SELECT
     b.name as building_name,
     b.address,
     vs.spot_identifier,
@@ -290,13 +299,13 @@ FROM buildings b
 JOIN visitor_spots vs ON b.id = vs.building_id
 JOIN availability_blocks ab ON vs.id = ab.spot_id
 WHERE ab.date = '2025-09-15'
-  AND b.is_active = TRUE 
+  AND b.is_active = TRUE
   AND vs.is_active = TRUE
   AND (ab.half_day_available = TRUE OR ab.full_day_available = TRUE)
 ORDER BY ab.half_day_price_clp ASC;
 
 -- 2. Reservas activas para edificio específico
-SELECT 
+SELECT
     bk.confirmation_code,
     r.full_name as resident_name,
     r.phone as resident_phone,
@@ -317,7 +326,7 @@ WHERE b.id = 'edificio-uuid'
 ORDER BY bk.booking_date, bk.checkin_time;
 
 -- 3. Reporte financiero mensual por edificio
-SELECT 
+SELECT
     b.name as building_name,
     COUNT(bk.id) as total_bookings,
     SUM(bk.total_price_clp) as gross_revenue_clp,
@@ -338,12 +347,13 @@ ORDER BY gross_revenue_clp DESC;
 ### 3.4 Endpoints mínimos
 
 **Autenticación y usuarios:**
+
 ```
 POST /auth/register-resident
   Body: { email, phone, fullName, rut, unitId, buildingId }
   Response: { userId, verificationRequired: true }
 
-POST /auth/verify-resident  
+POST /auth/verify-resident
   Body: { userId, verificationCode }
   Response: { accessToken, refreshToken, user }
 
@@ -357,9 +367,10 @@ GET /auth/profile
 ```
 
 **Búsqueda y disponibilidad:**
+
 ```
 GET /spots/search?lat=-33.4372&lng=-70.6506&date=2025-09-15&radius=2000
-  Response: { 
+  Response: {
     spots: [
       {
         buildingName, address, spotId, spotIdentifier,
@@ -378,6 +389,7 @@ GET /spots/{spotId}/availability?startDate=2025-09-15&endDate=2025-09-22
 ```
 
 **Gestión de reservas:**
+
 ```
 POST /bookings/create
   Body: {
@@ -387,7 +399,7 @@ POST /bookings/create
   Response: { bookingId, paymentUrl, confirmationCode, checkinTime, checkoutTime }
 
 GET /bookings/my-bookings?status=active&limit=10
-  Response: { 
+  Response: {
     bookings: [
       { bookingId, spotInfo, bookingDate, status, confirmationCode, qrCode }
     ]
@@ -399,13 +411,14 @@ POST /bookings/{bookingId}/cancel
 ```
 
 **Webhooks y pagos:**
+
 ```
 POST /payments/webhook/mercadopago
   Headers: { "X-Signature": "webhook-signature" }
   Body: { /* MercadoPago webhook payload */ }
   Response: { success: true }
 
-POST /payments/webhook/fintoc  
+POST /payments/webhook/fintoc
   Headers: { "X-Fintoc-Signature": "webhook-signature" }
   Body: { /* Fintoc webhook payload */ }
   Response: { success: true }
@@ -416,6 +429,7 @@ POST /payments/{paymentId}/refund
 ```
 
 **Administración (edificios):**
+
 ```
 GET /admin/buildings/{buildingId}/dashboard
   Query: { startDate, endDate }
@@ -426,7 +440,7 @@ GET /admin/buildings/{buildingId}/dashboard
   }
 
 PUT /admin/buildings/{buildingId}/pricing
-  Body: { 
+  Body: {
     defaultHalfDayPrice, defaultFullDayPrice,
     dateOverrides: [{ date, halfDayPrice, fullDayPrice }]
   }
@@ -574,6 +588,7 @@ Explorar alianzas con principales administradoras de edificios (Imagina, Adminis
 Implementar estructura de comisiones basada en volumen que incentive adopción temprana. Edificios con menos de 10 reservas/mes: 8%, 10-25 reservas: 12%, más de 25 reservas: 15%. Incluir bonificaciones por cumplimiento de SLA (disponibilidad 99%+, respuesta conserjería <15 minutos).
 
 **Servicios premium y add-ons:**
+
 - **Reserva garantizada:** +$2,000 CLP asegura puesto en caso de sobreventa
 - **Estacionamiento techado:** Premium de 30% cuando disponible
 - **Check-in express:** Acceso automático con QR sin validación de conserjería
@@ -666,13 +681,13 @@ WhatsApp Business como canal principal de soporte (95% de penetración en Chile)
 
 **Supuestos base del modelo:**
 
-| Métrica | Año 1 | Año 2 | Año 3 |
-|---------|--------|--------|--------|
-| **Edificios activos** | 15 | 50 | 150 |
-| **Spots promedio/edificio** | 3 | 3.5 | 4 |
-| **Ocupación mensual/spot** | 8 reservas | 12 reservas | 15 reservas |
-| **Precio promedio reserva** | $10,000 | $11,000 | $12,500 |
-| **Take rate plataforma** | 12% | 13% | 14% |
+| Métrica                     | Año 1      | Año 2       | Año 3       |
+| --------------------------- | ---------- | ----------- | ----------- |
+| **Edificios activos**       | 15         | 50          | 150         |
+| **Spots promedio/edificio** | 3          | 3.5         | 4           |
+| **Ocupación mensual/spot**  | 8 reservas | 12 reservas | 15 reservas |
+| **Precio promedio reserva** | $10,000    | $11,000     | $12,500     |
+| **Take rate plataforma**    | 12%        | 13%         | 14%         |
 
 **Proyección de ingresos (CLP):**
 
@@ -692,15 +707,15 @@ Ingresos mens.:     $432,000       $2,502,500      $11,812,500
 
 **Estructura de costos estimada:**
 
-| Concepto | Año 1 (CLP/mes) | Año 2 (CLP/mes) | Año 3 (CLP/mes) |
-|----------|-----------------|------------------|------------------|
-| **Equipo técnico** | $2,500,000 | $4,000,000 | $7,500,000 |
-| **Equipo comercial** | $1,200,000 | $2,400,000 | $4,800,000 |
-| **Infraestructura** | $150,000 | $500,000 | $1,200,000 |
-| **Marketing/Growth** | $300,000 | $800,000 | $2,000,000 |
-| **Operaciones** | $200,000 | $600,000 | $1,500,000 |
-| **Legal/Compliance** | $100,000 | $200,000 | $400,000 |
-| **Total costos** | **$4,450,000** | **$8,500,000** | **$17,400,000** |
+| Concepto             | Año 1 (CLP/mes) | Año 2 (CLP/mes) | Año 3 (CLP/mes) |
+| -------------------- | --------------- | --------------- | --------------- |
+| **Equipo técnico**   | $2,500,000      | $4,000,000      | $7,500,000      |
+| **Equipo comercial** | $1,200,000      | $2,400,000      | $4,800,000      |
+| **Infraestructura**  | $150,000        | $500,000        | $1,200,000      |
+| **Marketing/Growth** | $300,000        | $800,000        | $2,000,000      |
+| **Operaciones**      | $200,000        | $600,000        | $1,500,000      |
+| **Legal/Compliance** | $100,000        | $200,000        | $400,000        |
+| **Total costos**     | **$4,450,000**  | **$8,500,000**  | **$17,400,000** |
 
 **Punto de equilibrio:**
 El breakeven operativo se alcanza en el mes 12 con aproximadamente 12 edificios activos generando 2,880 reservas mensuales. Para acelerar este timeline, considerar pre-venta de suscripciones anuales con descuento a administradoras o fundraising semilla de $50-100 millones CLP.
@@ -723,6 +738,7 @@ Abrir la plataforma a usuarios externos manteniendo proceso de verificación est
 Especialización en reservas para eventos específicos: matrimonios en salones de eventos, graduaciones universitarias, partidos de fútbol en estadios cercanos. Precios premium justificados por la ocasión especial y demanda temporal concentrada.
 
 **Indicadores para decisión de pivot:**
+
 - Menos de 5 edificios captados después de 6 meses de esfuerzo comercial
 - Ocupación promedio <30% en edificios piloto después de 3 meses
 - NPS consistentemente bajo <5 en múltiples iteraciones del producto

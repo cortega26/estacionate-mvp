@@ -1,0 +1,60 @@
+name: Documentation CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'AGENTS.md'
+      - 'README.md'
+      - 'CONTRIBUTING.md'
+      - 'RUNBOOK.md'
+      - 'documentation/**'
+      - 'docs/**'
+      - 'frontend/README.md'
+      - 'scripts/**'
+      - '.github/workflows/**'
+      - '.markdown-link-check.json'
+      - '.prettierignore'
+      - 'prettier.config.cjs'
+      - 'package.json'
+      - 'package-lock.json'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'AGENTS.md'
+      - 'README.md'
+      - 'CONTRIBUTING.md'
+      - 'RUNBOOK.md'
+      - 'documentation/**'
+      - 'docs/**'
+      - 'frontend/README.md'
+      - 'scripts/**'
+      - '.github/workflows/**'
+      - '.markdown-link-check.json'
+      - '.prettierignore'
+      - 'prettier.config.cjs'
+      - 'package.json'
+      - 'package-lock.json'
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check documentation links
+        run: npm run check:docs
+
+      - name: Check formatting
+        run: npm run format:check

@@ -5,6 +5,7 @@ Start here before editing. This file is the short operational map for AI agents 
 ## Bootstrap
 
 Fast path for a fresh local environment:
+
 ```bash
 npm run bootstrap
 ```
@@ -38,7 +39,10 @@ Manual equivalent:
 ## Validation
 
 - Full local check: `npm run check:all`
+- Environment-aware local check: `npm run check:local`
 - Same check via shell script: `npm run verify`
+- Documentation/process check: `npm run check:docs`
+- Formatting check: `npm run format:check`
 - Backend only: `cd backend && npm run check:all`
 - Frontend only: `cd frontend && npm run lint && npm test && npm run build`
 - Browser E2E: `cd frontend && npm run test:e2e`
@@ -70,6 +74,8 @@ Run the narrowest relevant test while working, then run `npm run check:all` befo
 ## Read Next
 
 - `documentation/CODEMAP.md` for a fuller map of the repository.
+- `documentation/AGENT_POLICY.md` for canonical agent workflow rules.
+- `documentation/OWNERSHIP.md` for edit boundaries and high-risk/generated paths.
 - `documentation/TASKS.md` for task-specific entry points and checks.
 - `documentation/VALIDATION.md` for validation command selection.
 - `documentation/TECH_SPEC.md` for product/domain rules.

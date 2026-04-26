@@ -22,6 +22,7 @@ Al acceder y utilizar la plataforma **Estaciónate** (en adelante, la **“Plata
 ## 2. Marco Legal Aplicable
 
 Estos T&C se rigen por las leyes de la República de Chile, incluyendo (sin limitarse a):
+
 - Ley N° **19.496** sobre Protección de los Derechos de los Consumidores (cuando corresponda).
 - **Código Civil**.
 - Ley N° **21.442** sobre Copropiedad Inmobiliaria.

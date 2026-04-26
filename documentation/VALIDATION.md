@@ -9,9 +9,19 @@ npm run check:all
 ```
 
 Equivalent shell wrapper:
+
 ```bash
 npm run verify
 ```
+
+Environment-aware local wrapper:
+
+```bash
+npm run check:local
+```
+
+`check:local` creates missing local env files, starts Docker-backed PostgreSQL and
+Redis, then runs `npm run check:all`.
 
 ## Backend Only
 
@@ -19,7 +29,12 @@ npm run verify
 cd backend && npm run check:all
 ```
 
+DB-backed backend checks require PostgreSQL, Redis, and backend test environment
+variables. Use `backend/.env.test.example` as the test template, or run
+`npm run check:local` from the repository root to start local infrastructure first.
+
 Faster backend loop:
+
 ```bash
 cd backend && npm run lint && npm run build && npm test
 ```
@@ -37,6 +52,7 @@ cd frontend && npm run test:e2e
 ```
 
 Run a single Playwright spec when iterating:
+
 ```bash
 cd frontend && npm run test:e2e -- booking.spec.ts
 ```
@@ -55,6 +71,7 @@ Also update affected API responses, frontend types, and seed data when the schem
 ## Dependency Changes
 
 After adding, removing, or upgrading packages:
+
 ```bash
 npm run install:all
 npm run check:all
@@ -65,8 +82,24 @@ Use `npm audit` for visibility, but do not run `npm audit fix --force`.
 ## Documentation-Only Changes
 
 For Markdown or process-only edits, run a lightweight sanity check:
+
 ```bash
-bash -n scripts/verify.sh
+npm run check:docs
+npm run format:check
 ```
 
 If the docs changed commands or scripts, also run the command parser or shell syntax check for those files.
+
+## Formatting
+
+Check formatting without changing files:
+
+```bash
+npm run format:check
+```
+
+Apply formatting to supported source and documentation files:
+
+```bash
+npm run format
+```

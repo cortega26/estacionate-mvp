@@ -14,6 +14,8 @@ Use this map to choose the right files before editing. If the map disagrees with
 
 - `package.json`: monorepo command surface for install, dev, build, lint, test, and full checks.
 - `scripts/bootstrap.sh`: one-command local setup for dependencies, env files, Docker services, migrations, and seed data.
+- `scripts/check-local-env.sh`: preflight for Docker-backed PostgreSQL/Redis and local env files before full checks.
+- `scripts/check-docs.sh`: Markdown link and shell-script sanity checks for documentation/process changes.
 - `docker-compose.yml`: local Postgres, Redis, backend, and frontend containers.
 - `AGENTS.md`: short agent/new-contributor entry point.
 - `README.md`: human-facing project overview and bootstrap.
@@ -55,6 +57,9 @@ Use this map to choose the right files before editing. If the map disagrees with
 ## Validation Matrix
 
 - Full repo: `npm run check:all`
+- Formatting: `npm run format:check`
+- Documentation/process: `npm run check:docs`
+- Environment-aware local validation: `npm run check:local`
 - Backend full regression: `cd backend && npm run check:all`
 - Backend tests: `cd backend && npm test`
 - Backend coverage: `cd backend && npm run test:coverage`
@@ -74,5 +79,7 @@ See `documentation/VALIDATION.md` for command selection by change type.
 - Sales flows: inspect `backend/src/api/sales`, `backend/src/services/SalesService.ts`, sales tests, and sales pages/layout.
 - Cron jobs: inspect `backend/src/api/cron`, cron tests, and operational notes in `RUNBOOK.md`.
 - Database changes: update `backend/prisma/schema.prisma`, create a migration, regenerate Prisma client, update affected API/frontend types, and run relevant tests.
+- Deployment changes: inspect `.github/workflows`, Vercel config, environment examples, and `documentation/INFRASTRUCTURE.md`.
+- Notification changes: inspect backend services/adapters, env examples, and provider tests.
 
 See `documentation/TASKS.md` for more detailed task recipes.

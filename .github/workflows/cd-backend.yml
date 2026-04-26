@@ -2,7 +2,7 @@ name: Backend CD
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
     paths:
       - 'backend/**'
 
@@ -30,7 +30,7 @@ jobs:
         run: npx prisma migrate deploy
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      
+
       - name: Deploy to Vercel
         uses: amondnet/vercel-action@v25
         with:

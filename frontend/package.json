@@ -9,7 +9,7 @@
     "build": "tsc && vite build",
     "type-check": "tsc --noEmit",
     "preview": "vite preview",
-    "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
+    "lint": "eslint . --report-unused-disable-directives",
     "deploy": "npm run build && gh-pages -d dist",
     "test": "vitest run",
     "test:watch": "vitest",

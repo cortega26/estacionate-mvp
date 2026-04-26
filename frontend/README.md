@@ -1,69 +1,60 @@
-# React + TypeScript + Vite
+# Estacionate Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React, Vite, TypeScript, TailwindCSS, React Query, and Playwright app for the
+Estacionate parking marketplace.
 
-Currently, two official plugins are available:
+## Local Development
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+From the repository root:
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run dev:frontend
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Or from this directory:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run dev
 ```
+
+The default local URL is `http://localhost:5173`.
+
+## Environment
+
+Create `frontend/.env` from the checked-in example:
+
+```bash
+cp .env.example .env
+```
+
+The main variable is:
+
+- `VITE_API_URL`: backend API base URL, usually `http://localhost:3000`.
+
+## Validation
+
+Run the frontend-only checks:
+
+```bash
+npm run lint
+npm test
+npm run build
+```
+
+Run browser flows when changing booking, admin, auth, sales, or gatekeeper behavior:
+
+```bash
+npm run test:e2e
+```
+
+For repository-wide validation, run `npm run check:all` from the root.
+
+## Entry Points
+
+- `src/App.tsx`: route composition.
+- `src/pages/**`: route-level pages.
+- `src/features/**`: feature components.
+- `src/components/ui/**`: reusable UI primitives.
+- `src/lib/api.ts`: backend API client.
+- `src/types/**`: frontend domain types.
+- `e2e/**`: Playwright browser tests.

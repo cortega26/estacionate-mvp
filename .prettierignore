@@ -1,0 +1,14 @@
+node_modules
+dist
+build
+coverage
+.git
+
+backend/prisma/migrations
+package-lock.json
+backend/package-lock.json
+frontend/package-lock.json
+
+frontend/playwright-report
+frontend/test-results
+audit-system/reports

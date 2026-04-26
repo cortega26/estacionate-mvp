@@ -44,6 +44,7 @@ cp frontend/.env.example frontend/.env
 ```
 
 **Backend Required Variables:**
+
 - `DATABASE_URL`
 - `REDIS_URL`
 - `JWT_SECRET`
@@ -88,6 +89,7 @@ npm run test:e2e
 ```
 
 To see the report:
+
 ```bash
 npx playwright show-report
 ```
@@ -104,12 +106,19 @@ npm run test
 npm run check:all
 ```
 
+If local PostgreSQL/Redis may not be running yet, use:
+
+```bash
+npm run check:local
+```
+
 ## Project Structure
 
 - `frontend/`: React application, E2E tests (`/e2e`)
 - `backend/`: Express API, Prisma schema, Business Logic
 - `documentation/`: Detailed architectural and product documentation
 - `documentation/CODEMAP.md`: File and workflow map for agents/contributors
+- `documentation/OWNERSHIP.md`: Ownership and edit-boundary guide
 - `documentation/TASKS.md`: Task-specific entry points and validation hints
 - `documentation/VALIDATION.md`: Validation command guide
 - `documentation/adr/`: Architecture decision records

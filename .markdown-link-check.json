@@ -1,0 +1,23 @@
+{
+  "ignorePatterns": [
+    {
+      "pattern": "^http://localhost"
+    },
+    {
+      "pattern": "^https://www.conventionalcommits.org/"
+    },
+    {
+      "pattern": "^https://github.com/organizations/.*/settings/copilot/features$"
+    }
+  ],
+  "replacementPatterns": [
+    {
+      "pattern": "^/",
+      "replacement": "{{BASEURL}}/"
+    }
+  ],
+  "retryOn429": true,
+  "retryCount": 2,
+  "timeout": "20s",
+  "aliveStatusCodes": [200, 206, 301, 302, 999]
+}

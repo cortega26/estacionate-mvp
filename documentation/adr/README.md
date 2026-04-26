@@ -11,31 +11,12 @@ This directory records durable technical decisions for Estacionate. Use ADRs for
 
 ## Template
 
-```md
-# ADR NNNN: Short Title
-
-- Status: proposed | accepted | superseded
-- Date: YYYY-MM-DD
-
-## Context
-
-What forces, constraints, or problem led to this decision?
-
-## Decision
-
-What did we choose?
-
-## Consequences
-
-What gets easier, what gets harder, and what follow-up work is implied?
-
-## Links
-
-- Related files, issues, PRs, docs, or audits.
-```
+Use `TEMPLATE.md` when creating a new ADR.
 
 ## Records
 
 - `0001-local-development-stack.md`: Docker Compose for local PostgreSQL/Redis with npm-run app processes.
 - `0002-root-validation-command.md`: `npm run check:all` as the root full-repository validation command.
 - `0003-deployment-topology.md`: Vercel as the production deployment target for both frontend and backend.
+- `0004-audit-eventbus-contract.md`: `EventBus` as the canonical audit event boundary for state-changing backend workflows.
+- `0005-validation-environment-contract.md`: `npm run check:local` as the environment-aware local validation command.

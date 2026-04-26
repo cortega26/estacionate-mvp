@@ -24,6 +24,10 @@
     "lint": "npm run lint:backend && npm run lint:frontend",
     "lint:backend": "cd backend && npm run lint",
     "lint:frontend": "cd frontend && npm run lint",
+    "format": "prettier --write --ignore-unknown AGENTS.md README.md CONTRIBUTING.md RUNBOOK.md frontend/README.md package.json prettier.config.cjs .markdown-link-check.json \"documentation/**/*.md\" \".github/workflows/*.yml\"",
+    "format:check": "prettier --check --ignore-unknown AGENTS.md README.md CONTRIBUTING.md RUNBOOK.md frontend/README.md package.json prettier.config.cjs .markdown-link-check.json \"documentation/**/*.md\" \".github/workflows/*.yml\"",
+    "check:docs": "bash scripts/check-docs.sh",
+    "check:local": "bash scripts/check-local-env.sh && npm run check:all",
     "audit:arch": "cd backend && npm run audit:arch",
     "check:all": "npm run lint && npm run build && npm run test && npm run audit:arch",
     "verify": "bash scripts/verify.sh",
@@ -32,7 +36,12 @@
   "devDependencies": {
     "concurrently": "^8.2.2",
     "husky": "^9.1.7",
-    "lint-staged": "^16.2.7"
+    "lint-staged": "^16.2.7",
+    "markdown-link-check": "^3.13.7",
+    "prettier": "^3.6.2"
+  },
+  "lint-staged": {
+    "*.{js,cjs,mjs,ts,tsx,json,md,yml,yaml,css,html}": "prettier --write"
   },
   "engines": {
     "node": ">=18.0.0",
