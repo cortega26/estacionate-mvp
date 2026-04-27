@@ -32,6 +32,11 @@ Use this page as the navigation layer for project documentation. Prefer updating
 
 - `../docs/production-roadmap-2025.md`: roadmap.
 - `../docs/production-backlog.md`: production backlog.
+- `../docs/commercial-conversion-plan-2026.md`: product, sales, and conversion operating plan for the current growth stage.
+- `../docs/commercial-roadmap-2026.md`: 30-60-90 commercial and product execution roadmap.
+- `../docs/founder-sales-playbook-es.md`: Spanish founder sales playbook for discovery, demos, and pilot conversations.
+- `../docs/conversion-backlog-2026.md`: prioritized conversion-focused backlog.
+- `../docs/client-pitch-deck-outline-2026.md`: client-facing pitch deck structure.
 - `../docs/GAP_ANALYSIS_FEATURES.md`: feature gap analysis.
 - `project_context/`: original project context and MVP analysis.
 
