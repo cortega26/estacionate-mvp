@@ -77,7 +77,9 @@ Run the narrowest relevant test while working, then run `npm run check:all` befo
 
 - Auth changes usually need backend auth route/service tests and role coverage.
 - Booking changes usually need `BookingService` tests plus frontend booking-flow checks when UI-facing.
-- Payment changes usually need payment service/adapter tests and webhook integration coverage.
+- Payment changes require reading `documentation/LEGAL_COMMERCIAL_GUARDRAILS.md` and
+  executing `documentation/task-recipes/monetization-change.md` first; then payment
+  service/adapter tests and webhook integration coverage.
 - Prisma changes require `npx prisma migrate dev`, `npx prisma generate`, and affected API/frontend type updates.
 - Frontend user-flow changes should include Vitest coverage where practical and Playwright coverage for critical paths.
 
@@ -92,3 +94,6 @@ Run the narrowest relevant test while working, then run `npm run check:all` befo
 - `documentation/PROTOCOL.md` for terminal/output expectations.
 - `documentation/LESSONS.md` for project-specific gotchas.
 - `documentation/adr/` for durable architecture decisions.
+- `documentation/LEGAL_COMMERCIAL_GUARDRAILS.md` — **mandatory before any change to
+  payments, pricing, billing, payout, or monetization features** (Chilean legal
+  constraints; read before writing code, not after).

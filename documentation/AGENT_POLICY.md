@@ -8,9 +8,11 @@ interpretation.
 
 1. The current user request.
 2. The root `AGENTS.md` quickstart.
-3. This policy file.
-4. Task-specific recipes in `documentation/TASKS.md` and `documentation/task-recipes/`.
-5. Historical context in `documentation/LESSONS.md` and audit reports.
+3. `documentation/LEGAL_COMMERCIAL_GUARDRAILS.md` for any task touching payments,
+   pricing, billing, payout, or monetization — read it before writing code.
+4. This policy file.
+5. Task-specific recipes in `documentation/TASKS.md` and `documentation/task-recipes/`.
+6. Historical context in `documentation/LESSONS.md` and audit reports.
 
 If two repository docs conflict, prefer the more specific and more recent operational
 document, then update the stale document as part of the same change when practical.

@@ -60,3 +60,14 @@ in the same change when practical.
   `documentation/adr/0003-deployment-topology.md`.
 - Full local validation depends on the environment contract in
   `documentation/adr/0005-validation-environment-contract.md`.
+- **Monetization and payment changes** touching any of the paths below require reading
+  `documentation/LEGAL_COMMERCIAL_GUARDRAILS.md` and executing
+  `documentation/task-recipes/monetization-change.md` before writing code:
+  - `backend/prisma/schema.prisma` (models: Payment, Payout, PricingRule,
+    SalesRepCommission, or any new billing model)
+  - `backend/src/services/PaymentService.ts`
+  - `backend/src/services/payment/**`
+  - `backend/src/api/payments/**`
+  - `backend/src/api/cron/reconcile.ts`
+  - Any frontend component that renders prices, charge amounts, or payment flows
+  - Any new feature that introduces a PSP integration or recurring billing
