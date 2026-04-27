@@ -46,12 +46,21 @@ export class PaymentService {
         });
 
         const gateway = this.getGateway();
-        return gateway.createPreference(
+        const preference = await gateway.createPreference(
             'Estacionamiento Spot',
             1,
             booking.amountClp,
             booking.id
         );
+
+        logger.info({
+            bookingId: booking.id,
+            paymentId: booking.id,
+            amountClp: booking.amountClp,
+            gateway: gateway.constructor.name,
+        }, '[PaymentService] Payment preference created');
+
+        return preference;
     }
 
     /**

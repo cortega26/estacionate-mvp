@@ -8,6 +8,9 @@ For a fresh local environment, run:
 npm run bootstrap
 ```
 
+This now provisions the local environment and launches the frontend/backend dev
+servers. To provision only, run `npm run bootstrap -- --no-start`.
+
 Manual equivalent:
 
 1.  **Install Dependencies:**

@@ -112,7 +112,14 @@ describe('Reconciliation Job (Unit)', () => {
             { id: 'b1', name: 'Build 1' }
         ]);
         mockDb.payout.findFirst.mockResolvedValue(null);
-        mockDb.booking.findMany.mockResolvedValue([]);
+        mockDb.booking.findMany.mockResolvedValue([
+            {
+                id: 'bk-race-1',
+                amountClp: 10000,
+                commissionClp: 1000,
+                payment: { amountClp: 10000 }
+            }
+        ]);
 
         // Simulate Race Condition
         const p2002 = new Error('Unique constraint');
@@ -140,7 +147,14 @@ describe('Reconciliation Job (Unit)', () => {
             { id: 'b1', name: 'Build 1' }
         ]);
         mockDb.payout.findFirst.mockResolvedValue(null);
-        mockDb.booking.findMany.mockResolvedValue([]);
+        mockDb.booking.findMany.mockResolvedValue([
+            {
+                id: 'bk-race-2',
+                amountClp: 5000,
+                commissionClp: 500,
+                payment: { amountClp: 5000 }
+            }
+        ]);
 
         // Simulate Building Deleted
         const p2003 = new Error('Foreign key constraint');

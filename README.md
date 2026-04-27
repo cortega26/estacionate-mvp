@@ -25,6 +25,13 @@ npm run bootstrap
 ```
 
 This installs dependencies, creates local `.env` files when missing, starts PostgreSQL and Redis, applies Prisma migrations, and seeds the database.
+It then starts the frontend and backend together.
+
+To provision everything without launching the dev servers:
+
+```bash
+npm run bootstrap -- --no-start
+```
 
 ### Manual Setup
 
@@ -64,7 +71,7 @@ Prepare the database:
 
 ```bash
 cd backend
-npx prisma migrate dev
+npx prisma migrate deploy
 npm run db:seed
 ```
 

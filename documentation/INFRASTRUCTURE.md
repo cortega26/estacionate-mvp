@@ -29,7 +29,13 @@ We use `docker-compose` to replicate the production environment locally.
     npm run bootstrap
     ```
 
-    This installs dependencies, creates local `.env` files when missing, starts PostgreSQL and Redis, applies Prisma migrations, and seeds the database.
+    This installs dependencies, creates local `.env` files when missing, starts PostgreSQL and Redis, applies checked-in Prisma migrations, seeds the database, and launches the frontend/backend dev servers.
+
+    To stop after provisioning only:
+
+    ```bash
+    npm run bootstrap -- --no-start
+    ```
 
 ### Manual Setup
 
@@ -49,7 +55,7 @@ We use `docker-compose` to replicate the production environment locally.
     ```bash
     cd backend
     npm install
-    npx prisma migrate dev
+    npx prisma migrate deploy
     npm run dev
     ```
     _Ensure your `.env` points to localhost ports._

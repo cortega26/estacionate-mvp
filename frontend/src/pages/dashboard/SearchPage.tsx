@@ -13,6 +13,7 @@ import { ParkingMap } from '../../features/map/components/ParkingMap';
 
 export const SearchPage = () => {
     const user = useAuthStore((state) => state.user);
+    const normalizedUserRole = String(user?.role || '').toLowerCase();
     // State with initializer from sessionStorage
     const [selectedDate, setSelectedDate] = useState(() => sessionStorage.getItem('search_date') || new Date().toISOString().split('T')[0]);
     const [viewMode, setViewMode] = useState<'list' | 'map'>(() => (sessionStorage.getItem('search_viewMode') as 'list' | 'map') || 'list');
@@ -53,6 +54,11 @@ export const SearchPage = () => {
             value: b.id
         })) || [];
     }, [buildings]);
+
+    const selectedBuildingDetails = useMemo(
+        () => buildings?.find((building) => building.id === selectedBuilding?.value),
+        [buildings, selectedBuilding]
+    );
 
     React.useEffect(() => {
         if (isSuccess && buildingOptions.length > 0) {
@@ -226,12 +232,12 @@ export const SearchPage = () => {
                             </div>
                             <button
                                 onClick={() => setSelectedBlock(block)}
-                                disabled={block.status !== 'available' || user.role !== 'resident'}
+                                disabled={block.status !== 'available' || normalizedUserRole !== 'resident'}
                                 className="w-full py-3 bg-gray-900 text-white rounded-lg hover:bg-black disabled:bg-gray-100 disabled:text-gray-400 transition-colors font-medium text-sm"
                             >
                                 {block.status !== 'available'
                                     ? 'No Disponible'
-                                    : user.role !== 'resident'
+                                    : normalizedUserRole !== 'resident'
                                         ? 'Solo Residentes'
                                         : 'Reservar Ahora'}
                             </button>
@@ -257,6 +263,11 @@ export const SearchPage = () => {
                 spotNumber={selectedBlock?.spot?.spotNumber}
                 price={selectedBlock?.basePriceClp}
                 defaultName={user.firstName ? `${user.firstName} ${user.lastName}` : ''}
+                buildingName={selectedBuildingDetails?.name}
+                buildingAddress={selectedBuildingDetails?.address}
+                bookingStart={selectedBlock?.startDatetime}
+                bookingEnd={selectedBlock?.endDatetime}
+                durationLabel={selectedBlock?.durationType === 'ELEVEN_HOURS' ? '11 horas' : '23 horas'}
             />
         </div>
     );

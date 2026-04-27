@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { X, Car, User, Phone, Lock, ShieldCheck } from 'lucide-react';
+import { X, Car, User, Phone, Lock, ShieldCheck, Building2, CalendarDays, Clock3 } from 'lucide-react';
 
 const bookingSchema = z.object({
     visitorName: z.string().min(3, 'El nombre debe tener al menos 3 caracteres'),
@@ -20,7 +20,34 @@ interface BookingModalProps {
     spotNumber?: string;
     price?: number;
     defaultName?: string;
+    buildingName?: string;
+    buildingAddress?: string;
+    bookingStart?: string;
+    bookingEnd?: string;
+    durationLabel?: string;
 }
+
+const formatBookingDate = (value?: string) => {
+    if (!value) return 'Por confirmar';
+
+    return new Intl.DateTimeFormat('es-CL', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long'
+    }).format(new Date(value));
+};
+
+const formatBookingTime = (start?: string, end?: string) => {
+    if (!start || !end) return 'Por confirmar';
+
+    const formatter = new Intl.DateTimeFormat('es-CL', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+    });
+
+    return `${formatter.format(new Date(start))} - ${formatter.format(new Date(end))}`;
+};
 
 export const BookingModal: React.FC<BookingModalProps> = ({
     isOpen,
@@ -29,7 +56,12 @@ export const BookingModal: React.FC<BookingModalProps> = ({
     isLoading,
     spotNumber,
     price,
-    defaultName
+    defaultName,
+    buildingName,
+    buildingAddress,
+    bookingStart,
+    bookingEnd,
+    durationLabel
 }) => {
     const { register, handleSubmit, formState: { errors }, reset } = useForm<BookingFormData>({
         resolver: zodResolver(bookingSchema),
@@ -68,6 +100,41 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                     <div className="flex justify-between items-center bg-gray-50 p-3 rounded-md border border-gray-200">
                         <span className="text-gray-600 font-medium">Total a Pagar</span>
                         <span className="text-xl font-bold text-indigo-600">${price?.toLocaleString()}</span>
+                    </div>
+
+                    <div className="rounded-md border border-indigo-100 bg-indigo-50/70 p-4 space-y-3">
+                        <div>
+                            <p className="text-sm font-semibold text-indigo-900">Resumen antes de pagar</p>
+                            <p className="text-xs text-indigo-700">Verifica estos datos antes de salir a Mercado Pago.</p>
+                        </div>
+
+                        <div className="space-y-2 text-sm text-slate-700">
+                            <div className="flex gap-3">
+                                <Building2 size={16} className="mt-0.5 shrink-0 text-indigo-700" />
+                                <div>
+                                    <p className="font-medium text-slate-900">Edificio</p>
+                                    <p>{buildingName || 'Edificio por confirmar'}</p>
+                                    {buildingAddress && <p className="text-xs text-slate-500">{buildingAddress}</p>}
+                                </div>
+                            </div>
+
+                            <div className="flex gap-3">
+                                <CalendarDays size={16} className="mt-0.5 shrink-0 text-indigo-700" />
+                                <div>
+                                    <p className="font-medium text-slate-900">Fecha</p>
+                                    <p>{formatBookingDate(bookingStart)}</p>
+                                </div>
+                            </div>
+
+                            <div className="flex gap-3">
+                                <Clock3 size={16} className="mt-0.5 shrink-0 text-indigo-700" />
+                                <div>
+                                    <p className="font-medium text-slate-900">Horario</p>
+                                    <p>{formatBookingTime(bookingStart, bookingEnd)}</p>
+                                    <p className="text-xs text-slate-500">Duracion: {durationLabel || 'Por confirmar'}</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     {/* Form Fields */}
@@ -166,6 +233,10 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                             <ShieldCheck size={14} className="text-green-600" />
                             <span>Pagos seguros vía MercadoPago</span>
                         </div>
+
+                        <p className="text-center text-xs text-gray-500">
+                            Al continuar, te redirigiremos a Mercado Pago para completar el cobro y luego volverás a Estacionate con el estado de tu reserva.
+                        </p>
                     </div>
                 </form>
             </div>

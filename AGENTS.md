@@ -10,6 +10,16 @@ Fast path for a fresh local environment:
 npm run bootstrap
 ```
 
+This installs dependencies, creates missing local env files, starts Docker-backed
+Postgres and Redis, applies checked-in Prisma migrations, seeds demo data, and
+launches the frontend and backend dev servers.
+
+To stop after provisioning and data setup, run:
+
+```bash
+npm run bootstrap -- --no-start
+```
+
 Manual equivalent:
 
 1. Install dependencies:
@@ -28,7 +38,7 @@ Manual equivalent:
 4. Prepare the database:
    ```bash
    cd backend
-   npx prisma migrate dev
+   npx prisma migrate deploy
    npm run db:seed
    ```
 5. Start both applications from the repository root:

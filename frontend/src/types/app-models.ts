@@ -47,6 +47,8 @@ export interface User {
     email: string;
     firstName?: string;
     lastName?: string;
-    role: 'admin' | 'support' | 'building_admin';
+    isVerified?: boolean;
+    isAuthenticated?: boolean;
+    role: 'resident' | 'admin' | 'support' | 'building_admin' | 'concierge' | 'sales_rep';
     buildingId?: string;
 }

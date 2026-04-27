@@ -5,6 +5,24 @@ import { api } from '../../lib/api';
 import { useAuthStore } from '../../store/authStore';
 import toast from 'react-hot-toast';
 
+const LOGIN_ERROR_MESSAGES: Record<string, string> = {
+    'AUTH-LOGIN-1002': 'Cuenta bloqueada temporalmente. Intente nuevamente en 15 minutos.',
+    'AUTH-LOGIN-1003': 'Cuenta no verificada. Revise su correo o contacte a administración.',
+    'AUTH-LOGIN-1004': 'Cuenta inactiva. Contacte a administración para reactivarla.'
+};
+
+const getLoginErrorMessage = (error: any) => {
+    const errorCode = error?.response?.data?.code;
+    const publicMessage = error?.response?.data?.publicMessage ?? error?.response?.data?.message;
+    const legacyMessage = error?.response?.data?.error;
+
+    if (typeof errorCode === 'string' && LOGIN_ERROR_MESSAGES[errorCode]) {
+        return LOGIN_ERROR_MESSAGES[errorCode];
+    }
+
+    return publicMessage || legacyMessage || 'Falló el inicio de sesión';
+};
+
 export const LoginPage = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const navigate = useNavigate();
@@ -14,20 +32,24 @@ export const LoginPage = () => {
         try {
             const res = await api.post('/auth/login', data);
             if (res.data.success) {
-                setAuth(res.data.user);
+                const authenticatedUser = res.data.user;
+
+                setAuth(authenticatedUser);
                 toast.success('¡Bienvenida/o!');
 
                 // Role-based redirect
-                if (res.data.user.role === 'concierge') {
+                if (authenticatedUser.role === 'concierge') {
                     navigate('/gatekeeper');
-                } else if (['admin', 'building_admin'].includes(res.data.user.role)) {
+                } else if (authenticatedUser.role === 'sales_rep') {
+                    navigate('/sales');
+                } else if (['admin', 'building_admin', 'support'].includes(authenticatedUser.role)) {
                     navigate('/admin');
                 } else {
                     navigate('/search');
                 }
             }
         } catch (error: any) {
-            toast.error(error.response?.data?.error || 'Falló el inicio de sesión');
+            toast.error(getLoginErrorMessage(error));
         }
     };
 

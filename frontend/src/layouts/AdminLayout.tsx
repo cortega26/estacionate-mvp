@@ -6,16 +6,19 @@ export const AdminLayout = () => {
     const { user, isAuthenticated, logout } = useAuthStore();
     const navigate = useNavigate();
     const location = useLocation();
+    const normalizedRole = String(user?.role || '').toLowerCase();
+    const isElevatedAdmin = normalizedRole === 'admin';
+    const isSupport = normalizedRole === 'support';
 
     useEffect(() => {
         if (!isAuthenticated()) {
             navigate('/login');
             return;
         }
-        if (user?.role !== 'admin' && user?.role !== 'building_admin') {
+        if (!['admin', 'building_admin', 'support'].includes(normalizedRole)) {
             navigate('/search'); // Kick out non-admins
         }
-    }, [isAuthenticated, user, navigate]);
+    }, [isAuthenticated, normalizedRole, navigate]);
 
     const handleLogout = () => {
         logout();
@@ -25,13 +28,16 @@ export const AdminLayout = () => {
     const navItems = [
         { name: 'Dashboard', path: '/admin' },
         { name: 'Analytics', path: '/admin/analytics' },
-        ...(user?.role === 'admin' ? [
+        ...(isSupport ? [
+            { name: 'Reservas', path: '/admin/bookings' },
+        ] : []),
+        ...(isElevatedAdmin ? [
             { name: 'Edificios', path: '/admin/buildings' },
             { name: 'Reservas', path: '/admin/bookings' },
             { name: 'Usuarios', path: '/admin/users' },
             { name: 'Vendedores', path: '/admin/sales-reps' }
         ] : []),
-        { name: 'Configuración', path: '/admin/settings' },
+        ...(!isSupport ? [{ name: 'Configuración', path: '/admin/settings' }] : []),
     ];
 
     return (
@@ -41,7 +47,7 @@ export const AdminLayout = () => {
                 <div className="p-6">
                     <h1 className="text-2xl font-bold">Admin Panel</h1>
                     <p className="text-xs text-slate-400 mt-1">
-                        {user?.role === 'admin' ? 'Super Admin' : 'Admin Edificio'}
+                        {isElevatedAdmin ? 'Super Admin' : isSupport ? 'Soporte' : 'Admin Edificio'}
                     </p>
                 </div>
                 <nav className="mt-4">

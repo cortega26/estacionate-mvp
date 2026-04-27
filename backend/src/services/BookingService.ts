@@ -153,11 +153,23 @@ export class BookingService {
             const paymentPreference = await PaymentService.createPreference(booking.id);
             return { booking, payment: paymentPreference };
         } catch (paymentErr) {
+            logger.error({
+                err: paymentErr,
+                bookingId: booking.id,
+                residentId: user.userId,
+                availabilityBlockId: data.blockId,
+            }, 'Payment preference creation failed; attempting rollback');
+
             // Compensating Transaction: Cancel the booking if payment init fails
             // We use the system actor to cancel it immediately
             await BookingService.cancelBooking(booking.id, user.userId, 'system-rollback').catch(rollbackErr => {
                 // If rollback fails, we have a true zombie. Log CRITICAL error.
-                console.error('CRITICAL: ZOMBIE BOOKING CREATED', { bookingId: booking.id, error: rollbackErr });
+                logger.error({
+                    err: rollbackErr,
+                    bookingId: booking.id,
+                    residentId: user.userId,
+                    availabilityBlockId: data.blockId,
+                }, 'Critical rollback failure left a zombie booking');
             });
 
             throw new AppError({

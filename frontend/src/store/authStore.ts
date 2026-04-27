@@ -1,5 +1,30 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist, type StateStorage } from 'zustand/middleware';
+
+const noopStorage: StateStorage = {
+    getItem: () => null,
+    setItem: () => undefined,
+    removeItem: () => undefined,
+};
+
+const resolveAuthStorage = (): StateStorage => {
+    if (typeof window === 'undefined') {
+        return noopStorage;
+    }
+
+    const storage = window.localStorage;
+
+    if (
+        storage &&
+        typeof storage.getItem === 'function' &&
+        typeof storage.setItem === 'function' &&
+        typeof storage.removeItem === 'function'
+    ) {
+        return storage;
+    }
+
+    return noopStorage;
+};
 
 interface User {
     id: string;
@@ -9,6 +34,7 @@ interface User {
     isVerified: boolean;
     role: string;
     buildingId?: string;
+    isAuthenticated: boolean;
 }
 
 interface AuthState {
@@ -33,6 +59,7 @@ export const useAuthStore = create<AuthState>()(
         }),
         {
             name: 'auth-storage',
+            storage: createJSONStorage(resolveAuthStorage),
         }
     )
 );

@@ -6,6 +6,7 @@ export const SalesLayout = () => {
     const { user, isAuthenticated, logout } = useAuthStore();
     const navigate = useNavigate();
     const location = useLocation();
+    const identityLabel = [user?.firstName?.trim(), user?.lastName?.trim()].filter(Boolean).join(' ') || user?.email || '';
 
     useEffect(() => {
         if (!isAuthenticated()) {
@@ -34,7 +35,7 @@ export const SalesLayout = () => {
                 <div className="p-6">
                     <h1 className="text-2xl font-bold text-emerald-400">Sales Partner</h1>
                     <p className="text-xs text-slate-400 mt-1">
-                        {user?.firstName} {user?.lastName}
+                        {identityLabel}
                     </p>
                 </div>
                 <nav className="mt-4">

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { api } from '../../lib/api';
-import { Search, CheckCircle, Clock, AlertTriangle, AlertCircle } from 'lucide-react';
+import { Search, CheckCircle, Clock, AlertCircle } from 'lucide-react';
+import { isAxiosError } from 'axios';
+import type { AxiosError } from 'axios';
 import { toast } from 'react-hot-toast';
 
 interface Booking {
@@ -15,9 +17,56 @@ interface Booking {
     status: string;
 }
 
+interface VerificationSuccessData {
+    plate: string;
+    spotNumber: string;
+    resident: string;
+    expiresAt: string;
+}
+
+interface VerificationSuccessResponse {
+    data: VerificationSuccessData;
+}
+
+interface VerificationErrorResponse {
+    message?: string;
+}
+
+type ManualCheckResult =
+    | { valid: true; data: VerificationSuccessData }
+    | { valid: false; message: string };
+
+const CONFIRMATION_CODE_PATTERN = /^[A-F0-9]{8}$/;
+
+const normalizeVerificationInput = (value: string) => value.trim().toUpperCase();
+
+const buildVerificationPayload = (value: string) => {
+    const normalizedValue = normalizeVerificationInput(value);
+
+    if (CONFIRMATION_CODE_PATTERN.test(normalizedValue)) {
+        return { code: normalizedValue };
+    }
+
+    return { plate: normalizedValue };
+};
+
+const verifyConciergeAccess = async (plateOrCode: string): Promise<VerificationSuccessResponse> => {
+    const payload = buildVerificationPayload(plateOrCode);
+    const res = await api.post<VerificationSuccessResponse>('/concierge/verify', payload);
+    return res.data;
+};
+
+const getVerificationErrorMessage = (error: unknown) => {
+    if (isAxiosError<VerificationErrorResponse>(error)) {
+        return error.response?.data?.message ?? 'Error al verificar';
+    }
+
+    return 'Error al verificar';
+};
+
 export const GatekeeperDashboard = () => {
     const [searchTerm, setSearchTerm] = useState('');
-    const [manualCheckResult, setManualCheckResult] = useState<any>(null);
+    const [manualCheckResult, setManualCheckResult] = useState<ManualCheckResult | null>(null);
 
     // 1. Fetch Today's Dashboard
     const { data: bookings, isLoading, refetch } = useQuery({
@@ -30,20 +79,17 @@ export const GatekeeperDashboard = () => {
     });
 
     // 2. Manual Verify Mutation
-    const verifyMutation = useMutation({
-        mutationFn: async (plateOrCode: string) => {
-            const isCode = plateOrCode.length <= 6 && !plateOrCode.includes('-'); // Guess heuristic
-            const payload = isCode ? { code: plateOrCode } : { plate: plateOrCode };
-            const res = await api.post('/concierge/verify', payload);
-            return res.data;
-        },
-        onSuccess: (data) => {
-            setManualCheckResult({ valid: true, data: data.data });
+    const verifyMutation = useMutation<VerificationSuccessResponse, AxiosError<VerificationErrorResponse>, string>({
+        mutationFn: verifyConciergeAccess,
+        onSuccess: (response) => {
+            const verifiedAccess = response.data;
+
+            setManualCheckResult({ valid: true, data: verifiedAccess });
             toast.success('¡Vehículo Autorizado!');
             setSearchTerm('');
         },
-        onError: (err: any) => {
-            setManualCheckResult({ valid: false, message: err.response?.data?.message || 'Error al verificar' });
+        onError: (error: AxiosError<VerificationErrorResponse>) => {
+            setManualCheckResult({ valid: false, message: getVerificationErrorMessage(error) });
             toast.error('Vehículo NO encontrado o sin reserva activa.');
         }
     });
@@ -59,6 +105,7 @@ export const GatekeeperDashboard = () => {
         b.plate.toLowerCase().includes(searchTerm.toLowerCase()) ||
         b.spotNumber.includes(searchTerm)
     );
+    const authorizedResult = manualCheckResult?.valid ? manualCheckResult.data : null;
 
     return (
         <div className="space-y-6">
@@ -68,6 +115,9 @@ export const GatekeeperDashboard = () => {
                     <label className="block text-slate-400 text-sm font-medium mb-2">
                         Verificar Patente o Código
                     </label>
+                    <p className="mb-3 text-sm text-slate-500">
+                        Ingresa la patente del vehiculo o el codigo de confirmacion de 8 caracteres para evitar rechazos por formato.
+                    </p>
                     <div className="relative">
                         <input
                             type="text"
@@ -99,12 +149,12 @@ export const GatekeeperDashboard = () => {
                                 <h3 className={`text-lg font-bold ${manualCheckResult.valid ? 'text-emerald-400' : 'text-red-400'}`}>
                                     {manualCheckResult.valid ? 'ACCESO AUTORIZADO' : 'ACCESO DENEGADO'}
                                 </h3>
-                                {manualCheckResult.valid && (
+                                {authorizedResult && (
                                     <div className="mt-2 text-slate-300 space-y-1">
-                                        <p><span className="text-slate-500">Patente:</span> <span className="text-white font-mono text-lg">{manualCheckResult.data.plate}</span></p>
-                                        <p><span className="text-slate-500">Estacionamiento:</span> <span className="text-white font-bold bg-slate-700 px-2 rounded ml-2">{manualCheckResult.data.spotNumber}</span></p>
-                                        <p><span className="text-slate-500">Visita a:</span> {manualCheckResult.data.resident}</p>
-                                        <p><span className="text-slate-500">Expira:</span> {new Date(manualCheckResult.data.expiresAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+                                        <p><span className="text-slate-500">Patente:</span> <span className="text-white font-mono text-lg">{authorizedResult.plate}</span></p>
+                                        <p><span className="text-slate-500">Estacionamiento:</span> <span className="text-white font-bold bg-slate-700 px-2 rounded ml-2">{authorizedResult.spotNumber}</span></p>
+                                        <p><span className="text-slate-500">Visita a:</span> {authorizedResult.resident}</p>
+                                        <p><span className="text-slate-500">Expira:</span> {new Date(authorizedResult.expiresAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
                                     </div>
                                 )}
                                 {!manualCheckResult.valid && (

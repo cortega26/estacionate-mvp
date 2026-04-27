@@ -78,7 +78,7 @@ describe('Reconciliation Cron', () => {
 
             // Spot & Cleanup
             const spot = await db.visitorSpot.create({
-                data: { buildingId, spotNumber: 'S-Reconcile' }
+                data: { buildingId, spotNumber: 'REC-01' }
             });
             spotId = spot.id;
 
@@ -99,7 +99,7 @@ describe('Reconciliation Cron', () => {
         }
     });
 
-    it.skip('should calculate revenue and create payout for yesterday', async () => {
+    it('should calculate revenue and create payout for yesterday', async () => {
         // Create a confirmed booking for "Yesterday"
         const bookingDate = new Date(startOfYesterday().getTime() + 1000); // Yesterday start + 1s
 
@@ -137,7 +137,7 @@ describe('Reconciliation Cron', () => {
         expect(payouts[0].status).toBe('calculated');
     });
 
-    it.skip('should be idempotent', async () => {
+    it('should be idempotent', async () => {
         // Create a confirmed booking for "Yesterday"
         const bookingDate = new Date(startOfYesterday().getTime() + 1000);
 

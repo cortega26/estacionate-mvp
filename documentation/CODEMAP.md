@@ -13,7 +13,7 @@ Use this map to choose the right files before editing. If the map disagrees with
 ## Root
 
 - `package.json`: monorepo command surface for install, dev, build, lint, test, and full checks.
-- `scripts/bootstrap.sh`: one-command local setup for dependencies, env files, Docker services, migrations, and seed data.
+- `scripts/bootstrap.sh`: one-command local setup for dependencies, env files, Docker services, checked-in migrations, seed data, and launching the app.
 - `scripts/check-local-env.sh`: preflight for Docker-backed PostgreSQL/Redis and local env files before full checks.
 - `scripts/check-docs.sh`: Markdown link and shell-script sanity checks for documentation/process changes.
 - `docker-compose.yml`: local Postgres, Redis, backend, and frontend containers.

@@ -4,6 +4,7 @@ import { useAuthStore } from '../store/authStore';
 export const MainLayout = () => {
     const { logout, user } = useAuthStore();
     const navigate = useNavigate();
+    const greetingName = user?.firstName?.trim() || user?.email || '';
 
     const handleLogout = () => {
         logout();
@@ -21,7 +22,7 @@ export const MainLayout = () => {
                             </span>
                         </div>
                         <div className="flex items-center gap-4">
-                            {(user?.role === 'admin' || user?.role === 'building_admin') && (
+                            {(user?.role === 'admin' || user?.role === 'building_admin' || user?.role === 'support') && (
                                 <Link
                                     to="/admin"
                                     className="text-sm font-medium text-purple-600 hover:text-purple-500 transition-colors"
@@ -31,7 +32,7 @@ export const MainLayout = () => {
                             )}
                             {user && (
                                 <div className="text-sm text-gray-700 hidden sm:block">
-                                    <span className="text-gray-400">Hola,</span> {user.firstName}
+                                    <span className="text-gray-400">Hola,</span> {greetingName}
                                 </div>
                             )}
                             <button

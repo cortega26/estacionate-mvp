@@ -14,7 +14,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         if (!token) return res.status(401).json({ error: 'Unauthorized' })
 
         const user = verifyToken(token)
-        if (!user || !user.role || !['admin', 'building_admin'].includes(user.role)) {
+        if (!user || !user.role || !['admin', 'building_admin', 'support'].includes(user.role)) {
             return res.status(403).json({ error: 'Forbidden' })
         }
 

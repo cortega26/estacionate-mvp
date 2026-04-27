@@ -18,6 +18,40 @@ const loginSchema = z.object({
 const MAX_ATTEMPTS = 5
 const LOCKOUT_MINUTES = 15
 
+const buildLoginUserPayload = ({
+    account,
+    resident,
+    user,
+    buildingId
+}: {
+    account: {
+        id: string
+        email: string
+    }
+    resident: {
+        firstName: string
+        lastName: string
+        isVerified: boolean
+    } | null
+    user: {
+        role?: string | null
+    } | null
+    buildingId?: string
+}) => {
+    const responseRole = resident ? 'resident' : String(user?.role ?? '').toLowerCase()
+
+    return {
+        id: account.id,
+        email: account.email,
+        firstName: resident?.firstName ?? '',
+        lastName: resident?.lastName ?? '',
+        isVerified: resident?.isVerified ?? true,
+        buildingId,
+        role: responseRole,
+        isAuthenticated: true
+    }
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     await cors(req, res)
@@ -120,11 +154,24 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     return res.status(200).json({
         success: true,
-        user: {
-            id: userId,
-            email: account.email,
-            role,
-            isAuthenticated: true
-        }
+        user: buildLoginUserPayload({
+            account: {
+                id: userId,
+                email: account.email
+            },
+            resident: resident
+                ? {
+                    firstName: resident.firstName,
+                    lastName: resident.lastName,
+                    isVerified: resident.isVerified
+                }
+                : null,
+            user: user
+                ? {
+                    role: String(user.role)
+                }
+                : null,
+            buildingId
+        })
     })
 }
