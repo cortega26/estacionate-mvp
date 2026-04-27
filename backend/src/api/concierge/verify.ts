@@ -3,6 +3,7 @@ import { db } from '../../lib/db.js'
 import cors from '../../lib/cors.js'
 import { verifyToken, getTokenFromRequest } from '../../services/auth.js'
 import { z } from 'zod'
+import { logger } from '../../lib/logger.js'
 
 const verifySchema = z.object({
     plate: z.string().optional(),
@@ -84,7 +85,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         if (error instanceof z.ZodError) {
             return res.status(400).json({ error: error.errors })
         }
-        console.error(error)
+        logger.error({
+            route: 'concierge.verify',
+            actorRole: user?.role,
+            actorId: user?.userId,
+            buildingId: user?.buildingId,
+            requestHasPlate: Boolean(req.body?.plate),
+            requestHasCode: Boolean(req.body?.code),
+            error,
+        }, 'Concierge verify error')
         return res.status(500).json({ error: 'Internal Server Error' })
     }
 }

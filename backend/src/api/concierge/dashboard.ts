@@ -2,6 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { db } from '../../lib/db.js'
 import cors from '../../lib/cors.js'
 import { verifyToken, getTokenFromRequest } from '../../services/auth.js'
+import { logger } from '../../lib/logger.js'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
     await cors(req, res)
@@ -92,8 +93,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         return res.status(200).json({ success: true, data });
 
-    } catch (error) {
-        console.error(error)
+    } catch (error: unknown) {
+        logger.error({
+            route: 'concierge.dashboard',
+            actorRole: user?.role,
+            actorId: user?.userId,
+            buildingId: user?.buildingId,
+            error,
+        }, 'Concierge dashboard error')
         return res.status(500).json({ error: 'Internal Server Error' })
     }
 }

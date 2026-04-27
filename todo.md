@@ -31,6 +31,18 @@
 - [x] Add deterministic root Playwright proof for sales-rep building removal cancel-versus-confirm behavior.
 - [x] Replace the remaining raw sales-rep building-removal `confirm()` call with an in-app confirmation surface.
 - [x] Prove the sales-rep confirmation slice with targeted Playwright and focused frontend lint.
+- [x] Refresh `spec.md`, `todo.md`, and `tests/` so the active slice is backend observability consistency.
+- [x] Add narrow backend proof for analytics and concierge error-path logging with unchanged response contracts.
+- [x] Replace remaining `console.error` usage in touched analytics and concierge handlers with structured logger calls.
+- [x] Prove the observability slice with focused backend tests and backend build.
+- [x] Refresh `spec.md`, `todo.md`, and `tests/` so the active observability sub-slice targets admin buildings and payments webhook handlers.
+- [x] Add narrow backend proof for admin-buildings and payments-webhook error-path logging with unchanged response contracts.
+- [x] Replace remaining `console.error` usage in `backend/src/api/admin/buildings.ts` and `backend/src/api/payments/webhook.ts` with structured logger calls.
+- [x] Prove the admin-buildings/webhook observability sub-slice with focused backend tests and backend build.
+- [x] Refresh `spec.md`, `todo.md`, and `tests/` so the active observability sub-slice targets admin users and admin bookings handlers.
+- [x] Add narrow backend proof for admin-users and admin-bookings error-path logging with unchanged response contracts.
+- [x] Replace remaining `console.error` usage in `backend/src/api/admin/users.ts` and `backend/src/api/admin/bookings.ts` with structured logger calls.
+- [x] Prove the admin-users/bookings observability sub-slice with focused backend tests and backend build.
 
 ## Next
 

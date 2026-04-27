@@ -4,6 +4,7 @@ import cors from '../../lib/cors.js'
 import { verifyToken, getTokenFromRequest } from '../../services/auth.js'
 import { z } from 'zod'
 import { Prisma } from '@prisma/client'
+import { logger } from '../../lib/logger.js'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
     await cors(req, res)
@@ -11,11 +12,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         return res.status(405).json({ error: 'Method not allowed' })
     }
 
+    let requester: ReturnType<typeof verifyToken> | null = null
+
     try {
         const token = getTokenFromRequest(req)
         if (!token) return res.status(401).json({ error: 'Unauthorized' })
 
-        const requester = verifyToken(token)
+        requester = verifyToken(token)
         if (!requester || (requester.role !== 'admin' && requester.role !== 'building_admin' && requester.role !== 'support')) {
             return res.status(403).json({ error: 'Forbidden' })
         }
@@ -112,7 +115,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         })
 
     } catch (error: unknown) {
-        console.error('[Admin] List Bookings Error:', error)
+        logger.error({
+            route: 'admin.bookings',
+            method: req.method,
+            actorRole: requester?.role,
+            actorId: requester?.userId,
+            requestedBuildingId: req.query?.buildingId,
+            statusFilter: req.query?.status,
+            error,
+        }, '[Admin] List bookings error')
         return res.status(500).json({ error: 'Internal Server Error' })
     }
 }

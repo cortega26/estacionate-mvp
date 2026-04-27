@@ -4,16 +4,18 @@ import cors from '../../lib/cors.js'
 import { verifyToken, getTokenFromRequest } from '../../services/auth.js'
 import { subDays, format } from 'date-fns'
 import { BookingStatus } from '@prisma/client'
+import { logger } from '../../lib/logger.js'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
     await cors(req, res)
     if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' })
+    let user: ReturnType<typeof verifyToken> | null = null
 
     try {
         const token = getTokenFromRequest(req)
         if (!token) return res.status(401).json({ error: 'Unauthorized' })
 
-        const user = verifyToken(token)
+        user = verifyToken(token)
         if (!user || !user.role || !['admin', 'building_admin', 'support'].includes(user.role)) {
             return res.status(403).json({ error: 'Forbidden' })
         }
@@ -119,7 +121,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         })
 
     } catch (error: unknown) {
-        console.error('Analytics Error:', error)
+        logger.error({
+            route: 'admin.analytics',
+            actorRole: user?.role,
+            actorId: user?.userId,
+            buildingId: user?.role === 'building_admin' ? user?.buildingId : (req.query.buildingId as string | undefined) || 'all',
+            error,
+        }, 'Admin analytics error')
         return res.status(500).json({ error: 'Internal Server Error' })
     }
 }

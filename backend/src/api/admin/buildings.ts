@@ -2,6 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { db } from '../../lib/db.js'
 import cors from '../../lib/cors.js'
 import { verifyToken, getTokenFromRequest } from '../../services/auth.js'
+import { logger } from '../../lib/logger.js'
 
 async function deleteBuildingWithDependencies(buildingId: string) {
     await db.$transaction(async (tx) => {
@@ -196,7 +197,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         return res.status(405).json({ error: 'Method not allowed' })
 
     } catch (error: any) {
-        console.error(error)
+        logger.error({
+            route: 'admin.buildings',
+            method: req.method,
+            actorRole: user?.role,
+            actorId: user?.userId,
+            targetBuildingId: (req.query?.id as string | undefined) || req.body?.id,
+            error,
+        }, 'Admin buildings error')
+
         if (error.code === 'P2003') {
             return res.status(409).json({
                 error: 'Cannot delete building because it has associated records (bookings, payouts, etc.).'

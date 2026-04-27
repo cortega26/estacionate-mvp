@@ -96,10 +96,10 @@ Raise Estacionate from MVP quality to a SaaS-grade product by improving the end-
 
 ## Current Execution Order
 
-1. Keep the admin dashboard and analytics rendering slice green with deterministic proof in `tests/admin-dashboard.spec.ts`.
-2. Remove the last raw browser `confirm()` path in sales-rep building management (`frontend/src/pages/admin/components/ManageBuildingsList.tsx`) using in-app confirmation UI.
-3. Add deterministic browser proof for cancel-versus-confirm sales-rep building removal in root `tests/`.
-4. Validate the sales-rep slice with focused Playwright plus touched-slice lint only if page code changes.
+1. Keep the completed admin dashboard/analytics and sales-rep confirmation slices green.
+2. Execute the next highest-value phase from this spec: backend observability and error-handling consistency in admin and concierge reporting paths.
+3. Replace remaining `console.error` usage in the next observability targets: `backend/src/api/admin/users.ts` and `backend/src/api/admin/bookings.ts`, with structured logger context (actor, role, building scope, and failure cause when available).
+4. Add narrow backend proof for the observability behavior, then run focused backend validation before broadening.
 
 ## Current Phase Implementation Details
 
@@ -175,6 +175,24 @@ Raise Estacionate from MVP quality to a SaaS-grade product by improving the end-
 2. Preserve contract behavior: cancel sends no mutation, confirm sends the same `PUT /api/admin/buildings` payload with `salesRepId: null`.
 3. Prove the slice with deterministic root browser coverage for cancel-versus-confirm removal behavior.
 
+### Slice 10: Backend Observability Consistency
+
+1. Update touched reporting and concierge handlers to use `logger` instead of raw `console.error` so failures are emitted with consistent operational context.
+2. Keep existing API contracts stable while enriching logs with actor role, assigned building scope, and request intent when known.
+3. Add narrow backend tests that prove error paths return the same HTTP responses while recording structured logger entries.
+
+### Slice 10a: Admin Buildings And Payments Webhook Observability
+
+1. Replace raw `console.error` in `backend/src/api/admin/buildings.ts` and `backend/src/api/payments/webhook.ts` with structured logger calls.
+2. Preserve behavior contracts for conflict handling (`P2003`) and generic 500 responses.
+3. Add narrow tests that force controlled failures and assert logger context plus unchanged response status codes.
+
+### Slice 10b: Admin Users And Bookings Observability
+
+1. Replace raw `console.error` in `backend/src/api/admin/users.ts` and `backend/src/api/admin/bookings.ts` with structured logger calls.
+2. Preserve existing response contracts for validation errors and generic 500 paths.
+3. Add narrow tests that force controlled failures and assert logger context plus unchanged response status codes.
+
 ## Execution Rules
 
 1. Consult this spec before each meaningful implementation change.
@@ -210,6 +228,9 @@ Raise Estacionate from MVP quality to a SaaS-grade product by improving the end-
 | Demo building deletion | Focused backend test plus browser proof | `cd backend && npm test -- admin-buildings.test.ts`, `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/admin-buildings.spec.ts`, `cd frontend && npm run lint` | Demo buildings with demo residents, bookings, and payments delete cleanly from the standard admin flow without a force-delete detour |
 | Local admin CORS resilience | Focused backend integration plus browser proof | `cd backend && npm test -- integration/cors.test.ts`, `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/admin-dashboard.spec.ts` | Local admin login, dashboard, and analytics requests succeed when Vite moves to an approved fallback localhost port |
 | Sales-rep building-removal confirmation clarity | Browser test | `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/admin-sales-reps.spec.ts` | Admin can cancel sales-rep building removal without sending a mutation and must explicitly confirm before unassignment is persisted |
+| Backend observability consistency | Narrow backend tests and build | `cd backend && npm test -- admin-analytics.observability.test.ts concierge-observability.test.ts`, `cd backend && npm run build` | Error paths in touched handlers keep current HTTP contracts and emit structured logs with context |
+| Admin buildings and webhook observability | Narrow backend tests and build | `cd backend && npm test -- admin-buildings.observability.test.ts payments-webhook.observability.test.ts`, `cd backend && npm run build` | Admin buildings and payments webhook failures preserve response contracts while emitting structured logs |
+| Admin users and bookings observability | Narrow backend tests and build | `cd backend && npm test -- admin-users.observability.test.ts admin-bookings.observability.test.ts`, `cd backend && npm run build` | Admin users and bookings failures preserve response contracts while emitting structured logs |
 | Backend observability in touched path | Narrow backend checks | `cd backend && npm run build`, targeted backend test if added | Touched backend path compiles and preserves behavior while emitting clearer operational context |
 | Product changes in touched frontend slice | Narrow frontend checks | `cd frontend && npm run lint`, `cd frontend && npm test`, targeted Playwright spec | No regressions in touched flow |
 | Product changes in touched backend slice | Narrow backend checks | `cd backend && npm run lint`, `cd backend && npm run build`, `cd backend && npm test` | No regressions in touched backend slice |
@@ -291,6 +312,27 @@ Raise Estacionate from MVP quality to a SaaS-grade product by improving the end-
 1. Add `tests/admin-sales-reps.spec.ts` to mock admin login plus sales-rep and building admin APIs.
 2. Prove cancel-versus-confirm removal behavior so no update request is sent on cancel and a single unassignment payload is sent only on confirm.
 3. Run `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/admin-sales-reps.spec.ts` immediately after the first substantive sales-rep admin edit, then run `cd frontend && npm run lint`.
+
+### Backend Observability Consistency
+
+1. Add narrow backend tests in `backend/tests/` that mock logger and force controlled failures in analytics and concierge handlers.
+2. Prove unchanged response contracts for 500 paths while asserting structured logger calls include contextual fields.
+3. Run `cd backend && npm test -- admin-analytics.observability.test.ts concierge-observability.test.ts` immediately after the first substantive backend observability edit.
+4. Run `cd backend && npm run build` once observability edits and focused tests are green.
+
+### Admin Buildings And Payments Webhook Observability
+
+1. Add `backend/tests/admin-buildings.observability.test.ts` to force a controlled admin-buildings failure and assert structured logger context with unchanged 500 behavior.
+2. Add `backend/tests/payments-webhook.observability.test.ts` to force a controlled webhook processing failure and assert structured logger context with unchanged 500 behavior.
+3. Run `cd backend && npm test -- admin-buildings.observability.test.ts payments-webhook.observability.test.ts` immediately after the first substantive observability edits.
+4. Run `cd backend && npm run build` once focused observability checks are green.
+
+### Admin Users And Bookings Observability
+
+1. Add `backend/tests/admin-users.observability.test.ts` to force controlled user-management failures and assert structured logger context with unchanged 500 behavior.
+2. Add `backend/tests/admin-bookings.observability.test.ts` to force controlled booking-list failures and assert structured logger context with unchanged 500 behavior.
+3. Run `cd backend && npm test -- admin-users.observability.test.ts admin-bookings.observability.test.ts` immediately after the first substantive observability edits.
+4. Run `cd backend && npm run build` once focused observability checks are green.
 
 ## Initial Risks
 

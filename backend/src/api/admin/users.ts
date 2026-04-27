@@ -4,6 +4,7 @@ import cors from '../../lib/cors.js'
 import { verifyToken, getTokenFromRequest } from '../../services/auth.js'
 import { z } from 'zod'
 import { Prisma, Role } from '@prisma/client'
+import { logger } from '../../lib/logger.js'
 
 type ManagedAccount = {
     id: string
@@ -34,12 +35,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (req.method !== 'GET' && req.method !== 'PATCH' && req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' })
     }
+    let requester: ReturnType<typeof verifyToken> | null = null
 
     try {
         const token = getTokenFromRequest(req)
         if (!token) return res.status(401).json({ error: 'Unauthorized' })
 
-        const requester = verifyToken(token)
+        requester = verifyToken(token)
         // Only Super Admin can manage users fully. Building Admin might view residents (future).
         if (!requester || requester.role !== 'admin') {
             return res.status(403).json({ error: 'Forbidden' })
@@ -212,7 +214,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         }
 
     } catch (error: unknown) {
-        console.error('User Management Error:', error)
+        logger.error({
+            route: 'admin.users',
+            method: req.method,
+            actorRole: requester?.role,
+            actorId: requester?.userId,
+            targetUserId: req.body?.userId,
+            error,
+        }, 'User management error')
+
         if (error instanceof z.ZodError) return res.status(400).json({ error: error.issues })
         return res.status(500).json({ error: 'Internal Server Error' })
     }
