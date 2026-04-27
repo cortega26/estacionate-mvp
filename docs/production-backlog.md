@@ -11,7 +11,7 @@ This document tracks the implementation status of the [Production Roadmap](produ
     - [x] Created `lib/crypto.ts` (AES-256-GCM / SHA-256 Blind Index).
     - [x] Updated `Resident` model to encrypt `rut` and `phone`.
     - [x] Implemented Blind Index (`rutHash`) for lookups in `signup.ts`.
-    - [ ] **Follow-up**: Migrate `create-admin` and `seed` scripts to use encryption.
+    - [x] Follow-up: Align resident seed paths with the encrypted `rut` and `phone` contract; `create-admin` only persists credential fields and does not write resident PII.
 
 - [x] **1. Distributed Event Bus**
     - [x] Create `RedisEventBus` implementation.

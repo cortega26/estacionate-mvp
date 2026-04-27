@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcryptjs'
+import { prepareResidentSensitiveFields } from '../src/lib/crypto.js'
 
 const prisma = new PrismaClient()
 
@@ -83,16 +84,24 @@ async function main() {
 
     // 6. Resident
     try {
+        const residentSensitiveFields = await prepareResidentSensitiveFields({ rut: '12345678-9' })
+
         // Residents table is separate
         await prisma.resident.upsert({
             where: { email: 'resident@estacionate.cl' },
-            update: { passwordHash, isVerified: true, isActive: true, unitId: unit.id },
+            update: {
+                ...residentSensitiveFields,
+                passwordHash,
+                isVerified: true,
+                isActive: true,
+                unitId: unit.id
+            },
             create: {
                 unitId: unit.id,
                 email: 'resident@estacionate.cl',
                 firstName: 'Demo',
                 lastName: 'Resident',
-                rut: '12345678-9',
+                ...residentSensitiveFields,
                 passwordHash,
                 isVerified: true,
                 isActive: true
@@ -102,15 +111,23 @@ async function main() {
     } catch (e) { console.error('Error creating resident', e) }
 
     try {
+        const residentSensitiveFields = await prepareResidentSensitiveFields({ rut: '12345670-0' })
+
         await prisma.resident.upsert({
             where: { email: 'resident-lockout@estacionate.cl' },
-            update: { passwordHash, isVerified: true, isActive: true, unitId: unit.id },
+            update: {
+                ...residentSensitiveFields,
+                passwordHash,
+                isVerified: true,
+                isActive: true,
+                unitId: unit.id
+            },
             create: {
                 unitId: unit.id,
                 email: 'resident-lockout@estacionate.cl',
                 firstName: 'Demo',
                 lastName: 'Lockout',
-                rut: '12345670-0',
+                ...residentSensitiveFields,
                 passwordHash,
                 isVerified: true,
                 isActive: true
@@ -120,15 +137,23 @@ async function main() {
     } catch (e) { console.error('Error creating lockout resident', e) }
 
     try {
+        const residentSensitiveFields = await prepareResidentSensitiveFields({ rut: '12345671-9' })
+
         await prisma.resident.upsert({
             where: { email: 'resident-unverified@estacionate.cl' },
-            update: { passwordHash, isVerified: false, isActive: true, unitId: unit.id },
+            update: {
+                ...residentSensitiveFields,
+                passwordHash,
+                isVerified: false,
+                isActive: true,
+                unitId: unit.id
+            },
             create: {
                 unitId: unit.id,
                 email: 'resident-unverified@estacionate.cl',
                 firstName: 'Demo',
                 lastName: 'Pending',
-                rut: '12345671-9',
+                ...residentSensitiveFields,
                 passwordHash,
                 isVerified: false,
                 isActive: true
@@ -138,15 +163,23 @@ async function main() {
     } catch (e) { console.error('Error creating unverified resident', e) }
 
     try {
+        const residentSensitiveFields = await prepareResidentSensitiveFields({ rut: '12345672-7' })
+
         await prisma.resident.upsert({
             where: { email: 'resident-inactive@estacionate.cl' },
-            update: { passwordHash, isVerified: true, isActive: false, unitId: unit.id },
+            update: {
+                ...residentSensitiveFields,
+                passwordHash,
+                isVerified: true,
+                isActive: false,
+                unitId: unit.id
+            },
             create: {
                 unitId: unit.id,
                 email: 'resident-inactive@estacionate.cl',
                 firstName: 'Demo',
                 lastName: 'Inactive',
-                rut: '12345672-7',
+                ...residentSensitiveFields,
                 passwordHash,
                 isVerified: true,
                 isActive: false

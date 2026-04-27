@@ -4,6 +4,12 @@ const ALGORITHM = 'AES-GCM';
 const KEY_LENGTH = 256;
 const IV_LENGTH = 12; // 96 bits recommended for GCM
 
+type ResidentSensitiveInput = {
+    rut: string
+    phone?: string | null
+    rutHash?: string
+}
+
 // Ensure we have a master key
 // Ensure we warn if missing, but don't crash boot
 if (!process.env.ENCRYPTION_KEY && process.env.NODE_ENV === 'production') {
@@ -85,5 +91,17 @@ export async function hashPII(text: string): Promise<string> {
     const msgBuffer = new TextEncoder().encode(text);
     const hashBuffer = await webcrypto.subtle.digest('SHA-256', msgBuffer);
     return Buffer.from(hashBuffer).toString('hex');
+}
+
+export async function prepareResidentSensitiveFields({
+    rut,
+    phone,
+    rutHash
+}: ResidentSensitiveInput): Promise<{ rut: string; rutHash: string; phone: string | null }> {
+    return {
+        rut: await encrypt(rut),
+        rutHash: rutHash ?? await hashPII(rut),
+        phone: phone ? await encrypt(phone) : null
+    }
 }
 

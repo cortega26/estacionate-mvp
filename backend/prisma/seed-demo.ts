@@ -1,5 +1,6 @@
 import { PrismaClient, DurationType, SpotStatus } from '@prisma/client'
 import { hashPassword } from '../src/services/auth.js'
+import { prepareResidentSensitiveFields } from '../src/lib/crypto.js'
 
 const prisma = new PrismaClient()
 
@@ -30,13 +31,14 @@ async function main() {
     const unit101 = await prisma.unit.findFirst({ where: { buildingId: building.id, unitNumber: '101' } })
     if (unit101) {
         const pass = await hashPassword('123456')
+        const residentSensitiveFields = await prepareResidentSensitiveFields({ rut: '12345678-9' })
         const resident = await prisma.resident.create({
             data: {
                 unitId: unit101.id,
                 email: 'demo@resident.cl',
                 firstName: 'Juan',
                 lastName: 'Pérez',
-                rut: '12345678-9',
+                ...residentSensitiveFields,
                 passwordHash: pass,
                 isVerified: true
             }

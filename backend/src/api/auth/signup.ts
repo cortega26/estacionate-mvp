@@ -2,7 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { z } from 'zod'
 import { db } from '../../lib/db.js'
 import { hashPassword } from '../../services/auth.js'
-import { encrypt, hashPII } from '../../lib/crypto.js'
+import { hashPII, prepareResidentSensitiveFields } from '../../lib/crypto.js'
 import cors from '../../lib/cors.js'
 
 // Schema
@@ -61,18 +61,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         // 3. Create Resident
         const hashed = await hashPassword(data.password)
-        const encryptedRut = await encrypt(data.rut)
-        const encryptedPhone = data.phone ? await encrypt(data.phone) : null
+        const residentSensitiveFields = await prepareResidentSensitiveFields({
+            rut: data.rut,
+            phone: data.phone,
+            rutHash
+        })
 
         const resident = await db.resident.create({
             data: {
                 email: data.email,
                 passwordHash: hashed,
-                rut: encryptedRut,
-                rutHash: rutHash, // Blind Index
+                ...residentSensitiveFields,
                 firstName: data.firstName,
                 lastName: data.lastName,
-                phone: encryptedPhone, // Encrypted
                 unitId: unit.id,
                 isVerified: false
             }

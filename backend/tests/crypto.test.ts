@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { encrypt, decrypt } from '../src/lib/crypto.js';
+import { decrypt, encrypt, hashPII, prepareResidentSensitiveFields } from '../src/lib/crypto.js';
 
 describe('Encryption Lib (AES-GCM)', () => {
     it('should encrypt and decrypt a string correctly', async () => {
@@ -37,5 +37,18 @@ describe('Encryption Lib (AES-GCM)', () => {
 
         const decrypted = await decrypt(tampered);
         expect(decrypted).toBeNull();
+    });
+
+    it('should prepare encrypted resident fields and preserve blind-index lookups', async () => {
+        const rut = '12.345.678-9';
+        const phone = '+56912345678';
+
+        const fields = await prepareResidentSensitiveFields({ rut, phone });
+
+        expect(fields.rut).not.toBe(rut);
+        expect(fields.rutHash).toBe(await hashPII(rut));
+        expect(await decrypt(fields.rut)).toBe(rut);
+        expect(fields.phone).not.toBeNull();
+        expect(await decrypt(fields.phone!)).toBe(phone);
     });
 });
