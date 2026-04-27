@@ -10,6 +10,17 @@ const readPersistedUser = async (page: any) => page.evaluate(() => {
     return JSON.parse(raw).state?.user ?? null;
 });
 
+const submitLogin = async (page: any, email: string, password: string) => {
+    await page.getByLabel(/Correo/i).fill(email);
+    await page.getByLabel(/Contraseña/i).fill(password);
+    await page.getByRole('button', { name: /Ingresar/i }).click();
+};
+
+const expectLoginFeedback = async (page: any, message: RegExp) => {
+    await expect(page.getByText(message)).toBeVisible();
+    await expect(page).toHaveURL(/\/login/);
+};
+
 const mockSearchBootstrap = async (page: any) => {
     await page.route('**/api/buildings', async (route) => {
         await route.fulfill({
@@ -93,11 +104,43 @@ test.describe('Authentication Smoke', () => {
     test('shows an error on invalid login', async ({ page }) => {
         await page.goto('/login');
 
-        await page.getByLabel(/Correo/i).fill('wrong@test.com');
-        await page.getByLabel(/Contraseña/i).fill('wrongpass');
-        await page.getByRole('button', { name: /Ingresar/i }).click();
+        await submitLogin(page, 'wrong@test.com', 'wrongpass');
 
         await expect(page.getByText(/Credenciales inválidas/i)).toBeVisible();
+    });
+
+    test('shows unverified-account feedback for the seeded resident', async ({ page }) => {
+        await page.goto('/login');
+
+        await submitLogin(page, 'resident-unverified@estacionate.cl', 'password123');
+
+        await expectLoginFeedback(page, /Cuenta no verificada\. Revise su correo o contacte a administración\./i);
+    });
+
+    test('shows inactive-account feedback for the seeded resident', async ({ page }) => {
+        await page.goto('/login');
+
+        await submitLogin(page, 'resident-inactive@estacionate.cl', 'password123');
+
+        await expectLoginFeedback(page, /Cuenta inactiva\. Contacte a administración para reactivarla\./i);
+    });
+
+    test('shows lockout feedback after repeated invalid logins for the seeded resident', async ({ page }) => {
+        test.setTimeout(120000);
+
+        await page.goto('/login');
+
+        for (let attempt = 0; attempt < 6; attempt += 1) {
+            await submitLogin(page, 'resident-lockout@estacionate.cl', 'wrongpass');
+
+            await expect(page.getByText(/Cuenta bloqueada temporalmente\. Intente nuevamente en 15 minutos\.|Credenciales inválidas/i).last()).toBeVisible();
+
+            if (await page.getByText(/Cuenta bloqueada temporalmente\. Intente nuevamente en 15 minutos\./i).last().isVisible()) {
+                break;
+            }
+        }
+
+        await expectLoginFeedback(page, /Cuenta bloqueada temporalmente\. Intente nuevamente en 15 minutos\./i);
     });
 
     test('logs in successfully as seeded admin', async ({ page }) => {

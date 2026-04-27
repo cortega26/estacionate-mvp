@@ -45,8 +45,8 @@
     "*.{js,cjs,mjs,ts,tsx,json,md,yml,yaml,css,html}": "prettier --write"
   },
   "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=8.0.0"
+    "node": ">=24.15.0 <25",
+    "npm": ">=11.12.1 <12"
   },
   "keywords": [
     "parking",

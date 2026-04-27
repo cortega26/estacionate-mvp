@@ -156,6 +156,46 @@ describe('Login Logic Smoke Test', () => {
         });
     });
 
+    it('clears accumulated Redis lockout attempts after a successful resident login', async () => {
+        mockRedisGet.mockResolvedValue('4');
+        mockResidentFindUnique.mockResolvedValue({
+            id: 'resident-1',
+            email: 'resident@estacionate.cl',
+            firstName: 'Demo',
+            lastName: 'Resident',
+            isVerified: true,
+            isActive: true,
+            passwordHash: 'resident-hash',
+            unit: {
+                buildingId: 'building-1'
+            }
+        });
+        mockComparePassword.mockResolvedValue(true);
+
+        const req: any = {
+            method: 'POST',
+            body: {
+                email: 'resident@estacionate.cl',
+                password: 'password123'
+            },
+            headers: {}
+        };
+
+        const res: any = {
+            status: vi.fn().mockReturnThis(),
+            json: vi.fn().mockReturnThis(),
+            setHeader: vi.fn()
+        };
+
+        await loginHandler(req as any, res as any);
+
+        expect(mockRedisGet).toHaveBeenCalledWith('login_fail:resident@estacionate.cl');
+        expect(mockRedisDel).toHaveBeenCalledWith('login_fail:resident@estacionate.cl');
+        expect(mockRedisIncr).not.toHaveBeenCalled();
+        expect(mockRedisExpire).not.toHaveBeenCalled();
+        expect(res.status).toHaveBeenCalledWith(200);
+    });
+
     it('returns the normalized admin auth payload on successful login', async () => {
         mockUserFindUnique.mockResolvedValue({
             id: 'admin-1',

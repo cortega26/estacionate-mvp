@@ -100,6 +100,60 @@ async function main() {
         })
         console.log('Resident: resident@estacionate.cl / password123')
     } catch (e) { console.error('Error creating resident', e) }
+
+    try {
+        await prisma.resident.upsert({
+            where: { email: 'resident-lockout@estacionate.cl' },
+            update: { passwordHash, isVerified: true, isActive: true, unitId: unit.id },
+            create: {
+                unitId: unit.id,
+                email: 'resident-lockout@estacionate.cl',
+                firstName: 'Demo',
+                lastName: 'Lockout',
+                rut: '12345670-0',
+                passwordHash,
+                isVerified: true,
+                isActive: true
+            }
+        })
+        console.log('Resident: resident-lockout@estacionate.cl / password123')
+    } catch (e) { console.error('Error creating lockout resident', e) }
+
+    try {
+        await prisma.resident.upsert({
+            where: { email: 'resident-unverified@estacionate.cl' },
+            update: { passwordHash, isVerified: false, isActive: true, unitId: unit.id },
+            create: {
+                unitId: unit.id,
+                email: 'resident-unverified@estacionate.cl',
+                firstName: 'Demo',
+                lastName: 'Pending',
+                rut: '12345671-9',
+                passwordHash,
+                isVerified: false,
+                isActive: true
+            }
+        })
+        console.log('Resident: resident-unverified@estacionate.cl / password123')
+    } catch (e) { console.error('Error creating unverified resident', e) }
+
+    try {
+        await prisma.resident.upsert({
+            where: { email: 'resident-inactive@estacionate.cl' },
+            update: { passwordHash, isVerified: true, isActive: false, unitId: unit.id },
+            create: {
+                unitId: unit.id,
+                email: 'resident-inactive@estacionate.cl',
+                firstName: 'Demo',
+                lastName: 'Inactive',
+                rut: '12345672-7',
+                passwordHash,
+                isVerified: true,
+                isActive: false
+            }
+        })
+        console.log('Resident: resident-inactive@estacionate.cl / password123')
+    } catch (e) { console.error('Error creating inactive resident', e) }
 }
 
 main()

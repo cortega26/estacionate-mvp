@@ -14,7 +14,7 @@
 - [x] Close the building-admin dashboard verification gap with explicit browser proof for building-scoped dashboard behavior.
 - [x] Expand guard validation coverage with deterministic browser proof for plate-versus-code verification routing.
 - [x] Add narrow backend proof that concierge verification stays building-scoped and only accepts active bookings.
-- [ ] Add browser-level proof that seeded locked, inactive, and unverified accounts surface the intended login feedback.
+- [ ] Identify the next smallest product-quality gap after the auth/login-state stabilization slice is fully covered.
 
 ## Blocked
 
@@ -22,6 +22,8 @@
 
 ## Done
 
+- [x] Add narrow backend proof that a successful login clears accumulated Redis lockout attempts before the account is blocked.
+- [x] Add browser-level proof that seeded locked, inactive, and unverified accounts surface the intended login feedback.
 - [x] Surface tailored login feedback for locked, inactive, and unverified accounts on the frontend with focused Vitest proof.
 - [x] Run a fresh audit review to identify the next smallest product-quality gap after the auth, support, and reconciliation stabilization work.
 - [x] Create `todo.md` as the running execution checklist.
