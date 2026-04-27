@@ -10,6 +10,7 @@ import searchHandler from './spots/search.js';
 
 import createBookingHandler from './bookings/create.js';
 import cancelBookingHandler from './bookings/cancel.js';
+import bookingSummaryHandler from './bookings/summary.js';
 
 import webhookHandler from './payments/webhook.js';
 
@@ -47,6 +48,7 @@ router.get('/spots/search', asyncHandler(searchHandler));
 // Bookings
 router.post('/bookings/create', asyncHandler(createBookingHandler));
 router.post('/bookings/cancel', asyncHandler(cancelBookingHandler));
+router.get('/bookings/summary', asyncHandler(bookingSummaryHandler));
 
 // Payments
 // Payments

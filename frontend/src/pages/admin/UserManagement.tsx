@@ -10,6 +10,7 @@ interface User {
     isActive: boolean;
     createdAt: string;
     building?: { name: string };
+    accountType?: 'user' | 'resident';
 }
 
 const UserManagement = () => {
@@ -112,7 +113,7 @@ const UserManagement = () => {
                                             Unban
                                         </button>
                                     )}
-                                    {user.role !== 'admin' && (
+                                    {user.role !== 'admin' && user.accountType !== 'resident' && (
                                         <button
                                             onClick={() => handleAction(user.id, 'promote_admin')}
                                             className="text-indigo-600 hover:text-indigo-900"

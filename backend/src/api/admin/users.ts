@@ -5,6 +5,16 @@ import { verifyToken, getTokenFromRequest } from '../../services/auth.js'
 import { z } from 'zod'
 import { Prisma, Role } from '@prisma/client'
 
+type ManagedAccount = {
+    id: string
+    email: string
+    role: string
+    isActive: boolean
+    createdAt: Date
+    building?: { name: string } | null
+    accountType: 'user' | 'resident'
+}
+
 const updateUserSchema = z.object({
     userId: z.string(),
     action: z.enum(['ban', 'unban', 'promote_admin', 'demote_admin', 'assign_building']),
@@ -52,13 +62,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 ...(role ? { role: role as Prisma.EnumRoleFilter } : {})
             }
 
+            const residentWhereClause: Prisma.ResidentWhereInput = {
+                ...(search ? {
+                    OR: [
+                        { email: { contains: search, mode: Prisma.QueryMode.insensitive } },
+                        { phone: { contains: search, mode: Prisma.QueryMode.insensitive } }
+                    ]
+                } : {}),
+                ...(role ? { isActive: role.toLowerCase() === 'resident' ? undefined : undefined } : {})
+            }
 
-
-            const [users, total] = await Promise.all([
+            const [users, residents] = await Promise.all([
                 db.user.findMany({
                     where: whereClause,
-                    take: limit,
-                    skip: (page - 1) * limit,
                     select: {
                         id: true,
                         email: true,
@@ -71,12 +87,49 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                     },
                     orderBy: { createdAt: 'desc' }
                 }),
-                db.user.count({ where: whereClause })
+                db.resident.findMany({
+                    where: residentWhereClause,
+                    select: {
+                        id: true,
+                        email: true,
+                        isActive: true,
+                        createdAt: true,
+                        unit: {
+                            select: {
+                                building: {
+                                    select: { name: true }
+                                }
+                            }
+                        }
+                    },
+                    orderBy: { createdAt: 'desc' }
+                })
             ]);
+
+            const managedAccounts: ManagedAccount[] = [
+                ...users.map((user) => ({
+                    ...user,
+                    accountType: 'user' as const
+                })),
+                ...residents.map((resident) => ({
+                    id: resident.id,
+                    email: resident.email,
+                    role: 'resident',
+                    isActive: resident.isActive,
+                    createdAt: resident.createdAt,
+                    building: resident.unit?.building ? { name: resident.unit.building.name } : null,
+                    accountType: 'resident' as const
+                }))
+            ]
+                .filter((account) => !role || account.role === role)
+                .sort((left, right) => right.createdAt.getTime() - left.createdAt.getTime())
+
+            const total = managedAccounts.length
+            const pageData = managedAccounts.slice((page - 1) * limit, page * limit)
 
             return res.status(200).json({
                 success: true,
-                data: users,
+                data: pageData,
                 pagination: {
                     total,
                     page,
@@ -131,6 +184,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             if (body.action === 'assign_building') {
                 if (!body.buildingId) return res.status(400).json({ error: 'Building ID required' })
                 updateData.building = { connect: { id: body.buildingId } }
+            }
+
+            const existingUser = await db.user.findUnique({ where: { id: body.userId }, select: { id: true } })
+
+            if (!existingUser) {
+                if (!['ban', 'unban'].includes(body.action)) {
+                    return res.status(400).json({ error: 'Residents only support ban and unban actions' })
+                }
+
+                const updatedResident = await db.resident.update({
+                    where: { id: body.userId },
+                    data: {
+                        isActive: body.action === 'unban'
+                    }
+                })
+
+                return res.status(200).json({ success: true, user: updatedResident })
             }
 
             const updatedUser = await db.user.update({

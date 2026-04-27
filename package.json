@@ -17,6 +17,7 @@
     "deploy:staging": "./scripts/deploy.sh staging",
     "deploy:production": "./scripts/deploy.sh production",
     "test": "npm run test:backend && npm run test:frontend",
+    "test:e2e:autopilot": "cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests",
     "test:backend": "cd backend && npm test",
     "test:frontend": "cd frontend && npm test",
     "test:coverage": "cd backend && npm run test:coverage",
