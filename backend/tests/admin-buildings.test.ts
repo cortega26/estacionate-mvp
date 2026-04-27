@@ -209,6 +209,81 @@ describe('DELETE /api/admin/buildings', () => {
         expect(res.status).toBe(409);
     });
 
+    it('should delete a demo building with demo operational history without force=true', async () => {
+        const building = await db.building.create({
+            data: {
+                name: 'Demo Delete',
+                address: '123 Demo St',
+                contactEmail: 'demo-delete@test.com',
+                totalUnits: 1,
+                isDemo: true,
+            }
+        });
+
+        const unit = await db.unit.create({
+            data: { buildingId: building.id, unitNumber: 'U-D' }
+        });
+
+        const resident = await db.resident.create({
+            data: {
+                unitId: unit.id,
+                email: `demo-delete-${Date.now()}@test.com`,
+                rut: '1-9',
+                firstName: 'Demo',
+                lastName: 'Resident'
+            }
+        });
+
+        const spot = await db.visitorSpot.create({
+            data: { buildingId: building.id, spotNumber: 'S-D' }
+        });
+
+        const block = await db.availabilityBlock.create({
+            data: {
+                spotId: spot.id,
+                startDatetime: new Date(),
+                endDatetime: new Date(),
+                durationType: 'ELEVEN_HOURS',
+                basePriceClp: 5000,
+                status: 'reserved'
+            }
+        });
+
+        const booking = await db.booking.create({
+            data: {
+                residentId: resident.id,
+                availabilityBlockId: block.id,
+                visitorName: 'Demo Visitor',
+                vehiclePlate: 'DEMO1',
+                amountClp: 5000,
+                commissionClp: 500,
+                status: 'pending',
+                confirmationCode: `DD${Math.floor(Math.random() * 10000)}`
+            }
+        });
+
+        await db.payment.create({
+            data: {
+                bookingId: booking.id,
+                amountClp: 5000,
+                status: 'pending'
+            }
+        });
+
+        const res = await request(app)
+            .delete(`/api/admin/buildings?id=${building.id}`)
+            .set('Authorization', `Bearer ${adminToken}`);
+
+        expect(res.status).toBe(200);
+        expect(res.body.success).toBe(true);
+
+        const checkBuilding = await db.building.findUnique({ where: { id: building.id } });
+        const checkUnit = await db.unit.findUnique({ where: { id: unit.id } });
+
+        expect(checkBuilding).toBeNull();
+        expect(checkUnit).toBeNull();
+    });
+
 
     it('should force delete building with complex dependencies when force=true', async () => {
         // Setup Complex Building

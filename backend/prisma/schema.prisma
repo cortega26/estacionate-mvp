@@ -70,6 +70,7 @@ model Building {
   totalUnits        Int      @map("total_units")
   visitorSpotsCount Int      @default(0) @map("visitor_spots_count")
   timezone          String   @default("America/Santiago") @db.VarChar(50)
+  isDemo            Boolean  @default(false) @map("is_demo")
   createdAt         DateTime @default(now()) @map("created_at")
   updatedAt         DateTime @default(now()) @updatedAt @map("updated_at")
   platformCommissionRate Float    @default(0.10) @map("platform_commission_rate")

@@ -3,6 +3,41 @@ import { db } from '../../lib/db.js'
 import cors from '../../lib/cors.js'
 import { verifyToken, getTokenFromRequest } from '../../services/auth.js'
 
+async function deleteBuildingWithDependencies(buildingId: string) {
+    await db.$transaction(async (tx) => {
+        const bookings = await tx.booking.findMany({
+            where: { availabilityBlock: { spot: { buildingId } } },
+            select: { id: true }
+        })
+        const bookingIds = bookings.map((booking) => booking.id)
+
+        if (bookingIds.length > 0) {
+            await tx.payment.deleteMany({
+                where: { bookingId: { in: bookingIds } }
+            })
+            await tx.booking.deleteMany({
+                where: { id: { in: bookingIds } }
+            })
+        }
+
+        await tx.resident.deleteMany({
+            where: { unit: { buildingId } }
+        })
+
+        await tx.salesRepCommission.deleteMany({ where: { buildingId } })
+        await tx.payout.deleteMany({ where: { buildingId } })
+
+        await tx.user.updateMany({
+            where: { buildingId },
+            data: { buildingId: null }
+        })
+
+        await tx.building.delete({
+            where: { id: buildingId }
+        })
+    })
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
     await cors(req, res)
 
@@ -36,6 +71,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 const data = buildings.map(b => ({
                     id: b.id,
                     name: b.name,
+                    isDemo: b.isDemo,
                     isActive: b.isActive,
                     salesRepId: b.salesRepId,
                     salesRepCommissionRate: b.salesRepCommissionRate,
@@ -71,6 +107,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                     id: b.id,
                     name: b.name,
                     address: b.address,
+                    isDemo: b.isDemo,
                     isActive: b.isActive,
                     adminCompany: b.adminCompany,
                     totalVisitorSpots: b._count.visitorSpots,
@@ -135,51 +172,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 return res.status(404).json({ error: 'Building not found' });
             }
 
-            if (force) {
-                // Force Delete: Clean up all dependencies that restrict deletion
-                await db.$transaction(async (tx) => {
-                    // 1. Payments (Restrict Booking)
-                    // Find all bookings for this building to find payments? 
-                    // Or simpler: Find payments where booking.availabilityBlock.spot.buildingId = id
-                    // Optimized:
-                    // Find related Bookings first
-                    const bookings = await tx.booking.findMany({
-                        where: { availabilityBlock: { spot: { buildingId: id } } },
-                        select: { id: true }
-                    });
-                    const bookingIds = bookings.map(b => b.id);
+            const shouldCleanupDelete = force || building.isDemo;
 
-                    if (bookingIds.length > 0) {
-                        await tx.payment.deleteMany({
-                            where: { bookingId: { in: bookingIds } }
-                        });
-                        await tx.booking.deleteMany({
-                            where: { id: { in: bookingIds } }
-                        });
-                    }
+            if (shouldCleanupDelete) {
+                await deleteBuildingWithDependencies(id)
 
-                    // 2. Residents (Restrict Unit)
-                    await tx.resident.deleteMany({
-                        where: { unit: { buildingId: id } }
-                    });
-
-                    // 3. Payouts & Commissions (Restrict Building)
-                    await tx.salesRepCommission.deleteMany({ where: { buildingId: id } });
-                    await tx.payout.deleteMany({ where: { buildingId: id } });
-
-                    // 4. Update Users (buildingId)
-                    await tx.user.updateMany({
-                        where: { buildingId: id },
-                        data: { buildingId: null }
-                    });
-
-                    // 5. Delete Building (Cascades Units, Spots, AvailabilityBlocks, PricingRules, Blocklist)
-                    await tx.building.delete({
-                        where: { id }
-                    });
+                return res.status(200).json({
+                    success: true,
+                    message: building.isDemo
+                        ? 'Demo building and associated demo data deleted successfully'
+                        : 'Building and all associated data deleted successfully'
                 });
-
-                return res.status(200).json({ success: true, message: 'Building and all associated data deleted successfully' });
             }
 
             // Standard Delete

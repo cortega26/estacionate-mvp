@@ -114,6 +114,7 @@ export const ManageRepBuildings = ({ rep, assignedBuildings, allBuildings, onUpd
 
 const BuildingRow = ({ building, onUpdate, repId }: BuildingRowProps) => {
     const [isEditing, setIsEditing] = useState(false);
+    const [isRemoveConfirmOpen, setIsRemoveConfirmOpen] = useState(false);
     const [rate, setRate] = useState(building.salesRepCommissionRate || 0.05);
 
     const handleSave = () => {
@@ -126,12 +127,12 @@ const BuildingRow = ({ building, onUpdate, repId }: BuildingRowProps) => {
     };
 
     const handleRemove = () => {
-        if (!confirm('Remove Rep from this building?')) return;
         onUpdate({
             buildingId: building.id,
             salesRepId: null,
             commissionRate: 0.05
         });
+        setIsRemoveConfirmOpen(false);
     };
 
     return (
@@ -156,10 +157,16 @@ const BuildingRow = ({ building, onUpdate, repId }: BuildingRowProps) => {
                         <button onClick={handleSave} className="text-green-600 font-medium">Save</button>
                         <button onClick={() => setIsEditing(false)} className="text-gray-500">Cancel</button>
                     </>
+                ) : isRemoveConfirmOpen ? (
+                    <div className="inline-flex items-center gap-2 rounded border border-amber-200 bg-amber-50 px-2 py-1">
+                        <h4 className="text-xs font-semibold text-amber-900">Confirmar desvinculacion</h4>
+                        <button onClick={handleRemove} className="text-red-700 font-medium">Confirmar</button>
+                        <button onClick={() => setIsRemoveConfirmOpen(false)} className="text-gray-600">Cancelar</button>
+                    </div>
                 ) : (
                     <>
                         <button onClick={() => setIsEditing(true)} className="text-indigo-600 hover:text-indigo-900">Edit %</button>
-                        <button onClick={handleRemove} className="text-red-600 hover:text-red-900 ml-2">Remove</button>
+                        <button onClick={() => setIsRemoveConfirmOpen(true)} className="text-red-600 hover:text-red-900 ml-2">Remove</button>
                     </>
                 )}
             </td>

@@ -19,7 +19,8 @@ async function main() {
             name: 'Torres del Parque (Demo)',
             address: 'Av. Kennedy 1234',
             contactEmail: 'admin@torres.cl',
-            totalUnits: 100
+            totalUnits: 100,
+            isDemo: true
         }
     })
     console.log(`Building: ${building.name}`)

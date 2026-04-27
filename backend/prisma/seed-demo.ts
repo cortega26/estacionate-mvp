@@ -14,7 +14,8 @@ async function main() {
             address: 'Av. Providencia 2000',
             contactEmail: 'contacto@demo.cl',
             totalUnits: 50,
-            visitorSpotsCount: 5
+            visitorSpotsCount: 5,
+            isDemo: true
         }
     })
     console.log(`Checking Building: ${building.name}`)

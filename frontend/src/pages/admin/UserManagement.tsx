@@ -3,6 +3,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '../../lib/api';
 // import { useAuthStore } from '../../store/authStore';
 
+type UserAction = 'ban' | 'unban' | 'promote_admin';
+
 interface User {
     id: string;
     email: string;
@@ -13,11 +15,24 @@ interface User {
     accountType?: 'user' | 'resident';
 }
 
+interface PendingUserAction {
+    userId: string;
+    userEmail: string;
+    action: UserAction;
+}
+
+const getActionLabel = (action: UserAction) => {
+    if (action === 'ban') return 'ban';
+    if (action === 'unban') return 'unban';
+    return 'promote';
+};
+
 const UserManagement = () => {
     // Auth handled via cookies
     const queryClient = useQueryClient();
     const [search, setSearch] = useState('');
     const [page, setPage] = useState(1);
+    const [pendingAction, setPendingAction] = useState<PendingUserAction | null>(null);
 
     const { data, isLoading } = useQuery({
         queryKey: ['admin-users', page, search],
@@ -35,14 +50,29 @@ const UserManagement = () => {
             return data;
         },
         onSuccess: () => {
+            setPendingAction(null);
             queryClient.invalidateQueries({ queryKey: ['admin-users'] });
         }
     });
 
-    const handleAction = (userId: string, action: string) => {
-        if (confirm(`Are you sure you want to ${action} this user?`)) {
-            mutation.mutate({ userId, action });
+    const handleAction = (user: User, action: UserAction) => {
+        setPendingAction({
+            userId: user.id,
+            userEmail: user.email,
+            action,
+        });
+    };
+
+    const cancelPendingAction = () => {
+        setPendingAction(null);
+    };
+
+    const confirmPendingAction = () => {
+        if (!pendingAction) {
+            return;
         }
+
+        mutation.mutate({ userId: pendingAction.userId, action: pendingAction.action });
     };
 
     if (isLoading) return <div className="p-8">Loading Users...</div>;
@@ -61,6 +91,46 @@ const UserManagement = () => {
                     onChange={(e) => setSearch(e.target.value)}
                 />
             </div>
+
+            {pendingAction && (
+                <section className="rounded-xl border border-amber-200 bg-amber-50 p-5 shadow-sm">
+                    <h2 className="text-lg font-semibold text-amber-950">Confirmar cambio de estado</h2>
+                    <p className="mt-2 text-sm text-amber-900">
+                        Revisa la acción antes de actualizar el estado de la cuenta.
+                    </p>
+                    <dl className="mt-4 space-y-3 text-sm text-amber-900">
+                        <div>
+                            <dt className="font-medium text-amber-950">Usuario</dt>
+                            <dd>{pendingAction.userEmail}</dd>
+                        </div>
+                        <div>
+                            <dt className="font-medium text-amber-950">Acción</dt>
+                            <dd>{getActionLabel(pendingAction.action)}</dd>
+                        </div>
+                    </dl>
+                    <p className="mt-3 text-xs text-amber-800">
+                        Cancela si seleccionaste la cuenta equivocada. El cambio solo se aplicará cuando confirmes la acción.
+                    </p>
+                    <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+                        <button
+                            type="button"
+                            onClick={cancelPendingAction}
+                            disabled={mutation.isPending}
+                            className="w-full rounded-md border border-amber-300 bg-white px-4 py-2 text-amber-900 hover:bg-amber-100 disabled:cursor-not-allowed disabled:opacity-60"
+                        >
+                            Cancelar
+                        </button>
+                        <button
+                            type="button"
+                            onClick={confirmPendingAction}
+                            disabled={mutation.isPending}
+                            className="w-full rounded-md bg-amber-950 px-4 py-2 text-white hover:bg-amber-900 disabled:cursor-not-allowed disabled:opacity-60"
+                        >
+                            {mutation.isPending ? 'Aplicando...' : 'Confirmar acción'}
+                        </button>
+                    </div>
+                </section>
+            )}
 
             {/* Table */}
             <div className="bg-white rounded-lg shadow overflow-hidden">
@@ -100,14 +170,14 @@ const UserManagement = () => {
                                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
                                     {user.isActive ? (
                                         <button
-                                            onClick={() => handleAction(user.id, 'ban')}
+                                            onClick={() => handleAction(user, 'ban')}
                                             className="text-red-600 hover:text-red-900"
                                         >
                                             Ban
                                         </button>
                                     ) : (
                                         <button
-                                            onClick={() => handleAction(user.id, 'unban')}
+                                            onClick={() => handleAction(user, 'unban')}
                                             className="text-green-600 hover:text-green-900"
                                         >
                                             Unban
@@ -115,7 +185,7 @@ const UserManagement = () => {
                                     )}
                                     {user.role !== 'admin' && user.accountType !== 'resident' && (
                                         <button
-                                            onClick={() => handleAction(user.id, 'promote_admin')}
+                                            onClick={() => handleAction(user, 'promote_admin')}
                                             className="text-indigo-600 hover:text-indigo-900"
                                         >
                                             Promote

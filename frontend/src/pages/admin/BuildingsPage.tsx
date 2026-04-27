@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import type { AxiosError } from 'axios';
 import { api } from '../../lib/api';
 import { toast } from 'react-hot-toast';
 import { Dialog } from '@headlessui/react';
@@ -9,6 +10,7 @@ interface Building {
     id: string;
     name: string;
     address: string;
+    isDemo: boolean;
     isActive: boolean;
     platformCommissionRate: number;
     softwareMonthlyFeeClp: number;
@@ -22,6 +24,29 @@ interface Building {
     };
 }
 
+type PendingBuildingAction = {
+    buildingId: string;
+    buildingName: string;
+    buildingIsDemo: boolean;
+    action: 'archive' | 'restore' | 'delete';
+    nextActiveState?: boolean;
+};
+
+type BuildingUpdatePayload = {
+    id: string;
+    platformCommissionRate?: number;
+    softwareMonthlyFeeClp?: number;
+    salesRepCommissionRate?: number;
+    salesRepId?: string;
+    name?: string;
+    address?: string;
+    isActive?: boolean;
+};
+
+type ApiErrorResponse = {
+    error?: string;
+};
+
 export const BuildingsPage = () => {
     const queryClient = useQueryClient();
     const [isEditOpen, setIsEditOpen] = useState(false);
@@ -29,6 +54,7 @@ export const BuildingsPage = () => {
     const [showArchived, setShowArchived] = useState(false); // Default: Hide archived
     const [isForceDeleteOpen, setIsForceDeleteOpen] = useState(false);
     const [buildingToDelete, setBuildingToDelete] = useState<string | null>(null);
+    const [pendingAction, setPendingAction] = useState<PendingBuildingAction | null>(null);
 
     // Form state
     const [editForm, setEditForm] = useState({
@@ -47,13 +73,14 @@ export const BuildingsPage = () => {
     });
 
     const updateMutation = useMutation({
-        mutationFn: async (data: any) => {
+        mutationFn: async (data: BuildingUpdatePayload) => {
             await api.put('/admin/buildings', data);
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['admin-buildings'] });
             toast.success('Edificio actualizado correctamente');
             setIsEditOpen(false);
+            setPendingAction(null);
         },
         onError: () => {
             toast.error('Error al actualizar edificio');
@@ -69,8 +96,9 @@ export const BuildingsPage = () => {
             toast.success('Edificio eliminado correctamente');
             setIsForceDeleteOpen(false);
             setBuildingToDelete(null);
+            setPendingAction(null);
         },
-        onError: (err: any) => {
+        onError: (err: AxiosError<ApiErrorResponse>) => {
             if (err.response?.status === 409 && !isForceDeleteOpen) {
                 // Conflict detected (dependencies exist), open Force Delete Modal
                 setIsForceDeleteOpen(true);
@@ -81,20 +109,51 @@ export const BuildingsPage = () => {
     });
 
     const handleToggleActive = (building: Building) => {
-        const action = building.isActive ? 'Archivar' : 'Activar';
-        if (confirm(`¿Seguro que quieres ${action} el edificio "${building.name}"?`)) {
-            updateMutation.mutate({
-                id: building.id,
-                isActive: !building.isActive
-            });
-        }
+        setPendingAction({
+            buildingId: building.id,
+            buildingName: building.name,
+            buildingIsDemo: building.isDemo,
+            action: building.isActive ? 'archive' : 'restore',
+            nextActiveState: !building.isActive,
+        });
     };
 
     const handleDelete = (id: string) => {
-        setBuildingToDelete(id);
-        if (confirm('¿Estás seguro de que deseas eliminar este edificio? Esta acción no se puede deshacer.')) {
-            deleteMutation.mutate({ id });
+        const building = buildings?.find((candidate) => candidate.id === id);
+        if (!building) {
+            return;
         }
+
+        setBuildingToDelete(id);
+        setPendingAction({
+            buildingId: id,
+            buildingName: building.name,
+            buildingIsDemo: building.isDemo,
+            action: 'delete',
+        });
+    };
+
+    const cancelPendingAction = () => {
+        setPendingAction(null);
+        if (!isForceDeleteOpen) {
+            setBuildingToDelete(null);
+        }
+    };
+
+    const confirmPendingAction = () => {
+        if (!pendingAction) {
+            return;
+        }
+
+        if (pendingAction.action === 'delete') {
+            deleteMutation.mutate({ id: pendingAction.buildingId });
+            return;
+        }
+
+        updateMutation.mutate({
+            id: pendingAction.buildingId,
+            isActive: pendingAction.nextActiveState,
+        });
     };
 
     const confirmForceDelete = () => {
@@ -157,6 +216,11 @@ export const BuildingsPage = () => {
                             <tr key={building.id} className={`hover:bg-slate-50 ${!building.isActive ? 'bg-gray-50' : ''}`}>
                                 <td className="px-6 py-4">
                                     <div className="text-sm font-medium text-slate-900">{building.name}</div>
+                                    {building.isDemo && (
+                                        <div className="mt-1 inline-flex rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-800">
+                                            Demo
+                                        </div>
+                                    )}
                                     <div className="text-sm text-slate-500">{building.address}</div>
                                     <div className="text-xs text-slate-400 mt-1">
                                         Unidades: {building.totalUnits} | Espacios: {building.totalVisitorSpots}
@@ -213,6 +277,57 @@ export const BuildingsPage = () => {
                     </tbody>
                 </table>
             </div>
+
+            {pendingAction && (
+                <section className="rounded-xl border border-amber-200 bg-amber-50 p-5 shadow-sm">
+                    <h2 className="text-lg font-semibold text-amber-950">Confirmar acción sobre edificio</h2>
+                    <p className="mt-2 text-sm text-amber-900">
+                        Revisa el edificio y la acción antes de enviar el cambio.
+                    </p>
+                    <dl className="mt-4 space-y-3 text-sm text-amber-900">
+                        <div>
+                            <dt className="font-medium text-amber-950">Edificio</dt>
+                            <dd>{pendingAction.buildingName}</dd>
+                        </div>
+                        <div>
+                            <dt className="font-medium text-amber-950">Acción</dt>
+                            <dd>
+                                {pendingAction.action === 'archive'
+                                    ? 'Archivar'
+                                    : pendingAction.action === 'restore'
+                                        ? 'Restaurar'
+                                        : 'Eliminar'}
+                            </dd>
+                        </div>
+                    </dl>
+                    <p className="mt-3 text-xs text-amber-800">
+                        Cancela si elegiste el edificio equivocado. El cambio solo se aplicará cuando confirmes la acción.
+                    </p>
+                    {pendingAction.action === 'delete' && pendingAction.buildingIsDemo && (
+                        <p className="mt-3 rounded-md border border-amber-300 bg-white px-3 py-2 text-xs text-amber-900">
+                            Este edificio está marcado como demo. Al eliminarlo también se limpiarán residentes, reservas y pagos demo asociados.
+                        </p>
+                    )}
+                    <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+                        <button
+                            type="button"
+                            onClick={cancelPendingAction}
+                            disabled={updateMutation.isPending || deleteMutation.isPending}
+                            className="w-full rounded-md border border-amber-300 bg-white px-4 py-2 text-amber-900 hover:bg-amber-100 disabled:cursor-not-allowed disabled:opacity-60"
+                        >
+                            Cancelar
+                        </button>
+                        <button
+                            type="button"
+                            onClick={confirmPendingAction}
+                            disabled={updateMutation.isPending || deleteMutation.isPending}
+                            className="w-full rounded-md bg-amber-950 px-4 py-2 text-white hover:bg-amber-900 disabled:cursor-not-allowed disabled:opacity-60"
+                        >
+                            {updateMutation.isPending || deleteMutation.isPending ? 'Aplicando...' : 'Confirmar acción'}
+                        </button>
+                    </div>
+                </section>
+            )}
 
             {/* Edit Modal */}
             <Dialog open={isEditOpen} onClose={() => setIsEditOpen(false)} className="relative z-50">

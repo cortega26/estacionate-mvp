@@ -10,12 +10,28 @@ const whitelist = [
     ...(process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : [])
 ];
 
+const isApprovedLocalDevOrigin = (origin: string) => {
+    try {
+        const parsed = new URL(origin)
+        const isLoopbackHost = ['localhost', '127.0.0.1', '[::1]'].includes(parsed.hostname)
+        const port = Number(parsed.port)
+
+        return parsed.protocol === 'http:'
+            && isLoopbackHost
+            && Number.isInteger(port)
+            && port >= 5173
+            && port <= 5199
+    } catch {
+        return false
+    }
+}
+
 // Helper to check origin
 const checkOrigin = (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
 
-    if (whitelist.indexOf(origin) !== -1 || origin.match(/^https:\/\/.*\.vercel\.app$/)) {
+    if (whitelist.indexOf(origin) !== -1 || isApprovedLocalDevOrigin(origin) || origin.match(/^https:\/\/.*\.vercel\.app$/)) {
         return callback(null, true);
     } else {
         return callback(AppError.forbidden(ErrorCode.SYSTEM_RESOURCE_NOT_FOUND, 'CORS: Origin not allowed', undefined, { origin }));

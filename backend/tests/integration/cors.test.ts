@@ -14,6 +14,15 @@ describe('Security Integration: CORS', () => {
         expect(res.headers['access-control-allow-credentials']).toBe('true');
     });
 
+    it('should allow requests from approved fallback localhost origin (localhost:5174)', async () => {
+        const res = await request(app)
+            .get('/api/health')
+            .set('Origin', 'http://localhost:5174');
+
+        expect(res.headers['access-control-allow-origin']).toBe('http://localhost:5174');
+        expect(res.headers['access-control-allow-credentials']).toBe('true');
+    });
+
     it('should block requests from unauthorized origin (evil.com)', async () => {
         const res = await request(app)
             .get('/api/health')
