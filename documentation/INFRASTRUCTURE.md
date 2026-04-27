@@ -13,12 +13,13 @@ See `documentation/adr/0003-deployment-topology.md` for the deployment topology 
 
 ## Local Development (Docker)
 
-We use `docker-compose` to replicate the production environment locally.
+We use Docker Compose to replicate the production environment locally.
 
 ### Prerequisites
 
 - Docker & Docker Compose
-- Node.js v20+
+- Node.js 24.15.0 LTS
+- `nvm` recommended; this repository includes `.nvmrc`, so `nvm use` will select the pinned runtime
 
 ### Setup
 
@@ -41,7 +42,7 @@ We use `docker-compose` to replicate the production environment locally.
 
 1.  **Start Services**:
     ```bash
-    docker-compose up -d
+    docker compose up -d postgres redis
     ```
     This spins up:
     - `postgres` (Port 5432, User: `postgres`, DB: `estacionate_dev`)
@@ -54,7 +55,8 @@ We use `docker-compose` to replicate the production environment locally.
 3.  **Run Backend Locally** (Outside Docker - Recommended for Dev):
     ```bash
     cd backend
-    npm install
+    nvm use
+    npm ci
     npx prisma migrate deploy
     npm run dev
     ```

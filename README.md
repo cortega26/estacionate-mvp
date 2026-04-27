@@ -11,7 +11,8 @@ A comprehensive marketplace for renting residential parking spots. Connects buil
 
 ## Prerequisites
 
-- Node.js (v18+; v20 recommended to match CI)
+- Node.js 24.15.0 LTS
+- `nvm` recommended; this repository includes `.nvmrc`, so `nvm use` will select the pinned runtime
 - Docker and Docker Compose for local PostgreSQL/Redis
 
 ## Getting Started
@@ -38,6 +39,7 @@ npm run bootstrap -- --no-start
 #### 1. Installation
 
 ```bash
+nvm use
 npm run install:all
 ```
 

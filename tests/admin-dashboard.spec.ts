@@ -1,4 +1,4 @@
-import { expect, test } from './playwright';
+import { expect, test } from './playwright.js';
 
 test.describe('Admin Dashboard Reporting Clarity', () => {
     test('explains scope and next steps when reporting data is empty', async ({ page }) => {
