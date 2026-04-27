@@ -4,6 +4,7 @@ import { db } from '../../lib/db.js'
 import cors from '../../lib/cors.js'
 import { hashPassword } from '../../services/auth.js'
 import { User, Resident } from '@prisma/client'
+import { logger } from '../../lib/logger.js'
 
 const resetSchema = z.object({
     token: z.string().min(6),
@@ -60,7 +61,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     } catch (error: unknown) {
         if (error instanceof z.ZodError) return res.status(400).json({ error: error.errors })
-        console.error('Reset Password Error:', error)
+        logger.error({
+            route: 'auth.reset-password',
+            tokenLength: typeof req.body?.token === 'string' ? req.body.token.length : undefined,
+            error,
+        }, 'Reset password error')
         return res.status(500).json({ error: 'Internal Server Error' })
     }
 }

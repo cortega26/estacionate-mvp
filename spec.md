@@ -98,7 +98,7 @@ Raise Estacionate from MVP quality to a SaaS-grade product by improving the end-
 
 1. Keep the completed admin dashboard/analytics and sales-rep confirmation slices green.
 2. Execute the next highest-value phase from this spec: backend observability and error-handling consistency in admin and concierge reporting paths.
-3. Replace remaining `console.error` usage in the next observability targets: `backend/src/api/admin/users.ts` and `backend/src/api/admin/bookings.ts`, with structured logger context (actor, role, building scope, and failure cause when available).
+3. Replace remaining `console.error` usage in the next observability targets: `backend/src/api/auth/forgot-password.ts`, `backend/src/api/auth/reset-password.ts`, and `backend/src/api/spots/search.ts`, with structured logger context.
 4. Add narrow backend proof for the observability behavior, then run focused backend validation before broadening.
 
 ## Current Phase Implementation Details
@@ -193,6 +193,18 @@ Raise Estacionate from MVP quality to a SaaS-grade product by improving the end-
 2. Preserve existing response contracts for validation errors and generic 500 paths.
 3. Add narrow tests that force controlled failures and assert logger context plus unchanged response status codes.
 
+### Slice 10c: Event Bus Observability Consistency
+
+1. Replace raw `console.error` paths in `backend/src/lib/event-bus.ts` with structured logger calls.
+2. Preserve event-bus behavior contracts: publish flow remains non-blocking and persistence failures stay isolated.
+3. Add narrow tests that force controlled failures (redis init/parse/publish and audit persistence) and assert logger context.
+
+### Slice 10d: Auth Recovery And Spot Search Observability
+
+1. Replace raw `console.error` in `backend/src/api/auth/forgot-password.ts`, `backend/src/api/auth/reset-password.ts`, and `backend/src/api/spots/search.ts` with structured logger calls.
+2. Preserve existing response contracts for validation failures and generic 500 paths.
+3. Add narrow tests that force controlled failures and assert logger context plus unchanged response status codes.
+
 ## Execution Rules
 
 1. Consult this spec before each meaningful implementation change.
@@ -231,6 +243,8 @@ Raise Estacionate from MVP quality to a SaaS-grade product by improving the end-
 | Backend observability consistency | Narrow backend tests and build | `cd backend && npm test -- admin-analytics.observability.test.ts concierge-observability.test.ts`, `cd backend && npm run build` | Error paths in touched handlers keep current HTTP contracts and emit structured logs with context |
 | Admin buildings and webhook observability | Narrow backend tests and build | `cd backend && npm test -- admin-buildings.observability.test.ts payments-webhook.observability.test.ts`, `cd backend && npm run build` | Admin buildings and payments webhook failures preserve response contracts while emitting structured logs |
 | Admin users and bookings observability | Narrow backend tests and build | `cd backend && npm test -- admin-users.observability.test.ts admin-bookings.observability.test.ts`, `cd backend && npm run build` | Admin users and bookings failures preserve response contracts while emitting structured logs |
+| Event bus observability consistency | Narrow backend test and build | `cd backend && npm test -- event-bus.observability.test.ts`, `cd backend && npm run build` | Event bus failures preserve publish behavior while emitting structured logs for init, parse, publish, and persistence paths |
+| Auth recovery and spot search observability | Narrow backend tests and build | `cd backend && npm test -- auth-recovery.observability.test.ts spots-search.observability.test.ts`, `cd backend && npm run build` | Forgot/reset password and spot search failures preserve response contracts while emitting structured logs |
 | Backend observability in touched path | Narrow backend checks | `cd backend && npm run build`, targeted backend test if added | Touched backend path compiles and preserves behavior while emitting clearer operational context |
 | Product changes in touched frontend slice | Narrow frontend checks | `cd frontend && npm run lint`, `cd frontend && npm test`, targeted Playwright spec | No regressions in touched flow |
 | Product changes in touched backend slice | Narrow backend checks | `cd backend && npm run lint`, `cd backend && npm run build`, `cd backend && npm test` | No regressions in touched backend slice |
@@ -332,6 +346,19 @@ Raise Estacionate from MVP quality to a SaaS-grade product by improving the end-
 1. Add `backend/tests/admin-users.observability.test.ts` to force controlled user-management failures and assert structured logger context with unchanged 500 behavior.
 2. Add `backend/tests/admin-bookings.observability.test.ts` to force controlled booking-list failures and assert structured logger context with unchanged 500 behavior.
 3. Run `cd backend && npm test -- admin-users.observability.test.ts admin-bookings.observability.test.ts` immediately after the first substantive observability edits.
+4. Run `cd backend && npm run build` once focused observability checks are green.
+
+### Event Bus Observability Consistency
+
+1. Add `backend/tests/event-bus.observability.test.ts` to force controlled event-bus failures and assert structured logger context.
+2. Run `cd backend && npm test -- event-bus.observability.test.ts` immediately after the first substantive event-bus observability edit.
+3. Run `cd backend && npm run build` once focused observability checks are green.
+
+### Auth Recovery And Spot Search Observability
+
+1. Add `backend/tests/auth-recovery.observability.test.ts` to force controlled failures in forgot/reset handlers and assert structured logger context with unchanged 500 behavior.
+2. Add `backend/tests/spots-search.observability.test.ts` to force controlled search-handler failures and assert structured logger context with unchanged 500 behavior.
+3. Run `cd backend && npm test -- auth-recovery.observability.test.ts spots-search.observability.test.ts` immediately after the first substantive observability edits.
 4. Run `cd backend && npm run build` once focused observability checks are green.
 
 ## Initial Risks

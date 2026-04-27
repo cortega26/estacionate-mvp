@@ -43,6 +43,14 @@
 - [x] Add narrow backend proof for admin-users and admin-bookings error-path logging with unchanged response contracts.
 - [x] Replace remaining `console.error` usage in `backend/src/api/admin/users.ts` and `backend/src/api/admin/bookings.ts` with structured logger calls.
 - [x] Prove the admin-users/bookings observability sub-slice with focused backend tests and backend build.
+- [x] Refresh `spec.md`, `todo.md`, and `tests/` so the active observability sub-slice targets event-bus consistency.
+- [x] Add narrow backend proof for event-bus logging across redis init/parse/publish and audit persistence failures.
+- [x] Replace remaining `console.error` usage in `backend/src/lib/event-bus.ts` with structured logger calls.
+- [x] Prove the event-bus observability sub-slice with focused backend tests and backend build.
+- [x] Refresh `spec.md`, `todo.md`, and `tests/` so the active observability sub-slice targets auth recovery and spot search handlers.
+- [x] Add narrow backend proof for forgot-password, reset-password, and spot-search error-path logging with unchanged response contracts.
+- [x] Replace remaining `console.error` usage in `backend/src/api/auth/forgot-password.ts`, `backend/src/api/auth/reset-password.ts`, and `backend/src/api/spots/search.ts` with structured logger calls.
+- [x] Prove the auth-recovery/spot-search observability sub-slice with focused backend tests and backend build.
 
 ## Next
 

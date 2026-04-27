@@ -75,7 +75,13 @@ export class EventBus {
             await connectPubSub();
 
             subscriber.subscribe(CHANNEL_NAME, (err) => {
-                if (err) console.error('[EventBus] Redis Subscribe Error:', err);
+                if (err) {
+                    logger.error({
+                        channel: CHANNEL_NAME,
+                        instanceId: INSTANCE_ID,
+                        error: err,
+                    }, '[EventBus] Redis subscribe error');
+                }
                 else {
                     this.isRedisConnected = true;
                     logger.info(`[EventBus] Subscribed to ${CHANNEL_NAME} as ${INSTANCE_ID}`);
@@ -88,7 +94,11 @@ export class EventBus {
                 }
             });
         } catch (error) {
-            console.error('[EventBus] Failed to init Redis:', error);
+            logger.error({
+                channel: CHANNEL_NAME,
+                instanceId: INSTANCE_ID,
+                error,
+            }, '[EventBus] Init Redis failed');
         }
     }
 
@@ -103,7 +113,11 @@ export class EventBus {
             this.triggerLocalHandlers(event);
 
         } catch (error) {
-            console.error('[EventBus] Parse error:', error);
+            logger.error({
+                channel: CHANNEL_NAME,
+                rawMessage,
+                error,
+            }, '[EventBus] Parse error');
         }
     }
 
@@ -136,7 +150,12 @@ export class EventBus {
         // 3. Publish to Redis (Async distribution)
         if (this.isRedisConnected) {
             publisher.publish(CHANNEL_NAME, JSON.stringify(event)).catch(err => {
-                console.error('[EventBus] Redis Publish Error:', err);
+                logger.error({
+                    channel: CHANNEL_NAME,
+                    action: event.action,
+                    actorId: event.actorId,
+                    error: err,
+                }, '[EventBus] Publish error');
             });
         }
     }
@@ -168,7 +187,12 @@ export class EventBus {
                 },
             });
         } catch (error) {
-            console.error('[EventBus] Failed to persist event:', error);
+            logger.error({
+                action: event.action,
+                actorId: event.actorId,
+                entityId: event.entityId,
+                error,
+            }, '[EventBus] Persist event failed');
         }
     }
 }

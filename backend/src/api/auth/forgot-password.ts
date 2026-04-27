@@ -4,6 +4,7 @@ import { db } from '../../lib/db.js'
 import cors from '../../lib/cors.js'
 import { NotificationService } from '../../services/NotificationService.js'
 import { v4 as uuidv4 } from 'uuid';
+import { logger } from '../../lib/logger.js'
 
 const forgotSchema = z.object({
     email: z.string().email()
@@ -35,7 +36,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     } catch (error: unknown) {
         if (error instanceof z.ZodError) return res.status(400).json({ error: error.errors })
-        console.error('Forgot Password Error:', error)
+        logger.error({
+            route: 'auth.forgot-password',
+            email: req.body?.email,
+            error,
+        }, 'Forgot password error')
         return res.status(500).json({ error: 'Internal Server Error' })
     }
 }
