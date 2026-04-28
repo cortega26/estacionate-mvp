@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(NODE_ENV=test npm test *)",
+      "Bash(npm test -- *)",
+      "Bash(npx playwright test *)",
+      "Bash(npx prisma migrate diff *)",
+      "Bash(npm run lint)",
+      "Bash(npm run type-check)",
+      "Bash(npm run audit:arch)"
+    ]
+  }
+}
