@@ -37,7 +37,7 @@ const UserManagement = () => {
     const { data, isLoading } = useQuery({
         queryKey: ['admin-users', page, search],
         queryFn: async () => {
-            const params: any = { page };
+            const params: { page: number; search?: string } = { page };
             if (search) params.search = search;
             const { data } = await api.get(`/admin/users`, { params });
             return data;

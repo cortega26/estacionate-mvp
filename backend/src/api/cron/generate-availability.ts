@@ -4,18 +4,18 @@ import { logger } from '../../lib/logger.js';
 import { DurationType } from '@prisma/client';
 import { addDays, setHours, setMinutes, setSeconds, setMilliseconds } from 'date-fns';
 import { toZonedTime } from 'date-fns-tz';
+import { verifyCronSecret } from '../../lib/cronAuth.js';
 
 const TIMEZONE = 'America/Santiago';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+    if (!verifyCronSecret(req as any)) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+
     if (req.method !== 'GET' && req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
-
-    // Security: Validate Cron Secret if needed (Vercel protects cron paths, but good practice)
-    // const authHeader = req.headers['authorization'];
-    // if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) { ... } 
-    // For MVP/Vercel Cron internal requests, we can rely on path secrecy or Vercel's protection.
 
     logger.info('[Availability Job] Starting generation...');
 

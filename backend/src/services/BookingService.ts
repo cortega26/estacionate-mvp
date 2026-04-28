@@ -1,13 +1,38 @@
 import { db, ActorType } from '../lib/db.js';
 import { calculateBookingPricing } from '../lib/domain/pricing.js';
 import crypto from 'crypto';
-import { z } from 'zod';
 import { EventBus, EventType } from '../lib/event-bus.js';
 import { logger } from '../lib/logger.js';
 import { PaymentService } from './PaymentService.js';
 import { AppError, ErrorCode } from '../lib/errors.js';
 import { ServiceErrorCode } from '../lib/error-codes.js';
 import { BookingValidator, BookingUser } from './booking/BookingValidator.js';
+import type { BookingStatus, AccessEventType } from '@prisma/client';
+
+export type BookingEvent =
+    | 'payment_approved'
+    | 'check_in'
+    | 'check_out'
+    | 'overstay'
+    | 'no_show'
+    | 'cancel'
+
+const TERMINAL_STATES: BookingStatus[] = ['cancelled', 'checked_out', 'no_show']
+
+const EVENT_TRANSITIONS: Record<BookingEvent, { from: BookingStatus[]; to: BookingStatus }> = {
+    payment_approved: { from: ['pending'], to: 'confirmed' },
+    check_in:         { from: ['confirmed'], to: 'checked_in' },
+    check_out:        { from: ['checked_in', 'overstay'], to: 'checked_out' },
+    overstay:         { from: ['checked_in'], to: 'overstay' },
+    no_show:          { from: ['confirmed'], to: 'no_show' },
+    cancel:           { from: ['pending', 'confirmed'], to: 'cancelled' },
+}
+
+const ACCESS_EVENT_TYPE: Partial<Record<BookingEvent, AccessEventType>> = {
+    check_in:  'check_in',
+    check_out: 'check_out',
+    no_show:   'no_show_marked',
+}
 
 
 
@@ -29,7 +54,7 @@ export class BookingService {
         // 2. Optimistic Locking Transaction
         const booking = await db.$transaction(async (tx) => {
             // 0. PRE-FETCH: Get Spot ID to acquire lock
-            const preBlock = await tx.availabilityBlock.findUniqueOrThrow({
+            await tx.availabilityBlock.findUniqueOrThrow({
                 where: { id: data.blockId },
                 select: { spotId: true }
             });
@@ -257,7 +282,7 @@ export class BookingService {
                 await PaymentService.refundPayment(bookingId, refundAmount);
             } catch (err) {
                 logger.error({ err, bookingId }, 'Refund Execution Failed - Manual Intervention Required');
-                // We do NOT rollback the cancellation (Policy: "Spot released immediately"). 
+                // We do NOT rollback the cancellation (Policy: "Spot released immediately").
                 // We rely on Audit Log or Error Log to fix the money.
             }
         }
@@ -279,5 +304,82 @@ export class BookingService {
         });
 
         return { success: true, refundAmount };
+    }
+
+    /**
+     * Sole entry point for changing Booking.status.
+     * Validates the transition, updates the booking, and creates an AccessEvent when applicable.
+     */
+    static async transition(
+        bookingId: string,
+        event: BookingEvent,
+        actorId: string,
+        context?: { plateObserved?: string; notes?: string }
+    ) {
+        const booking = await db.booking.findUnique({ where: { id: bookingId } })
+        if (!booking) throw AppError.notFound(ServiceErrorCode.BOOKING_NOT_FOUND, 'Booking not found')
+
+        if (TERMINAL_STATES.includes(booking.status)) {
+            throw new AppError({
+                code: ServiceErrorCode.CANNOT_CANCEL_COMPLETED_BOOKING,
+                statusCode: 409,
+                publicMessage: `Booking is already in terminal state: ${booking.status}`,
+                internalMessage: `Booking ${bookingId} is in terminal state '${booking.status}'; rejected transition '${event}'`,
+            })
+        }
+
+        const rule = EVENT_TRANSITIONS[event]
+        if (!rule.from.includes(booking.status)) {
+            throw new AppError({
+                code: ServiceErrorCode.CANNOT_CANCEL_COMPLETED_BOOKING,
+                statusCode: 409,
+                publicMessage: `Invalid transition from '${booking.status}' via '${event}'`,
+                internalMessage: `Invalid transition: current status '${booking.status}' not in allowed set ${JSON.stringify(rule.from)} for event '${event}'`,
+            })
+        }
+
+        const accessEventType = ACCESS_EVENT_TYPE[event]
+
+        const updated = await db.$transaction(async (tx) => {
+            const result = await tx.booking.update({
+                where: { id: bookingId },
+                data: { status: rule.to },
+            })
+
+            if (accessEventType) {
+                await tx.accessEvent.create({
+                    data: {
+                        bookingId,
+                        actorId,
+                        type: accessEventType,
+                        plateObserved: context?.plateObserved ?? booking.vehiclePlate,
+                        notes: context?.notes,
+                    },
+                })
+            }
+
+            return result
+        })
+
+        logger.info({
+            bookingId,
+            actorId,
+            event,
+            fromStatus: booking.status,
+            toStatus: updated.status,
+        }, '[BookingService] Transition applied')
+
+        EventBus.getInstance().publish({
+            actorId,
+            actorType: ActorType.HUMAN,
+            action: EventType.BOOKING_CANCELLED, // reuse nearest event type; extend EventType enum as needed
+            entityId: bookingId,
+            entityType: 'Booking',
+            metadata: { event, fromStatus: booking.status, toStatus: updated.status },
+            ipAddress: 'internal',
+            userAgent: 'internal',
+        })
+
+        return updated
     }
 }

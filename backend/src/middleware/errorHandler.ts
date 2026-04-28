@@ -5,7 +5,7 @@ import { ZodError } from 'zod';
 
 import { captureException } from '../lib/sentry.js';
 
-export const errorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
+export const errorHandler = (err: any, req: Request, res: Response, _next: NextFunction) => {
     let error = err;
 
     // 1. Transform Third-Party Errors to AppError

@@ -5,11 +5,14 @@ import { db } from '../src/lib/db.js';
 
 const prisma = new PrismaClient();
 
+const TEST_SECRET = 'test-cron-secret'
+
 describe('Availability Generator Cron (Integration)', () => {
     let buildingId: string;
     let spotId: string;
 
     beforeAll(async () => {
+        process.env.CRON_SECRET = TEST_SECRET
         // Setup Building & Spot
         const building = await prisma.building.create({
             data: {
@@ -32,6 +35,7 @@ describe('Availability Generator Cron (Integration)', () => {
     });
 
     afterAll(async () => {
+        delete process.env.CRON_SECRET
         await prisma.availabilityBlock.deleteMany({ where: { spotId } });
         await prisma.visitorSpot.delete({ where: { id: spotId } });
         await prisma.building.delete({ where: { id: buildingId } });
@@ -39,7 +43,7 @@ describe('Availability Generator Cron (Integration)', () => {
     });
 
     it('should generate blocks for the next 30 days', async () => {
-        const req = { method: 'POST', body: { spotId }, headers: {} } as any;
+        const req = { method: 'POST', body: { spotId }, headers: { authorization: `Bearer ${TEST_SECRET}` } } as any;
         const res = {
             status: (code: number) => ({
                 json: (data: any) => ({ code, data })
@@ -59,7 +63,7 @@ describe('Availability Generator Cron (Integration)', () => {
     });
 
     it('should be idempotent (not create duplicates)', async () => {
-        const req = { method: 'POST', body: { spotId }, headers: {} } as any;
+        const req = { method: 'POST', body: { spotId }, headers: { authorization: `Bearer ${TEST_SECRET}` } } as any;
         const res = {
             status: (code: number) => ({
                 json: (data: any) => ({ code, data })

@@ -46,24 +46,26 @@ PSP certifica Split Payment: los fondos de la comunidad se liquidan directamente
 ## Consecuencias
 
 ### Positivas
+
 - Elimina exposición fiscal (IVA + renta) mientras no se confirme tributariamente.
 - Elimina responsabilidad civil por daño/robo de vehículos (Ley 20.967) al no cobrar a visitantes externos.
 - Elimina riesgo regulatorio CMF/Fintec (no hay custodia de fondos en Fase 1).
 - La progresión de fases está gobernada por evidencia legal real, no por optimismo comercial.
 
 ### Restricciones que este ADR impone
+
 - El código de PaymentService, MercadoPagoAdapter, reconcile cron y modelos Payment/Payout no puede activarse contra comunidades reales hasta que Gate G2.1 + G2.2 estén documentados.
 - Ningún cambio a los archivos listados en §8 de `documentation/LEGAL_COMMERCIAL_GUARDRAILS.md` puede hacerse sin ejecutar el checklist de `documentation/task-recipes/monetization-change.md`.
 - La palabra "arriendo" está prohibida en toda la UX, contratos, y documentación comercial de Estacionate.
 
 ### Alternativas descartadas
 
-| Alternativa | Por qué se descartó |
-|---|---|
-| Cobrar directamente a visitantes | Activa responsabilidad civil estricta (Ley 20.967) + IVA + renta + Ley del Consumidor |
-| Custodiar fondos de comunidades en Estacionate y redistribuir | Requiere registro PSP bajo NCG 502 CMF; riesgo regulatorio desproporcionado para MVP |
-| Usar "arriendo" como marco jurídico | Art. 60 Ley 21.442 prohíbe arriendo de estacionamientos de visita; además requeriría quórum 66% + escritura pública |
-| Avanzar a Fase 2 sin memo legal | Expone a impugnaciones judiciales de copropietarios; riesgo de nulidad de todos los cobros realizados |
+| Alternativa                                                   | Por qué se descartó                                                                                                 |
+| ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| Cobrar directamente a visitantes                              | Activa responsabilidad civil estricta (Ley 20.967) + IVA + renta + Ley del Consumidor                               |
+| Custodiar fondos de comunidades en Estacionate y redistribuir | Requiere registro PSP bajo NCG 502 CMF; riesgo regulatorio desproporcionado para MVP                                |
+| Usar "arriendo" como marco jurídico                           | Art. 60 Ley 21.442 prohíbe arriendo de estacionamientos de visita; además requeriría quórum 66% + escritura pública |
+| Avanzar a Fase 2 sin memo legal                               | Expone a impugnaciones judiciales de copropietarios; riesgo de nulidad de todos los cobros realizados               |
 
 ---
 

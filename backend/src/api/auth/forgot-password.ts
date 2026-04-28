@@ -3,7 +3,6 @@ import { z } from 'zod'
 import { db } from '../../lib/db.js'
 import cors from '../../lib/cors.js'
 import { NotificationService } from '../../services/NotificationService.js'
-import { v4 as uuidv4 } from 'uuid';
 import { logger } from '../../lib/logger.js'
 
 const forgotSchema = z.object({
@@ -46,7 +45,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 }
 
 async function handleRecovery(id: string, phone: string, type: 'resident' | 'user') {
-    const _token = uuidv4().split('-')[0].toUpperCase(); // Short code for SMS/WhatsApp friendly (e.g. A1B2C3)
     // Actually full UUID might be safer but harder to type. Let's stick to short 6-char for MVP WhatsApp friendly.
     // Or generated 6-digit numeric.
     const shortCode = Math.floor(100000 + Math.random() * 900000).toString();

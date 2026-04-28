@@ -15,7 +15,7 @@ export class SimulatorAdapter implements PaymentGateway {
         quantity: number,
         unitPrice: number,
         externalReference: string,
-        notificationUrl?: string
+        _notificationUrl?: string
     ): Promise<PreferenceResult> {
         logger.warn('⚠️ Mock Mode: Returning fake Init Point');
         const simulatorUrl = `http://localhost:5173/payment-simulator?booking_id=${externalReference}&amount=${unitPrice}`;
@@ -25,15 +25,15 @@ export class SimulatorAdapter implements PaymentGateway {
         };
     }
 
-    async refund(paymentId: string | object, amount: number): Promise<RefundResult> {
+    async refund(_paymentId: string | object, _amount: number): Promise<RefundResult> {
         // paymentId might be the payment DB object in simulator mode
         // In the original service, it updated the DB. Here we probably just return success and let Service update DB?
         // Or Service passes the ID.
         // Looking at original: refundPayment implementation mixes logic.
         // It updates DB first.
         // The adapter should just do the GATEWAY part.
-        // But for simulator, the gateway IS the DB update effectively? 
-        // No, the simulator is "Instant". 
+        // But for simulator, the gateway IS the DB update effectively?
+        // No, the simulator is "Instant".
 
         // Let's assume the Service handles DB updates, but for Simulator, there is no external call.
         // We just return "refunded".
@@ -60,7 +60,7 @@ export class SimulatorAdapter implements PaymentGateway {
                     amountClp: 0, // Should be updated by caller? No, original created it here. This logic is borderline Service domain.
                     // Ideally, Adapter handles connectivity, Service handles DB.
                     // But simulator "webhook" is basically a direct service call.
-                    // Let's keep the transaction logic here for now to match behavior strictly, 
+                    // Let's keep the transaction logic here for now to match behavior strictly,
                     // OR move DB logic UP to Service.
 
                     // DECISION: To avoid regression, we must replicate behavior.
@@ -70,10 +70,10 @@ export class SimulatorAdapter implements PaymentGateway {
                     // The Adapter `handleWebhook` should return normalized data, and the SERVICE does the DB update.
                     // BUT, `handleSimulatorWebhook` in original file DOES DB transactional updates including Booking status.
                     // It is easier to keep this logic encapsulated in the adapter for now to avoid breaking the "Service handles everything" pattern too much.
-                    // WAIT. 
+                    // WAIT.
                     // If I put DB logic in Adapter, it's not an adapter.
 
-                    // REFACTOR STRATEGY: 
+                    // REFACTOR STRATEGY:
                     // Adapter should parse webhook and return: { event: 'payment_update', bookingId, status, rawData }.
                     // Service calls `adapter.process(data)`, gets event, and updates DB.
                     // HOWEVER, The original code separates logic completely between Simulator and Real.

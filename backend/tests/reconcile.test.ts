@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, beforeAll, afterAll } from 'vitest';
 import handler from '../src/api/cron/reconcile.js';
 import { SalesService } from '../src/services/SalesService.js';
 
@@ -18,7 +18,12 @@ vi.mock('../src/lib/db.js', () => ({ db: mockDb }));
 // Spy Sales Service
 const calculateCommissionSpy = vi.spyOn(SalesService, 'calculateCommission');
 
+const TEST_SECRET = 'test-cron-secret'
+
 describe('Reconciliation Job (Unit)', () => {
+
+    beforeAll(() => { process.env.CRON_SECRET = TEST_SECRET })
+    afterAll(() => { delete process.env.CRON_SECRET })
 
     beforeEach(() => {
         vi.clearAllMocks();
@@ -46,7 +51,7 @@ describe('Reconciliation Job (Unit)', () => {
         };
         mockDb.payout.create.mockResolvedValue(mockCreatedPayout);
 
-        const req = { method: 'POST' } as any;
+        const req = { method: 'POST', headers: { authorization: `Bearer ${TEST_SECRET}` } } as any;
         const res = {
             status: vi.fn().mockReturnThis(),
             json: vi.fn()
@@ -87,7 +92,7 @@ describe('Reconciliation Job (Unit)', () => {
         ]);
         mockDb.payout.findFirst.mockResolvedValue({ id: 'existing_payout' }); // Exists
 
-        const req = { method: 'POST' } as any;
+        const req = { method: 'POST', headers: { authorization: `Bearer ${TEST_SECRET}` } } as any;
         const res = {
             status: vi.fn().mockReturnThis(),
             json: vi.fn()
@@ -126,7 +131,7 @@ describe('Reconciliation Job (Unit)', () => {
         (p2002 as any).code = 'P2002';
         mockDb.payout.create.mockRejectedValue(p2002);
 
-        const req = { method: 'POST' } as any;
+        const req = { method: 'POST', headers: { authorization: `Bearer ${TEST_SECRET}` } } as any;
         const res = {
             status: vi.fn().mockReturnThis(),
             json: vi.fn()
@@ -161,7 +166,7 @@ describe('Reconciliation Job (Unit)', () => {
         (p2003 as any).code = 'P2003';
         mockDb.payout.create.mockRejectedValue(p2003);
 
-        const req = { method: 'POST' } as any;
+        const req = { method: 'POST', headers: { authorization: `Bearer ${TEST_SECRET}` } } as any;
         const res = {
             status: vi.fn().mockReturnThis(),
             json: vi.fn()

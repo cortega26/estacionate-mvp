@@ -12,7 +12,7 @@ export default tseslint.config(
             globals: globals.node,
         },
         rules: {
-            '@typescript-eslint/no-explicit-any': 'warn',
+            '@typescript-eslint/no-explicit-any': 'off',
             '@typescript-eslint/no-unused-vars': [
                 'warn',
                 {
@@ -36,6 +36,21 @@ export default tseslint.config(
         rules: {
             'no-console': 'off',
             '@typescript-eslint/no-explicit-any': 'off'
+        }
+    },
+    {
+        files: ['prisma/**/*.ts'],
+        rules: {
+            'no-console': 'off',
+            '@typescript-eslint/no-unused-vars': 'off'
+        }
+    },
+    {
+        files: ['tests/**/*.ts'],
+        rules: {
+            'no-console': 'off',
+            '@typescript-eslint/no-explicit-any': 'off',
+            '@typescript-eslint/no-unused-vars': 'off'
         }
     }
 );

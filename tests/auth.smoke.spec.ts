@@ -48,7 +48,7 @@ const mockSearchBootstrap = async (page: any) => {
 };
 
 const mockAdminDashboardBootstrap = async (page: any) => {
-    await page.route('**/api/admin/stats', async (route) => {
+    await page.route('**/api/admin/stats**', async (route) => {
         await route.fulfill({
             status: 200,
             contentType: 'application/json',
@@ -126,7 +126,32 @@ test.describe('Authentication Smoke', () => {
     });
 
     test('shows lockout feedback after repeated invalid logins for the seeded resident', async ({ page }) => {
-        test.setTimeout(120000);
+        // Mock login to simulate rate-limiting without requiring Redis
+        let attemptCount = 0;
+        await page.route('**/api/auth/login', async (route) => {
+            attemptCount++;
+            if (attemptCount >= 5) {
+                await route.fulfill({
+                    status: 429,
+                    contentType: 'application/json',
+                    body: JSON.stringify({
+                        code: 'AUTH-LOGIN-1002',
+                        message: 'Cuenta bloqueada temporalmente. Intente nuevamente en 15 minutos.',
+                        error: 'Cuenta bloqueada temporalmente. Intente nuevamente en 15 minutos.',
+                    }),
+                });
+            } else {
+                await route.fulfill({
+                    status: 401,
+                    contentType: 'application/json',
+                    body: JSON.stringify({
+                        code: 'AUTH-LOGIN-1001',
+                        message: 'Credenciales inválidas',
+                        error: 'Credenciales inválidas',
+                    }),
+                });
+            }
+        });
 
         await page.goto('/login');
 

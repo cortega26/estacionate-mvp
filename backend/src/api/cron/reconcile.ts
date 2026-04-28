@@ -3,8 +3,13 @@ import { db } from '../../lib/db.js'
 import { logger } from '../../lib/logger.js'
 import { SalesService } from '../../services/SalesService.js'
 import { startOfYesterday, endOfYesterday } from 'date-fns'
+import { verifyCronSecret } from '../../lib/cronAuth.js'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+    if (!verifyCronSecret(req as any)) {
+        return res.status(401).json({ error: 'Unauthorized' })
+    }
+
     if (req.method !== 'GET' && req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' })
     }

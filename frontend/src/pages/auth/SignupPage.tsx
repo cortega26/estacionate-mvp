@@ -4,11 +4,29 @@ import { useNavigate, Link } from 'react-router-dom';
 import { api } from '../../lib/api';
 import toast from 'react-hot-toast';
 
+type SignupFormValues = {
+    firstName?: string;
+    lastName?: string;
+    email: string;
+    password: string;
+    rut?: string;
+    buildingId?: string;
+    unitNumber?: string;
+};
+
+type SignupError = {
+    response?: {
+        data?: {
+            error?: string;
+        };
+    };
+};
+
 export const SignupPage = () => {
-    const { register, handleSubmit, formState: { errors } } = useForm();
+    const { register, handleSubmit } = useForm<SignupFormValues>();
     const navigate = useNavigate();
 
-    const onSubmit = async (data: any) => {
+    const onSubmit = async (data: SignupFormValues) => {
         try {
             // Hardcoded Building ID for MVP (Torres del Parque from seed)
             // In real app, user selects via UI or link.
@@ -25,8 +43,8 @@ export const SignupPage = () => {
                 toast.success('¡Cuenta creada correctamente!');
                 navigate('/login');
             }
-        } catch (error: any) {
-            toast.error(error.response?.data?.error || 'Falló el registro');
+        } catch (error: unknown) {
+            toast.error((error as SignupError).response?.data?.error || 'Falló el registro');
         }
     };
 

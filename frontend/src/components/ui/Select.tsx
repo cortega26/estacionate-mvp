@@ -6,7 +6,7 @@ import { clsx } from 'clsx';
 export interface SelectOption {
     id: string | number;
     label: string;
-    value: any;
+    value: string | number;
 }
 
 interface SelectProps {

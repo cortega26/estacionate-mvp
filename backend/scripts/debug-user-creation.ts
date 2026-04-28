@@ -1,6 +1,6 @@
- 
- 
-import { PrismaClient, Role } from '@prisma/client';
+
+
+import { PrismaClient } from '@prisma/client';
 import crypto from 'crypto';
 
 const prisma = new PrismaClient();

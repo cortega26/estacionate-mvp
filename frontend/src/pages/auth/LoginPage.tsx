@@ -5,13 +5,29 @@ import { api } from '../../lib/api';
 import { useAuthStore } from '../../store/authStore';
 import toast from 'react-hot-toast';
 
+type LoginFormValues = {
+    email: string;
+    password: string;
+};
+
+type LoginErrorShape = {
+    response?: {
+        data?: {
+            code?: string;
+            publicMessage?: string;
+            message?: string;
+            error?: string;
+        };
+    };
+};
+
 const LOGIN_ERROR_MESSAGES: Record<string, string> = {
     'AUTH-LOGIN-1002': 'Cuenta bloqueada temporalmente. Intente nuevamente en 15 minutos.',
     'AUTH-LOGIN-1003': 'Cuenta no verificada. Revise su correo o contacte a administración.',
     'AUTH-LOGIN-1004': 'Cuenta inactiva. Contacte a administración para reactivarla.'
 };
 
-const getLoginErrorMessage = (error: any) => {
+const getLoginErrorMessage = (error: LoginErrorShape) => {
     const errorCode = error?.response?.data?.code;
     const publicMessage = error?.response?.data?.publicMessage ?? error?.response?.data?.message;
     const legacyMessage = error?.response?.data?.error;
@@ -24,11 +40,11 @@ const getLoginErrorMessage = (error: any) => {
 };
 
 export const LoginPage = () => {
-    const { register, handleSubmit, formState: { errors } } = useForm();
+    const { register, handleSubmit, formState: { errors } } = useForm<LoginFormValues>();
     const navigate = useNavigate();
     const setAuth = useAuthStore((state) => state.setAuth);
 
-    const onSubmit = async (data: any) => {
+    const onSubmit = async (data: LoginFormValues) => {
         try {
             const res = await api.post('/auth/login', data);
             if (res.data.success) {
@@ -48,8 +64,8 @@ export const LoginPage = () => {
                     navigate('/search');
                 }
             }
-        } catch (error: any) {
-            toast.error(getLoginErrorMessage(error));
+        } catch (error: unknown) {
+            toast.error(getLoginErrorMessage(error as LoginErrorShape));
         }
     };
 

@@ -24,7 +24,11 @@ interface User {
 interface CreateRepInput {
     email?: string;
     password?: string;
-    [key: string]: any;
+    [key: string]: FormDataEntryValue | undefined;
+}
+
+interface MutationError {
+    message?: string;
 }
 
 interface UpdateBuildingInput {
@@ -68,7 +72,7 @@ const SalesRepsPage = () => {
             setIsCreateModalOpen(false);
             queryClient.invalidateQueries({ queryKey: ['admin-sales-reps'] });
         },
-        onError: (err: any) => toast.error(err.message)
+        onError: (err: MutationError) => toast.error(err.message || 'Failed to create sales rep')
     });
 
     // Update Building Mutation

@@ -96,10 +96,13 @@ Raise Estacionate from MVP quality to a SaaS-grade product by improving the end-
 
 ## Current Execution Order
 
-1. Keep the completed admin dashboard/analytics and sales-rep confirmation slices green.
-2. Execute the next highest-value phase from this spec: backend observability and error-handling consistency in admin and concierge reporting paths.
-3. Replace remaining `console.error` usage in the next observability targets: `backend/src/api/auth/forgot-password.ts`, `backend/src/api/auth/reset-password.ts`, and `backend/src/api/spots/search.ts`, with structured logger context.
-4. Add narrow backend proof for the observability behavior, then run focused backend validation before broadening.
+All prior quality slices (Slices 1–10d) are complete. The project has pivoted to Fase 0 Foundation: architectural decisions that must be locked before any feature development.
+
+1. Write P0 ADRs: Tenancy (0007), RBAC (0008), User/Resident identity (0009), Booking state machine (0010), Payment states (0011). These are the "floor" — no feature work starts until these decisions are recorded.
+2. Implement tenant isolation middleware (every backend endpoint derives building scope from authenticated membership, never from request params alone).
+3. Implement booking state machine with `checked_in`, `checked_out`, `overstay`, `no_show` states and `AccessEvent` for guard check-in/out.
+4. Enforce `CRON_SECRET` on all cron endpoints.
+5. Fix Playwright E2E flakiness (admin login redirect, missing browser installs in CI config).
 
 ## Current Phase Implementation Details
 
@@ -205,6 +208,38 @@ Raise Estacionate from MVP quality to a SaaS-grade product by improving the end-
 2. Preserve existing response contracts for validation failures and generic 500 paths.
 3. Add narrow tests that force controlled failures and assert logger context plus unchanged response status codes.
 
+### Slice F0.1: P0 ADRs — Tenancy, RBAC, User/Resident, Booking States, Payment States
+
+1. Write five ADRs in `documentation/adr/`: 0007 (Tenancy), 0008 (RBAC), 0009 (User vs Resident), 0010 (Booking state machine), 0011 (Payment states).
+2. Each ADR must define: the decision, the alternatives rejected, and the concrete acceptance criteria that allow implementation to start.
+3. No schema migration or code change is part of this slice — decisions only.
+
+### Slice F0.2: Tenant Isolation Middleware
+
+1. Add a `requireBuildingScope(req)` helper in `backend/src/middleware/` that resolves the caller's building scope from their JWT-attached role and membership, returning a 403 if the requested resource is outside that scope.
+2. Apply it to every admin, concierge, and booking endpoint that currently filters by `buildingId` from request parameters.
+3. Prove with negative tests: a user authenticated for Building A must receive 403 when requesting Building B resources across at least three distinct endpoints.
+
+### Slice F0.3: Booking State Machine + AccessEvent Check-in/Out
+
+1. Extend `BookingStatus` enum with `checked_in`, `checked_out`, `overstay`, `no_show` states.
+2. Define valid transitions as a map in `BookingService` — no direct `status` assignment outside the service's `transition(bookingId, event)` method.
+3. Add `AccessEvent` model to Prisma: `id`, `bookingId`, `actorId` (concierge user), `type` (check_in | check_out | denied), `plateObserved`, `timestamp`.
+4. Wire concierge verify endpoint to create an `AccessEvent` and transition the booking to `checked_in` on first successful verify; to `checked_out` on a second verify of the same booking.
+5. Prove with backend state machine tests that invalid transitions are rejected and that AccessEvent rows are created for each transition.
+
+### Slice F0.4: CRON_SECRET Enforcement
+
+1. All routes under `backend/src/api/cron/` must reject requests without a valid `Authorization: Bearer <CRON_SECRET>` header with 401.
+2. The secret must come from env; the server must refuse to start without it (fail-fast startup validation).
+3. Prove with a narrow backend test that the reconcile and any other cron endpoint returns 401 without the correct secret.
+
+### Slice F0.5: Playwright E2E Stabilization
+
+1. Fix admin login redirect failure so `tests/admin-dashboard.spec.ts` and the auth smoke suite pass reliably on Chromium.
+2. Update `playwright.ts` (or root Playwright config) so CI does not attempt Firefox/WebKit unless those browsers are explicitly installed.
+3. Run `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/admin-dashboard.spec.ts` and confirm zero failures before declaring this slice done.
+
 ## Execution Rules
 
 1. Consult this spec before each meaningful implementation change.
@@ -248,6 +283,11 @@ Raise Estacionate from MVP quality to a SaaS-grade product by improving the end-
 | Backend observability in touched path | Narrow backend checks | `cd backend && npm run build`, targeted backend test if added | Touched backend path compiles and preserves behavior while emitting clearer operational context |
 | Product changes in touched frontend slice | Narrow frontend checks | `cd frontend && npm run lint`, `cd frontend && npm test`, targeted Playwright spec | No regressions in touched flow |
 | Product changes in touched backend slice | Narrow backend checks | `cd backend && npm run lint`, `cd backend && npm run build`, `cd backend && npm test` | No regressions in touched backend slice |
+| P0 ADRs (Tenancy, RBAC, User/Resident, Booking states, Payment states) | Document review | Inspect `documentation/adr/0007` through `0011` | Five ADRs exist, each with a decision, rejected alternatives, and acceptance criteria |
+| Tenant isolation middleware | Backend negative tests | `cd backend && npm test -- tenant-isolation.test.ts` | Building-A user receives 403 on Building-B resources for bookings, admin stats, and concierge endpoints |
+| Booking state machine + AccessEvent | Backend state tests | `cd backend && npm test -- booking-state-machine.test.ts` | Invalid transitions rejected; AccessEvent rows created on check-in and check-out |
+| CRON_SECRET enforcement | Narrow backend test | `cd backend && npm test -- cron-auth.test.ts` | Reconcile and other cron endpoints return 401 without correct secret |
+| Playwright E2E stabilization | Browser test | `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/admin-dashboard.spec.ts` | Admin dashboard test passes on Chromium with zero failures |
 | Cross-cutting handoff | Broad validation | `npm run check:all` | Repo checks pass or blockers are explicitly documented |
 
 ## Slice Proof Plan
@@ -360,6 +400,35 @@ Raise Estacionate from MVP quality to a SaaS-grade product by improving the end-
 2. Add `backend/tests/spots-search.observability.test.ts` to force controlled search-handler failures and assert structured logger context with unchanged 500 behavior.
 3. Run `cd backend && npm test -- auth-recovery.observability.test.ts spots-search.observability.test.ts` immediately after the first substantive observability edits.
 4. Run `cd backend && npm run build` once focused observability checks are green.
+
+### Fase 0 — P0 ADRs
+
+1. Write `documentation/adr/0007` through `0011` covering Tenancy, RBAC, User/Resident, Booking state machine, and Payment states.
+2. Each ADR must include: context, decision, consequences, and acceptance criteria that gate the corresponding implementation slice.
+3. No implementation starts until the ADR for that slice is committed.
+
+### Fase 0 — Tenant Isolation Middleware
+
+1. Add `backend/tests/tenant-isolation.test.ts` with negative tests for bookings, admin/stats, and concierge endpoints using two distinct building identities.
+2. Run `cd backend && npm test -- tenant-isolation.test.ts` after each meaningful middleware edit.
+3. Run `cd backend && npm run build` once the negative tests are green to confirm no type regressions.
+
+### Fase 0 — Booking State Machine + AccessEvent
+
+1. Add `backend/tests/booking-state-machine.test.ts` covering: valid transitions, invalid transitions (must return error), and AccessEvent creation on check-in/check-out.
+2. Run `cd backend && npm test -- booking-state-machine.test.ts` after each BookingService or schema change.
+3. Run `cd backend && npm run build` once state machine tests are green.
+
+### Fase 0 — CRON_SECRET Enforcement
+
+1. Add `backend/tests/cron-auth.test.ts` that posts to `/api/cron/reconcile` without a secret (expect 401) and with the correct secret (expect 200 or the normal reconcile response).
+2. Run `cd backend && npm test -- cron-auth.test.ts` immediately after adding the auth guard.
+
+### Fase 0 — Playwright E2E Stabilization
+
+1. Diagnose the admin login redirect failure by running `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/admin-dashboard.spec.ts --headed` and inspecting the auth flow.
+2. Fix the root cause (likely seed mismatch or route guard timing) rather than adding retries.
+3. Re-run the targeted spec until it passes consistently, then run `npm run check:all`.
 
 ## Initial Risks
 

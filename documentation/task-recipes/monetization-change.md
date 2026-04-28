@@ -18,15 +18,15 @@
 
 Identifica en cuál categoría cae el cambio:
 
-| Categoría | Ejemplo | Gate adicional |
-|---|---|---|
-| A — Demo/simulador | Extender tests, mejorar mock de MercadoPago, refactorizar PaymentService internamente | Solo Gate 0 |
-| B — Feature Fase 1 | Mejorar dashboard admin, agregar notificaciones, reportes de ocupación | Solo Gate 0 |
-| C — Feature Fase 2 | Cualquier cobro de residente integrado a Gastos Comunes | Gates 0 + 2 |
-| D — Feature Fase 3 | PSP real, Split Payment, webhooks contra comunidades reales | Gates 0 + 2 + 3 |
-| E — Cambio de arquitectura de datos | Nuevo modelo billing/pago en Prisma | Gates 0 + arquitectura |
+| Categoría                           | Ejemplo                                                                               | Gate adicional         |
+| ----------------------------------- | ------------------------------------------------------------------------------------- | ---------------------- |
+| A — Demo/simulador                  | Extender tests, mejorar mock de MercadoPago, refactorizar PaymentService internamente | Solo Gate 0            |
+| B — Feature Fase 1                  | Mejorar dashboard admin, agregar notificaciones, reportes de ocupación                | Solo Gate 0            |
+| C — Feature Fase 2                  | Cualquier cobro de residente integrado a Gastos Comunes                               | Gates 0 + 2            |
+| D — Feature Fase 3                  | PSP real, Split Payment, webhooks contra comunidades reales                           | Gates 0 + 2 + 3        |
+| E — Cambio de arquitectura de datos | Nuevo modelo billing/pago en Prisma                                                   | Gates 0 + arquitectura |
 
-- [ ] Categoría seleccionada: ______
+- [ ] Categoría seleccionada: **\_\_**
 
 ---
 

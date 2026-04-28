@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { redis } from '../lib/redis.js';
 import { logger } from '../lib/logger.js';
-import { AppError, ErrorCode } from '../lib/errors.js';
 
 interface RateLimitConfig {
     windowMs: number;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-// import axios from 'axios'; 
+// import axios from 'axios';
 import { api } from '../../lib/api';
 import { toast } from 'react-hot-toast';
 import { Lock, ArrowLeft } from 'lucide-react';
@@ -10,6 +10,14 @@ type FormData = {
     token: string;
     password: string;
     confirmPassword: string;
+};
+
+type ResetPasswordError = {
+    response?: {
+        data?: {
+            error?: string;
+        };
+    };
 };
 
 export const ResetPasswordPage = () => {
@@ -31,9 +39,9 @@ export const ResetPasswordPage = () => {
             });
             toast.success('¡Contraseña actualizada! Por favor inicia sesión.');
             navigate('/login');
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error(error);
-            const msg = error.response?.data?.error || 'Error al restablecer contraseña';
+            const msg = (error as ResetPasswordError).response?.data?.error || 'Error al restablecer contraseña';
             toast.error(msg);
         } finally {
             setLoading(false);
@@ -50,7 +58,7 @@ export const ResetPasswordPage = () => {
 
                 <form onSubmit={handleSubmit(onSubmit)} className="p-8 space-y-6">
 
-                    {/* Token Field (Visible if not in URL, or just always visible for manual entry?) 
+                    {/* Token Field (Visible if not in URL, or just always visible for manual entry?)
                     Let's make it visible but pre-filled so they can type the code from WhatsApp manually if needed.
                 */}
                     <div>

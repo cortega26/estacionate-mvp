@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, beforeAll, afterAll } from 'vitest';
 import { db } from '../../src/lib/db.js';
 import { DurationType } from '@prisma/client';
 import { startOfYesterday, endOfYesterday, subDays } from 'date-fns';
@@ -18,10 +18,17 @@ const mockRes = () => {
     return res;
 };
 
+const TEST_SECRET = 'test-cron-secret'
+
 // Mock Request
-const mockReq = (method = 'POST') => ({ method } as any);
+const mockReq = (method = 'POST') => ({
+    method,
+    headers: { authorization: `Bearer ${TEST_SECRET}` }
+} as any);
 
 describe('Reconciliation Cron', () => {
+    beforeAll(() => { process.env.CRON_SECRET = TEST_SECRET })
+    afterAll(() => { delete process.env.CRON_SECRET })
     let buildingId: string;
     let spotId: string;
     let blockId: string;

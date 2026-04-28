@@ -12,14 +12,14 @@
 
 Este documento establece restricciones legales y comerciales **no negociables**. Los demás documentos del repositorio lo referencian de la siguiente manera:
 
-| Documento | Rol de esta referencia |
-|---|---|
-| `AGENTS.md` | Sección "Read Next" — primera lectura para agentes antes de tocar pagos |
-| `documentation/AGENT_POLICY.md` | Nivel 2 del Instruction Priority — autoridad sobre TASKS.md y LESSONS.md |
-| `documentation/OWNERSHIP.md` | Cross-Cutting Contract — trigger obligatorio en rutas de pago/precio |
-| `documentation/adr/0006-legal-commercial-monetization-architecture.md` | ADR fundacional que cita este documento como justificación |
-| `documentation/task-recipes/monetization-change.md` | Checklist de gate que todo agente debe ejecutar antes de cambios de monetización |
-| `documentation/TECH_SPEC.md` | Sección de pagos debe referenciar las restricciones aquí definidas |
+| Documento                                                              | Rol de esta referencia                                                           |
+| ---------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| `AGENTS.md`                                                            | Sección "Read Next" — primera lectura para agentes antes de tocar pagos          |
+| `documentation/AGENT_POLICY.md`                                        | Nivel 2 del Instruction Priority — autoridad sobre TASKS.md y LESSONS.md         |
+| `documentation/OWNERSHIP.md`                                           | Cross-Cutting Contract — trigger obligatorio en rutas de pago/precio             |
+| `documentation/adr/0006-legal-commercial-monetization-architecture.md` | ADR fundacional que cita este documento como justificación                       |
+| `documentation/task-recipes/monetization-change.md`                    | Checklist de gate que todo agente debe ejecutar antes de cambios de monetización |
+| `documentation/TECH_SPEC.md`                                           | Sección de pagos debe referenciar las restricciones aquí definidas               |
 
 Si cualquiera de estos documentos contradice este guardrail, **este guardrail prevalece**. Actualiza el documento desactualizado en el mismo cambio.
 
@@ -92,6 +92,7 @@ Estas prohibiciones no tienen excepciones. Ningún requerimiento de negocio, dec
 ### 3.1 — Fase 1: SaaS Puro B2B (Estado Actual — HABILITADO)
 
 **Qué incluye:**
+
 - Sistema digital de reservas de estacionamiento de visita para residentes.
 - Panel de administración para administradores de comunidad.
 - Validación digital por guardias (escaneo QR de reserva).
@@ -100,6 +101,7 @@ Estas prohibiciones no tienen excepciones. Ningún requerimiento de negocio, dec
 - **Cobro de Estacionate a la comunidad:** suscripción SaaS mensual/anual por contrato B2B (no involucra el estacionamiento físico, es servicio de software).
 
 **Qué NO incluye:**
+
 - Ningún flujo de pago de residente a comunidad por uso de estacionamiento.
 - Ningún procesamiento de pago de visitante externo.
 
@@ -110,6 +112,7 @@ Estas prohibiciones no tienen excepciones. Ningún requerimiento de negocio, dec
 ### 3.2 — Fase 2: Cobro Diferido a Gastos Comunes (BLOQUEADO)
 
 **Qué incluye:**
+
 - El sistema registra el uso de estacionamiento por residente.
 - Al cierre de período, genera un cargo en los Gastos Comunes del residente anfitrión como "Aporte al Fondo de Reserva" por uso de área común.
 - El cobro es **residente → comunidad**, nunca visitante → Estacionate.
@@ -120,10 +123,10 @@ Estas prohibiciones no tienen excepciones. Ningún requerimiento de negocio, dec
 
 **Gate condition — AMBOS requeridos antes de habilitar Fase 2:**
 
-| # | Condición | Evidencia requerida |
-|---|---|---|
-| G2.1 | Memo legal vinculante de estudio jurídico chileno especializado en copropiedad/derecho tributario que confirme viabilidad de la estructura "Aporte Fondo de Reserva" para este caso de uso | Documento firmado, archivado en repositorio o sistema de documentos legal |
-| G2.2 | Al menos una comunidad piloto con acuerdo de asamblea extraordinaria (quórum 50%+1 de derechos totales) aprobando la "Obligación Económica por uso de estacionamiento de visita" como aporte al Fondo de Reserva | Acta de asamblea notariada o con firmas verificables |
+| #    | Condición                                                                                                                                                                                                        | Evidencia requerida                                                       |
+| ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| G2.1 | Memo legal vinculante de estudio jurídico chileno especializado en copropiedad/derecho tributario que confirme viabilidad de la estructura "Aporte Fondo de Reserva" para este caso de uso                       | Documento firmado, archivado en repositorio o sistema de documentos legal |
+| G2.2 | Al menos una comunidad piloto con acuerdo de asamblea extraordinaria (quórum 50%+1 de derechos totales) aprobando la "Obligación Económica por uso de estacionamiento de visita" como aporte al Fondo de Reserva | Acta de asamblea notariada o con firmas verificables                      |
 
 **Quórum requerido para activar en cada comunidad:** Asamblea extraordinaria con mayoría absoluta (50%+1 de la totalidad de los derechos del condominio, Art. 65 Ley 21.442).
 
@@ -132,18 +135,19 @@ Estas prohibiciones no tienen excepciones. Ningún requerimiento de negocio, dec
 ### 3.3 — Fase 3: Pagos Integrados con Split Payment PSP (BLOQUEADO)
 
 **Qué incluye:**
+
 - PSP integrado (ej. Transbank, Khipu, Fintoc) liquida directamente a cuenta RUT de la comunidad.
 - Comisión de Estacionate fluye en transacción separada al account de Estacionate.
 - Flujo en tiempo real: residente paga → PSP → Split: [monto neto → comunidad] + [fee → Estacionate].
 
 **Gate condition — TODOS requeridos antes de habilitar Fase 3:**
 
-| # | Condición |
-|---|---|
-| G3.1 | Gate de Fase 2 completamente cumplido (G2.1 + G2.2 documentados) |
-| G3.2 | Cero impugnaciones judiciales exitosas durante período mínimo de 6 meses en Fase 2 |
+| #    | Condición                                                                                                            |
+| ---- | -------------------------------------------------------------------------------------------------------------------- |
+| G3.1 | Gate de Fase 2 completamente cumplido (G2.1 + G2.2 documentados)                                                     |
+| G3.2 | Cero impugnaciones judiciales exitosas durante período mínimo de 6 meses en Fase 2                                   |
 | G3.3 | PSP seleccionado tiene arquitectura Split Payment certificada (fondos de comunidades nunca tocan ledger Estacionate) |
-| G3.4 | Evaluación legal sobre necesidad de registro ante CMF bajo NCG 502 completada y documentada |
+| G3.4 | Evaluación legal sobre necesidad de registro ante CMF bajo NCG 502 completada y documentada                          |
 
 ---
 
@@ -163,6 +167,7 @@ Residente (anfitrión) ──paga──▶ PSP
 ```
 
 **Invariantes:**
+
 - El PSP, no Estacionate, ejecuta el split. Estacionate nunca recibe el monto total y reenvía.
 - `Payout.communityAccountId` apunta a la cuenta RUT registrada de la comunidad.
 - `Payment.payerId` siempre es un `userId` con `role = RESIDENT`. Nunca nulo, nunca visitante.
@@ -171,6 +176,7 @@ Residente (anfitrión) ──paga──▶ PSP
 ### 4.2 — Campos Prohibidos en Modelos Prisma
 
 Nunca agregar a los modelos `Payment`, `Payout`, o cualquier modelo de facturación:
+
 - `visitorId` como pagador.
 - `heldBalance` o similar (implicaría custodia).
 - `commissionFromCommunityFunds` (Estacionate no puede tomar comisión de fondos comunitarios directamente).
@@ -184,13 +190,13 @@ Nunca agregar a los modelos `Payment`, `Payout`, o cualquier modelo de facturaci
 
 ## §5. Matriz de Quórum por Tipo de Decisión
 
-| Decisión | Tipo de asamblea | Quórum | Restricción legal |
-|---|---|---|---|
-| Contratar SaaS Estacionate (Fase 1) | Ordinaria | Mayoría de presentes | Ninguna |
-| Aprobar "Obligación Económica" por uso de estacionamiento (Fase 2) | Extraordinaria | 50%+1 de **totalidad** de derechos | Art. 65 Ley 21.442 |
-| Modificar Reglamento de Copropiedad (reglas de estacionamiento) | Extraordinaria | 50%+1 de **totalidad** de derechos | Art. 65 Ley 21.442 |
-| Arrendar bien común (ej. sala eventos) | Extraordinaria reforzada | 66% de **totalidad** + escritura pública | Art. 67 Ley 21.442 |
-| "Arrendar" estacionamiento de visita | **PROHIBIDO** | N/A | Art. 60 Ley 21.442 — inalienable |
+| Decisión                                                           | Tipo de asamblea         | Quórum                                   | Restricción legal                |
+| ------------------------------------------------------------------ | ------------------------ | ---------------------------------------- | -------------------------------- |
+| Contratar SaaS Estacionate (Fase 1)                                | Ordinaria                | Mayoría de presentes                     | Ninguna                          |
+| Aprobar "Obligación Económica" por uso de estacionamiento (Fase 2) | Extraordinaria           | 50%+1 de **totalidad** de derechos       | Art. 65 Ley 21.442               |
+| Modificar Reglamento de Copropiedad (reglas de estacionamiento)    | Extraordinaria           | 50%+1 de **totalidad** de derechos       | Art. 65 Ley 21.442               |
+| Arrendar bien común (ej. sala eventos)                             | Extraordinaria reforzada | 66% de **totalidad** + escritura pública | Art. 67 Ley 21.442               |
+| "Arrendar" estacionamiento de visita                               | **PROHIBIDO**            | N/A                                      | Art. 60 Ley 21.442 — inalienable |
 
 **Consecuencia para el producto:** El frontend nunca debe presentar a administradores opciones que impliquen arrendamiento de estacionamientos de visita. La UI debe usar vocabulario de "reserva" y "tarifa de uso", no "arriendo".
 
@@ -201,6 +207,7 @@ Nunca agregar a los modelos `Payment`, `Payout`, o cualquier modelo de facturaci
 ### 6.1 — Patentes como Datos Personales
 
 Las patentes vehiculares son datos personales bajo Ley N° 21.719. Requieren:
+
 - Base legal para tratamiento (consentimiento o interés legítimo documentado).
 - Período de retención definido y cumplido.
 - Mecanismo de eliminación a solicitud del residente.
@@ -208,6 +215,7 @@ Las patentes vehiculares son datos personales bajo Ley N° 21.719. Requieren:
 ### 6.2 — DPA Obligatorio
 
 Antes de onboarding de cualquier comunidad, firmar un Acuerdo de Tratamiento de Datos que establezca:
+
 - Comunidad = Responsable del Tratamiento.
 - Estacionate = Encargado del Tratamiento.
 - Finalidades de tratamiento (gestión de reservas, control de acceso).
@@ -230,14 +238,14 @@ Ley N° 21.719 entra en vigor plena en **diciembre 2026**. Toda comunidad onboar
 
 ## §7. Marco Regulatorio Aplicable
 
-| Ley / Norma | Materia | Impacto en Estacionate |
-|---|---|---|
-| Ley N° 21.442 (Copropiedad Inmobiliaria) | Naturaleza jurídica del estacionamiento de visita; quórum de asambleas | Define qué puede y no puede cobrarse; qué quórum se necesita |
-| SII Oficios N° 1.986/2019, N° 3.311/2016, N° 47/2012 | Tributación de contribuciones a Fondo de Reserva | Estructura "Aporte Fondo de Reserva" puede ser no-gravada — requiere confirmación por memo legal |
-| Ley N° 20.967 (Estacionamientos) | Responsabilidad civil por vehículos en estacionamientos pagados | Cobro a terceros visitantes activa responsabilidad estricta — prohibición absoluta §2.1 |
-| Ley N° 21.719 (Protección de Datos) | Datos personales, DSAR, retención | Patentes son datos personales; DPA obligatorio |
-| Ley N° 21.521 + NCG 502 CMF (Fintec) | Custodia y agregación de fondos | Sin registro PSP, no se pueden custodiar fondos de comunidades |
-| Ley N° 19.496 (Consumidores) | Protección al consumidor | Cobrar a visitantes haría a Estacionate "proveedor" bajo esta ley, con obligaciones adicionales |
+| Ley / Norma                                          | Materia                                                                | Impacto en Estacionate                                                                           |
+| ---------------------------------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| Ley N° 21.442 (Copropiedad Inmobiliaria)             | Naturaleza jurídica del estacionamiento de visita; quórum de asambleas | Define qué puede y no puede cobrarse; qué quórum se necesita                                     |
+| SII Oficios N° 1.986/2019, N° 3.311/2016, N° 47/2012 | Tributación de contribuciones a Fondo de Reserva                       | Estructura "Aporte Fondo de Reserva" puede ser no-gravada — requiere confirmación por memo legal |
+| Ley N° 20.967 (Estacionamientos)                     | Responsabilidad civil por vehículos en estacionamientos pagados        | Cobro a terceros visitantes activa responsabilidad estricta — prohibición absoluta §2.1          |
+| Ley N° 21.719 (Protección de Datos)                  | Datos personales, DSAR, retención                                      | Patentes son datos personales; DPA obligatorio                                                   |
+| Ley N° 21.521 + NCG 502 CMF (Fintec)                 | Custodia y agregación de fondos                                        | Sin registro PSP, no se pueden custodiar fondos de comunidades                                   |
+| Ley N° 19.496 (Consumidores)                         | Protección al consumidor                                               | Cobrar a visitantes haría a Estacionate "proveedor" bajo esta ley, con obligaciones adicionales  |
 
 ---
 
@@ -246,24 +254,30 @@ Ley N° 21.719 entra en vigor plena en **diciembre 2026**. Toda comunidad onboar
 Todo agente o colaborador que toque cualquiera de los siguientes archivos **debe leer este documento completo antes de hacer cambios** y ejecutar el checklist de `documentation/task-recipes/monetization-change.md`:
 
 **Modelos de datos:**
+
 - `backend/prisma/schema.prisma` — específicamente modelos `Payment`, `Payout`, `PricingRule`, `SalesRepCommission`, o cualquier modelo nuevo de billing/cobro
 
 **Servicios y adapters:**
+
 - `backend/src/services/PaymentService.ts`
 - `backend/src/services/payment/**`
 
 **API de pagos:**
+
 - `backend/src/api/payments/**`
 - `backend/src/api/cron/reconcile.ts`
 
 **Frontend de cobros/precios:**
+
 - Cualquier componente o página que muestre precios, montos de cobro, o flujos de pago a residentes
 - Cualquier texto o copy de UI relacionado con "arriendo", "tarifa", "cobro", o vocabulario comercial de estacionamiento
 
 **Contratos y configuración comercial:**
+
 - Cualquier archivo de configuración de precios, planes SaaS, o comisiones
 
 **Cualquier feature nueva** que introduzca:
+
 - Procesamiento de pagos de cualquier tipo
 - Integración con PSP (Transbank, MercadoPago, Khipu, Fintoc, u otro)
 - Cobros periódicos o facturación recurrente
@@ -286,6 +300,6 @@ Este documento solo puede actualizarse cuando **todos** los siguientes pasos est
 
 ## §10. Historial de Versiones
 
-| Versión | Fecha | Cambio |
-|---|---|---|
-| 1.0 | 2026-04-27 | Documento inicial — basado en análisis jurídico de Ley 21.442, doctrina SII, Ley 20.967, Ley 21.521, NCG 502 CMF, y Ley 21.719 |
+| Versión | Fecha      | Cambio                                                                                                                         |
+| ------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| 1.0     | 2026-04-27 | Documento inicial — basado en análisis jurídico de Ley 21.442, doctrina SII, Ley 20.967, Ley 21.521, NCG 502 CMF, y Ley 21.719 |

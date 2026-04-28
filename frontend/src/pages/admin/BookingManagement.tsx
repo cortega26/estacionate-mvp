@@ -3,9 +3,34 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import { api } from '../../lib/api';
 import toast from 'react-hot-toast';
 
+interface BookingRecord {
+    id: string;
+    startDatetime: string;
+    buildingName: string;
+    spotNumber: string;
+    visitorName: string;
+    vehiclePlate: string;
+    status: string;
+    paymentStatus: string;
+    amount: number;
+    specialInstructions?: string | null;
+}
+
+interface BookingCancellationResponse {
+    refundAmount: number;
+}
+
+interface ApiErrorPayload {
+    response?: {
+        data?: {
+            error?: string;
+        };
+    };
+}
+
 export const BookingManagement = () => {
     const [filter, setFilter] = useState('all');
-    const [selectedBooking, setSelectedBooking] = useState<any>(null); // For Confirmation Modal
+    const [selectedBooking, setSelectedBooking] = useState<BookingRecord | null>(null);
 
     const { data: bookingsData, isLoading, refetch } = useQuery({
         queryKey: ['admin-bookings', filter],
@@ -25,17 +50,17 @@ export const BookingManagement = () => {
             const { data } = await api.post(`/bookings/cancel`, { bookingId });
             return data;
         },
-        onSuccess: (data) => {
+        onSuccess: (data: BookingCancellationResponse) => {
             toast.success(`Reserva cancelada. Reembolso: $${data.refundAmount}`);
             setSelectedBooking(null);
             refetch();
         },
-        onError: (err: any) => {
+        onError: (err: ApiErrorPayload) => {
             toast.error(err.response?.data?.error || 'Error al cancelar');
         }
     });
 
-    const handleCancelClick = (booking: any) => {
+    const handleCancelClick = (booking: BookingRecord) => {
         setSelectedBooking(booking);
     };
 
@@ -76,14 +101,14 @@ export const BookingManagement = () => {
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                         {bookingsData
-                            ?.filter((booking: any) => {
+                            ?.filter((booking: BookingRecord) => {
                                 const isExpired = booking.specialInstructions?.includes('timeout') || booking.specialInstructions?.includes('Manual Cleanup');
                                 if (filter === 'expired') return isExpired; // Only show expired
                                 if (filter === 'all') return !isExpired; // Hide expired from All
                                 if (filter === 'cancelled,no_show') return !isExpired; // Hide expired from Cancelled
                                 return true; // Show for other filters (confirmed, pending, etc)
                             })
-                            .map((booking: any) => (
+                            .map((booking: BookingRecord) => (
                                 <tr key={booking.id}>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {new Date(booking.startDatetime).toLocaleString()}

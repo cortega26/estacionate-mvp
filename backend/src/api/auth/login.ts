@@ -2,7 +2,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { z } from 'zod'
 import { db } from '../../lib/db.js'
-import { Prisma } from '@prisma/client'
 import { comparePassword, signToken, DUMMY_HASH } from '../../services/auth.js'
 import { serialize } from 'cookie'
 import cors from '../../lib/cors.js'
@@ -71,7 +70,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     try {
         const raw = await redis.get(lockoutKey);
         attempts = raw ? parseInt(raw) : 0;
-    } catch (e) {
+    } catch {
         logger.warn('Redis unreachable for rate limiting');
     }
 
@@ -101,8 +100,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         try {
             await redis.incr(lockoutKey);
             await redis.expire(lockoutKey, LOCKOUT_MINUTES * 60);
-        } catch (e) {
-            logger.warn(e, 'Redis unreachable for increment');
+        } catch (error) {
+            logger.warn(error, 'Redis unreachable for increment');
         }
 
         throw AppError.unauthorized(ErrorCode.AUTH_INVALID_CREDENTIALS, 'Credenciales inválidas');

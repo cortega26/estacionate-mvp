@@ -2,7 +2,6 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { db } from '../../lib/db.js'
 import cors from '../../lib/cors.js'
 import { verifyToken, getTokenFromRequest } from '../../services/auth.js'
-import { z } from 'zod'
 import { Prisma } from '@prisma/client'
 import { logger } from '../../lib/logger.js'
 
@@ -45,10 +44,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         // Building Admin Restriction
         if (requester.role === 'building_admin') {
             if (!requester.buildingId) {
-                // Critical Security Fix: Prevent unassigned admins from seeing all bookings
-                return res.status(403).json({ error: 'Building Admin has no assigned building' });
+                return res.status(403).json({ error: 'Building Admin has no assigned building' })
             }
-            // Enforce building filter
+            if (buildingId && buildingId !== requester.buildingId) {
+                logger.warn({
+                    actorId: requester.userId,
+                    role: requester.role,
+                    tokenBuildingId: requester.buildingId,
+                    requestedBuildingId: buildingId,
+                }, '[AdminBookings] Cross-building access attempt blocked')
+                return res.status(403).json({ error: 'Access denied to this building' })
+            }
             whereClause.availabilityBlock = {
                 spot: { buildingId: requester.buildingId }
             }

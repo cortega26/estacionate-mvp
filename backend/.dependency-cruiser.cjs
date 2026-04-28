@@ -16,7 +16,13 @@ module.exports = {
             severity: 'warn',
             from: {
                 orphan: true,
-                pathNot: ['^tests/'] // Ignore tests being orphans
+                pathNot: [
+                    '^tests/',
+                    '^scripts/',
+                    '^vitest\\.config\\.ts$',
+                    '^eslint\\.config\\.js$',
+                    '^\\.dependency-cruiser\\.cjs$'
+                ]
             },
             to: {}
         },

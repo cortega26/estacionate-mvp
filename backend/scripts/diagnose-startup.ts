@@ -1,5 +1,4 @@
 import { app } from '../app.js';
-import { logger } from '../src/lib/logger.js';
 
 console.log('--- Starting Diagnostic Server ---');
 try {

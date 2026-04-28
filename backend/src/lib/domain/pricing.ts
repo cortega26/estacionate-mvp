@@ -1,8 +1,6 @@
-import { APP_CONSTANTS } from '../constants.js'
-
 /**
  * Calculates the total price and commission for a booking using Integer Math.
- * 
+ *
  * @param basePriceClp - The base price of the parking spot in CLP (Integer)
  * @param commissionRate - The commission rate as a decimal (e.g., 0.10 for 10%)
  * @param multiplier - Yield management multiplier (default: 1.0)

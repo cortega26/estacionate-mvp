@@ -11,6 +11,29 @@ import { Select, type SelectOption } from '../../components/ui/Select';
 import { MagnifyingGlassIcon, MapIcon, ListBulletIcon } from '@heroicons/react/24/outline';
 import { ParkingMap } from '../../features/map/components/ParkingMap';
 
+type CreateBookingPayload = {
+    blockId: string;
+    vehiclePlate: string;
+    visitorName: string;
+    visitorPhone?: string;
+};
+
+type CreateBookingResponse = {
+    payment?: {
+        init_point?: string;
+        sandbox_init_point?: string;
+    };
+};
+
+type SearchPageError = {
+    response?: {
+        data?: {
+            error?: string;
+            publicMessage?: string;
+        };
+    };
+};
+
 export const SearchPage = () => {
     const user = useAuthStore((state) => state.user);
     const normalizedUserRole = String(user?.role || '').toLowerCase();
@@ -21,7 +44,7 @@ export const SearchPage = () => {
     // Select component uses object {id, label, value}
     const [selectedBuilding, setSelectedBuilding] = useState<SelectOption | null>(null);
     const [selectedBlock, setSelectedBlock] = useState<Spot | null>(null);
-    const [restoredBuildingId, setRestoredBuildingId] = useState<string | null>(() => sessionStorage.getItem('search_buildingId'));
+    const [restoredBuildingId] = useState<string | null>(() => sessionStorage.getItem('search_buildingId'));
 
     // Persist changes
     React.useEffect(() => {
@@ -93,10 +116,10 @@ export const SearchPage = () => {
     // Unified Booking+Payment Mutation
     // Now the backend creates booking AND returns payment init_point in one go.
     const bookMutation = useMutation({
-        mutationFn: async (data: { blockId: string, vehiclePlate: string, visitorName: string, visitorPhone?: string }) => {
+        mutationFn: async (data: CreateBookingPayload) => {
             return api.post('/bookings/create', data);
         },
-        onSuccess: (res: any) => {
+        onSuccess: (res: { data: CreateBookingResponse }) => {
             toast.success('¡Reserva creada! Redirigiendo a pago...');
             // Invalidate spots to update UI (mark as reserved)
             queryClient.invalidateQueries({ queryKey: ['spots'] });
@@ -110,7 +133,7 @@ export const SearchPage = () => {
                 toast.error('Error: No se recibió link de pago');
             }
         },
-        onError: (err: any) => {
+        onError: (err: SearchPageError) => {
             // Backend now cleans up Zombie bookings, so we just show the error.
             toast.error(err.response?.data?.error || err.response?.data?.publicMessage || 'Error al reservar');
         }

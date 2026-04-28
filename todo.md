@@ -1,6 +1,28 @@
 # Autopilot Todo
 
-## Now
+## Fase 0 Foundation — Now
+
+- [ ] Write ADR 0007: Tenancy model (Building as operational tenant; ManagementCompany as multi-building grouper).
+- [ ] Write ADR 0008: RBAC (roles, per-entity permissions, membership-scoped enforcement).
+- [ ] Write ADR 0009: User vs Resident identity contract (who can authenticate and with what scope).
+- [ ] Write ADR 0010: Booking state machine (pending → confirmed → checked_in → checked_out | overstay | no_show).
+- [ ] Write ADR 0011: Payment states (PaymentIntent, Payment, Refund, Payout enums + transitions).
+- [ ] Add `backend/tests/tenant-isolation.test.ts` — negative tests for Building-A user accessing Building-B resources.
+- [ ] Add `backend/src/middleware/requireBuildingScope.ts` and apply to admin, concierge, and booking routes.
+- [ ] Prove tenant isolation with `cd backend && npm test -- tenant-isolation.test.ts`.
+- [ ] Extend `BookingStatus` enum with `checked_in`, `checked_out`, `overstay`, `no_show`.
+- [ ] Add `AccessEvent` model to Prisma schema and create migration.
+- [ ] Implement `BookingService.transition(bookingId, event)` — only valid state transitions allowed.
+- [ ] Wire concierge verify endpoint to create `AccessEvent` and call `transition()`.
+- [ ] Add `backend/tests/booking-state-machine.test.ts` and prove with `cd backend && npm test -- booking-state-machine.test.ts`.
+- [ ] Add `CRON_SECRET` guard to all routes in `backend/src/api/cron/` — reject 401 without it.
+- [ ] Add fail-fast startup validation that refuses to start without `CRON_SECRET` in env.
+- [ ] Add `backend/tests/cron-auth.test.ts` and prove with `cd backend && npm test -- cron-auth.test.ts`.
+- [ ] Diagnose and fix Playwright admin login redirect failure in `tests/admin-dashboard.spec.ts`.
+- [ ] Run `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/admin-dashboard.spec.ts` until zero failures.
+- [ ] Run `npm run check:all` once all Fase 0 slices are green.
+
+## Prior Quality Slices — Completed
 
 - [x] Refresh `spec.md` so the current execution order and exact proof commands are explicit.
 - [x] Refresh `todo.md` and `tests/` so the remaining work is tracked as verifiable slices.

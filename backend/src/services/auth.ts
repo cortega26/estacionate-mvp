@@ -34,7 +34,7 @@ export const signToken = (payload: TokenPayload, expiresIn: string | number = '7
 export const verifyToken = (token: string): TokenPayload | null => {
     try {
         return jwt.verify(token, JWT_SECRET) as TokenPayload
-    } catch (error) {
+    } catch {
         return null
     }
 }

@@ -1,11 +1,5 @@
 import React from 'react';
 
-interface CreateRepInput {
-    email?: string;
-    password?: string;
-    [key: string]: any;
-}
-
 interface CreateRepModalProps {
     isOpen: boolean;
     onClose: () => void;

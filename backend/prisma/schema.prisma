@@ -28,6 +28,16 @@ enum BookingStatus {
   cancelled
   completed
   no_show
+  checked_in
+  checked_out
+  overstay
+}
+
+enum AccessEventType {
+  check_in
+  check_out
+  denied
+  no_show_marked
 }
 
 enum PaymentStatus {
@@ -240,6 +250,7 @@ model Booking {
   resident          Resident          @relation(fields: [residentId], references: [id], onDelete: Restrict)
   availabilityBlock AvailabilityBlock @relation(fields: [availabilityBlockId], references: [id], onDelete: Restrict)
   payment           Payment?
+  accessEvents      AccessEvent[]
 
   @@map("bookings")
   @@index([residentId])
@@ -270,6 +281,22 @@ model Payment {
 
   @@map("payments")
   @@index([createdAt])
+}
+
+model AccessEvent {
+  id            String          @id @default(uuid())
+  bookingId     String          @map("booking_id")
+  actorId       String          @map("actor_id")
+  type          AccessEventType
+  plateObserved String?         @map("plate_observed") @db.VarChar(10)
+  notes         String?
+  timestamp     DateTime        @default(now())
+
+  booking       Booking         @relation(fields: [bookingId], references: [id], onDelete: Restrict)
+
+  @@map("access_events")
+  @@index([bookingId])
+  @@index([timestamp])
 }
 
 model Payout {

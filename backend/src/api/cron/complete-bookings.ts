@@ -1,13 +1,13 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { db } from '../../lib/db.js';
 import { logger } from '../../lib/logger.js';
+import { verifyCronSecret } from '../../lib/cronAuth.js';
 
-/**
- * CRON: Completes bookings that have physically ended.
- * Moves BookingStatus from 'confirmed' -> 'completed'.
- * This should run e.g. every hour.
- */
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+    if (!verifyCronSecret(req as any)) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+
     if (req.method !== 'GET' && req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
