@@ -1,117 +1,121 @@
-# 🚀 Estacionate: La Revolución del Estacionamiento Residencial
-*Guía Comercial & Script de Ventas para Sales Reps*
+# Estacionate: Orden Operacional Para Estacionamientos De Visita
 
----
+_Guía comercial y guion de ventas para representantes_
 
-## 🎯 El Pitch (Elevator Pitch)
-**"Estacionate transforma los estacionamientos de visita del edificio en una fuente de ingresos segura y organizada para tu comunidad. Conectamos a residentes que reciben visitas con la capacidad del edificio, todo gestionado desde una plataforma digital segura, transparente y fácil de usar. Olvídate de los cuadernos de registro y el caos en conserjería; bienvenido al futuro del control de acceso."**
+> Nota obligatoria: este material debe leerse junto con `documentation/LEGAL_COMMERCIAL_GUARDRAILS.md`. La fase activa es SaaS B2B para orden, reglas, validación de conserjería, trazabilidad y reportes operacionales. No promete cobros directos a visitantes, pagos integrados productivos, payouts ni custodia de fondos comunitarios.
 
----
+## El Pitch
 
-## 💎 Propuesta de Valor: El "Win-Win"
+**"Estacionate digitaliza la gestión de estacionamientos de visita para edificios residenciales. Ayuda a la administración y conserjería a tener reglas claras, reservas trazables y validación rápida de accesos, reduciendo coordinación manual, reclamos y desorden operacional."**
 
-### 🏢 Para la Administración y el Edificio (B2B)
-*El caos de los estacionamientos de visita es un dolor de cabeza diario. Nosotros lo convertimos en orden y dinero.*
+## Propuesta De Valor
 
-1.  **Ingresos Extra para el Gasto Común**:
-    *   Cada reserva genera una comisión. Esos "pesos extra" pueden financiar mejoras, reparaciones o simplemente reducir la cuota de gastos comunes.
-2.  **Dashboard de Administración Completo (CRM)**:
-    *   **Control de Residentes y Unidades**: Base de datos digitalizada y autogestionada de todos los residentes y sus vehículos. Sepa exactamente quién vive dónde.
-    *   **Reportes Financieros**: Transparencia total. Vea en tiempo real cuánto dinero ha generado el edificio, desglose de comisiones y ocupación histórica.
-3.  **Seguridad y Control de Acceso**:
-    *   **Gatekeeper View (Vista Conserje)**: Tablet/Pantalla simplificada para el personal. Semáforo (Verde/Rojo) para validar patentes al instante.
-    *   **Registro Digital Inalterable**: Historial "Foreur" de cada vehículo que ingresó. Quién lo invitó, a qué hora entró y cuándo salió.
-4.  **Automatización y Cero Carga Administrativa**:
-    *   **Portal de Autoconsulta**: Los residentes gestionan sus propias patentes y datos. La administración no pierde tiempo actualizando planillas Excel.
-    *   **Cobranza Automática**: La App gestiona el cobro, la emisión de comprobantes y el cálculo de comisiones. El dinero se deposita periódicamente de forma transparente.
-5.  **Comunicación Instantánea**:
-    *   **Notificaciones Automáticas**: Confirmaciones por Email y WhatsApp al instante. El residente sabe cuándo llega su visita y el conserje sabe a quién esperar.
-    *   **Recordatorios**: Alertas antes de que termine el tiempo de reserva para evitar multas.
+### Para La Administración Y El Edificio (B2B)
 
-### 🏠 Para los Residentes (B2C - Interno)
-*Tus visitas, siempre bienvenidas y sin complicaciones.*
+_El desorden de estacionamientos de visita es una carga diaria. Estacionate lo convierte en proceso, control y evidencia._
 
-1.  **Comodidad Garantizada**:
-    *   Tus invitados ya no tienen que dar vueltas a la manzana buscando sitio. Reservas para ellos y tienen su lugar asegurado antes de llegar.
-2.  **Transparencia y Seguridad**:
-    *   Sabes exactamente cuánto costará el estacionamiento y pagas de forma digital. Sin sorpresas ni cobros arbitrarios.
+1. **Menos fricción operacional**
+   - Reservas y validaciones quedan registradas en una plataforma común, no dispersas en WhatsApp, llamadas o planillas.
+2. **Dashboard de administración**
+   - **Control de residentes y unidades:** base de datos digitalizada de residentes, unidades y vehículos.
+   - **Reportes operacionales:** visibilidad de ocupación, actividad, incidentes y cumplimiento de reglas.
+3. **Seguridad y control de acceso**
+   - **Vista conserjería:** pantalla simplificada para validar patentes, códigos o reservas activas.
+   - **Registro digital trazable:** historial de cada validación, actor y momento operacional.
+4. **Menor carga administrativa**
+   - **Autogestión:** residentes pueden mantener datos y solicitudes dentro del flujo autorizado.
+   - **Reglas configurables:** la comunidad mantiene control de cupos, horarios y restricciones.
+5. **Comunicación**
+   - **Notificaciones:** confirmaciones y recordatorios cuando el flujo lo requiera.
+   - **Alertas operativas:** apoyo para evitar malentendidos y sobreestadías.
 
-### 🚗 Para el Visitante (Usuario Final)
-1.  **Certeza y Seguridad**: Llegas y estacionas. Tu auto queda dentro del edificio, seguro.
-2.  **Pago Simple**: Todo digital. Sin buscar monedas para el "propina" o efectivo.
+### Para Residentes
 
----
+_Visitas coordinadas con menos incertidumbre._
 
-## 🗣️ Script de Ventas: Abordando al Comité / Administración
+1. **Proceso simple**
+   - Reservar o solicitar un cupo es más claro que coordinar manualmente.
+2. **Transparencia**
+   - El residente sabe si hay disponibilidad, qué reglas aplican y qué información verá conserjería.
+
+### Para Conserjería
+
+1. **Validación rápida:** menos llamadas y menos interpretación manual.
+2. **Más contexto:** información de reserva, patente y horario disponible en una vista operacional.
+
+## Guion De Ventas
 
 **Apertura:**
->"Hola [Nombre], noté que en [Nombre del Edificio] tienen varios estacionamientos de visita. ¿Sabían que esos espacios vacíos podrían estar pagando la mantención de sus ascensores o bajando el gasto común de todos los vecinos?"
 
-**Presentando el Problema:**
->"Hoy en día, gestionar las visitas es un problema. Autos mal estacionados, gente que se queda más tiempo del debido, y los conserjes perdiendo tiempo anotando patentes en un cuaderno que nadie lee. Además, es un riesgo de seguridad dejar entrar a cualquiera 'por un ratito'."
+> "Hola [Nombre], noté que en [Nombre del Edificio] gestionan estacionamientos de visita con bastante coordinación manual. ¿Cómo están manejando hoy reservas, validación y reclamos cuando hay conflictos por disponibilidad?"
 
-**La Solución (Estacionate):**
->"Nuestra App digitaliza todo ese proceso.
-> 1. El residente o la visita reserva y paga desde el celular.
-> 2. El dinero se recauda automáticamente.
-> 3. El conserje solo valida la entrada con un click.
-> Es más seguro porque sabemos exactamente quién entra, y es rentable porque el edificio gana una comisión por cada hora de uso."
+**Presentación del problema:**
 
-**Cierre / Llamado a la Acción:**
->"Me gustaría hacerles una demo de 10 minutos para mostrarles cuánto dinero están dejando de ganar hoy mismo y cómo podemos mejorar la seguridad de su acceso mañana. ¿Tienen disponibilidad el martes?"
+> "En muchos edificios el problema no es solo el cupo, sino la falta de trazabilidad: mensajes sueltos, conserjería con información incompleta, residentes molestos y administración sin evidencia clara para resolver disputas."
 
----
+**La solución:**
 
-## 🛡️ Manejo de Objeciones (FAQ)
+> "Estacionate ordena ese flujo:
+>
+> 1. El residente solicita o reserva según reglas del edificio.
+> 2. El sistema registra disponibilidad, horario y datos necesarios.
+> 3. Conserjería valida el acceso con una vista simple.
+> 4. Administración ve reportes e historial para tomar mejores decisiones."
 
-**1. "Es que no queremos gente extraña en el edificio."**
-> **Respuesta**: "Exactamente, nosotros tampoco. Hoy en día, el control es manual y falible. Con Estacionate, el control es digital. Solo pueden reservar invitados de residentes o usuarios verificados. Ustedes tienen el registro digital de cada auto, patente y RUT antes de que se abra el portón. Es *más* seguro que lo que tienen ahora."
+**Cierre:**
 
-**2. "¿Cuánto cuesta implementarlo?"**
-> **Respuesta**: "La implementación es **costo cero**.
-> *   **Primeros 3 Meses**: Servicio Gratuito (Costo Fijo $0). Solo cobramos la comisión por reserva efectiva.
-> *   **Desde el 4to Mes**: Si deciden continuar, existe un *fee* de mantenimiento de **0,5 UF mensuales** por el soporte de la plataforma.
-> Es un modelo sin riesgo: prueban 90 días gratis y el sistema se paga solo con las mismas comisiones que genera."
+> "Me gustaría mostrarles una demo de 10 minutos enfocada en su operación diaria: residente, conserjería y administración. ¿Tienen disponibilidad esta semana?"
+
+## Manejo De Objeciones
+
+**1. "Esto ya lo resolvemos por WhatsApp."**
+
+> **Respuesta:** "WhatsApp sirve para salir del paso, pero depende de personas, no deja trazabilidad completa y escala mal cuando hay conflictos o cambios de turno. Estacionate deja un registro operacional claro."
+
+**2. "No queremos una implementación compleja."**
+
+> **Respuesta:** "La propuesta inicial es un piloto acotado por edificio, con configuración guiada y foco en los flujos mínimos: reglas, reserva, validación y reporte."
 
 **3. "El conserje no se maneja con tecnología."**
-> **Respuesta**: "Diseñamos la 'Gatekeeper View' pensando en eso. Son botones grandes, código de colores (Verde = Pasa, Rojo = No Pasa) y textos claros. Si pueden usar WhatsApp, pueden usar Estacionate."
 
-**4. "¿Qué pasa si un auto no se va a la hora?"**
-> **Respuesta**: "La aplicación notifica al usuario y al residente. Además, se pueden establecer multas automáticas o recargos por exceso de tiempo, lo que incentiva el respeto de los horarios mucho más que un reto verbal del conserje."
+> **Respuesta:** "La vista de conserjería está diseñada para uso rápido: información clara, acciones simples y validación por patente o código. Debe ser más fácil que revisar mensajes dispersos."
 
-### 🛡️ Objeciones Avanzadas (Nivel Comité)
+**4. "¿Qué pasa si una visita no se va a la hora?"**
 
-**5. "El Reglamento de Copropiedad dice que las visitas son gratis/comunes. ¿Es legal cobrar?"**
-> **Respuesta**: "Es un punto válido. Muchas comunidades actualizan su reglamento (requiere quórum) para permitir el cobro por uso y así financiar mejoras. Nosotros entregamos el soporte necesario para explicar este beneficio en la asamblea. Recuerden: no es 'lucro', es 'recuperación de costos de mantención'."
+> **Respuesta:** "El sistema deja trazabilidad y puede gatillar avisos según las reglas del edificio. La administración conserva evidencia para actuar según su protocolo."
 
-**6. "¿Quién responde si una visita choca el portón?"**
-> **Respuesta**: "El residente. A diferencia de un parking público, aquí **no hay externos**. Solo entran invitados de un residente, y nuestros Términos y Condiciones establecen que el anfitrión es solidariamente responsable por los daños de su visita. El edificio queda blindado."
+### Objeciones Avanzadas (Comité)
 
-**7. "¿Y la Sra. Juanita que no tiene celular?"**
-> **Respuesta**: "El sistema permite gestión remota. Un hijo o nieto puede reservar por ella desde su propia casa. La tecnología facilita la vida, no deja a nadie fuera si la comunidad se apoya."
+**5. "El reglamento dice que los estacionamientos de visita son comunes."**
+
+> **Respuesta:** "Correcto, y por eso Estacionate en su fase activa no se posiciona como arriendo ni marketplace. La plataforma ayuda a ordenar reservas, reglas, validación y trazabilidad. Cualquier monetización futura requiere revisión legal y aprobación formal de la comunidad."
+
+**6. "¿Quién responde si una visita causa daño?"**
+
+> **Respuesta:** "Estacionate no reemplaza el reglamento ni la responsabilidad definida por la comunidad. La plataforma entrega evidencia: quién solicitó, cuándo ingresó, qué patente se validó y qué eventos se registraron."
+
+**7. "¿Y residentes con baja adopción digital?"**
+
+> **Respuesta:** "El piloto debe definir un proceso asistido. La administración puede apoyar casos puntuales mientras el flujo digital reduce carga en los casos repetitivos."
 
 **8. "¿Qué pasa si se cae Internet?"**
-> **Respuesta**: "La App requiere conexión básica (4G/WiFi) en conserjería para funcionar en tiempo real. Si hay un corte masivo, siempre existe el protocolo de emergencia manual, pero el registro digital queda guardado en la nube en cuanto vuelve la señal."
 
----
+> **Respuesta:** "La operación requiere conexión para validación en tiempo real. Si hay corte, se mantiene protocolo manual de emergencia y luego se regulariza el registro cuando vuelva la conexión."
 
-## 🌟 Características Clave para Destacar (Sales Highlights)
+## Puntos Clave Para Destacar
 
-*   **Dashboard Financiero**: Vista clara de ganancias y ocupación para el comité.
-*   **Gestión de Unidades**: Directorio digital de arrendatarios y propietarios.
-*   **Gatekeeper View**: Interfaz simplificada para conserjes (Tablet/Móvil).
-*   **Validación de Patente**: Seguridad antirrobo y registro histórico.
-*   **Pagos Web y Móviles**: Integración segura con MercadoPago/Stripe.
-*   **Roles Diferenciados**: Super Admin, Administrador de Edificio, Conserje, Residente.
+- **Dashboard operacional:** ocupación, actividad e incidentes.
+- **Gestión de unidades:** directorio digital de residentes y vehículos.
+- **Vista conserjería:** interfaz simplificada para personal en terreno.
+- **Validación de patente/código:** control y trazabilidad.
+- **Roles diferenciados:** super admin, administrador de edificio, conserjería, residente.
+- **Modelo SaaS B2B:** contrato con comunidad o administradora, sin cobros directos a visitantes en Fase 1.
 
----
+## Futuro Potencial
 
-## 🔮 El Futuro: Potencial de Crecimiento (Upselling)
-*Para cerrar clientes visionarios, mencione lo que viene:*
-
-1.  **Tarifas Dinámicas (Smart Pricing)**:
-    *   "Estamos desarrollando un algoritmo que ajusta el precio según la demanda (tipo Uber). Si hay evento en el estadio cercano o es Navidad, el edificio gana más."
-2.  **Carga de Autos Eléctricos**:
-    *   "En el futuro, podrán gestionar también el cobro por el uso de cargadores eléctricos en estos espacios."
-3.  **Sustentabilidad**:
-    *   "Al optimizar el uso de estacionamientos existentes, evitamos la construcción innecesaria de más concreto. Su edificio se vuelve más 'verde' y eficiente."
+1. **Reglas operacionales más avanzadas**
+   - Configuración por horarios, eventos o políticas del edificio.
+2. **Integraciones**
+   - Conserjería, accesos o reportes externos cuando el piloto lo justifique.
+3. **Monetización futura con guardrails**
+   - Solo si se cumplen condiciones legales, tributarias, de asamblea y PSP definidas en la documentación legal-comercial.

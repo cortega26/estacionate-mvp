@@ -1,39 +1,38 @@
-# Estacionate Frontend
+# Frontend De Estacionate
 
-React, Vite, TypeScript, TailwindCSS, React Query, and Playwright app for the
-Estacionate parking marketplace.
+Aplicación React, Vite, TypeScript, TailwindCSS, React Query y Playwright para la plataforma de gestión de estacionamientos de visita Estacionate.
 
-## Local Development
+## Desarrollo Local
 
-From the repository root:
+Desde la raíz del repositorio:
 
 ```bash
 npm run dev:frontend
 ```
 
-Or from this directory:
+O desde este directorio:
 
 ```bash
 npm run dev
 ```
 
-The default local URL is `http://localhost:5173`.
+La URL local por defecto es `http://localhost:5173`.
 
-## Environment
+## Entorno
 
-Create `frontend/.env` from the checked-in example:
+Crea `frontend/.env` desde el ejemplo versionado:
 
 ```bash
 cp .env.example .env
 ```
 
-The main variable is:
+La variable principal es:
 
-- `VITE_API_URL`: backend API base URL, usually `http://localhost:3000`.
+- `VITE_API_URL`: URL base de la API backend, usualmente `http://localhost:3000`.
 
-## Validation
+## Validación
 
-Run the frontend-only checks:
+Ejecuta las revisiones solo del frontend:
 
 ```bash
 npm run lint
@@ -41,20 +40,20 @@ npm test
 npm run build
 ```
 
-Run browser flows when changing booking, admin, auth, sales, or gatekeeper behavior:
+Ejecuta flujos de navegador cuando cambies reservas, administración, autenticación, ventas o comportamiento de conserjería:
 
 ```bash
 npm run test:e2e
 ```
 
-For repository-wide validation, run `npm run check:all` from the root.
+Para validación de todo el repositorio, ejecuta `npm run check:all` desde la raíz.
 
-## Entry Points
+## Puntos De Entrada
 
-- `src/App.tsx`: route composition.
-- `src/pages/**`: route-level pages.
-- `src/features/**`: feature components.
-- `src/components/ui/**`: reusable UI primitives.
-- `src/lib/api.ts`: backend API client.
-- `src/types/**`: frontend domain types.
-- `e2e/**`: Playwright browser tests.
+- `src/App.tsx`: composición de rutas.
+- `src/pages/**`: páginas a nivel de ruta.
+- `src/features/**`: componentes de funcionalidades.
+- `src/components/ui/**`: primitivas UI reutilizables.
+- `src/lib/api.ts`: cliente API backend.
+- `src/types/**`: tipos de dominio frontend.
+- `e2e/**`: pruebas de navegador Playwright.

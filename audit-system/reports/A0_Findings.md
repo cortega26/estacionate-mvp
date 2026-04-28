@@ -1,32 +1,39 @@
-# Audit A0: Project Structure & Organization Findings
+# Auditoría A0: Hallazgos De Estructura Y Organización Del Proyecto
 
-## 1. Executive Summary
-**Score:** B
-The project demonstrates a mixed maturity level. The **Frontend** is well-structured, utilizing a `features/` directory pattern, which aligns with modern scalability practices. The **Backend**, however, remains strictly **layer-based** (`api/`, `services/`), which will impede scalability as domain complexity grows. Root hygiene is generally good, but the duplicate documentation folders are a cleanup priority.
+## 1. Resumen Ejecutivo
 
-## 2. Findings
+**Puntaje:** B
 
-### 2.1 Root Directory Hygiene
-- **[PASSED]** Clear separation of `backend` and `frontend`.
-- **[PASSED]** Minimal config sprawl at root.
-- **[WARNING]** **Ambiguous Documentation Folders**: Both `docs/` and `documentation/` exist at the root.
-    - *Action*: Merge `documentation/` into `docs/` and remove the former.
+El proyecto muestra una madurez mixta. El **frontend** está bien estructurado y usa el patrón de directorio `features/`, alineado con prácticas modernas de escalabilidad. El **backend**, en cambio, sigue siendo estrictamente **basado en capas** (`api/`, `services/`), lo que puede dificultar la escalabilidad cuando crezca la complejidad de dominio. La higiene de raíz es buena en general, pero las carpetas duplicadas de documentación son una prioridad de limpieza.
 
-### 2.2 Backend Structure (`backend/src`)
-- **[OBSERVATION]** Strict Layer-based architecture (`api`, `services`, `middleware`).
-- **[ISSUE]** **Low Cohesion for Features**: Business logic for a single feature (e.g., "Booking") is split across `api/bookings`, `services/BookingService`, etc.
-    - *Severity*: S1 (High Friction)
-    - *Recommendation*: Gradually migrate to a modular structure (e.g., `backend/src/modules/bookings/`).
+## 2. Hallazgos
 
-### 2.3 Frontend Structure (`frontend/src`)
-- **[PASSED]** **Feature-based Architecture Detected**: The presence of `src/features` dictates a clean separation of concerns.
-- **[PASSED]** **UI Separation**: `src/components/ui` suggests a separation between "dumb" UI components and "smart" feature components.
+### 2.1 Higiene Del Directorio Raíz
 
-### 2.4 Naming & Consistency
-- **[PASSED]** Consistent kebab-case naming in root.
+- **[PASÓ]** Separación clara de `backend` y `frontend`.
+- **[PASÓ]** Baja dispersión de configuración en la raíz.
+- **[ADVERTENCIA]** **Carpetas de documentación ambiguas:** existen `docs/` y `documentation/` en la raíz.
+  - _Acción:_ fusionar `documentation/` en `docs/` o definir una fuente activa única y archivar la otra.
 
-## 3. Remediation Plan
-1.  **Immediate**: Delete `documentation/` (after checking if it contains unique content) or merge into `docs/`.
-2.  **Strategic**: Refactor Backend to use Module pattern.
-    - Create `backend/src/modules`.
-    - Move `auth` related code from `api/auth` and `services/auth.ts` to `modules/auth`.
+### 2.2 Estructura Backend (`backend/src`)
+
+- **[OBSERVACIÓN]** Arquitectura estrictamente basada en capas (`api`, `services`, `middleware`).
+- **[PROBLEMA]** **Baja cohesión por funcionalidad:** la lógica de negocio de una funcionalidad (por ejemplo, "Booking") está dividida entre `api/bookings`, `services/BookingService`, etc.
+  - _Severidad:_ S1 (alta fricción)
+  - _Recomendación:_ migrar gradualmente a una estructura modular, por ejemplo `backend/src/modules/bookings/`.
+
+### 2.3 Estructura Frontend (`frontend/src`)
+
+- **[PASÓ]** **Arquitectura basada en funcionalidades detectada:** `src/features` indica separación limpia de responsabilidades.
+- **[PASÓ]** **Separación UI:** `src/components/ui` sugiere separación entre componentes UI simples y componentes inteligentes de funcionalidades.
+
+### 2.4 Nombres Y Consistencia
+
+- **[PASÓ]** Nombres `kebab-case` consistentes en la raíz.
+
+## 3. Plan De Remediación
+
+1. **Inmediato:** decidir la fuente canónica entre `documentation/` y `docs/`, verificando contenido único antes de mover o archivar.
+2. **Estratégico:** refactorizar backend hacia patrón modular.
+   - Crear `backend/src/modules`.
+   - Mover código relacionado con `auth` desde `api/auth` y `services/auth.ts` a `modules/auth`.

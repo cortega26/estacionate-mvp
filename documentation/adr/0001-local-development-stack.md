@@ -1,19 +1,19 @@
-# ADR 0001: Local Development Stack
+# ADR 0001: Stack De Desarrollo Local
 
-- Status: accepted
-- Date: 2026-04-26
+- Estado: aceptado
+- Fecha: 2026-04-26
 
-## Context
+## Contexto
 
-Estacionate needs PostgreSQL, Redis, a backend API, and a Vite frontend for local development. Agents and contributors need a reproducible setup that does not depend on production Supabase/Neon, Upstash, or deployment credentials.
+Estacionate necesita PostgreSQL, Redis, una API backend y un frontend Vite para desarrollo local. Agentes y contribuyentes necesitan una configuración reproducible que no dependa de Supabase/Neon productivo, Upstash ni credenciales de despliegue.
 
-## Decision
+## Decisión
 
-Use Docker Compose for PostgreSQL and Redis, while running the backend and frontend with npm during active development. Keep `docker-compose.yml` capable of starting the full stack, but document npm-driven development as the default path in `AGENTS.md` and `README.md`.
+Usar Docker Compose para PostgreSQL y Redis, mientras backend y frontend se ejecutan con npm durante el desarrollo activo. Mantener `docker-compose.yml` capaz de iniciar el stack completo, pero documentar el desarrollo dirigido por npm como ruta por defecto en `AGENTS.md` y `README.md`.
 
-## Consequences
+## Consecuencias
 
-Local infrastructure is reproducible and isolated from production services. Backend/frontend hot reload stays fast because developers run those processes directly. Environment examples and bootstrap docs must stay aligned with `docker-compose.yml`.
+La infraestructura local es reproducible y queda aislada de servicios productivos. El hot reload de backend/frontend se mantiene rápido porque los desarrolladores ejecutan esos procesos directamente. Los ejemplos de entorno y la documentación de bootstrap deben mantenerse alineados con `docker-compose.yml`.
 
 ## Links
 

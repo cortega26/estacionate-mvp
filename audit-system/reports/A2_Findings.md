@@ -1,37 +1,44 @@
-# Audit A2: Security & AppSec Findings (REVISED)
+# Auditoría A2: Hallazgos De Seguridad Y AppSec (Revisado)
 
-## 1. Executive Summary
-**Score:** B-
-The application has good baseline security with Helmet and proper Redis-based Rate Limiting. However, **CORS is commented out in code**, seemingly relying on `vercel.json` or frontend proxying, which can be fragile.
+## 1. Resumen Ejecutivo
 
-## 2. Findings
+**Puntaje:** B-
 
-### 2.1 Network Security
-- **[S1] CORS Disabled in Code**
-    - **Location**: `backend/app.ts:55` (`// app.use(cors({...}));`)
-    - **Context**: `backend/src/lib/cors.ts` exists and defines a robust policy, but it is **not used**.
-    - **Risk**: If the Vercel config fails or if the app is deployed elsewhere (e.g., rigid container), the API will reject cross-origin requests or be wide open (depending on default).
-    - **Recommendation**: Uncomment `app.use(cors(corsOptions))` in `app.ts`.
+La aplicación tiene una base de seguridad razonable con Helmet y rate limiting basado en Redis. Sin embargo, **CORS aparece comentado en código**, aparentemente dependiendo de `vercel.json` o del proxy frontend, lo que puede ser frágil.
 
-### 2.2 Application Security
-- **[PASSED] Security Headers**: `helmet` is correctly configured in `app.ts`.
-- **[PASSED] Rate Limiting**: `rateLimiter.ts` uses Redis (Upstash) which is correct for Vercel.
-    - *Note*: It fails open (`next()`) if Redis is down. This is acceptable for availability but be aware of bot risks during Redis outages.
+## 2. Hallazgos
 
-### 2.3 Authentication
-- **[S1] JWT Secret Handling**
-    - **Location**: `backend/src/services/auth.ts`
-    - **Problem**: Falls back to `default-dev-secret` if ENV is missing, but logs a FATAL error (good).
-    - **Fix**: Change the log to `process.exit(1)` in production to prevent starting with a weak secret.
+### 2.1 Seguridad De Red
 
-### 2.4 Infrastructure
-- **[S2] Vercel Config**
-    - **Location**: `backend/vercel.json`
-    - **Observation**: Defines `Access-Control-Allow-Origin: *` in headers. This overrides code-level CORS and allows ANY origin.
-    - **Impact**: **Security Risk**. API is open to being called from malicious sites (CSRF/Data theft if cookies are used).
-    - **Fix**: Restrict `Access-Control-Allow-Origin` in `vercel.json` or defer to `cors` middleware.
+- **[S1] CORS deshabilitado en código**
+  - **Ubicación:** `backend/app.ts:55` (`// app.use(cors({...}));`)
+  - **Contexto:** `backend/src/lib/cors.ts` existe y define una política robusta, pero **no se usa**.
+  - **Riesgo:** si falla la configuración Vercel o la app se despliega en otro entorno, la API puede rechazar requests cross-origin o quedar demasiado abierta según defaults.
+  - **Recomendación:** habilitar `app.use(cors(corsOptions))` en `app.ts`.
 
-## 3. Recommendations
-1.  **Enforce CORS in Code**: Uncomment `cors` in `app.ts`.
-2.  **Restrict Vercel Headers**: Remove wildcard `*` from `vercel.json` or set to specific frontend domain.
-3.  **Hard Fail Secrets**: `process.exit(1)` on missing JWT_SECRET.
+### 2.2 Seguridad De Aplicación
+
+- **[PASÓ] Headers de seguridad:** `helmet` está configurado correctamente en `app.ts`.
+- **[PASÓ] Rate limiting:** `rateLimiter.ts` usa Redis (Upstash), correcto para Vercel.
+  - _Nota:_ falla abierto (`next()`) si Redis cae. Es aceptable para disponibilidad, pero aumenta riesgo de bots durante caídas de Redis.
+
+### 2.3 Autenticación
+
+- **[S1] Manejo de secreto JWT**
+  - **Ubicación:** `backend/src/services/auth.ts`
+  - **Problema:** cae a `default-dev-secret` si falta ENV, aunque registra un error FATAL.
+  - **Corrección:** cambiar a `process.exit(1)` en producción para impedir iniciar con secreto débil.
+
+### 2.4 Infraestructura
+
+- **[S2] Configuración Vercel**
+  - **Ubicación:** `backend/vercel.json`
+  - **Observación:** define `Access-Control-Allow-Origin: *` en headers. Esto sobreescribe CORS a nivel de código y permite cualquier origen.
+  - **Impacto:** riesgo de seguridad. La API puede ser llamada desde sitios maliciosos (CSRF/extracción de datos si se usan cookies).
+  - **Corrección:** restringir `Access-Control-Allow-Origin` en `vercel.json` o delegar al middleware `cors`.
+
+## 3. Recomendaciones
+
+1. **Forzar CORS en código:** habilitar `cors` en `app.ts`.
+2. **Restringir headers Vercel:** remover wildcard `*` de `vercel.json` o fijarlo al dominio frontend específico.
+3. **Falla dura ante secretos faltantes:** `process.exit(1)` si falta `JWT_SECRET`.

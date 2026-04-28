@@ -1,28 +1,31 @@
-# Security Closure Report - v1.0.0-rc.1
+# Reporte De Cierre De Seguridad - v1.0.0-rc.1
 
-**Audit Date**: Dec 24, 2025
-**Scope**: Backend API, Frontend Auth, Infrastructure
+**Fecha de auditoría:** 2025-12-24
+**Alcance:** API backend, auth frontend, infraestructura
 
-## 🛡️ Remediation Summary
+## Resumen De Remediación
 
-| Finding | Severity | Fix Implementation | Verification |
-| :--- | :--- | :--- | :--- |
-| **A2: Weak Password Policy** | High | Enforced zxcvbn strength checks + min length 12 in `backend/src/api/auth/register.ts`. | **PASS** Unit Test `tests/auth.test.ts` |
-| **A2: Login Rate Limiting** | Critical | Implemented Redis-based sliding window limiter in `backend/src/api/auth/login.ts`. | **PASS** Integration Test `tests/rate-limit.test.ts` |
-| **A1: Payout Duplication** | High | Added Unique Constraints on Payouts + DB Transactions in `reconcile.ts`. | **PASS** `tests/reconcile.test.ts` |
-| **A2: Timing Attacks** | Medium | Implemented constant-time password comparison and dummy hashing in `auth.ts`. | **PASS** Code Review |
-| **A5: Missing Seed Data** | Low | Created reproducible `prisma/seed.ts` for consistent local dev/test state. | **PASS** `npx prisma db seed` |
+| Hallazgo                             | Severidad | Implementación De Corrección                                                          | Verificación                                              |
+| :----------------------------------- | :-------- | :------------------------------------------------------------------------------------ | :-------------------------------------------------------- |
+| **A2: política de contraseña débil** | Alta      | Checks de fortaleza `zxcvbn` + largo mínimo 12 en `backend/src/api/auth/register.ts`. | **PASS** prueba unitaria `tests/auth.test.ts`             |
+| **A2: rate limiting de login**       | Crítica   | Limitador de ventana deslizante basado en Redis en `backend/src/api/auth/login.ts`.   | **PASS** prueba de integración `tests/rate-limit.test.ts` |
+| **A1: duplicación de payout**        | Alta      | Constraints únicos en payouts + transacciones DB en `reconcile.ts`.                   | **PASS** `tests/reconcile.test.ts`                        |
+| **A2: timing attacks**               | Media     | Comparación de contraseña constant-time y hash dummy en `auth.ts`.                    | **PASS** revisión de código                               |
+| **A5: datos seed faltantes**         | Baja      | `prisma/seed.ts` reproducible para estado local/test consistente.                     | **PASS** `npx prisma db seed`                             |
 
-## 🔒 Configuration Hardening
+## Endurecimiento De Configuración
 
-### Authentication
--   **Cookies**: `SameSite=Lax`, `HttpOnly`, `Secure` (Prod).
--   **Token Expiry**: Short-lived access tokens (15m), refresh rotation enabled.
+### Autenticación
 
-### Infrastructure
--   **Redis**: `enableOfflineQueue: false` to prevent DOS via connection hanging.
--   **Secrets**: All secrets loaded via `dotenv-safe` validation at startup.
+- **Cookies:** `SameSite=Lax`, `HttpOnly`, `Secure` (prod).
+- **Expiración de token:** access tokens de corta duración (15 min), rotación de refresh habilitada.
 
-## ⚠️ Residual Risks
--   **CSRF**: Relies on SameSite=Lax. Strict CSP recommended for next release.
--   **Session Invalidation**: Redis-based blacklist is implemented but relies on Redis availability.
+### Infraestructura
+
+- **Redis:** `enableOfflineQueue: false` para prevenir DOS por conexiones colgadas.
+- **Secretos:** todos los secretos cargados mediante validación `dotenv-safe` al iniciar.
+
+## Riesgos Residuales
+
+- **CSRF:** depende de `SameSite=Lax`. Se recomienda CSP estricta para el siguiente release.
+- **Invalidación de sesión:** blacklist basada en Redis implementada, pero depende de la disponibilidad de Redis.

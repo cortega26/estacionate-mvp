@@ -1,20 +1,20 @@
-# ADR NNNN: Short Title
+# ADR NNNN: Título Corto
 
-- Status: proposed | accepted | superseded
-- Date: YYYY-MM-DD
+- Estado: propuesto | aceptado | reemplazado
+- Fecha: AAAA-MM-DD
 
-## Context
+## Contexto
 
-What forces, constraints, or problem led to this decision?
+¿Qué fuerzas, restricciones o problema llevaron a esta decisión?
 
-## Decision
+## Decisión
 
-What did we choose?
+¿Qué elegimos?
 
-## Consequences
+## Consecuencias
 
-What gets easier, what gets harder, and what follow-up work is implied?
+¿Qué se vuelve más fácil, qué se vuelve más difícil y qué trabajo posterior queda implícito?
 
 ## Links
 
-- Related files, issues, PRs, docs, or audits.
+- Archivos, issues, PRs, documentación o auditorías relacionadas.

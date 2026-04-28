@@ -1,102 +1,90 @@
 # Estacionate MVP
 
-Estacionate is a SaaS platform for Chilean residential communities and building
-administrators to manage visitor parking through clear rules, reservations,
-concierge validation, traceability, and operational reporting.
+Estacionate es una plataforma SaaS para comunidades residenciales chilenas y administradores de edificios que permite gestionar estacionamientos de visita con reglas claras, reservas, validación de conserjería, trazabilidad y reportes operativos.
 
-The currently enabled product phase is **Phase 1: B2B SaaS without integrated
-resident/community payments**. Payment, payout, and PSP-related code exists only
-as demo/simulator infrastructure and must not be used with real communities
-until the legal/commercial gates in
-`documentation/LEGAL_COMMERCIAL_GUARDRAILS.md` are satisfied.
+La fase de producto habilitada actualmente es **Fase 1: SaaS B2B sin pagos integrados de residentes ni comunidades**. El código relacionado con pagos, payouts y PSP existe solo como infraestructura demo/simulador y no debe usarse con comunidades reales hasta cumplir los controles legales/comerciales definidos en `documentation/LEGAL_COMMERCIAL_GUARDRAILS.md`.
 
-## Product Positioning
+## Posicionamiento Del Producto
 
-Estacionate is not currently positioned as a marketplace and does not enable
-direct visitor payments for visitor parking spaces.
+Estacionate no está posicionado actualmente como marketplace y no habilita pagos directos de visitantes por estacionamientos de visita.
 
-The MVP focuses on:
+El MVP se enfoca en:
 
-- reducing parking-related disputes;
-- giving administrators and committees traceability;
-- helping concierge teams validate reservations quickly;
-- creating auditable visitor-parking usage records;
-- supporting safer future monetization only if legal, tax, assembly, and PSP
-  gates are met.
+- reducir disputas relacionadas con estacionamientos;
+- entregar trazabilidad a administradores y comités;
+- ayudar a los equipos de conserjería a validar reservas rápidamente;
+- crear registros auditables de uso de estacionamientos de visita;
+- permitir monetización futura más segura solo si se cumplen controles legales, tributarios, de asamblea y PSP.
 
-Phase 1 revenue is limited to a monthly or annual B2B SaaS contract with the
-community or building administrator. There is no direct visitor charge, no
-resident-to-community payment flow inside the platform, no payout flow, and no
-custody of community funds by Estacionate in the enabled product phase.
+Los ingresos de la Fase 1 se limitan a un contrato SaaS B2B mensual o anual con la comunidad o la administradora del edificio. En la fase de producto habilitada no existe cobro directo a visitantes, flujo de pago residente-comunidad dentro de la plataforma, flujo de payout ni custodia de fondos comunitarios por parte de Estacionate.
 
-## Tech Stack
+## Stack Técnico
 
 - **Frontend:** React, Vite, TypeScript, TailwindCSS
 - **Backend:** Node.js, Express, TypeScript, Prisma (PostgreSQL)
-- **Infrastructure:** Redis (queues/caching), Docker
-- **Testing:** Playwright (E2E), Vitest (Unit)
+- **Infraestructura:** Redis (colas/caché), Docker
+- **Pruebas:** Playwright (E2E), Vitest (unitarias)
 
-## Prerequisites
+## Prerrequisitos
 
 - Node.js 24.15.0 LTS
-- `nvm` recommended; this repository includes `.nvmrc`, so `nvm use` will select the pinned runtime
-- Docker and Docker Compose for local PostgreSQL/Redis
+- `nvm` recomendado; este repositorio incluye `.nvmrc`, por lo que `nvm use` selecciona el runtime fijado
+- Docker y Docker Compose para PostgreSQL/Redis local
 
-## Getting Started
+## Inicio
 
-### Fast Bootstrap
+### Preparación Rápida
 
-For a fresh local environment, run:
+Para un entorno local limpio, ejecuta:
 
 ```bash
 npm run bootstrap
 ```
 
-This installs dependencies, creates local `.env` files when missing, starts PostgreSQL and Redis, applies Prisma migrations, and seeds the database.
-It then starts the frontend and backend together.
+Esto instala dependencias, crea archivos `.env` locales cuando falten, inicia PostgreSQL y Redis, aplica migraciones Prisma y carga la base de datos con datos demo. Luego inicia frontend y backend juntos.
 
-To provision everything without launching the dev servers:
+Para aprovisionar todo sin levantar los servidores de desarrollo:
 
 ```bash
 npm run bootstrap -- --no-start
 ```
 
-### Manual Setup
+### Configuración Manual
 
-#### 1. Installation
+#### 1. Instalación
 
 ```bash
 nvm use
 npm run install:all
 ```
 
-#### 2. Environment Configuration
+#### 2. Configuración De Entorno
 
-Create local environment files from the examples:
+Crea archivos de entorno locales desde los ejemplos:
 
 ```bash
 cp backend/.env.local.example backend/.env
 cp frontend/.env.example frontend/.env
 ```
 
-**Backend Required Variables:**
+**Variables requeridas del backend:**
 
 - `DATABASE_URL`
 - `REDIS_URL`
 - `JWT_SECRET`
-- `PORT` (default 3000)
+- `PORT` (valor por defecto: 3000)
 
-For local infrastructure defaults, see `docker-compose.yml` and `documentation/INFRASTRUCTURE.md`.
+Para los valores locales por defecto de infraestructura, revisa `docker-compose.yml` y `documentation/INFRASTRUCTURE.md`.
 
-#### 3. Running the Project
+#### 3. Ejecución Del Proyecto
 
-Start PostgreSQL and Redis:
+Inicia PostgreSQL y Redis:
 
 ```bash
 docker compose up -d postgres redis
 ```
 
-Prepare the database:
+Prepara la base de datos:
 
 ```bash
 cd backend
@@ -104,7 +92,7 @@ npx prisma migrate deploy
 npm run db:seed
 ```
 
-Start backend and frontend together:
+Inicia backend y frontend juntos:
 
 ```bash
 npm run dev
@@ -113,49 +101,49 @@ npm run dev
 - Backend: http://localhost:3000
 - Frontend: http://localhost:5173
 
-## Testing
+## Pruebas
 
-### E2E Tests (Playwright)
+### Pruebas E2E (Playwright)
 
-Running full end-to-end tests for the critical visitor booking flows.
+Ejecuta pruebas end-to-end completas para los flujos críticos de reserva de visitas.
 
 ```bash
 cd frontend
 npm run test:e2e
 ```
 
-To see the report:
+Para ver el reporte:
 
 ```bash
 npx playwright show-report
 ```
 
-### Unit Tests
+### Pruebas Unitarias
 
 ```bash
 npm run test
 ```
 
-### Full Validation
+### Validación Completa
 
 ```bash
 npm run check:all
 ```
 
-If local PostgreSQL/Redis may not be running yet, use:
+Si PostgreSQL/Redis locales podrían no estar corriendo todavía, usa:
 
 ```bash
 npm run check:local
 ```
 
-## Project Structure
+## Estructura Del Proyecto
 
-- `frontend/`: React application, E2E tests (`/e2e`)
-- `backend/`: Express API, Prisma schema, Business Logic
-- `documentation/`: Detailed architectural and product documentation
-- `documentation/CODEMAP.md`: File and workflow map for agents/contributors
-- `documentation/OWNERSHIP.md`: Ownership and edit-boundary guide
-- `documentation/TASKS.md`: Task-specific entry points and validation hints
-- `documentation/VALIDATION.md`: Validation command guide
-- `documentation/adr/`: Architecture decision records
-- `AGENTS.md`: Fast-start guide for agents and new contributors
+- `frontend/`: aplicación React y pruebas E2E (`/e2e`)
+- `backend/`: API Express, esquema Prisma y lógica de negocio
+- `documentation/`: documentación detallada de arquitectura y producto
+- `documentation/CODEMAP.md`: mapa de archivos y flujos para agentes/contribuyentes
+- `documentation/OWNERSHIP.md`: guía de propiedad y límites de edición
+- `documentation/TASKS.md`: puntos de entrada por tarea y pistas de validación
+- `documentation/VALIDATION.md`: guía de comandos de validación
+- `documentation/adr/`: registros de decisión de arquitectura
+- `AGENTS.md`: guía de inicio rápido para agentes y nuevos contribuyentes

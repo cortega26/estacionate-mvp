@@ -1,26 +1,32 @@
-# Audit A6: Release & Environment Findings
+# Auditoría A6: Hallazgos De Release Y Entorno
 
-## 1. Executive Summary
-**Score:** B-
-Deployment is handled via standard scripts (`npm run deploy:production`), likely wrapping Vercel CLI. However, **Environment Parity** is weak due to the absence of `.env.example` files in the backend. This forces developers to rely on external docs or tribal knowledge.
+## 1. Resumen Ejecutivo
 
-## 2. Findings
+**Puntaje:** B-
 
-### 2.1 Environment Configuration
-- **[S2] Missing `.env.example`**
-    - **Location**: `backend/`
-    - **Problem**: No sample environment file.
-    - **Impact**: Onboarding friction; risk of missing keys in production if not documented.
-    - **Recommendation**: Create `backend/.env.example` with keys but dummy values.
+El despliegue se maneja mediante scripts estándar (`npm run deploy:production`), probablemente envolviendo Vercel CLI. Sin embargo, la **paridad de entorno** es débil por la ausencia histórica de archivos `.env.example` en backend. Esto obliga a depender de documentación externa o conocimiento tribal.
 
-### 2.2 Secrets Management
-- **[PASSED] Gitignore**: `.gitignore` correctly excludes `.env` and `.env.local`.
-- **[S1] Secrets in Code**: (Repeated from A2) Fallback to default secrets in `auth.ts` is risky for release if envs fail.
+## 2. Hallazgos
 
-### 2.3 Deployment
-- **[PASSED] Build Scripts**: `package.json` contains standard build scripts.
-- **[S2] No Staging Environment**: Scripts mention `deploy:staging`, but is there a persistent staging URL? Vercel provides Preview URLs, which is good, but a dedicated staging environment (syncing with `staging` branch) is preferred for integration testing.
+### 2.1 Configuración De Entorno
 
-## 3. Recommendations
-1.  **Create `.env.example`**: IMMEDIATE action.
-2.  **Formalize Staging**: Ensure `deploy:staging` maps to a consistent non-prod URL.
+- **[S2] `.env.example` faltante**
+  - **Ubicación:** `backend/`
+  - **Problema:** no existe archivo de entorno de ejemplo.
+  - **Impacto:** fricción de onboarding y riesgo de claves faltantes en producción si no están documentadas.
+  - **Recomendación:** crear `backend/.env.example` con claves y valores dummy.
+
+### 2.2 Gestión De Secretos
+
+- **[PASÓ] Gitignore:** `.gitignore` excluye correctamente `.env` y `.env.local`.
+- **[S1] Secretos en código:** repetido desde A2. Fallback a secretos por defecto en `auth.ts` es riesgoso para release si fallan envs.
+
+### 2.3 Despliegue
+
+- **[PASÓ] Scripts de build:** `package.json` contiene scripts estándar de build.
+- **[S2] Sin entorno staging dedicado:** los scripts mencionan `deploy:staging`, pero se debe confirmar si existe una URL staging persistente. Vercel entrega Preview URLs, lo que ayuda, pero un entorno staging dedicado con rama `staging` es preferible para pruebas de integración.
+
+## 3. Recomendaciones
+
+1. **Crear `.env.example`:** acción inmediata.
+2. **Formalizar staging:** asegurar que `deploy:staging` mapee a una URL no productiva consistente.

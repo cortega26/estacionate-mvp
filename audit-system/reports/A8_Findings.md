@@ -1,30 +1,36 @@
-# Audit A8: FinOps & Efficiency Findings
+# Auditoría A8: Hallazgos De FinOps Y Eficiencia
 
-## 1. Executive Summary
-**Score:** C
-The project lacks Data Lifecycle Management policies, meaning the database will grow indefinitely (increasing costs). Serverless configuration in `vercel.json` uses default memory settings which is acceptable for MVP but should be tuned.
+## 1. Resumen Ejecutivo
 
-## 2. Findings
+**Puntaje:** C
 
-### 2.1 Data Retention (Cost + Performance)
-- **[S1] Unbounded Data Growth**
-    - **Location**: `AuditLog`, `Booking` tables.
-    - **Observation**: No cron job found to archive or delete old records.
-    - **Impact**: Database storage costs will rise linearly; query performance will degrade.
-    - **Recommendation**: Add a cron job to delete `AuditLog` > 90 days.
+El proyecto carece de políticas de ciclo de vida de datos, por lo que la base de datos crecerá indefinidamente y aumentará costos. La configuración serverless en `vercel.json` usa memoria por defecto, aceptable para MVP, pero debe ajustarse con el tiempo.
 
-### 2.2 Compute Efficiency
-- **[S2] Serverless Cold Starts**
-    - **Observation**: `app.ts` imports all handlers at the top level.
-    - **Impact**: Larger bundle size increases cold start latency and billing duration.
-    - **Fix**: Use dynamic imports or lazy loading if supported, though standard for Express apps on Vercel is acceptable.
+## 2. Hallazgos
 
-### 2.3 Database Connections
-- **[S1] Connection Pooling**
-    - **Location**: `backend/src/lib/db.ts`
-    - **Observation**: Comment explicitly states "Use a connection pooler".
-    - **Risk**: Without Supabase transaction pooler or similar, high concurrency will exhaust connections and crash the app during peak hours.
+### 2.1 Retención De Datos (Costo + Rendimiento)
 
-## 3. Recommendations
-1.  **Implement Data Pruning**: Add a `cleanup.ts` cron to `src/api/cron`.
-2.  **Enable Pooling**: Configure `DATABASE_URL` to use the pooler string (port 6543 for Supabase).
+- **[S1] Crecimiento de datos sin límite**
+  - **Ubicación:** tablas `AuditLog`, `Booking`.
+  - **Observación:** no se encontró cron job para archivar o eliminar registros antiguos.
+  - **Impacto:** costos de almacenamiento DB crecerán linealmente; rendimiento de queries se degradará.
+  - **Recomendación:** agregar cron job para eliminar `AuditLog` de más de 90 días, sujeto a requisitos legales de retención.
+
+### 2.2 Eficiencia De Cómputo
+
+- **[S2] Cold starts serverless**
+  - **Observación:** `app.ts` importa todos los handlers en top level.
+  - **Impacto:** bundle más grande aumenta latencia de cold start y duración facturable.
+  - **Corrección:** usar imports dinámicos o lazy loading si está soportado, aunque el patrón Express en Vercel puede ser aceptable.
+
+### 2.3 Conexiones A Base De Datos
+
+- **[S1] Connection pooling**
+  - **Ubicación:** `backend/src/lib/db.ts`
+  - **Observación:** un comentario indica explícitamente "Use a connection pooler".
+  - **Riesgo:** sin pooler transaccional de Supabase o similar, alta concurrencia agotará conexiones y puede botar la app en horas punta.
+
+## 3. Recomendaciones
+
+1. **Implementar limpieza de datos:** agregar `cleanup.ts` en `src/api/cron`.
+2. **Habilitar pooling:** configurar `DATABASE_URL` para usar string de pooler (puerto 6543 en Supabase).

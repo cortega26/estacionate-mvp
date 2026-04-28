@@ -1,30 +1,36 @@
-# Privacy Policy
+# Política De Privacidad
 
-**Last Updated:** 2025-12-22
+**Última actualización:** 2025-12-22
 
-Your privacy is important to us. This policy explains how Estacionate MVP collects, uses, and protects your data.
+Tu privacidad es importante para nosotros. Esta política explica cómo Estacionate MVP recopila, usa y protege tus datos.
 
-## 1. Information We Collect
-- **Identity Data:** Name, RUT (National ID), Email, Phone.
-- **Vehicle Data:** License Plate Number.
-- **Financial Data:** Payment transaction history (we do not store full credit card numbers; these are handled by payment processors).
-- **Usage Data:** IP address, logs, and booking history.
+## 1. Información Que Recopilamos
 
-## 2. How We Use Your Data
-- To process bookings and payments.
-- To verify identity for security (Building access control).
-- To comply with legal obligations.
-- To improve our platform.
+- **Datos de identidad:** nombre, RUT, email y teléfono.
+- **Datos de vehículo:** patente.
+- **Datos financieros:** historial de transacciones de pago (no almacenamos números completos de tarjetas de crédito; estos son gestionados por procesadores de pago).
+- **Datos de uso:** dirección IP, logs e historial de reservas.
 
-## 3. Data Protection
-- We use encryption for sensitive fields (RUT, Phone).
-- We restrict access to personal data to authorized personnel and systems.
+## 2. Cómo Usamos Tus Datos
 
-## 4. Data Sharing
-We do not sell your data. We share data only with:
-- **Building Administration:** To authorize your entry.
-- **Service Providers:** Payment gateways (MercadoPago/Fintoc), Notification services (Twilio).
-- **Legal Authorities:** If required by law.
+- Para procesar reservas y pagos.
+- Para verificar identidad por seguridad (control de acceso del edificio).
+- Para cumplir obligaciones legales.
+- Para mejorar nuestra plataforma.
 
-## 5. Your Rights
-You have the right to request access to, correction of, or deletion of your personal data. Contact us to exercise these rights.
+## 3. Protección De Datos
+
+- Usamos cifrado para campos sensibles (RUT, teléfono).
+- Restringimos el acceso a datos personales a personal y sistemas autorizados.
+
+## 4. Compartición De Datos
+
+No vendemos tus datos. Compartimos datos solo con:
+
+- **Administración del edificio:** para autorizar tu ingreso.
+- **Proveedores de servicios:** pasarelas de pago (MercadoPago/Fintoc) y servicios de notificación (Twilio).
+- **Autoridades legales:** si la ley lo exige.
+
+## 5. Tus Derechos
+
+Tienes derecho a solicitar acceso, corrección o eliminación de tus datos personales. Contáctanos para ejercer estos derechos.

@@ -1,125 +1,119 @@
-# Conversion Backlog 2026
+# Backlog De Conversión 2026
 
-**Date:** 2026-04-26  
-**Scope:** Sales-facing and conversion-facing product backlog for the current stage
+**Fecha:** 2026-04-26
+**Alcance:** backlog de producto orientado a ventas y conversión para la etapa actual
 
-Scoring dimensions:
+Dimensiones de scoring:
 
-1. Impact on conversion.
-2. Impact on trust and reliability.
-3. Effort.
-4. Urgency.
+1. Impacto en conversión.
+2. Impacto en confianza y confiabilidad.
+3. Esfuerzo.
+4. Urgencia.
 
-## Priority 1: Do Now
+## Prioridad 1: Hacer Ahora
 
-### 1. Demo tenant with realistic seeded data
+### 1. Tenant demo con datos seed realistas
 
-Impact: Very high  
-Effort: Medium  
-Why: strongest immediate effect on demos and pilot readiness.
+Impacto: muy alto
+Esfuerzo: medio
+Por qué: mayor efecto inmediato en demos y preparación de pilotos.
 
-### 2. Standardize critical UI labels, statuses, and error messages
+### 2. Estandarizar etiquetas UI críticas, estados y mensajes de error
 
-Impact: High  
-Effort: Low  
-Why: visible professionalism gain with fast payoff.
+Impacto: alto
+Esfuerzo: bajo
+Por qué: mejora visible de profesionalismo con retorno rápido.
 
-### 3. Fix inconsistent frontend API usage in critical flows
+### 3. Corregir uso inconsistente de API frontend en flujos críticos
 
-Impact: High  
-Effort: Medium  
-Why: reduces demo and pilot instability.
+Impacto: alto
+Esfuerzo: medio
+Por qué: reduce inestabilidad en demos y pilotos.
 
-### 4. Booking flow UX cleanup
+### 4. Limpieza UX del flujo de reserva
 
-Impact: High  
-Effort: Medium  
-Why: core value path.
+Impacto: alto
+Esfuerzo: medio
+Por qué: ruta central de valor.
 
-### 5. Payment and webhook robustness review with logging improvements
+### 5. Revisión de robustez de pagos y webhooks con mejoras de logging
 
-Impact: High  
-Effort: Medium  
-Why: trust and operational safety.
+Impacto: alto
+Esfuerzo: medio
+Por qué: confianza y seguridad operacional.
 
-### 6. Admin dashboard simplification
+### 6. Simplificación del dashboard admin
 
-Impact: High  
-Effort: Medium  
-Why: decision-makers care about clarity and control.
+Impacto: alto
+Esfuerzo: medio
+Por qué: los tomadores de decisión valoran claridad y control.
 
-### 7. Mobile polish for guard and concierge flow
+### 7. Pulido móvil para flujo de guardia y conserjería
 
-Impact: High  
-Effort: Medium  
-Why: operational adoption risk.
+Impacto: alto
+Esfuerzo: medio
+Por qué: riesgo de adopción operacional.
 
-## Priority 2: Next
+## Prioridad 2: Siguiente
 
-### 1. Public pricing page
+### 1. Página pública de precios
 
-Impact: High  
-Effort: Low  
-Why: reduces ambiguity and shortens the sales cycle.
+Impacto: alto
+Esfuerzo: bajo
+Por qué: reduce ambigüedad y acorta el ciclo de venta.
 
-### 2. Security and reliability page
+### 2. Página de seguridad y confiabilidad
 
-Impact: High  
-Effort: Low  
-Why: strong B2B trust signal.
+Impacto: alto
+Esfuerzo: bajo
+Por qué: señal fuerte de confianza B2B.
 
-### 3. Pilot onboarding checklist in product and process
+### 3. Checklist de onboarding piloto en producto y proceso
 
-Impact: Medium  
-Effort: Low  
-Why: speeds delivery and lowers activation friction.
+Impacto: medio
+Esfuerzo: bajo
+Por qué: acelera entrega y baja fricción de activación.
 
-### 4. Better empty states and onboarding guidance
+### 4. Mejores estados vacíos y guía de onboarding
 
-Impact: Medium  
-Effort: Low  
-Why: better first-use experience.
+Impacto: medio
+Esfuerzo: bajo
+Por qué: mejora la primera experiencia de uso.
 
-### 5. Usage and occupancy reporting snapshot
+### 5. Snapshot de reportes de uso y ocupación
 
-Impact: Medium  
-Effort: Medium  
-Why: strengthens admin value perception.
+Impacto: medio
+Esfuerzo: medio
+Por qué: fortalece percepción de valor para admins.
 
-### 6. Critical-path integration and E2E hardening
+### 6. Endurecimiento de integración y E2E de rutas críticas
 
-Impact: High  
-Effort: Medium  
-Why: protects demos and pilots.
+Impacto: alto
+Esfuerzo: medio
+Por qué: protege demos y pilotos.
 
-## Priority 3: Later
+## Prioridad 3: Después
 
-### 1. Public acquisition site in Next.js
+### 1. Sitio público de adquisición en Next.js
 
-Impact: Medium to high  
-Effort: Medium  
-Why: useful if outreach, SEO, or content become active growth channels.
+Impacto: medio a alto
+Esfuerzo: medio
+Por qué: útil cuando ya exista claridad comercial suficiente para escalar tráfico.
 
-### 2. Backend modularization of overloaded booking and payment paths
+### 2. Calculadora simple de ROI
 
-Impact: Medium  
-Effort: Medium to high  
-Why: valuable, but less visible than conversion-facing work unless failures are occurring.
+Impacto: medio
+Esfuerzo: bajo
+Por qué: ayuda a conversaciones comerciales con administradoras.
 
-### 3. Full design system refinement
+### 3. Caso de estudio de primer piloto
 
-Impact: Medium  
-Effort: High  
-Why: useful later, but limited short-term conversion leverage.
+Impacto: alto
+Esfuerzo: medio
+Por qué: se vuelve mucho más fuerte cuando contiene evidencia real.
 
-### 4. Full frontend migration
+### 4. Mejoras de observabilidad en auth, booking y validación
 
-Impact: Low to medium right now  
-Effort: High  
-Why: high cost with weak short-term sales ROI.
-
-### 5. Full backend migration
-
-Impact: Low to medium right now  
-Effort: Very high  
-Why: not justified until the current architecture clearly blocks delivery.
+Impacto: medio
+Esfuerzo: medio
+Por qué: reduce tiempo de soporte y mejora confianza operacional.

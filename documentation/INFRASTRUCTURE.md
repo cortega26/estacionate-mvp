@@ -1,58 +1,58 @@
-# Infrastructure & Deployment Guide
+# Guía De Infraestructura Y Despliegue
 
-## Overview
+## Visión General
 
-Estaciónate uses a hybrid infrastructure model:
+Estaciónate usa un modelo híbrido de infraestructura:
 
-- **Backend**: Node.js/Express on Vercel (Production) / Docker (Local).
-- **Frontend**: React SPA on Vercel (Production) / Vite (Local).
-- **Database**: PostgreSQL on Neon (Production) / Docker (Local).
-- **Caching/Rate Limiting**: Upstash Redis (Production) / Redis Docker (Local).
+- **Backend:** Node.js/Express en Vercel (producción) / Docker (local).
+- **Frontend:** SPA React en Vercel (producción) / Vite (local).
+- **Base de datos:** PostgreSQL en Neon (producción) / Docker (local).
+- **Caché/rate limiting:** Upstash Redis (producción) / Redis Docker (local).
 
-See `documentation/adr/0003-deployment-topology.md` for the deployment topology decision.
+Revisa `documentation/adr/0003-deployment-topology.md` para la decisión de topología de despliegue.
 
-## Local Development (Docker)
+## Desarrollo Local (Docker)
 
-We use Docker Compose to replicate the production environment locally.
+Usamos Docker Compose para replicar localmente el entorno de producción.
 
-### Prerequisites
+### Prerrequisitos
 
-- Docker & Docker Compose
+- Docker y Docker Compose
 - Node.js 24.15.0 LTS
-- `nvm` recommended; this repository includes `.nvmrc`, so `nvm use` will select the pinned runtime
+- `nvm` recomendado; este repositorio incluye `.nvmrc`, por lo que `nvm use` selecciona el runtime fijado
 
 ### Setup
 
-1.  **Clone the repository**.
-2.  **Bootstrap the local environment**:
+1.  **Clonar el repositorio**.
+2.  **Preparar el entorno local**:
 
     ```bash
     npm run bootstrap
     ```
 
-    This installs dependencies, creates local `.env` files when missing, starts PostgreSQL and Redis, applies checked-in Prisma migrations, seeds the database, and launches the frontend/backend dev servers.
+    Esto instala dependencias, crea archivos `.env` locales cuando falten, inicia PostgreSQL y Redis, aplica migraciones Prisma registradas, carga la base de datos y levanta los servidores de desarrollo frontend/backend.
 
-    To stop after provisioning only:
+    Para detenerse después del aprovisionamiento:
 
     ```bash
     npm run bootstrap -- --no-start
     ```
 
-### Manual Setup
+### Setup Manual
 
-1.  **Start Services**:
+1.  **Iniciar servicios**:
     ```bash
     docker compose up -d postgres redis
     ```
-    This spins up:
-    - `postgres` (Port 5432, User: `postgres`, DB: `estacionate_dev`)
-    - `redis` (Port 6379)
-2.  **Create Local Env Files**:
+    Esto levanta:
+    - `postgres` (puerto 5432, usuario: `postgres`, DB: `estacionate_dev`)
+    - `redis` (puerto 6379)
+2.  **Crear archivos de entorno locales**:
     ```bash
     cp backend/.env.local.example backend/.env
     cp frontend/.env.example frontend/.env
     ```
-3.  **Run Backend Locally** (Outside Docker - Recommended for Dev):
+3.  **Ejecutar backend localmente** (fuera de Docker, recomendado para desarrollo):
     ```bash
     cd backend
     nvm use
@@ -60,48 +60,48 @@ We use Docker Compose to replicate the production environment locally.
     npx prisma migrate deploy
     npm run dev
     ```
-    _Ensure your `.env` points to localhost ports._
+    _Asegúrate de que tu `.env` apunte a puertos localhost._
 
-## Environment Variables
+## Variables De Entorno
 
 ### Backend (`backend/.env`)
 
-| Variable            | Description                                                                  | Example (Local)                                                 |
-| :------------------ | :--------------------------------------------------------------------------- | :-------------------------------------------------------------- |
-| `DATABASE_URL`      | Connection string for Postgres                                               | `postgresql://postgres:password@localhost:5432/estacionate_dev` |
-| `JWT_SECRET`        | Secret for signing auth tokens                                               | `local-dev-secret`                                              |
-| `PORT`              | API Server Port                                                              | `3000`                                                          |
-| `MP_ACCESS_TOKEN`   | MercadoPago demo/sandbox access token; not for Phase 1 production payments   | `TEST-...`                                                      |
-| `MP_WEBHOOK_SECRET` | MercadoPago demo/sandbox webhook secret; not for Phase 1 production payments | `...`                                                           |
-| `REDIS_URL`         | Redis Connection String                                                      | `redis://localhost:6379`                                        |
+| Variable            | Descripción                                                                     | Ejemplo (local)                                                 |
+| :------------------ | :------------------------------------------------------------------------------ | :-------------------------------------------------------------- |
+| `DATABASE_URL`      | String de conexión para Postgres                                                | `postgresql://postgres:password@localhost:5432/estacionate_dev` |
+| `JWT_SECRET`        | Secreto para firmar tokens de auth                                              | `local-dev-secret`                                              |
+| `PORT`              | Puerto del servidor API                                                         | `3000`                                                          |
+| `MP_ACCESS_TOKEN`   | Token demo/sandbox MercadoPago; no usar para pagos productivos de Fase 1        | `TEST-...`                                                      |
+| `MP_WEBHOOK_SECRET` | Secreto webhook demo/sandbox MercadoPago; no usar para pagos productivos Fase 1 | `...`                                                           |
+| `REDIS_URL`         | String de conexión Redis                                                        | `redis://localhost:6379`                                        |
 
 ### Frontend (`frontend/.env`)
 
-| Variable       | Description            | Example                 |
-| :------------- | :--------------------- | :---------------------- |
-| `VITE_API_URL` | URL of the Backend API | `http://localhost:3000` |
+| Variable       | Descripción           | Ejemplo                 |
+| :------------- | :-------------------- | :---------------------- |
+| `VITE_API_URL` | URL de la API backend | `http://localhost:3000` |
 
-## CI/CD Pipelines (GitHub Actions)
+## Pipelines CI/CD (GitHub Actions)
 
-We use GitHub Actions for continuous integration and deployment.
+Usamos GitHub Actions para integración continua y despliegue.
 
 ### Workflows
 
-- **`ci-backend.yml`**: Runs linting and unit/integration tests on every push. Uses a Postgres service container.
-- **`ci-frontend.yml`**: Runs linting and builds the React app to verify integrity.
-- **`cd-backend.yml`**: Deploys to Vercel when changes are merged to `main`.
-- **`cd-frontend.yml`**: Deploys the frontend to Vercel when changes are merged to `main`.
+- **`ci-backend.yml`**: ejecuta linting y pruebas unitarias/integración en cada push. Usa un contenedor de servicio Postgres.
+- **`ci-frontend.yml`**: ejecuta linting y build de la app React para verificar integridad.
+- **`cd-backend.yml`**: despliega a Vercel cuando los cambios se mergean a `main`.
+- **`cd-frontend.yml`**: despliega el frontend a Vercel cuando los cambios se mergean a `main`.
 
-### Secrets Required (GitHub Repo Settings)
+### Secretos Requeridos (Configuración Del Repo En GitHub)
 
-To enable deployments, add these secrets to your repository:
+Para habilitar despliegues, agrega estos secretos al repositorio:
 
-- `VERCEL_TOKEN`: Vercel CLI Token.
-- `VERCEL_ORG_ID`: From Vercel Project Settings.
-- `VERCEL_PROJECT_ID`: From Vercel Project Settings.
-- `DATABASE_URL`: Production DB URL (optional for CI, but needed if running non-mocked tests).
+- `VERCEL_TOKEN`: token de Vercel CLI.
+- `VERCEL_ORG_ID`: desde la configuración del proyecto en Vercel.
+- `VERCEL_PROJECT_ID`: desde la configuración del proyecto en Vercel.
+- `DATABASE_URL`: URL de base de datos productiva (opcional para CI, pero necesaria si se ejecutan pruebas sin mocks).
 
-## Database Migrations
+## Migraciones De Base De Datos
 
-- **Local**: `npx prisma migrate dev` - Creates new migrations and applies them.
-- **Production**: Vercel build command should include `npx prisma migrate deploy` or it should be run manually/via CI before deployment.
+- **Local:** `npx prisma migrate dev` crea nuevas migraciones y las aplica.
+- **Producción:** el comando de build de Vercel debe incluir `npx prisma migrate deploy` o debe ejecutarse manualmente/vía CI antes del despliegue.

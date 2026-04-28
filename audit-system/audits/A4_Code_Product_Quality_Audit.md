@@ -1,179 +1,148 @@
-# Code & Product Quality Audit (A4)
-**Role:** Senior Software Engineer / Product Quality Auditor  
-**Focus:** Maintainability • Performance Ergonomics • UX/UI • Accessibility • Testing Quality
+# Auditoría De Calidad De Código Y Producto (A4)
 
----
+**Rol:** ingeniero senior / auditor de calidad de producto
+**Foco:** mantenibilidad, ergonomía de performance, UX/UI, accesibilidad, calidad de pruebas
 
-## Scope Contract (Hard Boundary)
+## Contrato De Alcance
 
-### This audit DOES:
-- Evaluate **code maintainability and readability**.
-- Assess **modularity, abstraction quality, and developer ergonomics**.
-- Identify **performance issues that affect user experience** (not correctness or security).
-- Review **UX/UI consistency, accessibility, and feedback mechanisms**.
-- Evaluate **test quality, value, and stability**.
+### Esta auditoría sí:
 
-### This audit DOES NOT:
-- Verify business logic correctness or rule enforcement.
-- Detect security vulnerabilities or abuse cases.
-- Enforce architectural topology or file structure changes.
-- Validate regulatory or compliance requirements.
+- Evalúa **mantenibilidad y legibilidad de código**.
+- Evalúa **modularidad, calidad de abstracción y ergonomía de desarrollo**.
+- Identifica problemas de **performance que afectan experiencia de usuario**, no corrección o seguridad.
+- Revisa **consistencia UX/UI, accesibilidad y mecanismos de feedback**.
+- Evalúa **calidad, valor y estabilidad de pruebas**.
 
-### Delegation Rule
-If a finding relates primarily to:
-- Business correctness, state machines, or edge cases → `Delegated to A1`
-- Exploitability, secrets, auth, or abuse scenarios → `Delegated to A2`
-- Filesystem topology or module boundaries → `Delegated to A0`
-- Legal, regulatory, or audit evidence → `Delegated to A7`
+### Esta auditoría no:
 
-Do NOT duplicate findings across audits.
+- Verifica corrección de lógica de negocio ni enforcement de reglas.
+- Detecta vulnerabilidades de seguridad o abuso.
+- Hace cumplir topología arquitectónica o movimientos de archivos.
+- Valida requisitos regulatorios o de compliance.
 
----
+### Regla De Delegación
 
-## 1. Purpose
+Si un hallazgo trata principalmente de:
 
-Ensure the codebase is **pleasant to work in**, **safe to evolve**, and **pleasant to use**,
-without re-litigating correctness or security.
+- Corrección de negocio, state machines o edge cases -> `Delegado a A1`
+- Explotabilidad, secretos, auth o abuso -> `Delegado a A2`
+- Topología filesystem o límites de módulos -> `Delegado a A0`
+- Evidencia legal, regulatoria o de auditoría -> `Delegado a A7`
 
-This audit focuses on *friction*: for developers and for users.
+No duplicar hallazgos entre auditorías.
 
----
+## 1. Propósito
 
-## 2. Audience
-- Engineering Leads (technical debt & velocity)
-- Frontend / Backend Leads
-- QA / Test Engineers
-- Product Owners (UX prioritization)
+Asegurar que el codebase sea **agradable de trabajar**, **seguro de evolucionar** y **agradable de usar**, sin reabrir corrección o seguridad.
 
----
+Esta auditoría se enfoca en fricción para desarrolladores y usuarios.
 
-## 3. Scope of Evaluation
+## 2. Audiencia
 
-### 3.1 Maintainability & Developer Experience
-- Function and class size (avoid God objects/components).
-- Readability and naming clarity (intent-revealing code).
-- Duplication at the **implementation level** (not business rules).
-- Dependency hygiene (unused deps, version drift).
-- Local setup friction (Time-to-Hello-World).
+- Líderes de ingeniería
+- Leads frontend/backend
+- QA / test engineers
+- Product owners
 
-> Note: Logical duplication of business rules is **explicitly out of scope** (A1).
+## 3. Alcance De Evaluación
 
----
+### 3.1 Mantenibilidad Y DevEx
 
-### 3.2 Architecture (Ergonomic View Only)
-- Abstraction leaks (business logic inside UI layers).
-- Overly coupled modules hindering change.
-- Excessive global state usage.
-- Statelessness of backend services.
+- Tamaño de funciones y clases, evitando god objects/components.
+- Legibilidad y nombres que revelen intención.
+- Duplicación a nivel de implementación, no de reglas de negocio.
+- Higiene de dependencias (deps no usadas, drift de versiones).
+- Fricción de setup local (time-to-hello-world).
 
-> This section evaluates *ergonomics*, not correctness or topology.
+> La duplicación lógica de reglas de negocio queda explícitamente fuera de alcance (A1).
 
----
+### 3.2 Arquitectura (Vista Ergonómica)
 
-### 3.3 Performance (User-Perceived)
-- Frontend:
-  - Unnecessary re-renders.
-  - Large synchronous tasks blocking the main thread.
-- Backend:
-  - Obvious inefficiencies causing user-visible latency.
-- Asset delivery:
-  - Image formats, lazy-loading, bundle size red flags.
+- Abstracciones que filtran detalles.
+- Módulos demasiado acoplados que dificultan cambios.
+- Uso excesivo de estado global.
+- Statelessness de servicios backend.
 
-> Performance issues that cause **incorrect behavior** are delegated to A1.  
-> Performance issues that enable **exploitation** are delegated to A2.
+> Esta sección evalúa ergonomía, no corrección ni topología.
 
----
+### 3.3 Performance Percibida Por Usuario
 
-### 3.4 UX / UI & Accessibility
-- Visual consistency (design tokens, spacing, typography).
-- Feedback loops (loading states, empty states, error clarity).
-- Accessibility:
-  - Semantic HTML
-  - Keyboard navigation
-  - Screen reader compatibility
-- Responsiveness across breakpoints.
+- Frontend: renders innecesarios, tareas síncronas largas en main thread.
+- Backend: ineficiencias obvias con latencia visible para usuario.
+- Assets: formatos de imagen, lazy-loading, señales de bundle grande.
 
-> Error *semantics* are out of scope. Only presentation and clarity are evaluated here.
+Problemas de performance que causen comportamiento incorrecto van a A1; los que habiliten explotación van a A2.
 
----
+### 3.4 UX/UI Y Accesibilidad
 
-### 3.5 Testing Quality
-- Test pyramid shape (unit vs integration vs E2E).
-- Test intent: behavior vs implementation detail.
-- Flakiness and non-determinism.
-- Mocking strategy (over- vs under-mocking).
-- Mutation resistance (do tests actually fail when behavior breaks?).
+- Consistencia visual (tokens, spacing, tipografía).
+- Feedback loops (loading, empty states, claridad de errores).
+- Accesibilidad: HTML semántico, navegación por teclado, soporte screen reader.
+- Responsividad entre breakpoints.
 
----
+La semántica de errores queda fuera de alcance; aquí solo se evalúa presentación y claridad.
 
-## 4. Required Inputs
-- Source code repositories
-- API documentation (OpenAPI/Swagger)
-- Design references (Figma/Sketch)
-- Staging or Dev environment access (realistic data)
-- Performance reports (Lighthouse, APM snapshots)
+### 3.5 Calidad De Pruebas
 
----
+- Forma de la pirámide de pruebas.
+- Intención de pruebas: comportamiento versus detalle de implementación.
+- Flakiness y no determinismo.
+- Estrategia de mocks.
+- Resistencia a mutación: si el comportamiento se rompe, las pruebas deben fallar.
 
-## 5. Methodology
+## 4. Entradas Requeridas
 
-### 5.1 Discovery
-1. Identify top 10 most complex files/components.
-2. Walk critical user paths end-to-end.
-3. Run static analysis tools (ESLint, Sonar, Knip, etc.).
+- Repositorios de código fuente.
+- Documentación API (OpenAPI/Swagger).
+- Referencias de diseño (Figma/Sketch).
+- Acceso a staging o dev con datos realistas.
+- Reportes de performance (Lighthouse, snapshots APM).
 
----
+## 5. Metodología
 
-### 5.2 Execution
+### 5.1 Descubrimiento
 
-**Maintainability**
-- Flag files/components exceeding reasonable size thresholds.
-- Identify abstractions that obscure intent.
+1. Identificar los 10 archivos/componentes más complejos.
+2. Recorrer rutas críticas de usuario end-to-end.
+3. Ejecutar herramientas estáticas (ESLint, Sonar, Knip, etc.).
+
+### 5.2 Ejecución
+
+**Mantenibilidad**
+
+- Marcar archivos/componentes que excedan tamaños razonables.
+- Identificar abstracciones que oscurezcan intención.
 
 **Performance**
-- Profile under realistic usage.
-- Identify wasted renders, forced reflows, blocking operations.
 
-**UX & a11y**
-- Keyboard-only navigation of critical paths.
-- 200% zoom test.
-- Heuristic consistency review.
+- Perfilar con uso realista.
+- Identificar renders desperdiciados, reflows forzados y operaciones bloqueantes.
 
-**Testing**
-- Run full test suite and measure time.
-- Break a critical path intentionally—verify tests fail.
+**UX y a11y**
 
----
+- Navegación solo teclado en rutas críticas.
+- Prueba de zoom 200%.
+- Revisión heurística de consistencia.
 
-## 6. Deliverables
+**Pruebas**
 
-1. **Refactoring Roadmap**
-   - Rewrite vs refactor recommendations.
-   - High-impact / low-effort fixes.
+- Ejecutar suite completa y medir tiempo.
+- Romper intencionalmente una ruta crítica y verificar que las pruebas fallen.
 
-2. **Performance Baseline**
-   - Current vs target metrics (user-visible only).
+## 6. Entregables
 
-3. **UX & Accessibility Gap Report**
-   - Screenshots and concrete violations.
+1. **Roadmap de refactor:** reescritura versus refactor y fixes de alto impacto/bajo esfuerzo.
+2. **Baseline de performance:** métricas actuales versus objetivo.
+3. **Reporte de brechas UX y accesibilidad:** screenshots y violaciones concretas.
+4. **Reporte de calidad de pruebas:** brechas, riesgos de flakiness y recomendaciones de pirámide.
 
-4. **Testing Quality Report**
-   - Coverage gaps.
-   - Flakiness risks.
-   - Recommendations for pyramid rebalance.
+## 7. Niveles De Severidad
 
----
+- **S0:** bloqueante de producto
+- **S1:** fricción crítica
+- **S2:** molestia mayor
+- **S3:** pulido menor
 
-## 7. Severity Levels
+## Restricción De Ejecución
 
-- **S0 — Product Blocker:** App unusable, crashes, severe UX failure.
-- **S1 — Critical Friction:** Codebase hard to change safely; major UX confusion.
-- **S2 — Major Annoyance:** Inconsistent UI, sluggish interactions.
-- **S3 — Minor Polish:** Small readability or visual issues.
-
----
-
-## Execution Constraint
-
-This audit must be executable **in isolation** and **with partial context**.
-Focus on **ergonomics and experience**, not correctness or security.
+Esta auditoría debe ejecutarse **en aislamiento** y **con contexto parcial**. Enfocarse en ergonomía y experiencia, no en corrección o seguridad.

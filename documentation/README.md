@@ -1,60 +1,53 @@
-# Documentation Index
+# Índice De Documentación
 
-Use this page as the navigation layer for project documentation. Prefer updating an existing document over creating a new top-level file unless the topic is genuinely new.
+Usa esta página como capa de navegación para la documentación del proyecto. Prefiere actualizar un documento existente antes que crear un archivo nuevo de primer nivel, salvo que el tema sea realmente nuevo.
 
-## Start Here
+## Comienza Aquí
 
-- `../README.md`: project overview and standard bootstrap.
-- `../AGENTS.md`: fast operational entry point for agents and new contributors.
-- `AGENT_POLICY.md`: canonical agent workflow policy and interpretation rules.
-- `CODEMAP.md`: repository map, validation matrix, and change guide.
-- `OWNERSHIP.md`: ownership, generated-file, and edit-boundary guide.
-- `TASKS.md`: task-specific entry recipes and focused checks.
-- `task-recipes/`: deeper recipes for specialized workflows.
-- `VALIDATION.md`: validation command guide by change type.
-- `TECH_SPEC.md`: product/domain rules and core API sketch.
-- `commercial/PITCH_PHASE_1.md`: Phase 1 commercial pitch for administrators
-  and committees.
-- `commercial/ADMINISTRADORA_OUTREACH.md`: outbound and discovery script for
-  administrator conversations.
-- `commercial/PILOT_PHASE_1_CHECKLIST.md`: controlled pilot checklist with no
-  integrated payments.
-- `commercial/OBJECTIONS_FAQ.md`: answers to common legal, operational, and
-  commercial objections.
-- `INFRASTRUCTURE.md`: local and production infrastructure notes.
-- `../RUNBOOK.md`: operational procedures and troubleshooting.
+- `../README.md`: visión general del proyecto y preparación estándar.
+- `../AGENTS.md`: entrada operativa rápida para agentes y nuevos contribuyentes.
+- `AGENT_POLICY.md`: política canónica de flujo de trabajo e interpretación para agentes.
+- `CODEMAP.md`: mapa del repositorio, matriz de validación y guía de cambios.
+- `OWNERSHIP.md`: guía de propiedad, archivos generados y límites de edición.
+- `TASKS.md`: recetas de entrada por tarea y revisiones enfocadas.
+- `task-recipes/`: recetas más profundas para flujos especializados.
+- `VALIDATION.md`: guía de comandos de validación por tipo de cambio.
+- `TECH_SPEC.md`: reglas de producto/dominio y bosquejo API central.
+- `commercial/PITCH_PHASE_1.md`: pitch comercial de Fase 1 para administradores y comités.
+- `commercial/ADMINISTRADORA_OUTREACH.md`: guion outbound y discovery para conversaciones con administradoras.
+- `commercial/PILOT_PHASE_1_CHECKLIST.md`: checklist de piloto controlado sin pagos integrados.
+- `commercial/OBJECTIONS_FAQ.md`: respuestas a objeciones legales, operativas y comerciales comunes.
+- `INFRASTRUCTURE.md`: notas de infraestructura local y producción.
+- `../RUNBOOK.md`: procedimientos operacionales y solución de problemas.
 
-## Working Protocol
+## Protocolo De Trabajo
 
-- `AGENTS.md`: detailed agent guardrails.
-- `PROTOCOL.md`: terminal/output and workflow expectations.
-- `LESSONS.md`: project-specific gotchas and historical notes.
+- `AGENTS.md`: guardrails detallados para agentes.
+- `PROTOCOL.md`: expectativas de terminal/salida y flujo de trabajo.
+- `LESSONS.md`: advertencias y notas históricas específicas del proyecto.
 
-## Decisions
+## Decisiones
 
-- `adr/`: architecture decision records.
-- `adr/TEMPLATE.md`: template for new architecture decision records.
-- `adr/0005-validation-environment-contract.md`: local validation environment contract.
+- `adr/`: registros de decisión de arquitectura.
+- `adr/TEMPLATE.md`: plantilla para nuevos registros de decisión de arquitectura.
+- `adr/0005-validation-environment-contract.md`: contrato de entorno local de validación.
 
-## Product And Planning
+## Producto Y Planificación
 
-The `commercial/` directory is the active Phase 1 commercial source for outreach
-and pilots. Older files under `../docs/` and `project_context/` may contain
-historical marketplace/payment assumptions and must be read through
-`LEGAL_COMMERCIAL_GUARDRAILS.md`.
+El directorio `commercial/` es la fuente comercial activa de Fase 1 para outreach y pilotos. Archivos más antiguos en `../docs/` y `project_context/` pueden contener supuestos históricos de marketplace/pagos y deben leerse a través de `LEGAL_COMMERCIAL_GUARDRAILS.md`.
 
 - `../docs/production-roadmap-2025.md`: roadmap.
-- `../docs/production-backlog.md`: production backlog.
-- `../docs/commercial-conversion-plan-2026.md`: product, sales, and conversion operating plan for the current growth stage.
-- `../docs/commercial-roadmap-2026.md`: 30-60-90 commercial and product execution roadmap.
-- `../docs/founder-sales-playbook-es.md`: Spanish founder sales playbook for discovery, demos, and pilot conversations.
-- `../docs/conversion-backlog-2026.md`: prioritized conversion-focused backlog.
-- `../docs/client-pitch-deck-outline-2026.md`: client-facing pitch deck structure.
-- `../docs/GAP_ANALYSIS_FEATURES.md`: feature gap analysis.
-- `project_context/`: original project context and MVP analysis.
+- `../docs/production-backlog.md`: backlog de producción.
+- `../docs/commercial-conversion-plan-2026.md`: plan operativo de producto, ventas y conversión para la etapa actual de crecimiento.
+- `../docs/commercial-roadmap-2026.md`: roadmap comercial y de producto 30-60-90.
+- `../docs/founder-sales-playbook-es.md`: playbook comercial en español para discovery, demos y conversaciones de piloto.
+- `../docs/conversion-backlog-2026.md`: backlog priorizado con foco en conversión.
+- `../docs/client-pitch-deck-outline-2026.md`: estructura de pitch deck para clientes.
+- `../docs/GAP_ANALYSIS_FEATURES.md`: análisis de brechas de funcionalidades.
+- `project_context/`: contexto original del proyecto y análisis MVP.
 
-## Audit System
+## Sistema De Auditoría
 
-- `../audit-system/README.md`: audit-system overview.
-- `../audit-system/reports/Consolidated_Report.md`: consolidated audit findings.
-- `../audit-system/reports/Comprehensive_Audit_Report.md`: comprehensive audit report.
+- `../audit-system/README.md`: visión general del sistema de auditoría.
+- `../audit-system/reports/Consolidated_Report.md`: hallazgos de auditoría consolidados.
+- `../audit-system/reports/Comprehensive_Audit_Report.md`: reporte de auditoría completo.

@@ -1,50 +1,62 @@
-# Audit Phase 2: Deep Dive Findings
+# Auditoría Fase 2: Hallazgos Deep Dive
 
-**Date:** 2025-12-23
-**Status:** In Progress
+**Fecha:** 2025-12-23
+**Estado:** en progreso
 
-## 1. Executive Summary
-The "Deep Dive" audit reveals a tendency towards "God Functions" in the backend, specifically in critical paths like Booking Creation. The DB Schema is generally robust with good indexing and security practices (blind indexes for PII). The Frontend suffers from inconsistent API patterns, with some components bypassing the configured Axios client in favor of raw `fetch` calls, leading to potential auth implementation errors.
+## 1. Resumen Ejecutivo
 
-## 2. Backend Findings
+La auditoría deep dive revela tendencia a "God Functions" en backend, especialmente en rutas críticas como creación de bookings. El schema DB es generalmente robusto, con buenos índices y prácticas de seguridad (blind indexes para PII). El frontend sufre de patrones API inconsistentes: algunos componentes evitan el cliente Axios configurado y usan `fetch` crudo, lo que puede producir errores de auth.
 
-### 2.1 Architecture & Separation of Concerns
-**Severity: High**
-- **Violation:** `backend/api/bookings/create.ts` (280 lines) contains excessive logic:
-    - Blocklist verification (Database logic).
-    - Pricing Rules engine (Business logic).
-    - Double-booking detection (Business logic).
-    - Event publishing (Infrastructure logic).
-    - Controller logic (Req/Res handling).
-- **Impact:** Hard to test in isolation; logic cannot be reused (e.g., if we add a "Concierge Booking" feature later, we'd copy-paste this logic).
-- **Recommendation:** Extract logic into `BookingService.createBooking(...)`.
+## 2. Hallazgos Backend
 
-### 2.2 Payment Logic Leakage
-**Severity: Medium**
-- **Violation:** `backend/api/payments/checkout.ts` handles `db.payment.upsert`.
-- **Recommendation:** Move to `PaymentService`.
+### 2.1 Arquitectura Y Separación De Responsabilidades
 
-### 2.3 Database Schema (Prisma)
-**Severity: Low (Mostly Good)**
-- **Positive:** `Resident` table uses `rutHash` for blind indexing and `rut` encrypted. Good security practice.
-- **Positive:** Indexes on foreign keys (`residentId`, `buildingId`) are present.
-- **Observation:** `PricingRule` logic is embedded in the controller query rather than a DB function or Service method.
+**Severidad:** alta
 
-## 3. Frontend Findings
+- **Violación:** `backend/api/bookings/create.ts` (280 líneas) contiene lógica excesiva:
+  - Verificación de blocklist (lógica de base de datos).
+  - Motor de pricing rules (lógica de negocio).
+  - Detección de doble booking (lógica de negocio).
+  - Publicación de eventos (lógica de infraestructura).
+  - Lógica de controller (manejo req/res).
+- **Impacto:** difícil de probar en aislamiento; la lógica no puede reutilizarse. Si se agrega una funcionalidad "Concierge Booking", se tendería a copiar y pegar esta lógica.
+- **Recomendación:** extraer lógica a `BookingService.createBooking(...)`.
 
-### 3.1 Inconsistent API Patterns
-**Severity: High**
-- **Violation:** `frontend/src/lib/api.ts` defines a configured Axios instance (handling base URL and cookies).
-- **Evidence:** `frontend/src/pages/Admin/UserManagement.tsx` bypasses this and uses raw `fetch`:
-    ```typescript
-    fetch(`${import.meta.env.VITE_API_URL}/api/admin/users?${params}`, { credentials: 'include' })
-    ```
-- **Impact:** If auth logic changes (e.g., header-based token), these raw fetch calls will break. It also duplicates environment variable logic.
+### 2.2 Fuga De Lógica De Pagos
 
-### 3.2 Hardcoded Strings
-**Severity: Low**
-- Management pages use hardcoded English/Spanish strings mixed.
+**Severidad:** media
 
-## 4. Recommendations
-1.  **Refactor Booking Controller:** Create `BookingService`.
-2.  **Standardize Frontend API:** Replace raw `fetch` in `UserManagement.tsx` (and others) with `api` client from `lib/api.ts`.
+- **Violación:** `backend/api/payments/checkout.ts` maneja `db.payment.upsert`.
+- **Recomendación:** mover a `PaymentService`.
+
+### 2.3 Schema De Base De Datos (Prisma)
+
+**Severidad:** baja (mayoritariamente bien)
+
+- **Positivo:** tabla `Resident` usa `rutHash` para blind indexing y `rut` cifrado. Buena práctica de seguridad.
+- **Positivo:** existen índices en foreign keys (`residentId`, `buildingId`).
+- **Observación:** lógica de `PricingRule` está embebida en la query del controller en vez de una función DB o método de servicio.
+
+## 3. Hallazgos Frontend
+
+### 3.1 Patrones API Inconsistentes
+
+**Severidad:** alta
+
+- **Violación:** `frontend/src/lib/api.ts` define una instancia Axios configurada (base URL y cookies).
+- **Evidencia:** `frontend/src/pages/Admin/UserManagement.tsx` evita esta instancia y usa `fetch` crudo:
+  ```typescript
+  fetch(`${import.meta.env.VITE_API_URL}/api/admin/users?${params}`, { credentials: 'include' })
+  ```
+- **Impacto:** si cambia la lógica de auth (por ejemplo, token en header), estos `fetch` crudos fallarán. También duplican lógica de variables de entorno.
+
+### 3.2 Strings Hardcodeados
+
+**Severidad:** baja
+
+- Páginas de administración usan mezcla de strings hardcodeados en inglés/español.
+
+## 4. Recomendaciones
+
+1. **Refactor del controller de booking:** crear `BookingService`.
+2. **Estandarizar API frontend:** reemplazar `fetch` crudo en `UserManagement.tsx` y similares por el cliente `api` de `lib/api.ts`.

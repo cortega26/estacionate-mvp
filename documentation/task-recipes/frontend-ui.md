@@ -1,30 +1,30 @@
-# Frontend UI Recipe
+# Receta UI Frontend
 
-Use this recipe for route, component, state, and styling changes in the Vite React app.
+Usa esta receta para cambios en rutas, componentes, estado y estilos de la app React/Vite.
 
-## Start With
+## Comienza Con
 
-- `frontend/src/App.tsx` for routing and top-level composition.
-- `frontend/src/pages/**` for route-level screens.
-- `frontend/src/features/**` for feature-owned components.
-- `frontend/src/components/ui/**` for shared controls.
-- `frontend/src/lib/api.ts` for backend calls.
-- `frontend/src/types/**` for shared frontend contracts.
+- `frontend/src/App.tsx` para routing y composición superior.
+- `frontend/src/pages/**` para pantallas a nivel de ruta.
+- `frontend/src/features/**` para componentes dueños de funcionalidad.
+- `frontend/src/components/ui/**` para controles compartidos.
+- `frontend/src/lib/api.ts` para llamadas al backend.
+- `frontend/src/types/**` para contratos frontend compartidos.
 
-## Implementation Notes
+## Notas De Implementación
 
-- Use React Query for server state and Zustand only for cross-screen client state.
-- Keep reusable UI primitives in `frontend/src/components/ui`.
-- Use Tailwind utility classes and existing layout patterns before adding new CSS.
-- Update API types and fixtures when a UI change depends on backend response shape.
+- Usa React Query para estado de servidor y Zustand solo para estado de cliente transversal a pantallas.
+- Mantén primitivas UI reutilizables en `frontend/src/components/ui`.
+- Usa utilidades Tailwind y patrones de layout existentes antes de agregar CSS nuevo.
+- Actualiza tipos API y fixtures cuando un cambio UI dependa de la forma de respuesta backend.
 
-## Validate With
+## Validar Con
 
 ```bash
 cd frontend && npm run lint && npm test && npm run build
 ```
 
-Add Playwright when the change affects auth, booking, admin, sales, or gatekeeper flows:
+Agrega Playwright cuando el cambio afecte flujos de auth, booking, admin, ventas o conserjería:
 
 ```bash
 cd frontend && npm run test:e2e

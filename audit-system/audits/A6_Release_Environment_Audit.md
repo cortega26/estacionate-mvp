@@ -1,162 +1,142 @@
-# Release & Environment Safety Audit (A6)
-**Role:** Release Manager / DevOps Safety Auditor  
-**Focus:** Deploy Safety • Rollbacks • Environment Parity • Configuration & Secrets Handling
+# Auditoría De Seguridad De Release Y Entorno (A6)
 
----
+**Rol:** release manager / auditor de seguridad DevOps
+**Foco:** seguridad de deploy, rollbacks, paridad de entorno, configuración y secretos
 
-## Scope Contract (Hard Boundary)
+## Contrato De Alcance
 
-### This audit DOES:
-- Evaluate **release safety mechanisms** and rollback readiness.
-- Assess **environment parity** between Dev, Staging, and Production.
-- Review **configuration management** and secret injection strategies.
-- Validate **feature flag lifecycle** and kill‑switch effectiveness.
-- Detect **configuration drift** and unsafe manual interventions.
+### Esta auditoría sí:
 
-### This audit DOES NOT:
-- Optimize CI pipelines or developer inner‑loop experience.
-- Review application code quality, UX, or business logic correctness.
-- Detect security vulnerabilities beyond release/config exposure.
-- Produce legal or compliance evidence.
+- Evalúa **mecanismos de seguridad de release** y preparación de rollback.
+- Evalúa **paridad de entorno** entre dev, staging y producción.
+- Revisa **gestión de configuración** y estrategias de inyección de secretos.
+- Valida ciclo de vida de **feature flags** y efectividad de kill switches.
+- Detecta **drift de configuración** e intervenciones manuales inseguras.
 
-### Delegation Rule
-If a finding relates primarily to:
-- CI speed, DevEx, or operational flow → `Delegated to A5`
-- Security exploitability or IAM policy design → `Delegated to A2`
-- Code maintainability or UX → `Delegated to A4`
-- Compliance, approvals, or audit trails → `Delegated to A7`
+### Esta auditoría no:
 
-Do NOT duplicate findings across audits.
+- Optimiza pipelines CI ni experiencia inner-loop.
+- Revisa calidad de código, UX o corrección de negocio.
+- Detecta vulnerabilidades más allá de exposición de release/configuración.
+- Produce evidencia legal o de compliance.
 
----
+### Regla De Delegación
 
-## 1. Purpose
+Si un hallazgo trata principalmente de:
 
-Ensure that **changes can be shipped and unshipped safely**.
+- Velocidad CI, DevEx o flujo operacional -> `Delegado a A5`
+- Explotabilidad de seguridad o diseño IAM -> `Delegado a A2`
+- Mantenibilidad de código o UX -> `Delegado a A4`
+- Compliance, aprobaciones o audit trails -> `Delegado a A7`
 
-This audit answers:
-- Can we deploy without fear?
-- Can we stop or rollback instantly?
-- Do environments behave the same?
-- Are configurations controlled and reversible?
+No duplicar hallazgos entre auditorías.
 
----
+## 1. Propósito
 
-## 2. Audience
-- Release Managers
-- DevOps / Platform Engineers
-- QA Leads
-- Product Owners (release planning)
+Asegurar que **los cambios puedan enviarse y retirarse con seguridad**.
 
----
+Esta auditoría responde:
 
-## 3. Scope of Evaluation
+- ¿Podemos desplegar sin miedo?
+- ¿Podemos detener o rollbackear instantáneamente?
+- ¿Los entornos se comportan igual?
+- ¿Las configuraciones están controladas y son reversibles?
 
-### 3.1 Release Strategy
-- Separation of *deploy* (code present) vs *release* (traffic exposed).
-- Rollout mechanisms: blue/green, canary, rolling updates.
-- Automation level (manual steps are risk).
-- Mean time to rollback.
+## 2. Audiencia
 
----
+- Release managers
+- DevOps / plataforma
+- Leads QA
+- Product owners
 
-### 3.2 Feature Flags & Kill Switches
-- Coverage of critical paths.
-- Lifecycle management (stale flags).
-- Runtime toggle latency.
-- Flag ownership and documentation.
+## 3. Alcance De Evaluación
 
----
+### 3.1 Estrategia De Release
 
-### 3.3 Environment Parity
-- Runtime versions (language, OS, container base).
-- Infrastructure parameters (memory, limits, scaling).
-- Third‑party integrations and credentials.
-- Data realism in non‑prod environments.
+- Separación entre deploy (código presente) y release (tráfico expuesto).
+- Mecanismos de rollout: blue/green, canary, rolling updates.
+- Nivel de automatización; pasos manuales son riesgo.
+- Tiempo medio a rollback.
 
----
+### 3.2 Feature Flags Y Kill Switches
 
-### 3.4 Configuration & Secrets
-- Injection strategy (env vars vs secret manager).
-- Config versioning alongside code.
-- Ability to rollback configuration independently.
-- Detection of hardcoded or baked‑in secrets.
+- Cobertura de rutas críticas.
+- Gestión de ciclo de vida y flags obsoletas.
+- Latencia de toggle en runtime.
+- Ownership y documentación de flags.
 
----
+### 3.3 Paridad De Entorno
 
-### 3.5 Drift & Change Control
-- Detection of manual changes in production (ClickOps).
-- Infra drift alerts.
-- Guardrails preventing unsafe hot fixes.
+- Versiones runtime (lenguaje, OS, base container).
+- Parámetros de infraestructura (memoria, límites, escalamiento).
+- Integraciones y credenciales de terceros.
+- Realismo de datos en no-prod.
 
----
+### 3.4 Configuración Y Secretos
 
-## 4. Required Inputs
-- Deployment pipelines and scripts.
-- Environment manifests and variables.
-- Feature flag configurations.
-- Access to non‑prod environments.
+- Estrategia de inyección (env vars versus secret manager).
+- Versionado de configuración junto con código.
+- Capacidad de rollback de configuración independiente.
+- Detección de secretos hardcodeados o baked-in.
 
----
+### 3.5 Drift Y Control De Cambios
 
-## 5. Methodology
+- Detección de cambios manuales en producción (ClickOps).
+- Alertas de drift de infraestructura.
+- Guardrails que previenen hot fixes inseguros.
 
-### 5.1 Discovery
-1. Inventory environments and release paths.
-2. Map deploy vs release steps.
-3. Identify configuration sources of truth.
+## 4. Entradas Requeridas
 
----
+- Pipelines y scripts de despliegue.
+- Manifiestos y variables de entorno.
+- Configuraciones de feature flags.
+- Acceso a entornos no productivos.
 
-### 5.2 Execution
+## 5. Metodología
 
-**Rollback Readiness**
-- Simulate a bad deploy.
-- Measure time to restore service.
+### 5.1 Descubrimiento
 
-**Flags & Toggles**
-- Disable a non‑critical feature in prod.
-- Measure propagation latency.
+1. Inventariar entornos y rutas de release.
+2. Mapear pasos deploy versus release.
+3. Identificar fuentes de verdad de configuración.
 
-**Parity & Drift**
-- Diff configs across environments.
-- Inspect for manual changes.
+### 5.2 Ejecución
 
----
+**Preparación de rollback**
 
-### 5.3 Verification & Reporting
-- Validate findings are reproducible.
-- Prioritize by **blast radius × recovery time**.
-- Recommend concrete safety improvements.
+- Simular deploy malo.
+- Medir tiempo de restauración de servicio.
 
----
+**Flags y toggles**
 
-## 6. Deliverables
+- Deshabilitar una funcionalidad no crítica en prod.
+- Medir latencia de propagación.
 
-1. **Environment Drift Report**
-   - Differences between environments.
+**Paridad y drift**
 
-2. **Rollback Maturity Score**
-   - Time‑to‑recovery metrics.
+- Comparar configuraciones entre entornos.
+- Inspeccionar cambios manuales.
 
-3. **Feature Flag Health Report**
-   - Coverage, staleness, ownership.
+### 5.3 Verificación Y Reporte
 
-4. **Config & Secrets Hygiene Summary**
-   - Risks and remediation steps.
+- Validar que hallazgos sean reproducibles.
+- Priorizar por **radio de impacto x tiempo de recuperación**.
+- Recomendar mejoras concretas de seguridad de cambio.
 
----
+## 6. Entregables
 
-## 7. Severity Levels
+1. **Reporte de drift de entorno**
+2. **Puntaje de madurez de rollback**
+3. **Reporte de salud de feature flags**
+4. **Resumen de higiene de configuración y secretos**
 
-- **S0 — Unrecoverable:** No rollback, secrets committed, manual prod edits allowed.
-- **S1 — High Risk:** Staging ≠ Prod, dead flags, slow rollback.
-- **S2 — Medium Risk:** Partial parity, brittle config.
-- **S3 — Low Risk:** Minor inconsistencies.
+## 7. Niveles De Severidad
 
----
+- **S0:** irrecuperable
+- **S1:** alto riesgo
+- **S2:** riesgo medio
+- **S3:** bajo riesgo
 
-## Execution Constraint
+## Restricción De Ejecución
 
-This audit must be executable **in isolation** and **with partial context**.
-Focus on **safety of change**, not speed or code quality.
+Esta auditoría debe ejecutarse **en aislamiento** y **con contexto parcial**. Enfocarse en seguridad del cambio, no en velocidad o calidad de código.

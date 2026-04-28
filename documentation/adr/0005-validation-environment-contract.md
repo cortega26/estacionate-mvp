@@ -1,30 +1,21 @@
-# ADR 0005: Validation Environment Contract
+# ADR 0005: Contrato De Entorno De Validación
 
-- Status: accepted
-- Date: 2026-04-26
+- Estado: aceptado
+- Fecha: 2026-04-26
 
-## Context
+## Contexto
 
-The root `npm run check:all` command runs backend tests that require PostgreSQL,
-Redis, and backend environment variables. When those dependencies are missing, failures
-look like application regressions even though the local validation environment is
-incomplete.
+El comando raíz `npm run check:all` ejecuta pruebas backend que requieren PostgreSQL, Redis y variables de entorno backend. Cuando faltan esas dependencias, las fallas parecen regresiones de aplicación aunque el entorno local de validación esté incompleto.
 
-## Decision
+## Decisión
 
-Add `npm run check:local` as the environment-aware local validation command. It runs
-`scripts/check-local-env.sh` to create missing local env files, verify Docker Compose is
-available, start PostgreSQL and Redis, and then run `npm run check:all`.
+Agregar `npm run check:local` como comando local de validación consciente del entorno. Ejecuta `scripts/check-local-env.sh` para crear archivos de entorno locales faltantes, verificar que Docker Compose esté disponible, iniciar PostgreSQL y Redis, y luego ejecutar `npm run check:all`.
 
-Document `backend/.env.test.example` as the test environment template for backend
-DB-backed checks.
+Documentar `backend/.env.test.example` como plantilla de entorno de prueba para revisiones backend con base de datos.
 
-## Consequences
+## Consecuencias
 
-Agents and maintainers get a deterministic preflight path before full local validation.
-Failures can distinguish missing infrastructure from real code regressions. Machines
-without Docker still fail early with a clear message rather than a long Prisma or Redis
-error trail.
+Agentes y mantenedores obtienen un preflight determinístico antes de la validación local completa. Las fallas pueden distinguir infraestructura faltante de regresiones reales de código. Máquinas sin Docker fallan temprano con un mensaje claro en lugar de una traza larga de Prisma o Redis.
 
 ## Links
 

@@ -1,88 +1,85 @@
-# Codebase Map
+# Mapa Del Código
 
-Use this map to choose the right files before editing. If the map disagrees with code, treat code as the source of truth and update this file in the same change.
+Usa este mapa para elegir los archivos correctos antes de editar. Si el mapa contradice al código, trata el código como fuente de verdad y actualiza este archivo en el mismo cambio.
 
-## Runtime Shape
+## Forma En Runtime
 
 - Frontend: React, Vite, TypeScript, TailwindCSS.
-- Backend: Node.js, Express-style handlers, TypeScript, Prisma.
-- Data stores: PostgreSQL through Prisma, Redis for cache/pub-sub/rate-limit support.
-- Local infrastructure: `docker-compose.yml` provides PostgreSQL and Redis.
-- Production/deployment docs: `documentation/INFRASTRUCTURE.md`.
+- Backend: Node.js, handlers estilo Express, TypeScript, Prisma.
+- Almacenes de datos: PostgreSQL mediante Prisma, Redis para caché/pub-sub/rate-limit.
+- Infraestructura local: `docker-compose.yml` provee PostgreSQL y Redis.
+- Documentación de producción/despliegue: `documentation/INFRASTRUCTURE.md`.
 
-## Root
+## Raíz
 
-- `package.json`: monorepo command surface for install, dev, build, lint, test, and full checks.
-- `scripts/bootstrap.sh`: one-command local setup for dependencies, env files, Docker services, checked-in migrations, seed data, and launching the app.
-- `scripts/check-local-env.sh`: preflight for Docker-backed PostgreSQL/Redis and local env files before full checks.
-- `scripts/check-docs.sh`: Markdown link and shell-script sanity checks for documentation/process changes.
-- `docker-compose.yml`: local Postgres, Redis, backend, and frontend containers.
-- `AGENTS.md`: short agent/new-contributor entry point.
-- `README.md`: human-facing project overview and bootstrap.
-- `CONTRIBUTING.md`: contribution rules and PR expectations.
-- `RUNBOOK.md`: operational procedures and troubleshooting.
+- `package.json`: superficie de comandos monorepo para instalación, desarrollo, build, lint, pruebas y revisiones completas.
+- `scripts/bootstrap.sh`: configuración local con un comando para dependencias, archivos de entorno, servicios Docker, migraciones registradas, datos seed e inicio de la app.
+- `scripts/check-local-env.sh`: preflight para PostgreSQL/Redis con Docker y archivos de entorno locales antes de revisiones completas.
+- `scripts/check-docs.sh`: revisión de links Markdown y sintaxis de scripts shell para cambios de documentación/proceso.
+- `docker-compose.yml`: contenedores locales de Postgres, Redis, backend y frontend.
+- `AGENTS.md`: punto de entrada corto para agentes y nuevos contribuyentes.
+- `README.md`: visión general del proyecto y preparación para personas.
+- `CONTRIBUTING.md`: reglas de contribución y expectativas de PR.
+- `RUNBOOK.md`: procedimientos operacionales y solución de problemas.
 
 ## Backend
 
-- `backend/app.ts`: API app composition.
-- `backend/dev-server.ts`: local development server entry point.
-- `backend/api/**`: Vercel-oriented API entry files.
-- `backend/src/api/**`: domain route handlers grouped by area.
-- `backend/src/services/**`: business workflows such as auth, booking, demo/payment-simulator, notification, and sales.
-- `backend/src/services/payment/**`: demo/simulator and future-gated payment gateway abstraction and adapters.
-- `backend/src/services/booking/**`: booking validation helpers.
-- `backend/src/lib/**`: database, Redis, logging, CORS, errors, constants, crypto, and domain helpers.
-- `backend/src/middleware/**`: Express middleware.
-- `backend/src/types/**`: local request/type shims.
-- `backend/prisma/schema.prisma`: database model source of truth.
-- `backend/prisma/migrations/**`: committed database migrations.
-- `backend/prisma/seed.ts`: seed data for local development.
-- `backend/tests/**`: backend unit, integration, security, cron, and regression tests.
-- `backend/scripts/**`: manual diagnostics, verification helpers, and operational scripts.
+- `backend/app.ts`: composición de la app API.
+- `backend/dev-server.ts`: entrada del servidor de desarrollo local.
+- `backend/api/**`: archivos de entrada API orientados a Vercel.
+- `backend/src/api/**`: handlers de rutas de dominio agrupados por área.
+- `backend/src/services/**`: flujos de negocio como auth, booking, demo/payment-simulator, notification y sales.
+- `backend/src/services/payment/**`: demo/simulador y abstracción/adaptadores de gateway de pago con guardrails futuros.
+- `backend/src/services/booking/**`: helpers de validación de reservas.
+- `backend/src/lib/**`: base de datos, Redis, logging, CORS, errores, constantes, crypto y helpers de dominio.
+- `backend/src/middleware/**`: middleware Express.
+- `backend/src/types/**`: shims locales de requests/tipos.
+- `backend/prisma/schema.prisma`: fuente de verdad del modelo de base de datos.
+- `backend/prisma/migrations/**`: migraciones de base de datos registradas.
+- `backend/prisma/seed.ts`: datos seed para desarrollo local.
+- `backend/tests/**`: pruebas unitarias, integración, seguridad, cron y regresión backend.
+- `backend/scripts/**`: diagnósticos manuales, helpers de verificación y scripts operacionales.
 
 ## Frontend
 
-- `frontend/src/App.tsx`: application routes and top-level composition.
-- `frontend/src/pages/**`: route-level screens grouped by role/workflow.
-- `frontend/src/layouts/**`: admin, sales, gatekeeper, and main layout shells.
-- `frontend/src/features/**`: feature-specific components such as booking and map UI.
-- `frontend/src/components/ui/**`: reusable low-level UI controls.
-- `frontend/src/lib/api.ts`: API client.
-- `frontend/src/lib/utils.ts`: shared frontend utilities.
-- `frontend/src/types/**`: frontend app/domain types.
-- `frontend/src/store/**`: client state stores.
-- `frontend/src/tests/**`: frontend Vitest setup and smoke coverage.
-- `frontend/e2e/**`: Playwright browser flows.
+- `frontend/src/App.tsx`: rutas de aplicación y composición superior.
+- `frontend/src/pages/**`: pantallas a nivel de ruta agrupadas por rol/flujo.
+- `frontend/src/layouts/**`: shells de layout admin, ventas, conserjería y principal.
+- `frontend/src/features/**`: componentes específicos de funcionalidades como booking y UI de mapa.
+- `frontend/src/components/ui/**`: controles UI reutilizables de bajo nivel.
+- `frontend/src/lib/api.ts`: cliente API.
+- `frontend/src/lib/utils.ts`: utilidades frontend compartidas.
+- `frontend/src/types/**`: tipos de app/dominio frontend.
+- `frontend/src/store/**`: stores de estado de cliente.
+- `frontend/src/tests/**`: setup Vitest frontend y cobertura smoke.
+- `frontend/e2e/**`: flujos de navegador Playwright.
 
-## Validation Matrix
+## Matriz De Validación
 
-- Full repo: `npm run check:all`
-- Formatting: `npm run format:check`
-- Documentation/process: `npm run check:docs`
-- Environment-aware local validation: `npm run check:local`
-- Backend full regression: `cd backend && npm run check:all`
-- Backend tests: `cd backend && npm test`
-- Backend coverage: `cd backend && npm run test:coverage`
-- Backend architecture audit: `cd backend && npm run audit:arch`
-- Frontend lint/test/build: `cd frontend && npm run lint && npm test && npm run build`
-- Frontend E2E: `cd frontend && npm run test:e2e`
+- Repositorio completo: `npm run check:all`
+- Formato: `npm run format:check`
+- Documentación/proceso: `npm run check:docs`
+- Validación local consciente del entorno: `npm run check:local`
+- Regresión completa backend: `cd backend && npm run check:all`
+- Pruebas backend: `cd backend && npm test`
+- Cobertura backend: `cd backend && npm run test:coverage`
+- Auditoría de arquitectura backend: `cd backend && npm run audit:arch`
+- Lint/test/build frontend: `cd frontend && npm run lint && npm test && npm run build`
+- E2E frontend: `cd frontend && npm run test:e2e`
 
-See `documentation/VALIDATION.md` for command selection by change type.
+Revisa `documentation/VALIDATION.md` para elegir comandos según el tipo de cambio.
 
-## Change Guide
+## Guía De Cambios
 
-- Authentication: inspect `backend/src/api/auth`, `backend/src/services/auth.ts`, related frontend auth pages, and backend auth/login tests.
-- Booking lifecycle: inspect `backend/src/api/bookings`, `backend/src/services/BookingService.ts`, `backend/src/services/booking`, booking tests, and frontend booking components/pages.
-- Payments/webhooks: inspect `documentation/LEGAL_COMMERCIAL_GUARDRAILS.md`
-  first, then `backend/src/api/payments`, `backend/src/services/PaymentService.ts`,
-  `backend/src/services/payment`, payment/webhook tests, and checkout pages. This
-  area is demo/simulator or future-gated unless §3 gates are documented as open.
-- Admin flows: inspect `backend/src/api/admin`, admin tests, `frontend/src/pages/admin`, and `frontend/src/layouts/AdminLayout.tsx`.
-- Concierge/gatekeeper flows: inspect `backend/src/api/concierge`, gatekeeper pages/layouts, and verification tests.
-- Sales flows: inspect `backend/src/api/sales`, `backend/src/services/SalesService.ts`, sales tests, and sales pages/layout.
-- Cron jobs: inspect `backend/src/api/cron`, cron tests, and operational notes in `RUNBOOK.md`.
-- Database changes: update `backend/prisma/schema.prisma`, create a migration, regenerate Prisma client, update affected API/frontend types, and run relevant tests.
-- Deployment changes: inspect `.github/workflows`, Vercel config, environment examples, and `documentation/INFRASTRUCTURE.md`.
-- Notification changes: inspect backend services/adapters, env examples, and provider tests.
+- Autenticación: inspecciona `backend/src/api/auth`, `backend/src/services/auth.ts`, páginas frontend de auth relacionadas y pruebas backend de auth/login.
+- Ciclo de vida de reservas: inspecciona `backend/src/api/bookings`, `backend/src/services/BookingService.ts`, `backend/src/services/booking`, pruebas de booking y componentes/páginas frontend de booking.
+- Pagos/webhooks: inspecciona primero `documentation/LEGAL_COMMERCIAL_GUARDRAILS.md`; luego `backend/src/api/payments`, `backend/src/services/PaymentService.ts`, `backend/src/services/payment`, pruebas de payment/webhook y páginas de checkout. Esta área es demo/simulador o futura con guardrails, salvo que los gates de la sección 3 estén documentados como abiertos.
+- Flujos admin: inspecciona `backend/src/api/admin`, pruebas admin, `frontend/src/pages/admin` y `frontend/src/layouts/AdminLayout.tsx`.
+- Flujos conserjería/gatekeeper: inspecciona `backend/src/api/concierge`, páginas/layouts gatekeeper y pruebas de verificación.
+- Flujos de ventas: inspecciona `backend/src/api/sales`, `backend/src/services/SalesService.ts`, pruebas de sales y páginas/layout de ventas.
+- Cron jobs: inspecciona `backend/src/api/cron`, pruebas cron y notas operacionales en `RUNBOOK.md`.
+- Cambios de base de datos: actualiza `backend/prisma/schema.prisma`, crea una migración, regenera Prisma Client, actualiza tipos API/frontend afectados y ejecuta pruebas relevantes.
+- Cambios de despliegue: inspecciona `.github/workflows`, configuración Vercel, ejemplos de entorno y `documentation/INFRASTRUCTURE.md`.
+- Cambios de notificaciones: inspecciona servicios/adaptadores backend, ejemplos de entorno y pruebas de proveedores.
 
-See `documentation/TASKS.md` for more detailed task recipes.
+Revisa `documentation/TASKS.md` para recetas de tareas más detalladas.

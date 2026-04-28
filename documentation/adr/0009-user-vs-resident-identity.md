@@ -1,6 +1,6 @@
 # ADR 0009: User vs Resident — Contrato de Identidad
 
-**Estado:** Aceptado  
+**Estado:** Aceptado
 **Fecha:** 2026-04-27
 
 ---
@@ -32,7 +32,7 @@ Son dos actores con responsabilidades distintas y no deben unificarse:
 | --------------- | ------------------------------------------------------ | --------------------------------------------- |
 | Quién es        | Staff de plataforma o administradora                   | Habitante de una unidad en un edificio        |
 | Autenticación   | Email + password; MFA obligatorio para roles sensibles | Email + password; MFA recomendado             |
-| Scope           | Global o scoped por membership (ADR 0007, ADR 0008)    | Scoped al edificio de su unidad               |
+| Alcance         | Global o con scope por membership (ADR 0007, ADR 0008) | Con scope al edificio de su unidad            |
 | Puede crear     | Edificios, usuarios, reglas, reportes                  | Reservas, visitas (según reglas del edificio) |
 | Puede ver       | Según rol (ADR 0008)                                   | Sus propias reservas, datos de su unidad      |
 | JWT `actorType` | `"user"`                                               | `"resident"`                                  |

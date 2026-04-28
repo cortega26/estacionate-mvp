@@ -1,6 +1,6 @@
 # Términos y Condiciones de Uso — Estaciónate Fase 1
 
-**Última actualización:** 28 de abril de 2026  
+**Última actualización:** 28 de abril de 2026
 **Estado:** borrador operacional para revisión legal.
 
 Estos términos describen el uso de Estaciónate en su fase habilitada actual:

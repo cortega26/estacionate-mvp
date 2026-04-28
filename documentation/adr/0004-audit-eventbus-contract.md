@@ -1,29 +1,19 @@
-# ADR 0004: Audit EventBus Contract
+# ADR 0004: Contrato De Auditoría EventBus
 
-- Status: accepted
-- Date: 2026-04-26
+- Estado: aceptado
+- Fecha: 2026-04-26
 
-## Context
+## Contexto
 
-Estacionate needs an auditable record of state-changing operations across booking,
-payment, admin, concierge, sales, cron, webhook, and agent-driven workflows. The
-backend already has an `EventBus` implementation and `documentation/AGENTS.md` requires
-state-changing actions to publish events, but that contract was documented only as an
-agent guardrail.
+Estacionate necesita un registro auditable de operaciones que cambian estado en flujos de booking, pagos, admin, conserjería, ventas, cron, webhooks y tareas ejecutadas por agentes. El backend ya tiene una implementación `EventBus` y `documentation/AGENTS.md` exige que las acciones que cambian estado publiquen eventos, pero ese contrato estaba documentado solo como guardrail para agentes.
 
-## Decision
+## Decisión
 
-Treat `backend/src/lib/event-bus.ts` as the canonical audit event boundary. Backend
-create, update, and delete workflows must publish audit events through
-`EventBus.getInstance().publish(...)` and include the correct `actorType` for `HUMAN`,
-`AGENT`, or `SYSTEM` actors.
+Tratar `backend/src/lib/event-bus.ts` como el límite canónico de eventos de auditoría. Los flujos backend de creación, actualización y eliminación deben publicar eventos de auditoría mediante `EventBus.getInstance().publish(...)` e incluir el `actorType` correcto para actores `HUMAN`, `AGENT` o `SYSTEM`.
 
-## Consequences
+## Consecuencias
 
-Audit behavior becomes part of the backend service contract rather than an optional
-implementation detail. Tests for sensitive write paths should verify that an event is
-published or explicitly document why the path is excluded. New provider adapters,
-webhooks, and cron jobs must preserve actor attribution when they mutate state.
+El comportamiento de auditoría pasa a ser parte del contrato de servicio backend, no un detalle opcional de implementación. Las pruebas de rutas sensibles de escritura deben verificar que se publique un evento o documentar explícitamente por qué la ruta está excluida. Nuevos adaptadores de proveedores, webhooks y cron jobs deben preservar atribución de actor cuando muten estado.
 
 ## Links
 

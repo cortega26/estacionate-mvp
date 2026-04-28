@@ -1,7 +1,7 @@
 # Guardrails Legales y Comerciales — Estacionate
 
-**Versión:** 1.0  
-**Fecha:** 2026-04-27  
+**Versión:** 1.0
+**Fecha:** 2026-04-27
 **Autoridad:** Este documento es la **fuente de verdad** para toda decisión de monetización, pagos, precios, custodia de fondos, privacidad de datos y arquitectura comercial de Estacionate. Ningún cambio en los archivos listados en §8 puede realizarse sin verificar primero este documento.
 
 > **Para agentes IA y colaboradores:** Si tu tarea involucra cualquier archivo de pagos, precios, facturación, cobros, modelos Prisma de Payment/Payout/Pricing, endpoints de pagos, cron de reconciliación, o cualquier feature nueva de monetización — detente y lee este documento completo antes de escribir código.

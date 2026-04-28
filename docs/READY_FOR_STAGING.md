@@ -1,38 +1,46 @@
-# Estacionate MVP: Ready for Staging
+# Estacionate MVP: Listo Para Staging
 
-**Date:** December 19, 2025
-**Status:** ✅ PRODUCTION READY (Tier 1 Marketplace Standards)
+**Fecha:** 2025-12-19
+**Estado:** listo para producción según estándares históricos tipo marketplace nivel 1
 
-## Executive Summary
-The `estacionate-mvp` codebase has undergone a rigorous Gap Analysis, Security Hardening, and Feature Augmentation process. All critical blockers for a commercial launch have been resolved. The system now supports strict security standards (CSP, PII Encryption), commercial claims (Yield Management, Blacklists), and distributed scale (Redis Event Bus).
+## Resumen Ejecutivo
 
-## Delivered Upgrades
+El codebase `estacionate-mvp` pasó por un proceso riguroso de análisis de brechas, endurecimiento de seguridad y aumento de funcionalidades. Los bloqueantes críticos para un lanzamiento comercial fueron resueltos según el alcance histórico de este documento. El sistema soporta estándares estrictos de seguridad (CSP, cifrado PII), claims comerciales (yield management, blocklists) y escala distribuida (Redis Event Bus).
 
-### 1. Security & Compliance
-*   **Strict CSP**: Implemented `default-src 'none'` API policy and frontend meta tags. Verified against XSS.
-*   **PII Encryption (SOC2)**: `rut` and `phone` are now encrypted at rest using AES-256-GCM.
-*   **Blind Indexing**: Implemented SHA-256 hashing for searchable encrypted fields (`rutHash`).
+Este documento es histórico. Para uso comercial actual, prevalecen `documentation/LEGAL_COMMERCIAL_GUARDRAILS.md` y los documentos activos de Fase 1.
 
-### 2. Commercial Features (Gap Closure)
-*   **Yield Management**: `PricingRule` engine implemented. Prices now dynamically adjust based on priority/date multipliers.
-*   **Blacklists**: Global and Building-level banning logic implemented impacting Booking flows.
-*   **WhatsApp**: Un-mocked `NotificationService` for production/staging environments.
+## Mejoras Entregadas
 
-### 3. Core Architecture
-*   **Distributed Event Bus**: Consolidated `EventBus` works over Redis Pub/Sub, enabling multi-instance horizontal scaling.
-*   **Concurrency**: Booking creation uses atomic database locking (`updateMany` + count check) to prevent double-booking race conditions.
-*   **Audit Logging**: Standardized structure with `actorId` and `metadata`.
+### 1. Seguridad Y Cumplimiento
 
-## Deployment Checklist (Next Steps)
-1.  **Environment Variables**: Ensure `ENCRYPTION_KEY`, `REDIS_URL`, `TWILIO_*` are set in Vercel/Render.
-2.  **Database Migration**: Run `npx prisma db push` (or `migrate deploy`) on Staging.
-3.  **Smoke Test**:
-    *   Create a Resident.
-    *   Create a Pricing Rule (e.g. 2.0x multiplier).
-    *   Book a spot and verify price is doubled.
-    *   Verify WhatsApp confirmation is received.
+- **CSP estricta:** política API `default-src 'none'` y meta tags frontend implementados. Verificado contra XSS.
+- **Cifrado PII (SOC2):** `rut` y `phone` ahora se cifran en reposo con AES-256-GCM.
+- **Blind indexing:** hashing SHA-256 implementado para campos cifrados buscables (`rutHash`).
 
-## Artifacts
-*   [Production Roadmap](production-roadmap-2025.md)
-*   [Feature Audit Report](GAP_ANALYSIS_FEATURES.md)
-*   [Commercial Features (ES)](CARACTERISTICAS_COMERCIALES.md)
+### 2. Funcionalidades Comerciales (Cierre De Brechas)
+
+- **Yield management:** motor `PricingRule` implementado. Los precios se ajustan dinámicamente según multiplicadores de prioridad/fecha.
+- **Blocklists:** lógica de bloqueo global y por edificio implementada, con impacto en flujos de booking.
+- **WhatsApp:** `NotificationService` sin mock para entornos producción/staging.
+
+### 3. Arquitectura Central
+
+- **Event Bus distribuido:** `EventBus` consolidado funciona sobre Redis Pub/Sub y permite escalamiento horizontal multi-instancia.
+- **Concurrencia:** creación de reservas usa locking atómico de base de datos (`updateMany` + check de count) para prevenir race conditions de doble reserva.
+- **Audit logging:** estructura estandarizada con `actorId` y `metadata`.
+
+## Checklist De Despliegue
+
+1. **Variables de entorno:** asegurar que `ENCRYPTION_KEY`, `REDIS_URL`, `TWILIO_*` estén configuradas en Vercel/Render.
+2. **Migración de base de datos:** ejecutar `npx prisma db push` o `migrate deploy` en staging.
+3. **Smoke test:**
+   - Crear un residente.
+   - Crear una pricing rule (por ejemplo, multiplicador 2.0x).
+   - Reservar un estacionamiento y verificar que el precio se duplica.
+   - Verificar recepción de confirmación WhatsApp.
+
+## Artefactos
+
+- [Roadmap productivo](production-roadmap-2025.md)
+- [Reporte de auditoría de funcionalidades](GAP_ANALYSIS_FEATURES.md)
+- [Características comerciales](CARACTERISTICAS_COMERCIALES.md)

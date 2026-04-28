@@ -1,76 +1,60 @@
-# Ownership And Edit Boundaries
+# Propiedad Y Límites De Edición
 
-Use this guide to understand where changes belong and which paths need extra care. If
-this file disagrees with code, treat code as the source of truth and update this guide
-in the same change when practical.
+Usa esta guía para entender dónde pertenecen los cambios y qué rutas requieren cuidado adicional. Si este archivo contradice al código, trata el código como fuente de verdad y actualiza esta guía en el mismo cambio cuando sea práctico.
 
 ## Backend
 
-- API routes: `backend/src/api/**`
-- Business workflows: `backend/src/services/**`
-- Payment adapters: `backend/src/services/payment/**`
-- Booking validation helpers: `backend/src/services/booking/**`
-- Shared backend infrastructure: `backend/src/lib/**`
-- Express middleware: `backend/src/middleware/**`
-- Prisma schema and seed data: `backend/prisma/schema.prisma`,
-  `backend/prisma/seed.ts`
-- Backend tests: `backend/tests/**`
+- Rutas API: `backend/src/api/**`
+- Flujos de negocio: `backend/src/services/**`
+- Adaptadores de pago: `backend/src/services/payment/**`
+- Helpers de validación de reservas: `backend/src/services/booking/**`
+- Infraestructura backend compartida: `backend/src/lib/**`
+- Middleware Express: `backend/src/middleware/**`
+- Esquema Prisma y datos seed: `backend/prisma/schema.prisma`, `backend/prisma/seed.ts`
+- Pruebas backend: `backend/tests/**`
 
 ## Frontend
 
-- Route composition: `frontend/src/App.tsx`
-- Route-level pages: `frontend/src/pages/**`
-- Layout shells: `frontend/src/layouts/**`
-- Feature components: `frontend/src/features/**`
-- Shared UI primitives: `frontend/src/components/ui/**`
-- API client and helpers: `frontend/src/lib/**`
-- Client state: `frontend/src/store/**`
-- Frontend types: `frontend/src/types/**`
-- Browser flows: `frontend/e2e/**`
+- Composición de rutas: `frontend/src/App.tsx`
+- Páginas a nivel de ruta: `frontend/src/pages/**`
+- Shells de layout: `frontend/src/layouts/**`
+- Componentes de funcionalidades: `frontend/src/features/**`
+- Primitivas UI compartidas: `frontend/src/components/ui/**`
+- Cliente API y helpers: `frontend/src/lib/**`
+- Estado de cliente: `frontend/src/store/**`
+- Tipos frontend: `frontend/src/types/**`
+- Flujos de navegador: `frontend/e2e/**`
 
-## Documentation And Operations
+## Documentación Y Operaciones
 
-- Agent and contributor entry: `AGENTS.md`
-- Documentation index: `documentation/README.md`
-- Validation guidance: `documentation/VALIDATION.md`
-- Task entry points: `documentation/TASKS.md` and `documentation/task-recipes/**`
-- Architecture decisions: `documentation/adr/**`
-- Local and production infrastructure: `documentation/INFRASTRUCTURE.md`
-- Operational procedures: `RUNBOOK.md`
+- Entrada para agentes y contribuyentes: `AGENTS.md`
+- Índice de documentación: `documentation/README.md`
+- Guía de validación: `documentation/VALIDATION.md`
+- Puntos de entrada por tarea: `documentation/TASKS.md` y `documentation/task-recipes/**`
+- Decisiones de arquitectura: `documentation/adr/**`
+- Infraestructura local y producción: `documentation/INFRASTRUCTURE.md`
+- Procedimientos operacionales: `RUNBOOK.md`
 
-## Generated Or High-Risk Paths
+## Rutas Generadas O De Alto Riesgo
 
-- `backend/prisma/migrations/**`: create with Prisma migration commands; do not edit
-  migration SQL by hand unless repairing a reviewed migration issue.
-- `backend/node_modules/**`, `frontend/node_modules/**`, `node_modules/**`: never edit.
-- `backend/dist/**`, `frontend/dist/**`, `coverage/**`, `frontend/playwright-report/**`:
-  generated output; never edit.
-- `package-lock.json`, `backend/package-lock.json`, `frontend/package-lock.json`: update
-  only through npm commands.
-- `backend/.env`, `frontend/.env`, `.env*` files without `.example`: local secrets; do
-  not commit.
+- `backend/prisma/migrations/**`: crear con comandos de migración Prisma; no editar SQL de migraciones a mano salvo para reparar un problema de migración revisado.
+- `backend/node_modules/**`, `frontend/node_modules/**`, `node_modules/**`: nunca editar.
+- `backend/dist/**`, `frontend/dist/**`, `coverage/**`, `frontend/playwright-report/**`: salida generada; nunca editar.
+- `package-lock.json`, `backend/package-lock.json`, `frontend/package-lock.json`: actualizar solo mediante comandos npm.
+- `backend/.env`, `frontend/.env`, archivos `.env*` sin `.example`: secretos locales; no commitear.
 
-## Cross-Cutting Contracts
+## Contratos Transversales
 
-- Prisma model changes require migrations, Prisma client generation, API response
-  updates, frontend type updates, and affected tests.
-- State-changing backend workflows must preserve the audit `EventBus` contract from
-  `documentation/adr/0004-audit-eventbus-contract.md`.
-- Deployment changes must stay aligned with
-  `documentation/adr/0003-deployment-topology.md`.
-- Full local validation depends on the environment contract in
-  `documentation/adr/0005-validation-environment-contract.md`.
-- **Monetization and payment changes** touching any of the paths below require reading
-  `documentation/LEGAL_COMMERCIAL_GUARDRAILS.md` and executing
-  `documentation/task-recipes/monetization-change.md` before writing code:
-  - `backend/prisma/schema.prisma` (models: Payment, Payout, PricingRule,
-    SalesRepCommission, or any new billing model)
+- Cambios de modelos Prisma requieren migraciones, generación de Prisma Client, actualizaciones de respuestas API, actualizaciones de tipos frontend y pruebas afectadas.
+- Flujos backend que cambian estado deben preservar el contrato de auditoría `EventBus` de `documentation/adr/0004-audit-eventbus-contract.md`.
+- Cambios de despliegue deben mantenerse alineados con `documentation/adr/0003-deployment-topology.md`.
+- La validación local completa depende del contrato de entorno en `documentation/adr/0005-validation-environment-contract.md`.
+- **Cambios de monetización y pagos** que toquen cualquiera de las rutas siguientes requieren leer `documentation/LEGAL_COMMERCIAL_GUARDRAILS.md` y ejecutar `documentation/task-recipes/monetization-change.md` antes de escribir código:
+  - `backend/prisma/schema.prisma` (modelos: Payment, Payout, PricingRule, SalesRepCommission o cualquier nuevo modelo de billing)
   - `backend/src/services/PaymentService.ts`
   - `backend/src/services/payment/**`
   - `backend/src/api/payments/**`
   - `backend/src/api/cron/reconcile.ts`
-  - Any frontend component that renders prices, charge amounts, or payment flows
-  - Any README, terms, pitch, roadmap, task recipe, or UI copy that could position
-    Estacionate as a marketplace, parking monetization product, direct visitor
-    payment flow, payout flow, or enabled PSP integration
-  - Any new feature that introduces a PSP integration or recurring billing
+  - Cualquier componente frontend que muestre precios, montos de cobro o flujos de pago
+  - Cualquier README, términos, pitch, roadmap, receta de tarea o copy UI que pueda posicionar Estacionate como marketplace, producto de monetización de estacionamientos, flujo de pago directo de visitantes, flujo de payout o integración PSP habilitada
+  - Cualquier nueva funcionalidad que introduzca una integración PSP o billing recurrente

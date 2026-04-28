@@ -1,115 +1,113 @@
-# Project Structure & Organization Audit (A0)
-**Role:** Senior Software Architect / Tech Lead  
-**Focus:** Filesystem Topology • Modularization • Naming • Screaming Architecture
+# Auditoría De Estructura Y Organización Del Proyecto (A0)
 
----
+**Rol:** arquitecto senior de software / tech lead
+**Foco:** topología de filesystem, modularización, nombres, screaming architecture
 
-## Scope Contract (Hard Boundary)
+## Contrato De Alcance
 
-### This audit DOES:
-- Evaluate **filesystem structure**, module boundaries, and dependency direction.
-- Assess **Screaming Architecture**: whether the project structure reflects the business domain.
-- Enforce **naming conventions**, colocation rules, and root hygiene.
+### Esta auditoría sí:
 
-### This audit DOES NOT:
-- Evaluate runtime behavior or business logic correctness.
-- Report dead code, unused functions, or duplicated rules.
-- Review performance, security, UX, or testing quality.
+- Evalúa **estructura de filesystem**, límites de módulos y dirección de dependencias.
+- Evalúa **screaming architecture**: si la estructura refleja el dominio de negocio.
+- Hace cumplir **convenciones de nombres**, reglas de colocación e higiene de raíz.
 
-### Delegation Rule
-If a finding relates to behavior, logic, security, performance, or UX:
-- **Do NOT report it here**.
-- Tag it as: `Delegated to A1 / A2 / A4` and move on.
+### Esta auditoría no:
 
----
+- Evalúa comportamiento en runtime ni corrección de lógica de negocio.
+- Reporta código muerto, funciones no usadas o reglas duplicadas.
+- Revisa performance, seguridad, UX o calidad de pruebas.
 
-## 1. Purpose
-Evaluate whether the project structure enables **scalability, discoverability, and clean separation of concerns**.
+### Regla De Delegación
 
-**Primary heuristic:** A new developer should locate the code for a given business feature in **< 10 seconds without search**.
+Si un hallazgo trata de comportamiento, lógica, seguridad, performance o UX:
 
----
+- **No reportarlo aquí**.
+- Etiquetarlo como `Delegado a A1 / A2 / A4` y continuar.
 
-## 2. Audience
-- Tech Leads (long-term maintainability)
-- Onboarding engineers (cognitive load reduction)
-- DevOps (monorepo and build boundaries)
+## 1. Propósito
 
----
+Evaluar si la estructura del proyecto permite **escalabilidad, descubribilidad y separación limpia de responsabilidades**.
 
-## 3. Scope of Evaluation
+**Heurística principal:** una persona nueva debe ubicar el código de una funcionalidad de negocio en **menos de 10 segundos sin búsqueda**.
 
-### 3.1 Architectural Signaling
-- Feature-based vs layer-based organization.
-- Business concepts visible at the top level (`billing`, `orders`, `auth`).
-- Frameworks and tools should not dominate the root structure.
+## 2. Audiencia
 
-### 3.2 Root Directory Hygiene
-- Excessive config sprawl at repo root.
-- Clear visibility of documentation and ownership files.
-- Separation of app code vs tooling vs infrastructure.
+- Tech leads
+- Ingenieros en onboarding
+- DevOps
 
-### 3.3 Module Boundaries & Dependencies
-- Circular imports between modules.
-- Improper cross-feature imports.
-- Correct use of public APIs (barrel files).
-- Detection of "junk drawer" folders (`utils`, `common`).
+## 3. Alcance De Evaluación
 
-### 3.4 Naming & Consistency
-- Single casing strategy for folders and files.
-- Predictable naming conventions.
-- Test colocation policy consistency.
+### 3.1 Señalización Arquitectónica
 
----
+- Organización por funcionalidad versus por capa.
+- Conceptos de negocio visibles en el nivel superior (`billing`, `orders`, `auth`).
+- Frameworks y herramientas no deben dominar la raíz.
 
-## 4. Required Inputs
-- Recursive file tree (excluding `node_modules`, `.git`).
-- Framework constraints (Next.js, Rails, etc.).
-- Monorepo/workspace configuration (if applicable).
+### 3.2 Higiene Del Directorio Raíz
 
----
+- Dispersión excesiva de configuración.
+- Visibilidad clara de documentación y archivos de ownership.
+- Separación de código de app, tooling e infraestructura.
 
-## 5. Methodology
+### 3.3 Límites De Módulos Y Dependencias
 
-### 5.1 Discovery
-1. Generate an ASCII tree of the top 3–4 levels.
-2. Identify directories with abnormal size (file-count heatmap).
+- Imports circulares entre módulos.
+- Imports impropios entre funcionalidades.
+- Uso correcto de APIs públicas (barrel files).
+- Detección de carpetas "cajón de sastre" (`utils`, `common`).
 
-### 5.2 Structural Heuristics
-- **Deletion Test:** Removing a feature folder should remove the feature.
-- **Import Depth:** Excessive relative imports indicate poor boundaries.
-- **Depth Rule:** Core logic should not exceed 4 levels deep.
+### 3.4 Nombres Y Consistencia
 
-### 5.3 Reporting
-- Propose a *target* structure (not just criticism).
-- Identify breaking changes caused by moves (imports, CI, dynamic paths).
+- Estrategia única de casing para carpetas y archivos.
+- Convenciones de nombres predecibles.
+- Consistencia de política de colocación de tests.
 
----
+## 4. Entradas Requeridas
 
-## 6. Deliverables
-1. **Proposed Directory Tree (ASCII)**
-2. **Refactor Plan:** ordered `git mv` operations
-3. **Naming Convention Summary**
-4. **Alias / Path Mapping Updates**
+- Árbol recursivo de archivos, excluyendo `node_modules` y `.git`.
+- Restricciones del framework (Next.js, Rails, etc.).
+- Configuración monorepo/workspace si aplica.
 
----
+## 5. Metodología
 
-## 7. Acceptance Criteria
-- Structure reflects business domains.
-- No circular dependencies between features.
-- No unrestricted junk-drawer folders.
-- Naming conventions applied consistently.
+### 5.1 Descubrimiento
 
----
+1. Generar árbol ASCII de los 3-4 niveles superiores.
+2. Identificar directorios de tamaño anormal mediante conteo de archivos.
 
-## 8. Severity Levels
-- **S0:** Structural blockers (circular deps, unbounded root)
-- **S1:** High friction (deep nesting, spaghetti imports)
-- **S2:** Inconsistency (mixed casing, unclear ownership)
-- **S3:** Cosmetic clutter
+### 5.2 Heurísticas Estructurales
 
----
+- **Deletion test:** eliminar una carpeta de funcionalidad debería eliminar la funcionalidad.
+- **Profundidad de imports:** demasiados imports relativos indican límites débiles.
+- **Regla de profundidad:** lógica central no debe superar 4 niveles.
 
-## Execution Constraint
-This audit must be executable **in isolation** and **without full system context**.
-Structural findings only. Nothing else.
+### 5.3 Reporte
+
+- Proponer una estructura objetivo, no solo críticas.
+- Identificar cambios rompientes causados por movimientos (imports, CI, rutas dinámicas).
+
+## 6. Entregables
+
+1. **Árbol de directorios propuesto (ASCII)**
+2. **Plan de refactor:** operaciones `git mv` ordenadas
+3. **Resumen de convenciones de nombres**
+4. **Actualizaciones de alias / path mapping**
+
+## 7. Criterios De Aceptación
+
+- La estructura refleja dominios de negocio.
+- No hay dependencias circulares entre funcionalidades.
+- No hay carpetas cajón de sastre sin restricciones.
+- Las convenciones de nombres se aplican consistentemente.
+
+## 8. Niveles De Severidad
+
+- **S0:** bloqueantes estructurales (deps circulares, raíz sin límites)
+- **S1:** fricción alta (anidación profunda, imports spaghetti)
+- **S2:** inconsistencia (casing mezclado, ownership poco claro)
+- **S3:** desorden cosmético
+
+## Restricción De Ejecución
+
+Esta auditoría debe poder ejecutarse **en aislamiento** y **sin contexto completo del sistema**. Solo hallazgos estructurales.

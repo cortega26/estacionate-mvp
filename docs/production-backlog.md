@@ -1,47 +1,47 @@
-# Production Backlog 2025
+# Backlog Productivo 2025
 
-This document tracks the implementation status of the [Production Roadmap](production-roadmap-2025.md).
+Este documento registra el estado de implementación del [roadmap productivo](production-roadmap-2025.md).
 
-## High Priority
+## Prioridad Alta
 
-- [x] **8. Strict Content-Security-Policy (CSP)**
-    - [x] Verified via `tests/security-headers.test.ts`.
+- [x] **8. Content-Security-Policy (CSP) estricta**
+  - [x] Verificada mediante `tests/security-headers.test.ts`.
 
-- [x] **4. PII Encryption at Rest**
-    - [x] Created `lib/crypto.ts` (AES-256-GCM / SHA-256 Blind Index).
-    - [x] Updated `Resident` model to encrypt `rut` and `phone`.
-    - [x] Implemented Blind Index (`rutHash`) for lookups in `signup.ts`.
-    - [x] Follow-up: Align resident seed paths with the encrypted `rut` and `phone` contract; `create-admin` only persists credential fields and does not write resident PII.
+- [x] **4. Cifrado PII en reposo**
+  - [x] Creado `lib/crypto.ts` (AES-256-GCM / blind index SHA-256).
+  - [x] Actualizado modelo `Resident` para cifrar `rut` y `phone`.
+  - [x] Implementado blind index (`rutHash`) para búsquedas en `signup.ts`.
+  - [x] Seguimiento: alinear rutas seed de residentes con el contrato de `rut` y `phone` cifrados; `create-admin` solo persiste campos de credenciales y no escribe PII de residentes.
 
-- [x] **1. Distributed Event Bus**
-    - [x] Create `RedisEventBus` implementation.
-    - [x] Configure connection handling.
-    - [x] Switch `EventBus.getInstance()` to use Redis in production.
+- [x] **1. Event Bus distribuido**
+  - [x] Crear implementación `RedisEventBus`.
+  - [x] Configurar manejo de conexión.
+  - [x] Cambiar `EventBus.getInstance()` para usar Redis en producción.
 
-- [x] **2. Optimistic Concurrency Control**
-    - [x] Add `@version` to `AvailabilityBlock` (Verified Atomic Locking via `updateMany` in `create.ts`).
-    - [x] Update `createBooking` transaction logic.
-    - [x] Add `race-condition.ts` verification test (Coverage existent).
+- [x] **2. Control de concurrencia optimista**
+  - [x] Agregar `@version` a `AvailabilityBlock` (locking atómico verificado mediante `updateMany` en `create.ts`).
+  - [x] Actualizar lógica transaccional de `createBooking`.
+  - [x] Agregar prueba de verificación `race-condition.ts` (cobertura existente).
 
-- [ ] **5. Multi-Factor Authentication**
-    - [ ] Add MFA fields to `User` schema.
-    - [ ] Implement TOTP generation/verification.
-    - [ ] Enforce for Admin roles.
+- [ ] **5. Autenticación multifactor**
+  - [ ] Agregar campos MFA al schema `User`.
+  - [ ] Implementar generación/verificación TOTP.
+  - [ ] Exigir para roles admin.
 
-## Medium Priority
+## Prioridad Media
 
-- [ ] **3. Multi-Tenant "Organization" Layer**
-    - [ ] Create `Organization` model.
-    - [ ] Migrate `Building` to belong to `Organization`.
-    - [ ] Update RBAC.
+- [ ] **3. Capa multi-tenant "Organization"**
+  - [ ] Crear modelo `Organization`.
+  - [ ] Migrar `Building` para pertenecer a `Organization`.
+  - [ ] Actualizar RBAC.
 
-- [ ] **6. Structured Logging Unification**
-    - [ ] Replace `console.log` with `logger` (Pino).
+- [ ] **6. Unificación de logging estructurado**
+  - [ ] Reemplazar `console.log` por `logger` (Pino).
 
-- [ ] **9. Revocable Session Management**
-    - [ ] Implement Redis session storage.
+- [ ] **9. Gestión de sesiones revocables**
+  - [ ] Implementar almacenamiento de sesiones en Redis.
 
-## Low Priority (Maintenance/Compliance)
+## Prioridad Baja (Mantenimiento/Cumplimiento)
 
-- [ ] **7. Automated GDPR "Right to be Forgotten"**
-- [ ] **10. IaC & CI/CD Pipeline**
+- [ ] **7. "Derecho al olvido" automatizado**
+- [ ] **10. IaC y pipeline CI/CD**

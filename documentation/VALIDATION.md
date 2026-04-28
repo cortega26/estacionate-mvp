@@ -1,63 +1,60 @@
-# Validation Guide
+# Guía De Validación
 
-Run the narrowest relevant check while working, then run the broader command before handing off broad or cross-cutting changes.
+Ejecuta la revisión relevante más acotada mientras trabajas; luego ejecuta el comando más amplio antes de entregar cambios grandes o transversales.
 
-## Full Repository
+## Repositorio Completo
 
 ```bash
 npm run check:all
 ```
 
-Equivalent shell wrapper:
+Wrapper equivalente de shell:
 
 ```bash
 npm run verify
 ```
 
-Environment-aware local wrapper:
+Wrapper local consciente del entorno:
 
 ```bash
 npm run check:local
 ```
 
-`check:local` creates missing local env files, starts Docker-backed PostgreSQL and
-Redis, then runs `npm run check:all`.
+`check:local` crea archivos de entorno locales faltantes, inicia PostgreSQL y Redis con Docker, y luego ejecuta `npm run check:all`.
 
-## Backend Only
+## Solo Backend
 
 ```bash
 cd backend && npm run check:all
 ```
 
-DB-backed backend checks require PostgreSQL, Redis, and backend test environment
-variables. Use `backend/.env.test.example` as the test template, or run
-`npm run check:local` from the repository root to start local infrastructure first.
+Las revisiones backend con base de datos requieren PostgreSQL, Redis y variables de entorno de prueba backend. Usa `backend/.env.test.example` como plantilla de prueba, o ejecuta `npm run check:local` desde la raíz del repositorio para iniciar primero la infraestructura local.
 
-Faster backend loop:
+Loop backend más rápido:
 
 ```bash
 cd backend && npm run lint && npm run build && npm test
 ```
 
-## Frontend Only
+## Solo Frontend
 
 ```bash
 cd frontend && npm run lint && npm test && npm run build
 ```
 
-## Browser-Critical Frontend Flows
+## Flujos Frontend Críticos En Navegador
 
 ```bash
 cd frontend && npm run test:e2e
 ```
 
-Run a single Playwright spec when iterating:
+Ejecuta una sola spec Playwright mientras iteras:
 
 ```bash
 cd frontend && npm run test:e2e -- booking.spec.ts
 ```
 
-## Database Changes
+## Cambios De Base De Datos
 
 ```bash
 cd backend
@@ -66,44 +63,41 @@ npx prisma generate
 npm run check:all
 ```
 
-Also update affected API responses, frontend types, and seed data when the schema change touches user-facing contracts.
+Actualiza también respuestas API, tipos frontend y datos seed afectados cuando el cambio de esquema toque contratos visibles para usuarios.
 
-## Dependency Changes
+## Cambios De Dependencias
 
-After adding, removing, or upgrading packages:
+Después de agregar, quitar o actualizar paquetes:
 
 ```bash
 npm run install:all
 npm run check:all
 ```
 
-Use `npm audit` for visibility, but do not run `npm audit fix --force`.
+Usa `npm audit` para visibilidad, pero no ejecutes `npm audit fix --force`.
 
-## Documentation-Only Changes
+## Cambios Solo De Documentación
 
-For Markdown or process-only edits, run a lightweight sanity check:
+Para ediciones solo de Markdown o proceso, ejecuta una revisión liviana:
 
 ```bash
 npm run check:docs
 npm run format:check
 ```
 
-If the docs changed commands or scripts, also run the command parser or shell syntax check for those files.
+Si la documentación cambió comandos o scripts, ejecuta también el parser de comandos o revisión de sintaxis shell para esos archivos.
 
-For commercial, legal, pricing, payment, payout, or visible copy changes, also
-repeat the guardrail vocabulary scan from the task or PR description and classify
-remaining matches as negative-policy context, demo/simulator, blocked future
-phase, corrected, or pending risk.
+Para cambios comerciales, legales, de pricing, payment, payout o copy visible, repite además el escaneo de vocabulario de guardrails desde la tarea o descripción del PR y clasifica las coincidencias restantes como contexto de política negativa, demo/simulador, fase futura bloqueada, corregido o riesgo pendiente.
 
-## Formatting
+## Formato
 
-Check formatting without changing files:
+Revisar formato sin cambiar archivos:
 
 ```bash
 npm run format:check
 ```
 
-Apply formatting to supported source and documentation files:
+Aplicar formato a fuentes y documentación soportadas:
 
 ```bash
 npm run format

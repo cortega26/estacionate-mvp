@@ -1,19 +1,24 @@
-# Audit A7: Compliance & Governance Findings
+# Auditoría A7: Hallazgos De Cumplimiento Y Gobernanza
 
-## 1. Executive Summary
-**Score:** A
-The project scores highly on governance. Standard LICENSE (MIT) is present and matches package configuration. Privacy and Terms documents exist in Markdown format, which is excellent for version control and transparency.
+## 1. Resumen Ejecutivo
 
-## 2. Findings
+**Puntaje:** A
 
-### 2.1 Licensing
-- **[PASSED] License File**: `LICENSE` file exists (MIT).
-- **[PASSED] Package Config**: `package.json` specifies `MIT`. Consistency verified.
+El proyecto obtiene buen puntaje en gobernanza. Existe licencia estándar (MIT) y coincide con la configuración del paquete. Documentos de privacidad y términos existen en formato Markdown, lo que es positivo para control de versiones y transparencia.
 
-### 2.2 Legal Documentation
-- **[PASSED] Privacy Policy**: `PRIVACY.md` is present.
-- **[PASSED] Terms of Service**: `TERMS.md` is present.
-- **[OBSERVATION] integration**: Ensure these are actually rendered in the Frontend (e.g., at `/privacy` and `/terms`). (Verified in A0 that a `pages` directory exists, likely having these, but A7 finding is just about existence).
+## 2. Hallazgos
 
-## 3. Recommendations
-1.  **Render Markdown**: Ensure the frontend has a route to render `PRIVACY.md` and `TERMS.md` so they aren't just dead files in the repo.
+### 2.1 Licenciamiento
+
+- **[PASÓ] Archivo de licencia:** existe `LICENSE` (MIT).
+- **[PASÓ] Configuración del paquete:** `package.json` especifica `MIT`. Consistencia verificada.
+
+### 2.2 Documentación Legal
+
+- **[PASÓ] Política de privacidad:** `PRIVACY.md` está presente.
+- **[PASÓ] Términos de servicio:** `TERMS.md` está presente según auditoría histórica.
+- **[OBSERVACIÓN] Integración:** asegurar que estos documentos se rendericen realmente en el frontend (por ejemplo, en `/privacy` y `/terms`).
+
+## 3. Recomendaciones
+
+1. **Renderizar Markdown:** asegurar que el frontend tenga rutas para renderizar `PRIVACY.md` y `TERMS.md`, de modo que no queden como archivos muertos en el repo.

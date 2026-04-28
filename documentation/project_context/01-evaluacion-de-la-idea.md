@@ -38,23 +38,23 @@ Los edificios residenciales en Chile enfrentan **escasez crónica de estacionami
 
 ### 1. Estacionamiento Nocturno (20:00-08:00)
 
-**Contexto:** Cenas, celebraciones familiares, visitas prolongadas  
-**Valor:** Seguridad y comodidad, evita rotación de autos en calle  
-**Pricing esperado:** $4.000-6.000 CLP por 11h  
+**Contexto:** Cenas, celebraciones familiares, visitas prolongadas
+**Valor:** Seguridad y comodidad, evita rotación de autos en calle
+**Pricing esperado:** $4.000-6.000 CLP por 11h
 **Frecuencia estimada:** 3-5 eventos/mes por unidad activa
 
 ### 2. Eventos y Reuniones (Fines de Semana)
 
-**Contexto:** Cumpleaños, reuniones sociales, celebraciones  
-**Valor:** Múltiples espacios coordinados, experiencia premium para invitados  
-**Pricing esperado:** $6.000-8.000 CLP por 23h  
+**Contexto:** Cumpleaños, reuniones sociales, celebraciones
+**Valor:** Múltiples espacios coordinados, experiencia premium para invitados
+**Pricing esperado:** $6.000-8.000 CLP por 23h
 **Frecuencia estimada:** 1-2 eventos/mes por unidad activa
 
 ### 3. Zonas con Restricción Municipal
 
-**Contexto:** Áreas como Las Condes con parquímetros o prohibición total  
-**Valor:** Única opción legal y conveniente  
-**Pricing esperado:** Premium 30-50% sobre tarifa base  
+**Contexto:** Áreas como Las Condes con parquímetros o prohibición total
+**Valor:** Única opción legal y conveniente
+**Pricing esperado:** Premium 30-50% sobre tarifa base
 **Frecuencia estimada:** Demanda diaria en edificios bien ubicados
 
 ## Análisis Competitivo
@@ -78,7 +78,7 @@ Los edificios residenciales en Chile enfrentan **escasez crónica de estacionami
 
 ### Validación Administradoras (Semanas 1-2)
 
-**Método:** Entrevistas a 8-10 administradoras de edificios 40+ unidades  
+**Método:** Entrevistas a 8-10 administradoras de edificios 40+ unidades
 **Preguntas clave:**
 
 - ¿Cuántos espacios de visita están disponibles típicamente?
@@ -89,7 +89,7 @@ Los edificios residenciales en Chile enfrentan **escasez crónica de estacionami
 
 ### Validación Residentes (Semanas 2-3)
 
-**Método:** Encuesta online + focus groups en 2-3 edificios target  
+**Método:** Encuesta online + focus groups en 2-3 edificios target
 **Preguntas clave:**
 
 - ¿Cuánto pagarían por garantizar estacionamiento para visitas?
@@ -100,7 +100,7 @@ Los edificios residenciales en Chile enfrentan **escasez crónica de estacionami
 
 ### Piloto Técnico (Semanas 3-4)
 
-**Método:** MVP simplificado con 1-2 edificios por 2 semanas  
+**Método:** MVP simplificado con 1-2 edificios por 2 semanas
 **Métricas objetivo:**
 
 - Conversión búsqueda → reserva: 25%+

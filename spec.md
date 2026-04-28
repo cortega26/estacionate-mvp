@@ -1,48 +1,50 @@
-# Estacionate SaaS Upgrade Spec
+# Especificación De Upgrade SaaS Estacionate
 
-## Objective
+## Objetivo
 
-Raise Estacionate from MVP quality to a SaaS-grade product by improving the end-to-end platform across resident booking, payments, admin operations, guard validation, UX clarity, reliability, performance, supportability, and trust.
+Elevar Estacionate desde calidad MVP a producto de nivel SaaS, mejorando la plataforma end-to-end en reservas de residentes, pagos demo/futuros con guardrails, operaciones admin, validación de conserjería, claridad UX, confiabilidad, performance, soporte y confianza.
 
-## Goals
+> Nota de fase activa: toda mención a pagos en esta especificación debe leerse según `documentation/LEGAL_COMMERCIAL_GUARDRAILS.md`. La fase habilitada es SaaS B2B sin pagos integrados productivos de residentes/comunidades, sin cobros directos a visitantes, sin payouts productivos y sin custodia de fondos comunitarios.
 
-1. Improve the quality of the resident booking and payment journey so it is clearer, more trustworthy, and easier to recover when something fails.
-2. Improve the admin experience so it communicates status, occupancy, revenue, and actions with less friction and more executive value.
-3. Improve the guard workflow so validation states and operational decisions are faster and less ambiguous.
-4. Improve platform robustness with better error handling, observability, and validation around critical flows.
-5. Improve delivery discipline by tying every meaningful product change to a specific proof path.
+## Metas
 
-## Non-Goals
+1. Mejorar la calidad del journey de reserva de residente para que sea más claro, confiable y recuperable cuando algo falle.
+2. Mejorar la experiencia admin para comunicar estado, ocupación, acciones y valor ejecutivo con menos fricción.
+3. Mejorar el workflow de conserjería para que estados de validación y decisiones operativas sean más rápidos y menos ambiguos.
+4. Mejorar robustez de plataforma con mejor manejo de errores, observabilidad y validación alrededor de flujos críticos.
+5. Mejorar disciplina de entrega vinculando cada cambio relevante de producto a una ruta de prueba específica.
 
-1. Full replatforming or major framework migration.
-2. Broad redesign of unrelated modules with no product-quality impact.
-3. Deep pricing-strategy redesign beyond what is required for clarity and trust.
-4. New marketing site work unless it is directly required for product trust or onboarding.
+## No Metas
 
-## Product Outcomes
+1. Replatforming completo o migración mayor de framework.
+2. Rediseño amplio de módulos no relacionados sin impacto en calidad de producto.
+3. Rediseño profundo de estrategia de pricing más allá de lo necesario para claridad y confianza.
+4. Sitio nuevo de marketing salvo que sea directamente necesario para confianza del producto u onboarding.
 
-1. Core demo flows can be run consistently and explain value quickly.
-2. Critical user-facing states have clear messaging and next-step guidance.
-3. Browser-critical paths have automated proof instead of relying on manual confidence.
-4. Product quality work is tracked as a sequence of verifiable changes rather than broad refactors.
+## Resultados De Producto
 
-## Scope
+1. Los flujos demo centrales pueden ejecutarse consistentemente y explicar valor rápido.
+2. Los estados críticos visibles para usuarios tienen mensajes claros y guía de siguientes pasos.
+3. Rutas críticas de navegador tienen prueba automatizada, no solo confianza manual.
+4. El trabajo de calidad de producto se rastrea como cambios verificables, no como refactors amplios.
 
-### In Scope
+## Alcance
 
-1. Resident authentication, search, booking, payment initiation, and post-payment states.
-2. Admin dashboards and user-management workflows that affect trust and operational clarity.
-3. Guard validation flows and supporting status clarity.
-4. Reliability, observability, and performance work in auth, bookings, payments, and admin metrics.
-5. Cross-role validation coverage and project-level execution tracking.
+### Dentro De Alcance
 
-### Out of Scope
+1. Autenticación, búsqueda, reserva, inicio de flujo de pago demo/futuro y estados posteriores de residente.
+2. Dashboards admin y workflows de gestión de usuarios que afectan confianza y claridad operacional.
+3. Flujos de validación de conserjería y claridad de estados.
+4. Confiabilidad, observabilidad y performance en auth, bookings, payments demo/futuros y métricas admin.
+5. Cobertura cross-role y tracking de ejecución a nivel proyecto.
 
-1. New infrastructure platforms unless a current blocker demands it.
-2. Full visual rebrand.
-3. Commercial collateral unrelated to product experience or delivery confidence.
+### Fuera De Alcance
 
-## System Anchors
+1. Nuevas plataformas de infraestructura salvo que un bloqueante actual lo exija.
+2. Rebrand visual completo.
+3. Collateral comercial sin relación con experiencia de producto o confianza de entrega.
+
+## Anclas Del Sistema
 
 ### Frontend
 
@@ -66,379 +68,173 @@ Raise Estacionate from MVP quality to a SaaS-grade product by improving the end-
 6. `backend/src/middleware/auth.ts`
 7. `backend/prisma/schema.prisma`
 
-## Implementation Strategy
+## Estrategia De Implementación
 
-### Phase 0: Bootstrap
+### Fase 0: Bootstrap
 
-1. Create this spec and keep it current.
-2. Create `todo.md` and use it as the running execution checklist.
-3. Create a root `tests/` E2E layer that reuses the existing frontend Playwright environment while making proof paths explicit.
+1. Crear esta especificación y mantenerla actualizada.
+2. Crear `todo.md` y usarlo como checklist vivo de ejecución.
+3. Crear una capa E2E raíz `tests/` que reutilice el entorno Playwright frontend y deje explícitas las rutas de prueba.
 
-### Phase 1: Baseline Quality and Proof
+### Fase 1: Calidad Base Y Prueba
 
-1. Establish stable browser coverage for resident login/search, admin user management, and smoke-level critical entry points.
-2. Audit current experience gaps against the main product flows.
-3. Prioritize the first slices that improve clarity, status communication, and operational trust.
+1. Establecer cobertura estable de navegador para login/búsqueda residente, gestión admin de usuarios y puntos críticos smoke.
+2. Auditar brechas de experiencia contra los flujos principales.
+3. Priorizar las primeras slices que mejoren claridad, comunicación de estado y confianza operacional.
 
-### Phase 2: High-Value Product Fixes
+### Fase 2: Fixes De Producto De Alto Valor
 
-1. Booking and checkout clarity.
-2. Payment success and failure recovery.
-3. Admin reporting and workflow clarity.
-4. Guard validation flow clarity.
-5. Reliability and observability improvements in backend critical paths.
+1. Claridad de booking y checkout.
+2. Recuperación de estados de éxito/falla de pago demo/futuro.
+3. Claridad de reportes y workflows admin.
+4. Claridad de validación conserjería.
+5. Mejoras de confiabilidad y observabilidad en rutas backend críticas.
 
-### Phase 3: Hardening
+### Fase 3: Endurecimiento
 
-1. Expand E2E coverage to match completed improvements.
-2. Close spec-to-implementation gaps found in periodic reviews.
-3. Run broader validation before handoff.
+1. Expandir cobertura E2E para cubrir mejoras completadas.
+2. Cerrar brechas spec-implementación encontradas en revisiones periódicas.
+3. Ejecutar validación más amplia antes de entregar.
 
-## Current Execution Order
+## Orden Actual De Ejecución
 
-All prior quality slices (Slices 1–10d) are complete. The project has pivoted to Fase 0 Foundation: architectural decisions that must be locked before any feature development.
+Todas las slices de calidad previas (Slices 1-10d) están completas. El proyecto pivoteó a **Fase 0 Fundacional**: decisiones de arquitectura que deben quedar bloqueadas antes de desarrollar nuevas funcionalidades.
 
-1. Write P0 ADRs: Tenancy (0007), RBAC (0008), User/Resident identity (0009), Booking state machine (0010), Payment states (0011). These are the "floor" — no feature work starts until these decisions are recorded.
-2. Implement tenant isolation middleware (every backend endpoint derives building scope from authenticated membership, never from request params alone).
-3. Implement booking state machine with `checked_in`, `checked_out`, `overstay`, `no_show` states and `AccessEvent` for guard check-in/out.
-4. Enforce `CRON_SECRET` on all cron endpoints.
-5. Fix Playwright E2E flakiness (admin login redirect, missing browser installs in CI config).
+1. Escribir ADRs P0: Tenancy (0007), RBAC (0008), identidad User/Resident (0009), state machine Booking (0010), estados de Payment (0011). Son el piso: no empieza feature work hasta registrarlas.
+2. Implementar middleware de aislamiento de tenant: todo endpoint backend deriva scope de edificio desde membership autenticada, nunca solo desde params del request.
+3. Implementar state machine de booking con `checked_in`, `checked_out`, `overstay`, `no_show` y `AccessEvent` para check-in/out de conserjería.
+4. Exigir `CRON_SECRET` en todos los endpoints cron.
+5. Estabilizar Playwright E2E: redirect de login admin y configuración CI de navegadores.
 
-## Current Phase Implementation Details
+## Detalle De Implementación Por Slice
 
-### Slice 1: Admin Reporting Clarity
+### Slices Previas Completadas
 
-1. Improve `frontend/src/pages/admin/DashboardPage.tsx` so the dashboard explains reporting scope, current platform state, and the next operational action instead of only showing raw KPIs.
-2. Add clear zero-data and sparse-data states for revenue trends and recent activity so admins understand whether the system is idle, misconfigured, or simply between bookings.
-3. Keep the change deterministic by proving the dashboard with mocked stats responses in a root `tests/` Playwright spec instead of relying on volatile seed data.
+Las slices 1-10d ya cerraron mejoras de claridad en reporting admin, journey residente booking-to-payment, observabilidad backend, validación conserjería, confirmaciones in-app para settings, users, buildings y sales reps, eliminación de edificios demo, resiliencia CORS local y consistencia de logging en event-bus/auth recovery/spot search.
 
-### Slice 2: Resident Booking-To-Payment Journey
+El detalle histórico de estas slices queda reflejado en `todo.md`; para nuevas tareas, el foco activo es Fase 0.
 
-1. Extend the resident browser suite from search and modal confirmation into the payment initiation handoff and result-return path.
-2. Reuse deterministic route mocking where external payment behavior or seed variability would make the proof brittle.
-3. Keep the journey proof user-visible: confirm that the resident can choose a space, review booking details, initiate payment, and land on a clear status page.
+### Slice F0.1: ADRs P0
 
-### Slice 3: Backend Observability And Error Handling
+1. Escribir cinco ADRs en `documentation/adr/`: 0007 (Tenancy), 0008 (RBAC), 0009 (User vs Resident), 0010 (state machine Booking), 0011 (estados Payment).
+2. Cada ADR debe definir decisión, alternativas rechazadas y criterios concretos de aceptación.
+3. Esta slice no incluye migraciones ni cambios de código; solo decisiones.
 
-1. Add structured logging and safer error-handling around the backend code touched by the booking and reporting slices.
-2. Prefer improvements that expose failure cause, actor, and booking or reporting context without changing the public product contract unnecessarily.
-3. Validate observability work with narrow backend checks first, then broaden only if the touched slice is green.
+### Slice F0.2: Middleware De Aislamiento De Tenant
 
-### Slice 4: Guard Validation Flow Clarity
+1. Agregar helper `requireBuildingScope(req)` en `backend/src/middleware/` que resuelva scope de edificio desde rol/membership del JWT y retorne 403 si el recurso solicitado está fuera de ese scope.
+2. Aplicarlo a todo endpoint admin, conserjería y booking que hoy filtre por `buildingId` desde parámetros de request.
+3. Probar con casos negativos: usuario autenticado para Edificio A debe recibir 403 al pedir recursos del Edificio B en al menos tres endpoints distintos.
 
-1. Make concierge verification less ambiguous by classifying patents and confirmation codes from explicit patterns instead of brittle length guesses.
-2. Add operator-facing guidance in `frontend/src/pages/gatekeeper/Dashboard.tsx` so guards know how to enter a booking code versus a patent.
-3. Prove the slice with deterministic browser coverage for request routing and a narrow backend test for building isolation plus active-window enforcement.
+### Slice F0.3: State Machine Booking + AccessEvent Check-In/Out
 
-### Slice 5: Admin Settings Confirmation Clarity
+1. Extender enum `BookingStatus` con `checked_in`, `checked_out`, `overstay`, `no_show`.
+2. Definir transiciones válidas como mapa en `BookingService`; no permitir asignaciones directas a `status` fuera de `transition(bookingId, event)`.
+3. Agregar modelo `AccessEvent` a Prisma: `id`, `bookingId`, `actorId` (usuario conserjería), `type` (`check_in` | `check_out` | `denied`), `plateObserved`, `timestamp`.
+4. Conectar endpoint de verificación de conserjería para crear `AccessEvent` y transicionar booking a `checked_in` en la primera verificación exitosa, y a `checked_out` en segunda verificación del mismo booking.
+5. Probar con tests backend que transiciones inválidas se rechazan y que se crean filas `AccessEvent` por transición.
 
-1. Replace the blocking `confirm()` flow in `frontend/src/pages/admin/SettingsPage.tsx` with an in-app confirmation surface that summarizes the selected building, new base price, and the fact that only future available blocks are affected.
-2. Keep the action deterministic by allowing the confirmation step to be fully exercised with mocked `GET /api/buildings` and `PUT /api/admin/prices` responses in a root `tests/` Playwright spec.
-3. Preserve the existing mutation contract while improving the operator experience: cancel should abort the request, confirm should send the exact building and price chosen in the form, and success feedback should remain visible.
+### Slice F0.4: Enforcement De `CRON_SECRET`
 
-### Slice 6: Admin User-Management Confirmation Clarity
+1. Todas las rutas bajo `backend/src/api/cron/` deben rechazar requests sin header válido `Authorization: Bearer <CRON_SECRET>` con 401.
+2. El secreto debe venir de env; el servidor debe negarse a iniciar sin él.
+3. Probar con test backend acotado que reconcile y cualquier otro endpoint cron retorna 401 sin el secreto correcto.
 
-1. Replace the raw `confirm()` flow in `frontend/src/pages/admin/UserManagement.tsx` with an in-app confirmation surface for ban and unban actions so admins can verify the target user before mutating account status.
-2. Keep the slice behaviorally complete by ensuring cancel leaves the user row unchanged and confirm triggers the same backend patch contract used today.
-3. Keep the browser proof deterministic by intercepting admin login plus the list-and-patch user-management requests inside `tests/admin-user-management.spec.ts`, so the test isolates confirmation behavior instead of live auth or seed drift.
+### Slice F0.5: Estabilización Playwright E2E
 
-### Slice 7: Building-Management Confirmation Clarity
+1. Corregir falla de redirect de login admin para que `tests/admin-dashboard.spec.ts` y suite smoke auth pasen confiablemente en Chromium.
+2. Actualizar `playwright.ts` o configuración raíz para que CI no intente Firefox/WebKit salvo que esos navegadores estén instalados explícitamente.
+3. Ejecutar `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/admin-dashboard.spec.ts` y confirmar cero fallas antes de cerrar la slice.
 
-1. Replace the remaining raw `confirm()` usage in building-management admin surfaces with in-app confirmation UI, starting with `frontend/src/pages/admin/BuildingsPage.tsx` and `frontend/src/pages/admin/components/ManageBuildingsList.tsx`.
-2. Preserve the current backend contracts while making destructive actions reviewable and cancelable without relying on browser dialogs.
-3. Add or extend root `tests/` browser proof so building status changes or destructive building actions can be canceled before any request is sent and explicitly confirmed before state changes.
+## Reglas De Ejecución
 
-### Slice 7a: Buildings Page Confirmation Clarity
+1. Consultar esta spec antes de cada cambio significativo.
+2. Actualizar `todo.md` cuando tareas pasen de planificadas a completas.
+3. Ejecutar la prueba relevante más acotada tras cada cambio significativo y ampliar solo cuando corresponda.
+4. Cada aproximadamente 20 iteraciones, correr una revisión fresca contra esta spec y la implementación actual.
+5. No marcar tareas completas sin prueba.
+6. Mantener `tests/` raíz alineado con el orden actual para que cada slice completa tenga prueba browser explícita cuando aplique.
 
-1. Replace the raw `confirm()` calls in `frontend/src/pages/admin/BuildingsPage.tsx` for archive/restore and delete actions with a shared in-app confirmation panel.
-2. Keep the contract stable: archive/restore should still issue the same `PUT /api/admin/buildings` payload, and delete should still issue the same `DELETE /api/admin/buildings?id=...` request only after explicit confirmation.
-3. Prove the slice with deterministic browser coverage that can cancel each action without sending a request and confirm the exact archive/delete request once accepted.
+## Matriz De Verificación
 
-### Slice 7b: Demo Building Deletion
+### Precondiciones De Entorno
 
-1. Add an explicit demo marker to buildings so seeded demo inventory can be handled intentionally instead of inferred from fragile naming or email conventions.
-2. Update `backend/src/api/admin/buildings.ts` so a normal delete for a demo building automatically performs the same dependency cleanup currently reserved for `force=true`, while preserving the stricter 409-plus-force flow for non-demo buildings with associated records.
-3. Expose the demo flag in the admin buildings response and use it in `frontend/src/pages/admin/BuildingsPage.tsx` to explain when deleting a demo building will also remove its demo operational history.
+1. Pruebas E2E críticas de navegador requieren backend alcanzable y datos seed de auth.
+2. La ruta local por defecto usa Postgres y Redis con Docker vía `backend/.env.local.example`.
+3. Este entorno está configurado para la ruta local por defecto, incluyendo Docker, Postgres, Redis, migraciones y cuentas demo seed.
 
-### Slice 8: Local Admin CORS Resilience
-
-1. Update `backend/src/lib/cors.ts` so approved local development origins include the standard Vite fallback ports needed when `5173` is already occupied, without broadening access to arbitrary origins.
-2. Keep the security posture explicit: local loopback origins may vary by approved port, production origins remain allowlisted, and unknown origins must still fail closed.
-3. Refresh the admin reporting browser proof so it no longer depends on stale seeded-login assumptions and confirms the dashboard can load data after a real authenticated admin session.
-
-### Slice 8a: Admin Dashboard And Analytics Render Reliability
-
-1. Keep `frontend/src/pages/admin/DashboardPage.tsx` and `frontend/src/pages/admin/Analytics.tsx` aligned with the backend response contracts so both routes load reliably after authentication.
-2. Make root browser proof deterministic by mocking `POST /api/auth/login`, `GET /api/admin/stats`, and `GET /api/admin/analytics` inside `tests/admin-dashboard.spec.ts`.
-3. Ensure the proof explicitly asserts both pages: dashboard state messaging and analytics summary-plus-chart sections.
-
-### Slice 9: Sales-Rep Building Removal Confirmation Clarity
-
-1. Replace the raw `confirm()` call in `frontend/src/pages/admin/components/ManageBuildingsList.tsx` with an in-app confirmation surface before unassigning a sales rep from a building.
-2. Preserve contract behavior: cancel sends no mutation, confirm sends the same `PUT /api/admin/buildings` payload with `salesRepId: null`.
-3. Prove the slice with deterministic root browser coverage for cancel-versus-confirm removal behavior.
-
-### Slice 10: Backend Observability Consistency
-
-1. Update touched reporting and concierge handlers to use `logger` instead of raw `console.error` so failures are emitted with consistent operational context.
-2. Keep existing API contracts stable while enriching logs with actor role, assigned building scope, and request intent when known.
-3. Add narrow backend tests that prove error paths return the same HTTP responses while recording structured logger entries.
-
-### Slice 10a: Admin Buildings And Payments Webhook Observability
-
-1. Replace raw `console.error` in `backend/src/api/admin/buildings.ts` and `backend/src/api/payments/webhook.ts` with structured logger calls.
-2. Preserve behavior contracts for conflict handling (`P2003`) and generic 500 responses.
-3. Add narrow tests that force controlled failures and assert logger context plus unchanged response status codes.
-
-### Slice 10b: Admin Users And Bookings Observability
-
-1. Replace raw `console.error` in `backend/src/api/admin/users.ts` and `backend/src/api/admin/bookings.ts` with structured logger calls.
-2. Preserve existing response contracts for validation errors and generic 500 paths.
-3. Add narrow tests that force controlled failures and assert logger context plus unchanged response status codes.
-
-### Slice 10c: Event Bus Observability Consistency
-
-1. Replace raw `console.error` paths in `backend/src/lib/event-bus.ts` with structured logger calls.
-2. Preserve event-bus behavior contracts: publish flow remains non-blocking and persistence failures stay isolated.
-3. Add narrow tests that force controlled failures (redis init/parse/publish and audit persistence) and assert logger context.
-
-### Slice 10d: Auth Recovery And Spot Search Observability
-
-1. Replace raw `console.error` in `backend/src/api/auth/forgot-password.ts`, `backend/src/api/auth/reset-password.ts`, and `backend/src/api/spots/search.ts` with structured logger calls.
-2. Preserve existing response contracts for validation failures and generic 500 paths.
-3. Add narrow tests that force controlled failures and assert logger context plus unchanged response status codes.
-
-### Slice F0.1: P0 ADRs — Tenancy, RBAC, User/Resident, Booking States, Payment States
-
-1. Write five ADRs in `documentation/adr/`: 0007 (Tenancy), 0008 (RBAC), 0009 (User vs Resident), 0010 (Booking state machine), 0011 (Payment states).
-2. Each ADR must define: the decision, the alternatives rejected, and the concrete acceptance criteria that allow implementation to start.
-3. No schema migration or code change is part of this slice — decisions only.
-
-### Slice F0.2: Tenant Isolation Middleware
-
-1. Add a `requireBuildingScope(req)` helper in `backend/src/middleware/` that resolves the caller's building scope from their JWT-attached role and membership, returning a 403 if the requested resource is outside that scope.
-2. Apply it to every admin, concierge, and booking endpoint that currently filters by `buildingId` from request parameters.
-3. Prove with negative tests: a user authenticated for Building A must receive 403 when requesting Building B resources across at least three distinct endpoints.
-
-### Slice F0.3: Booking State Machine + AccessEvent Check-in/Out
-
-1. Extend `BookingStatus` enum with `checked_in`, `checked_out`, `overstay`, `no_show` states.
-2. Define valid transitions as a map in `BookingService` — no direct `status` assignment outside the service's `transition(bookingId, event)` method.
-3. Add `AccessEvent` model to Prisma: `id`, `bookingId`, `actorId` (concierge user), `type` (check_in | check_out | denied), `plateObserved`, `timestamp`.
-4. Wire concierge verify endpoint to create an `AccessEvent` and transition the booking to `checked_in` on first successful verify; to `checked_out` on a second verify of the same booking.
-5. Prove with backend state machine tests that invalid transitions are rejected and that AccessEvent rows are created for each transition.
-
-### Slice F0.4: CRON_SECRET Enforcement
-
-1. All routes under `backend/src/api/cron/` must reject requests without a valid `Authorization: Bearer <CRON_SECRET>` header with 401.
-2. The secret must come from env; the server must refuse to start without it (fail-fast startup validation).
-3. Prove with a narrow backend test that the reconcile and any other cron endpoint returns 401 without the correct secret.
-
-### Slice F0.5: Playwright E2E Stabilization
-
-1. Fix admin login redirect failure so `tests/admin-dashboard.spec.ts` and the auth smoke suite pass reliably on Chromium.
-2. Update `playwright.ts` (or root Playwright config) so CI does not attempt Firefox/WebKit unless those browsers are explicitly installed.
-3. Run `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/admin-dashboard.spec.ts` and confirm zero failures before declaring this slice done.
-
-## Execution Rules
-
-1. Consult this spec before each meaningful implementation change.
-2. Update `todo.md` as tasks move from planned to complete.
-3. Run the narrowest relevant tests after each meaningful change, then broaden when needed.
-4. Every roughly 20 iterations, run a fresh review pass against this spec and the current implementation.
-5. Do not mark a task complete without proof.
-6. Keep root `tests/` aligned with the current execution order so each completed slice has an explicit browser proof path.
-
-## Verification Matrix
-
-### Environment Preconditions
-
-1. Browser-critical E2E tests require a reachable backend and seeded auth data.
-2. The default local path uses Docker-backed Postgres and Redis via `backend/.env.local.example`.
-3. This environment is now configured for the default local path, including Docker, Postgres, Redis, migrations, and seeded demo accounts.
-
-| Area | Proof Required | Initial Command/Check | Exit Signal |
-| --- | --- | --- | --- |
-| Bootstrap artifacts | Files created and internally consistent | Inspect `spec.md`, `todo.md`, `tests/`, run docs checks if touched | Files exist and are coherent |
-| Resident auth/search smoke | Browser test | `cd frontend && npx playwright test -c playwright.autopilot.config.ts resident-search.spec.ts` | User can reach and use the search surface after login |
-| Admin user management | Browser test | `cd frontend && npx playwright test -c playwright.autopilot.config.ts admin-user-management.spec.ts` | Admin can ban and unban seeded user |
-| Admin user-management confirmation clarity | Browser test | `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/admin-user-management.spec.ts` | Admin can review, cancel, and then confirm ban-or-unban actions before the row status changes |
-| Critical login behavior | Browser test | `cd frontend && npx playwright test -c playwright.autopilot.config.ts auth.smoke.spec.ts` | Invalid login fails and seeded admin login succeeds |
-| Payment result states | Browser test | `cd frontend && npx playwright test -c playwright.autopilot.config.ts payment-result-pages.spec.ts` | Approved, pending, and rejected result pages show clear guidance and recovery actions |
-| Admin dashboard and analytics render reliability | Browser test | `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/admin-dashboard.spec.ts` | Admin dashboard and analytics pages both load after login and render deterministic reporting content |
-| Building-admin dashboard scope | Browser test | `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/admin-dashboard.spec.ts` | Building admins see scoped dashboard messaging and cannot request another building's stats |
-| Resident booking confirmation clarity | Browser test | `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/resident-search.spec.ts` | Resident can review booking details before leaving for payment |
-| Resident booking-to-payment journey | Browser test | `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/resident-booking-journey.spec.ts` | Resident can move from search to booking confirmation to payment result guidance |
-| Guard validation clarity | Browser and narrow backend test | `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/guard-validation.spec.ts`, `cd backend && npm test -- concierge-verify.test.ts`, `cd frontend && npm run lint` | Guard can verify patents and confirmation codes without format ambiguity, and backend verification remains building-scoped and time-valid |
-| Admin settings confirmation clarity | Browser test and frontend lint | `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/admin-settings.spec.ts`, `cd frontend && npm run lint` | Admin sees an in-app confirmation summary before bulk price changes, can cancel without sending the mutation, and can confirm the exact building/price payload |
-| Buildings page confirmation clarity | Browser test and frontend lint | `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/admin-buildings.spec.ts`, `cd frontend && npm run lint` | Admin can review, cancel, and then confirm archive/delete actions for a building before any request is sent |
-| Demo building deletion | Focused backend test plus browser proof | `cd backend && npm test -- admin-buildings.test.ts`, `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/admin-buildings.spec.ts`, `cd frontend && npm run lint` | Demo buildings with demo residents, bookings, and payments delete cleanly from the standard admin flow without a force-delete detour |
-| Local admin CORS resilience | Focused backend integration plus browser proof | `cd backend && npm test -- integration/cors.test.ts`, `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/admin-dashboard.spec.ts` | Local admin login, dashboard, and analytics requests succeed when Vite moves to an approved fallback localhost port |
-| Sales-rep building-removal confirmation clarity | Browser test | `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/admin-sales-reps.spec.ts` | Admin can cancel sales-rep building removal without sending a mutation and must explicitly confirm before unassignment is persisted |
-| Backend observability consistency | Narrow backend tests and build | `cd backend && npm test -- admin-analytics.observability.test.ts concierge-observability.test.ts`, `cd backend && npm run build` | Error paths in touched handlers keep current HTTP contracts and emit structured logs with context |
-| Admin buildings and webhook observability | Narrow backend tests and build | `cd backend && npm test -- admin-buildings.observability.test.ts payments-webhook.observability.test.ts`, `cd backend && npm run build` | Admin buildings and payments webhook failures preserve response contracts while emitting structured logs |
-| Admin users and bookings observability | Narrow backend tests and build | `cd backend && npm test -- admin-users.observability.test.ts admin-bookings.observability.test.ts`, `cd backend && npm run build` | Admin users and bookings failures preserve response contracts while emitting structured logs |
-| Event bus observability consistency | Narrow backend test and build | `cd backend && npm test -- event-bus.observability.test.ts`, `cd backend && npm run build` | Event bus failures preserve publish behavior while emitting structured logs for init, parse, publish, and persistence paths |
-| Auth recovery and spot search observability | Narrow backend tests and build | `cd backend && npm test -- auth-recovery.observability.test.ts spots-search.observability.test.ts`, `cd backend && npm run build` | Forgot/reset password and spot search failures preserve response contracts while emitting structured logs |
-| Backend observability in touched path | Narrow backend checks | `cd backend && npm run build`, targeted backend test if added | Touched backend path compiles and preserves behavior while emitting clearer operational context |
-| Product changes in touched frontend slice | Narrow frontend checks | `cd frontend && npm run lint`, `cd frontend && npm test`, targeted Playwright spec | No regressions in touched flow |
-| Product changes in touched backend slice | Narrow backend checks | `cd backend && npm run lint`, `cd backend && npm run build`, `cd backend && npm test` | No regressions in touched backend slice |
-| P0 ADRs (Tenancy, RBAC, User/Resident, Booking states, Payment states) | Document review | Inspect `documentation/adr/0007` through `0011` | Five ADRs exist, each with a decision, rejected alternatives, and acceptance criteria |
-| Tenant isolation middleware | Backend negative tests | `cd backend && npm test -- tenant-isolation.test.ts` | Building-A user receives 403 on Building-B resources for bookings, admin stats, and concierge endpoints |
-| Booking state machine + AccessEvent | Backend state tests | `cd backend && npm test -- booking-state-machine.test.ts` | Invalid transitions rejected; AccessEvent rows created on check-in and check-out |
-| CRON_SECRET enforcement | Narrow backend test | `cd backend && npm test -- cron-auth.test.ts` | Reconcile and other cron endpoints return 401 without correct secret |
-| Playwright E2E stabilization | Browser test | `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/admin-dashboard.spec.ts` | Admin dashboard test passes on Chromium with zero failures |
-| Cross-cutting handoff | Broad validation | `npm run check:all` | Repo checks pass or blockers are explicitly documented |
-
-## Slice Proof Plan
-
-### Admin Reporting Clarity
-
-1. Add or update `tests/admin-dashboard.spec.ts` to mock `GET /api/admin/stats` and assert the dashboard headline, scope guidance, KPI helper text, and zero-data messaging.
-2. Run `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/admin-dashboard.spec.ts` after the first substantive dashboard edit.
-3. Run `cd frontend && npm run lint` once the dashboard slice is green.
-
-### Resident Booking-To-Payment Journey
-
-1. Add or update `tests/resident-booking-journey.spec.ts` to cover space selection, booking confirmation, payment initiation handoff, and return-state messaging.
-2. Run `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/resident-booking-journey.spec.ts` after the first substantive journey edit.
-3. Re-run the narrower resident search proof if the journey edit changes shared booking UI.
-
-### Backend Observability And Error Handling
-
-1. Add or update narrow backend proof for the touched reporting or booking path when behavior changes.
-2. Run `cd backend && npm run build` immediately after the first substantive backend edit.
-3. If a targeted backend test exists or is added, rerun it before broadening to wider checks.
-
-### Guard Validation Flow Clarity
-
-1. Add or update `tests/guard-validation.spec.ts` to prove concierge input routing for both patents and confirmation codes with deterministic request assertions.
-2. Add or update a narrow backend proof for `backend/src/api/concierge/verify.ts` so assigned-building scoping and active-window checks are explicit.
-3. Run `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/guard-validation.spec.ts` after the first substantive guard UI edit.
-4. Run `cd backend && npm test -- concierge-verify.test.ts` once the handler proof is in place, then `cd frontend && npm run lint`.
-
-### Admin Settings Confirmation Clarity
-
-1. Add `tests/admin-settings.spec.ts` to intercept `GET /api/buildings` and `PUT /api/admin/prices`, then assert that the page shows a confirmation summary before the mutation runs.
-2. Prove that canceling from the confirmation step sends no update request.
-3. Prove that confirming sends the exact `buildingId` and `newPrice` selected in the form and surfaces the success toast.
-4. Run `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/admin-settings.spec.ts` immediately after the first substantive settings-page edit, then `cd frontend && npm run lint`.
-
-### Admin User-Management Confirmation Clarity
-
-1. Update `tests/admin-user-management.spec.ts` to mock admin login plus `GET` and `PATCH /api/admin/users`, then verify that canceling a ban leaves the row active.
-2. Extend the same browser proof so the admin must explicitly confirm the ban before the row status changes, then repeat the pattern for unban.
-3. Run `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/admin-user-management.spec.ts` immediately after the first substantive user-management edit, then `cd frontend && npm run lint`.
-
-### Building-Management Confirmation Clarity
-
-1. Identify the smallest remaining raw `confirm()` path in building administration and add or extend a root `tests/` Playwright proof for cancel-versus-confirm behavior.
-2. Run the targeted building-management Playwright spec immediately after the first substantive UI edit.
-3. Run `cd frontend && npm run lint` once the next confirmation slice is green.
-
-### Buildings Page Confirmation Clarity
-
-1. Add `tests/admin-buildings.spec.ts` to mock admin login, `GET /api/admin/buildings`, and the archive/delete mutations.
-2. Prove that canceling the archive action leaves the row unchanged and sends no update request.
-3. Prove that confirming archive sends the exact building id plus inverted `isActive` payload, and that confirming delete sends the expected delete request only after explicit confirmation.
-4. Run `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/admin-buildings.spec.ts` immediately after the first substantive buildings-page edit, then `cd frontend && npm run lint`.
-
-### Demo Building Deletion
-
-1. Extend `backend/tests/admin-buildings.test.ts` with a case that creates a demo building with resident, booking, and payment dependencies, then proves a plain `DELETE /api/admin/buildings?id=...` succeeds without `force=true`.
-2. Update `tests/admin-buildings.spec.ts` so the buildings page shows demo-aware deletion guidance and the mocked delete succeeds through the normal confirmation path without surfacing the force-delete modal.
-3. Run `cd backend && npm test -- admin-buildings.test.ts` immediately after the first substantive backend edit, then run the targeted browser proof and `cd frontend && npm run lint` if the UI copy changes.
-
-### Local Admin CORS Resilience
-
-1. Extend `backend/tests/integration/cors.test.ts` so an approved fallback local origin such as `http://localhost:5174` is accepted and still receives credentialed CORS headers.
-2. Update `tests/admin-dashboard.spec.ts` to use a deterministic mocked admin login path that matches the current auth flow, then confirm the dashboard loads once the authenticated requests are no longer blocked by CORS.
-3. Run `cd backend && npm test -- integration/cors.test.ts` immediately after the first substantive backend CORS edit, then run `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/admin-dashboard.spec.ts`.
-
-### Admin Dashboard And Analytics Render Reliability
-
-1. Extend `tests/admin-dashboard.spec.ts` so it proves both `/admin` and `/admin/analytics` rendering with deterministic mocked responses.
-2. Assert dashboard scope messaging and analytics summary/chart sections to catch contract drift immediately.
-3. Run `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/admin-dashboard.spec.ts` after the first substantive proof edit, then run `cd frontend && npm run lint` only if admin page code changes.
-
-### Sales-Rep Building Removal Confirmation Clarity
-
-1. Add `tests/admin-sales-reps.spec.ts` to mock admin login plus sales-rep and building admin APIs.
-2. Prove cancel-versus-confirm removal behavior so no update request is sent on cancel and a single unassignment payload is sent only on confirm.
-3. Run `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/admin-sales-reps.spec.ts` immediately after the first substantive sales-rep admin edit, then run `cd frontend && npm run lint`.
-
-### Backend Observability Consistency
-
-1. Add narrow backend tests in `backend/tests/` that mock logger and force controlled failures in analytics and concierge handlers.
-2. Prove unchanged response contracts for 500 paths while asserting structured logger calls include contextual fields.
-3. Run `cd backend && npm test -- admin-analytics.observability.test.ts concierge-observability.test.ts` immediately after the first substantive backend observability edit.
-4. Run `cd backend && npm run build` once observability edits and focused tests are green.
-
-### Admin Buildings And Payments Webhook Observability
-
-1. Add `backend/tests/admin-buildings.observability.test.ts` to force a controlled admin-buildings failure and assert structured logger context with unchanged 500 behavior.
-2. Add `backend/tests/payments-webhook.observability.test.ts` to force a controlled webhook processing failure and assert structured logger context with unchanged 500 behavior.
-3. Run `cd backend && npm test -- admin-buildings.observability.test.ts payments-webhook.observability.test.ts` immediately after the first substantive observability edits.
-4. Run `cd backend && npm run build` once focused observability checks are green.
-
-### Admin Users And Bookings Observability
-
-1. Add `backend/tests/admin-users.observability.test.ts` to force controlled user-management failures and assert structured logger context with unchanged 500 behavior.
-2. Add `backend/tests/admin-bookings.observability.test.ts` to force controlled booking-list failures and assert structured logger context with unchanged 500 behavior.
-3. Run `cd backend && npm test -- admin-users.observability.test.ts admin-bookings.observability.test.ts` immediately after the first substantive observability edits.
-4. Run `cd backend && npm run build` once focused observability checks are green.
-
-### Event Bus Observability Consistency
-
-1. Add `backend/tests/event-bus.observability.test.ts` to force controlled event-bus failures and assert structured logger context.
-2. Run `cd backend && npm test -- event-bus.observability.test.ts` immediately after the first substantive event-bus observability edit.
-3. Run `cd backend && npm run build` once focused observability checks are green.
-
-### Auth Recovery And Spot Search Observability
-
-1. Add `backend/tests/auth-recovery.observability.test.ts` to force controlled failures in forgot/reset handlers and assert structured logger context with unchanged 500 behavior.
-2. Add `backend/tests/spots-search.observability.test.ts` to force controlled search-handler failures and assert structured logger context with unchanged 500 behavior.
-3. Run `cd backend && npm test -- auth-recovery.observability.test.ts spots-search.observability.test.ts` immediately after the first substantive observability edits.
-4. Run `cd backend && npm run build` once focused observability checks are green.
-
-### Fase 0 — P0 ADRs
-
-1. Write `documentation/adr/0007` through `0011` covering Tenancy, RBAC, User/Resident, Booking state machine, and Payment states.
-2. Each ADR must include: context, decision, consequences, and acceptance criteria that gate the corresponding implementation slice.
-3. No implementation starts until the ADR for that slice is committed.
-
-### Fase 0 — Tenant Isolation Middleware
-
-1. Add `backend/tests/tenant-isolation.test.ts` with negative tests for bookings, admin/stats, and concierge endpoints using two distinct building identities.
-2. Run `cd backend && npm test -- tenant-isolation.test.ts` after each meaningful middleware edit.
-3. Run `cd backend && npm run build` once the negative tests are green to confirm no type regressions.
-
-### Fase 0 — Booking State Machine + AccessEvent
-
-1. Add `backend/tests/booking-state-machine.test.ts` covering: valid transitions, invalid transitions (must return error), and AccessEvent creation on check-in/check-out.
-2. Run `cd backend && npm test -- booking-state-machine.test.ts` after each BookingService or schema change.
-3. Run `cd backend && npm run build` once state machine tests are green.
-
-### Fase 0 — CRON_SECRET Enforcement
-
-1. Add `backend/tests/cron-auth.test.ts` that posts to `/api/cron/reconcile` without a secret (expect 401) and with the correct secret (expect 200 or the normal reconcile response).
-2. Run `cd backend && npm test -- cron-auth.test.ts` immediately after adding the auth guard.
-
-### Fase 0 — Playwright E2E Stabilization
-
-1. Diagnose the admin login redirect failure by running `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/admin-dashboard.spec.ts --headed` and inspecting the auth flow.
-2. Fix the root cause (likely seed mismatch or route guard timing) rather than adding retries.
-3. Re-run the targeted spec until it passes consistently, then run `npm run check:all`.
-
-## Initial Risks
-
-1. Existing browser coverage is thin and may not be deterministic enough for fast iteration.
-2. Some cross-role flows may require stronger test data control than the current seed provides.
-3. Payment end-to-end coverage may need a simulator or deterministic harness to avoid external dependency noise.
-4. The broader backend suite still has unrelated reconciliation test failures, so full-repo handoff proof is not yet equivalent to slice-level proof.
-
-## Deferred Until Proven Necessary
-
-1. Full test framework restructuring beyond the minimum needed for a reliable root `tests/` layer.
-2. New public-site work.
-3. Wide architectural refactors not tied to user-visible quality or operational risk.
+| Área                                      | Prueba requerida                | Comando/check inicial                                                                                                                                                                         | Señal de salida                                                                          |
+| ----------------------------------------- | ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| Artefactos bootstrap                      | Archivos creados y consistentes | Inspeccionar `spec.md`, `todo.md`, `tests/`; correr docs checks si se tocaron                                                                                                                 | Archivos existen y son coherentes                                                        |
+| Smoke auth/búsqueda residente             | Prueba browser                  | `cd frontend && npx playwright test -c playwright.autopilot.config.ts resident-search.spec.ts`                                                                                                | Usuario puede entrar y usar búsqueda tras login                                          |
+| Gestión admin de usuarios                 | Prueba browser                  | `cd frontend && npx playwright test -c playwright.autopilot.config.ts admin-user-management.spec.ts`                                                                                          | Admin puede ban/unban de usuario seed                                                    |
+| Confirmación admin user-management        | Prueba browser                  | `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/admin-user-management.spec.ts`                                                                                 | Admin revisa, cancela y confirma ban/unban antes de cambio de estado                     |
+| Login crítico                             | Prueba browser                  | `cd frontend && npx playwright test -c playwright.autopilot.config.ts auth.smoke.spec.ts`                                                                                                     | Login inválido falla y login admin seed funciona                                         |
+| Estados de resultado de pago              | Prueba browser                  | `cd frontend && npx playwright test -c playwright.autopilot.config.ts payment-result-pages.spec.ts`                                                                                           | Páginas aprobado, pendiente y rechazado muestran guía clara                              |
+| Dashboard admin y analytics               | Prueba browser                  | `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/admin-dashboard.spec.ts`                                                                                       | Ambas páginas cargan tras login y renderizan contenido determinístico                    |
+| Alcance dashboard building-admin          | Prueba browser                  | `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/admin-dashboard.spec.ts`                                                                                       | Administradores de edificio ven mensajería con alcance y no piden stats de otro edificio |
+| Confirmación booking residente            | Prueba browser                  | `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/resident-search.spec.ts`                                                                                       | Residente revisa detalles antes de ir a pago                                             |
+| Journey booking-to-payment residente      | Prueba browser                  | `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/resident-booking-journey.spec.ts`                                                                              | Residente avanza desde búsqueda a confirmación y resultado de pago                       |
+| Claridad validación conserjería           | Browser + test backend acotado  | `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/guard-validation.spec.ts`, `cd backend && npm test -- concierge-verify.test.ts`, `cd frontend && npm run lint` | Guardia verifica patentes/códigos sin ambigüedad y backend conserva scope/ventana        |
+| Confirmación settings admin               | Browser + lint frontend         | `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/admin-settings.spec.ts`, `cd frontend && npm run lint`                                                         | Admin ve resumen in-app antes de cambios masivos de precio                               |
+| Confirmación buildings admin              | Browser + lint frontend         | `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/admin-buildings.spec.ts`, `cd frontend && npm run lint`                                                        | Admin puede cancelar y confirmar acciones destructivas antes de request                  |
+| Eliminación edificio demo                 | Test backend + browser          | `cd backend && npm test -- admin-buildings.test.ts`, `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/admin-buildings.spec.ts`, `cd frontend && npm run lint`   | Edificios demo se eliminan limpiamente desde flujo admin estándar                        |
+| Resiliencia CORS admin local              | Integración backend + browser   | `cd backend && npm test -- integration/cors.test.ts`, `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/admin-dashboard.spec.ts`                                 | Login/dashboard/analytics funcionan con puertos localhost fallback aprobados             |
+| Confirmación remoción sales-rep           | Prueba browser                  | `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/admin-sales-reps.spec.ts`                                                                                      | Admin cancela sin mutation y confirma antes de persistir desasignación                   |
+| Observabilidad backend                    | Tests backend acotados + build  | `cd backend && npm test -- admin-analytics.observability.test.ts concierge-observability.test.ts`, `cd backend && npm run build`                                                              | Error paths conservan contratos HTTP y emiten logs estructurados                         |
+| Admin buildings + webhook observability   | Tests backend acotados + build  | `cd backend && npm test -- admin-buildings.observability.test.ts payments-webhook.observability.test.ts`, `cd backend && npm run build`                                                       | Fallas preservan contratos y emiten logs estructurados                                   |
+| Admin users + bookings observability      | Tests backend acotados + build  | `cd backend && npm test -- admin-users.observability.test.ts admin-bookings.observability.test.ts`, `cd backend && npm run build`                                                             | Fallas preservan contratos y emiten logs estructurados                                   |
+| Event bus observability                   | Test backend acotado + build    | `cd backend && npm test -- event-bus.observability.test.ts`, `cd backend && npm run build`                                                                                                    | Fallas event-bus preservan publish behavior y emiten logs                                |
+| Auth recovery + spot search observability | Tests backend acotados + build  | `cd backend && npm test -- auth-recovery.observability.test.ts spots-search.observability.test.ts`, `cd backend && npm run build`                                                             | Fallas forgot/reset/search preservan contratos y emiten logs                             |
+| Cambios frontend tocados                  | Checks frontend acotados        | `cd frontend && npm run lint`, `cd frontend && npm test`, spec Playwright dirigida                                                                                                            | Sin regresiones en flujo tocado                                                          |
+| Cambios backend tocados                   | Checks backend acotados         | `cd backend && npm run lint`, `cd backend && npm run build`, `cd backend && npm test`                                                                                                         | Sin regresiones en slice backend tocada                                                  |
+| ADRs P0                                   | Revisión documental             | Inspeccionar `documentation/adr/0007` a `0011`                                                                                                                                                | Cinco ADRs con decisión, alternativas y criterios de aceptación                          |
+| Middleware aislamiento tenant             | Tests negativos backend         | `cd backend && npm test -- tenant-isolation.test.ts`                                                                                                                                          | Usuario edificio A recibe 403 al pedir recursos de edificio B                            |
+| Booking state machine + AccessEvent       | Tests backend de estado         | `cd backend && npm test -- booking-state-machine.test.ts`                                                                                                                                     | Transiciones inválidas rechazadas; AccessEvent creado en check-in/out                    |
+| Enforcement `CRON_SECRET`                 | Test backend acotado            | `cd backend && npm test -- cron-auth.test.ts`                                                                                                                                                 | Endpoints cron retornan 401 sin secreto correcto                                         |
+| Estabilización Playwright E2E             | Prueba browser                  | `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/admin-dashboard.spec.ts`                                                                                       | Spec admin dashboard pasa en Chromium con cero fallas                                    |
+| Entrega transversal                       | Validación amplia               | `npm run check:all`                                                                                                                                                                           | Checks pasan o bloqueantes quedan documentados                                           |
+
+## Plan De Prueba Por Slice Activa
+
+### Fase 0 - ADRs P0
+
+1. Escribir `documentation/adr/0007` a `0011` cubriendo Tenancy, RBAC, User/Resident, state machine Booking y estados Payment.
+2. Cada ADR debe incluir contexto, decisión, consecuencias y criterios de aceptación que habilitan implementación.
+3. No iniciar implementación hasta que el ADR de esa slice esté listo.
+
+### Fase 0 - Middleware De Aislamiento De Tenant
+
+1. Agregar `backend/tests/tenant-isolation.test.ts` con pruebas negativas para bookings, admin/stats y endpoints conserjería usando dos identidades de edificio.
+2. Ejecutar `cd backend && npm test -- tenant-isolation.test.ts` tras cada edición relevante.
+3. Ejecutar `cd backend && npm run build` cuando los tests negativos estén verdes.
+
+### Fase 0 - Booking State Machine + AccessEvent
+
+1. Agregar `backend/tests/booking-state-machine.test.ts` cubriendo transiciones válidas, transiciones inválidas y creación `AccessEvent`.
+2. Ejecutar `cd backend && npm test -- booking-state-machine.test.ts` tras cada cambio de `BookingService` o schema.
+3. Ejecutar `cd backend && npm run build` cuando los tests estén verdes.
+
+### Fase 0 - Enforcement `CRON_SECRET`
+
+1. Agregar `backend/tests/cron-auth.test.ts` que postee a `/api/cron/reconcile` sin secreto (espera 401) y con secreto correcto (espera 200 o respuesta normal de reconcile).
+2. Ejecutar `cd backend && npm test -- cron-auth.test.ts` inmediatamente después de agregar el guard.
+
+### Fase 0 - Estabilización Playwright E2E
+
+1. Diagnosticar falla de redirect admin ejecutando `cd frontend && npx playwright test -c playwright.autopilot.config.ts ../tests/admin-dashboard.spec.ts --headed`.
+2. Corregir causa raíz (probable desalineación seed o timing de route guard), no agregar retries como sustituto.
+3. Re-ejecutar la spec dirigida hasta que pase consistentemente; luego ejecutar `npm run check:all`.
+
+## Riesgos Iniciales
+
+1. La cobertura browser existente es delgada y puede no ser suficientemente determinística para iteración rápida.
+2. Algunos flujos cross-role pueden requerir control de test data más fuerte que el seed actual.
+3. La cobertura end-to-end de pagos demo/futuros puede requerir simulador o harness determinístico para evitar ruido externo.
+4. La suite backend amplia tuvo fallas no relacionadas de reconcile; por eso la prueba de entrega full-repo no siempre equivale a prueba por slice.
+
+## Diferido Hasta Que Sea Necesario
+
+1. Reestructuración amplia del framework de pruebas más allá de lo mínimo para una capa raíz `tests/` confiable.
+2. Nuevo sitio público.
+3. Refactors arquitectónicos amplios no ligados a calidad visible para usuario o riesgo operacional.

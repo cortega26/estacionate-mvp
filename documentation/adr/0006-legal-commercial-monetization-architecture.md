@@ -1,7 +1,7 @@
 # ADR 0006: Arquitectura Legal-Comercial de Monetización
 
-**Estado:** Aceptado  
-**Fecha:** 2026-04-27  
+**Estado:** Aceptado
+**Fecha:** 2026-04-27
 **Fuente de verdad:** `documentation/LEGAL_COMMERCIAL_GUARDRAILS.md`
 
 ---
@@ -34,7 +34,7 @@ Estacionate cobra a las comunidades una suscripción SaaS (software como servici
 
 Los residentes anfitriones son cobrados por sus comunidades como "Aporte al Fondo de Reserva" integrado en Gastos Comunes. El cobro es **residente → comunidad**, nunca visitante → Estacionate. Esta estructura se apoya en la doctrina SII de no-gravabilidad de aportes internos al Fondo de Reserva, sujeta a confirmación por memo legal vinculante.
 
-**Gate G2.1:** Memo legal de estudio jurídico chileno especializado confirmando viabilidad tributaria y de copropiedad.  
+**Gate G2.1:** Memo legal de estudio jurídico chileno especializado confirmando viabilidad tributaria y de copropiedad.
 **Gate G2.2:** Al menos una comunidad piloto con acta de asamblea extraordinaria (50%+1 de derechos totales) aprobando la obligación económica.
 
 ### Fase 3 — Pagos Integrados con Split Payment (Bloqueado por gates de Fase 2 + G3.3 + G3.4)

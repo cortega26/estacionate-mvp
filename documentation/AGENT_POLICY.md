@@ -1,65 +1,50 @@
-# Agent Policy
+# Política Para Agentes
 
-This file is the canonical policy layer for AI agents working in this repository. Use
-`../AGENTS.md` for the fast start, then use this file when a workflow rule needs
-interpretation.
+Este archivo es la capa canónica de política para agentes de IA que trabajan en este repositorio. Usa `../AGENTS.md` para el inicio rápido y este archivo cuando una regla de flujo necesite interpretación.
 
-## Instruction Priority
+## Prioridad De Instrucciones
 
-1. The current user request.
-2. The root `AGENTS.md` quickstart.
-3. `documentation/LEGAL_COMMERCIAL_GUARDRAILS.md` for any task touching payments,
-   pricing, billing, payout, monetization, commercial positioning, terms, or
-   visible copy that could imply payments/marketplace behavior — read it before
-   writing code.
-4. This policy file.
-5. Task-specific recipes in `documentation/TASKS.md` and `documentation/task-recipes/`.
-6. Historical context in `documentation/LESSONS.md` and audit reports.
+1. La solicitud actual del usuario.
+2. El inicio rápido raíz `AGENTS.md`.
+3. `documentation/LEGAL_COMMERCIAL_GUARDRAILS.md` para cualquier tarea que toque pagos, precios, facturación, payouts, monetización, posicionamiento comercial, términos o copy visible que pueda implicar pagos/comportamiento de marketplace; léelo antes de escribir código.
+4. Este archivo de política.
+5. Recetas específicas en `documentation/TASKS.md` y `documentation/task-recipes/`.
+6. Contexto histórico en `documentation/LESSONS.md` y reportes de auditoría.
 
-If two repository docs conflict, prefer the more specific and more recent operational
-document, then update the stale document as part of the same change when practical.
-For legal/commercial phase conflicts, `documentation/LEGAL_COMMERCIAL_GUARDRAILS.md`
-prevails over older roadmap, pitch, UI, terms, or historical project-context
-material.
+Si dos documentos del repositorio entran en conflicto, prefiere el documento operativo más específico y reciente; cuando sea práctico, actualiza el documento obsoleto como parte del mismo cambio. Para conflictos de fase legal/comercial, `documentation/LEGAL_COMMERCIAL_GUARDRAILS.md` prevalece sobre roadmap, pitch, UI, términos o material histórico de contexto de proyecto.
 
-## Default Workflow
+## Idioma De Documentación
 
-1. Explore the smallest relevant slice of the codebase.
-2. Identify the task recipe or entry point that matches the change.
-3. Make the smallest behaviorally complete change.
-4. Run the narrowest useful validation while iterating.
-5. Run `npm run check:all` before handing off broad, cross-cutting, or user-facing
-   changes.
+Toda documentación nueva o modificada debe estar en español neutro, chileno sin modismos. Mantén sin traducir comandos, rutas, nombres de archivos, nombres de librerías, identificadores de código, claves de configuración y términos de dominio cuando sean contratos técnicos o aparezcan en APIs.
 
-## Reproduction-First Scope
+## Flujo Por Defecto
 
-Create a failing test before fixing bugs, regressions, and risk-bearing behavior changes.
-For docs-only edits, formatting changes, dependency metadata, or mechanical maintenance,
-run the relevant validation command directly.
+1. Explora la porción relevante más pequeña del código.
+2. Identifica la receta de tarea o punto de entrada que coincide con el cambio.
+3. Haz el cambio completo más pequeño desde el punto de vista de comportamiento.
+4. Ejecuta la validación útil más acotada mientras iteras.
+5. Ejecuta `npm run check:all` antes de entregar cambios amplios, transversales o visibles para usuarios.
 
-## Validation Selection
+## Alcance Con Reproducción Primero
 
-- Backend logic: start with the closest backend Vitest target, then `cd backend &&
-npm run check:all` for broad changes.
-- Frontend UI or client behavior: start with `cd frontend && npm test`, then add
-  Playwright for critical user flows.
-- Prisma schema changes: run migration/generation commands before application tests.
-- Docs and process changes: run `npm run check:docs` and `npm run format:check`.
-- Full local validation with DB-backed tests: prefer `npm run check:local` when
-  PostgreSQL or Redis may not already be running.
+Para bugs, regresiones y cambios de comportamiento con riesgo, crea una prueba fallida antes de corregir. Para cambios solo de documentación, formato, metadata de dependencias o mantenimiento mecánico, ejecuta directamente el comando de validación relevante.
 
-## Editing Boundaries
+## Selección De Validación
 
-- Do not edit generated output, lockfiles, or migrations by hand unless the task is
-  specifically about those files.
-- Use `documentation/OWNERSHIP.md` before crossing backend, frontend, Prisma,
-  deployment, or generated-file boundaries.
-- Treat `backend/prisma/schema.prisma`, API response shapes, and frontend types as one
-  contract when changing data models.
-- Prefer established utilities and service boundaries over new abstractions.
-- Preserve user comments and TODOs unless the change resolves them.
+- Lógica backend: empieza con el objetivo Vitest backend más cercano; para cambios amplios, luego ejecuta `cd backend && npm run check:all`.
+- UI frontend o comportamiento del cliente: empieza con `cd frontend && npm test`; agrega Playwright para flujos críticos de usuario.
+- Cambios en esquema Prisma: ejecuta comandos de migración/generación antes de las pruebas de aplicación.
+- Cambios de documentación y proceso: ejecuta `npm run check:docs` y `npm run format:check`.
+- Validación local completa con pruebas que dependen de base de datos: prefiere `npm run check:local` cuando PostgreSQL o Redis podrían no estar corriendo.
 
-## Reporting
+## Límites De Edición
 
-End handoffs with the commands that were run and any checks that could not be run. Keep
-raw command output short and include the failure line when validation fails.
+- No edites a mano salidas generadas, lockfiles ni migraciones, salvo que la tarea trate específicamente esos archivos.
+- Usa `documentation/OWNERSHIP.md` antes de cruzar límites de backend, frontend, Prisma, despliegue o archivos generados.
+- Trata `backend/prisma/schema.prisma`, las formas de respuesta API y los tipos frontend como un solo contrato al cambiar modelos de datos.
+- Prefiere utilidades y límites de servicio existentes antes de crear nuevas abstracciones.
+- Conserva comentarios de usuario y TODOs salvo que el cambio los resuelva.
+
+## Reporte
+
+Termina las entregas con los comandos ejecutados y las revisiones que no pudieron correrse. Mantén breve la salida cruda de comandos e incluye la línea de falla cuando una validación falle.

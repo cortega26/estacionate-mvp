@@ -1,27 +1,28 @@
-# Lessons Learned & Common Mistakes
+# Lecciones Aprendidas Y Errores Comunes
 
-> **Instruction:** Read this file before writing code. Check if your task falls into a known pitfall.
+> **Instrucción:** lee este archivo antes de escribir código. Revisa si tu tarea cae en una advertencia conocida.
 
-## 1. Date Handling
+## 1. Manejo De Fechas
 
-- **Mistake:** Using `new Date()` directly for time zone calculations.
-- **Correction:** Always use `date-fns` and explicitly handle the Chile (UTC-3/UTC-4) time zone.
+- **Error:** usar `new Date()` directamente para cálculos de zona horaria.
+- **Corrección:** usar siempre `date-fns` y manejar explícitamente la zona horaria de Chile (UTC-3/UTC-4).
 
-## 2. Database
+## 2. Base De Datos
 
-- **Mistake:** querying `Booking` without including the relation `include: { ParkingSpot: true }`.
-- **Correction:** The frontend always expects the Spot Number, so always include the relation.
+- **Error:** consultar `Booking` sin incluir la relación `include: { ParkingSpot: true }`.
+- **Corrección:** el frontend siempre espera el número de estacionamiento, así que incluye siempre la relación.
 
 ## 3. Tailwind
 
-- **Mistake:** Using arbitrary values like `w-[350px]`.
-- **Correction:** Stick to the design system tokens `w-full max-w-sm`.
+- **Error:** usar valores arbitrarios como `w-[350px]`.
+- **Corrección:** ajustarse a los tokens del sistema de diseño, como `w-full max-w-sm`.
 
-## 4. Commercial And Legal Copy
+## 4. Copy Comercial Y Legal
 
-- **Mistake:** Describing Estacionate as a marketplace or using parking
-  monetization language as the active product pitch.
-- **Correction:** Phase 1 is B2B SaaS for order, rules, concierge validation,
-  traceability, and operational reports. Payments, payouts, PSP, and
-  resident/community charges are demo/simulator or future blocked until the
-  gates in `LEGAL_COMMERCIAL_GUARDRAILS.md` are satisfied.
+- **Error:** describir Estacionate como marketplace o usar lenguaje de monetización de estacionamientos como pitch activo del producto.
+- **Corrección:** la Fase 1 es SaaS B2B para orden, reglas, validación de conserjería, trazabilidad y reportes operativos. Pagos, payouts, PSP y cobros a residentes/comunidades son demo/simulador o futuro bloqueado hasta cumplir los gates de `LEGAL_COMMERCIAL_GUARDRAILS.md`.
+
+## 5. Idioma De Documentación
+
+- **Error:** crear o actualizar documentación en inglés.
+- **Corrección:** mantener toda documentación en español neutro, chileno sin modismos. Conservar sin traducir comandos, rutas, APIs, identificadores de código, nombres de librerías y etiquetas que sean contratos técnicos.

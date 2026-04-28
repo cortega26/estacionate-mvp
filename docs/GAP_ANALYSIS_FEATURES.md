@@ -1,27 +1,31 @@
-# Audit of Commercial Features (Reality Check)
-**Date:** December 19, 2025
-**Scope:** Review of claims made in `CARACTERISTICAS_COMERCIALES.md` against the current codebase.
+# Auditoría De Funcionalidades Comerciales (Reality Check)
 
-## Summary
-The codebase supports the core transactional loop (Search -> Book -> Pay) solidly. However, advanced "commercial" layers (Yield Management, real WhatsApp sending, Blocklists) are either **Mocked**, **Foundational**, or **Missing**.
+**Fecha:** 2025-12-19
+**Alcance:** revisión de claims en `CARACTERISTICAS_COMERCIALES.md` contra el codebase actual.
 
-| Feature Claim | Status | Findings / Gaps |
-| :--- | :--- | :--- |
-| **1. Multi-Tenant Portfolio** | ✅ **Implemented** | `Building`, `Unit`, `Role` models exist. Admin stats (`api/admin/stats.ts`) respect `buildingId` scope. |
-| **2. Motor de Reservas** | ⚠️ **Partial** | Search works. **Optimistic Concurrency** is logic-based (overlap check) but lacks strict `@version` column (Roadmap Item #2). |
-| **3. Pasarela de Pagos** | ✅ **Implemented** | MercadoPago flow (`api/payments/*`) handles checkout and webhooks. |
-| **4. Dashboard Conserjería** | ✅ **Implemented** | `api/concierge/dashboard.ts` exists and filters by date context. |
-| **5. Yield Management** | ✅ **Fixed** | `PricingRule` model added. `createBooking` now applies dynamic multipliers based on date/priority. |
-| **6. WhatsApp Recovery** | ✅ **Fixed** | Logic in `NotificationService.ts` now enables Twilio in Production (Mocked only in Dev). |
-| **7. Listas Negras** | ✅ **Fixed** | `Blocklist` model added (Email/Phone/Plate). Enforcement added to `createBooking`. |
-| **8. SOC2 Encrytion** | ✅ **Implemented** | `lib/crypto.ts` and `signup.ts` now encrypt RUT and Phone. |
+## Resumen
 
-## Conclusion
-**ALL COMMERCIAL CLAIMS SUCESSFULLY VALIDATED.**
-The codebase now supports every feature listed in `CARACTERISTICAS_COMERCIALES.md`.
+El codebase soporta sólidamente el loop transaccional central (buscar -> reservar -> pagar). Sin embargo, capas comerciales avanzadas (yield management, envío real de WhatsApp, blocklists) estaban **mockeadas**, **fundacionales** o **faltantes** según el análisis histórico.
 
-## Immediate Actions Required to Validating Claims
+Este documento es histórico. La fase comercial activa no habilita pagos integrados con comunidades reales; para ese alcance prevalece `documentation/LEGAL_COMMERCIAL_GUARDRAILS.md`.
 
-1.  **Un-mock WhatsApp**: Enable `twilio.js` integration in `NotificationService.ts`.
-2.  **Define Yield Strategy**: Either implement a `PricingRule` model or remove the claim for now.
-3.  **Implement Blocklist**: Add a simple `Blacklist` table and check it during `createBooking`.
+| Claim de funcionalidad         | Estado           | Hallazgos / brechas                                                                                                  |
+| :----------------------------- | :--------------- | :------------------------------------------------------------------------------------------------------------------- |
+| **1. Portafolio multi-tenant** | **Implementado** | Existen modelos `Building`, `Unit`, `Role`. Stats admin (`api/admin/stats.ts`) respetan alcance `buildingId`.        |
+| **2. Motor de reservas**       | **Parcial**      | La búsqueda funciona. La concurrencia optimista es lógica (check de solape), pero falta columna estricta `@version`. |
+| **3. Pasarela de pagos**       | **Implementado** | Flujo MercadoPago (`api/payments/*`) maneja checkout y webhooks en el alcance histórico/demo.                        |
+| **4. Dashboard conserjería**   | **Implementado** | Existe `api/concierge/dashboard.ts` y filtra por contexto de fecha.                                                  |
+| **5. Yield management**        | **Corregido**    | Se agregó modelo `PricingRule`. `createBooking` aplica multiplicadores dinámicos por fecha/prioridad.                |
+| **6. Recuperación WhatsApp**   | **Corregido**    | La lógica en `NotificationService.ts` habilita Twilio en producción (mock solo en dev).                              |
+| **7. Listas negras**           | **Corregido**    | Se agregó modelo `Blocklist` (Email/Phone/Plate). Enforcement agregado a `createBooking`.                            |
+| **8. Cifrado SOC2**            | **Implementado** | `lib/crypto.ts` y `signup.ts` cifran RUT y teléfono.                                                                 |
+
+## Conclusión
+
+Todos los claims comerciales históricos fueron validados según el alcance de este reporte.
+
+## Acciones Inmediatas Requeridas Para Validar Claims
+
+1. **Quitar mock de WhatsApp:** habilitar integración `twilio.js` en `NotificationService.ts`.
+2. **Definir estrategia de yield:** implementar modelo `PricingRule` o remover el claim por ahora.
+3. **Implementar blocklist:** agregar tabla simple `Blacklist` y revisarla durante `createBooking`.

@@ -1,66 +1,67 @@
-# AGENT BEHAVIOR & OUTPUT PROTOCOL
+# Protocolo De Comportamiento Y Salida Para Agentes
 
-# (These rules govern HOW you work, not just WHAT you code.)
+Estas reglas gobiernan cómo trabajas, no solo qué código escribes.
 
-## 🛑 CRITICAL RULES (ZERO TOLERANCE)
+## Reglas Críticas
 
-1.  **Bias for Action:** Your first response MUST include a diff or a shell command. Do not ask "Should I do this?"—just do it.
-2.  **No Binary/Large Files:** Never output binary blobs or full file contents of lockfiles/minified code.
-3.  **State Assumptions:** If you must assume a library version or business logic, explicitly state: "Assuming [X] because [Y]."
-4.  **Model Selection:**
-    - _Low Risk (Docs/Typos):_ Use fast/cheaper models.
-    - _High Risk (Auth/Payment/Architecture):_ Use smartest available model.
+1.  **Sesgo a la acción:** tu primera respuesta debe incluir un diff o un comando shell. No preguntes "¿hago esto?"; ejecútalo.
+2.  **Sin binarios ni archivos grandes:** nunca emitas blobs binarios ni contenido completo de lockfiles/código minificado.
+3.  **Declarar supuestos:** si debes asumir una versión de librería o lógica de negocio, declara explícitamente: "Asumo [X] porque [Y]."
+4.  **Selección de modelo:**
+    - _Bajo riesgo (docs/typos):_ usa modelos rápidos/económicos.
+    - _Alto riesgo (auth/payment/arquitectura):_ usa el modelo más capaz disponible.
 
-## 🔄 WORKFLOW LOOP
+## Loop De Trabajo
 
-1.  **EXPLORE (With R9 Limits):**
-    - Use `ls -F`, `grep`, or `find` to locate files.
-    - _Constraint:_ Never output more than 50 lines of search results.
-2.  **EDIT (Minimal Diffs):**
-    - Apply changes using `sed` or code block replacements.
-    - Keep changes atomic. Don't refactor unrelated code.
-3.  **TEST (Verification):**
-    - Run the specific test for the file you changed.
-    - _If no test exists:_ Create a `repro_script.ts` to verify the fix.
-4.  **COMMIT (Conventional):**
-    - Format: `<type>(<scope>): <subject>` (e.g., `fix(auth): handle null token`).
+1.  **Explorar (con límites R9):**
+    - Usa `ls -F`, `grep` o `find` para localizar archivos.
+    - _Restricción:_ nunca emitas más de 50 líneas de resultados de búsqueda.
+2.  **Editar (diffs mínimos):**
+    - Aplica cambios usando `sed` o reemplazos de bloques de código.
+    - Mantén cambios atómicos. No refactorices código no relacionado.
+3.  **Probar (verificación):**
+    - Ejecuta la prueba específica para el archivo cambiado.
+    - _Si no existe prueba:_ crea un `repro_script.ts` para verificar la corrección.
+4.  **Commit (convencional):**
+    - Formato: `<type>(<scope>): <subject>` (por ejemplo, `fix(auth): handle null token`).
 
-## 🛡️ STANDARDS (The "Definition of Done")
+## Estándares (Definición De Terminado)
 
-- **Code (R1):** Max 80 LOC/function. Cyclomatic complexity < 10. SOLID principles.
-- **Security (R2):** No hardcoded secrets. No shell injection (`exec` must use array args).
-- **Testing (R3):** Coverage targets: 80% Project, 90% Changed Files.
-- **Docs (R4):** If you change a generic function, update its JSDoc/TSDoc.
+- **Código (R1):** máximo 80 LOC por función. Complejidad ciclomática < 10. Principios SOLID.
+- **Seguridad (R2):** sin secretos hardcodeados. Sin shell injection (`exec` debe usar argumentos en arreglo).
+- **Pruebas (R3):** objetivos de cobertura: 80% proyecto, 90% archivos cambiados.
+- **Docs (R4):** si cambias una función genérica, actualiza su JSDoc/TSDoc.
+- **Idioma documentación:** toda documentación debe estar en español neutro, chileno sin modismos, salvo identificadores técnicos.
 
-## 🚫 TERMINAL / OUTPUT POLICY (R9) - VITAL
+## Política Terminal / Salida (R9)
 
-**Goal:** Prevent session crashes and token waste.
-**Hard Limits:**
+**Objetivo:** prevenir caídas de sesión y desperdicio de tokens.
+**Límites duros:**
 
-- **Line Length:** < 200 chars. (Use `cut -c1-200`).
-- **Output Height:** < 50 lines. (Use `head -n 50`).
-- **No Color:** Use `--color=never` or `NO_COLOR=1`.
+- **Largo de línea:** < 200 caracteres. Usa `cut -c1-200`.
+- **Altura de salida:** < 50 líneas. Usa `head -n 50`.
+- **Sin color:** usa `--color=never` o `NO_COLOR=1`.
 
-**Safe Command Patterns (Use these):**
+**Patrones seguros de comandos:**
 
 - `grep -rn "Pattern" src --color=never | cut -c1-200 | head -n 20`
 - `npm test 2>&1 | cut -c1-200 | head -n 50`
-- `cat src/file.ts | head -n 100` (Only if you are sure it is small)
+- `cat src/file.ts | head -n 100` (solo si tienes certeza de que es pequeño)
 
-**Strict Ban:**
+**Prohibición estricta:**
 
 - `cat package-lock.json`
-- `npm install` (without `--silent`)
+- `npm install` (sin `--silent`)
 - `cat dist/bundle.js`
 
-## 📝 REPORTING FORMAT (End of Task)
+## Formato De Reporte (Fin De Tarea)
 
-Chat (One-liner): ✅ 8/9 rules met (R5 deferred - no benchmark tooling)
+Chat (una línea): 8/9 reglas cumplidas (R5 diferida; no hay tooling de benchmark)
 
-**PR Body Template:**
+**Plantilla de cuerpo PR:**
 
-> 🤖 Model: gpt-5.2-codex (High)
-> ✅ Compat: Compatible
-> 🧪 Tests: `src/auth.test.ts` passed (95% cov)
-> 🔐 Security: No secrets found
-> 📝 Commits: `feat(auth): add login retry limit`
+> Modelo: gpt-5.2-codex (alto)
+> Compatibilidad: compatible
+> Pruebas: `src/auth.test.ts` pasó (95% cobertura)
+> Seguridad: sin secretos encontrados
+> Commits: `feat(auth): add login retry limit`

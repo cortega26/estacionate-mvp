@@ -1,58 +1,66 @@
-# Audit A9: Testing Strategy & Coverage
+# Auditoría A9: Estrategia De Pruebas Y Cobertura
 
-## 1. Executive Summary
-**Current Status**: ⚠️ **False Confidence Detected**
-**Score**: C+
-The project relies heavily on 3 layers:
-1.  **Unit Tests (Mocks)**: `BookingService.test.ts` verifies logic (refunds) but mocks DB completely.
-2.  **Integration Tests (Real DB)**: `bookings.test.ts` is robust but lacks cleanup isolation ("if we reused 'Test Building'").
-3.  **E2E (Playwright)**: Minimal (Smoke Login only).
+## 1. Resumen Ejecutivo
 
-**Risk**: The core "Money" flows (Payments, Payouts, Commissions) have the least "Real World" coverage (relying on unit tests or repro scripts), while the "Happy Path" booking flow is well covered.
+**Estado actual:** falsa confianza detectada
+**Puntaje:** C+
 
-## 2. Coverage Gaps by Risk
+El proyecto depende fuertemente de tres capas:
 
-### High Risk (Money/Legal)
-| Feature | Current Status | Risk | Recommendation |
-| :--- | :--- | :--- | :--- |
-| **Payment Webhooks** | Partially partially mocked in unit tests. Real webhook flow not simulated in E2E. | **CRITICAL** | Create a `verified-payouts.test.ts` integration test that simulates the full webhook signature verification. |
-| **Admin Payouts** | No automated tests found. | **HIGH** | Add integration test for `generate-payouts.ts` script logic. |
-| **Yield Management** | Mocked as `[]` in Unit tests. | **HIGH** | Add `pricing-rules.test.ts` (Integration) to verify priority/date range logic with real DB queries. |
-| **Commissions** | `fix-s1-commission.test.ts` exists (repro). | **MED** | Formalize into `commissions.test.ts`. |
+1. **Pruebas unitarias (mocks):** `BookingService.test.ts` verifica lógica (refunds), pero mockea DB completamente.
+2. **Pruebas de integración (DB real):** `bookings.test.ts` es robusta, pero carece de aislamiento fuerte de limpieza.
+3. **E2E (Playwright):** mínimo (smoke login solamente).
 
-### Medium Risk (UX/Operations)
-| Feature | Current Status | Risk | Recommendation |
-| :--- | :--- | :--- | :--- |
-| **Admin Dashboard** | Manual testing only. | **MED** | Add E2E for "Approve Resident" and "Cancel Booking". |
-| **Availability Sync** | `bookings.test.ts` covers overrides, but "Generate Availability" CRON needs specific overlap tests. | **MED** | Refactor `cron-availability.test.ts` to be more robust. |
+**Riesgo:** los flujos centrales de dinero (payments, payouts, commissions) tienen la menor cobertura realista, mientras el happy path de booking está bien cubierto.
 
-## 3. False Confidence Detectors
-These tests pass easily but may mask real bugs:
-1.  **`backend/tests/unit/BookingService.test.ts`**:
-    *   **Why**: It manual-mocks `db.availabilityBlock.findUniqueOrThrow`. If the Schema relationship changes (e.g. `spot` becomes optional), this test generally still passes while the app crashes.
-    *   **Verdict**: Good for testing *Refund Math*, Useless for testing *Data Integrity*.
-2.  **`backend/tests/singleton.ts` consumers**:
-    *   Any test relying solely on `prismaMock` for complex queries (Joins/Transactions) is suspect. Prisma transactions are hard to mock correctly.
+## 2. Brechas De Cobertura Por Riesgo
 
-## 4. Missing E2E Scenarios (Playwright)
-The current `frontend/e2e` only has 2 files. Missing:
-1.  **Admin Flow**:
-    *   Login as Admin -> Go to Residents -> Click "Verify" -> Logout -> Login as Resident -> Verify Access.
-2.  **My Bookings Flow**:
-    *   Login -> View "Upcoming Booking" -> Click Cancel -> Verify Toast.
-3.  **Profile Update**:
-    *   Update Vehicle Plate -> Verify reflection in next booking attempt.
+### Alto Riesgo (Dinero/Legal)
 
-## 5. Proposed Minimal Test Matrix
-Optimize for **Confidence**, not % Coverage.
+| Funcionalidad        | Estado actual                                                       | Riesgo       | Recomendación                                                                                 |
+| :------------------- | :------------------------------------------------------------------ | :----------- | :-------------------------------------------------------------------------------------------- |
+| **Payment webhooks** | Parcialmente mockeados en unit tests; flujo real no simulado en E2E | **Crítico**  | Crear `verified-payouts.test.ts` de integración que simule verificación completa de firma.     |
+| **Admin payouts**    | No se encontraron pruebas automatizadas                             | **Alto**     | Agregar prueba de integración para lógica de script `generate-payouts.ts`.                    |
+| **Yield management** | Mockeado como `[]` en unit tests                                    | **Alto**     | Agregar `pricing-rules.test.ts` de integración con queries reales.                            |
+| **Commissions**      | Existe `fix-s1-commission.test.ts` como repro                       | **Medio**    | Formalizar en `commissions.test.ts`.                                                          |
 
-| Layer | Focus | Target Matches |
-| :--- | :--- | :--- |
-| **E2E (Playwright)** | "Can a user give us money?" & "Can an admin stop abuse?" | 1. **Booking Flow** (Full, including fake payment)<br>2. **Admin Verification Flow**<br>3. **Emergency Button** (Cancel/Block) |
-| **Integration (Vitest + DB)** | Business Invariants & Money Math. | 1. **`BookingService`** (Switch from Unit to Integration for DB interactions)<br>2. **`PaymentService`** (Mock external MP API, but use Real DB for state transitions)<br>3. **`PricingRules`** (Complex SQL logic) |
-| **Unit (Vitest + Mocks)** | Pure Functions & Edge Logic. | 1. **Refund Calculator** (Date math)<br>2. **Audit Logging** (Format checks)<br>3. **Input Validation** (Regex) |
+### Riesgo Medio (UX/Operaciones)
 
-## 6. Action Plan
-1.  **Stop writing Unit Tests for Services**. Write Integration Tests instead (using the Docker DB). Service logic is too coupled to Data to mock effectively.
-2.  **Create `admin.spec.ts`** in Playwright.
-3.  **Formalize `payouts.test.ts`**.
+| Funcionalidad             | Estado actual                                                                 | Riesgo    | Recomendación                                                                  |
+| :------------------------ | :---------------------------------------------------------------------------- | :-------- | :----------------------------------------------------------------------------- |
+| **Admin dashboard**       | Solo pruebas manuales                                                         | **Medio** | Agregar E2E para aprobar residente y cancelar booking.                         |
+| **Availability sync**     | `bookings.test.ts` cubre overrides, pero CRON de generación requiere solapes   | **Medio** | Refactorizar `cron-availability.test.ts` para mayor robustez.                  |
+
+## 3. Detectores De Falsa Confianza
+
+Estas pruebas pasan fácilmente, pero pueden ocultar bugs reales:
+
+1. **`backend/tests/unit/BookingService.test.ts`:**
+   - **Por qué:** mockea manualmente `db.availabilityBlock.findUniqueOrThrow`. Si cambia la relación del schema (por ejemplo, `spot` pasa a ser opcional), esta prueba suele seguir pasando mientras la app falla.
+   - **Veredicto:** buena para probar matemática de refunds; débil para integridad de datos.
+2. **Consumidores de `backend/tests/singleton.ts`:**
+   - Cualquier prueba basada solo en `prismaMock` para queries complejas (joins/transacciones) es sospechosa. Las transacciones Prisma son difíciles de mockear correctamente.
+
+## 4. Escenarios E2E Faltantes (Playwright)
+
+El `frontend/e2e` actual solo tiene dos archivos. Falta:
+
+1. **Flujo admin:** login como admin -> ir a residentes -> click en verificar -> logout -> login como residente -> verificar acceso.
+2. **Flujo mis reservas:** login -> ver reserva futura -> cancelar -> verificar toast.
+3. **Actualización de perfil:** actualizar patente -> verificar reflejo en siguiente intento de reserva.
+
+## 5. Matriz Mínima Propuesta De Pruebas
+
+Optimizar por **confianza**, no por porcentaje de cobertura.
+
+| Capa                         | Foco                                      | Casos objetivo                                                                                                        |
+| :--------------------------- | :---------------------------------------- | :-------------------------------------------------------------------------------------------------------------------- |
+| **E2E (Playwright)**         | ¿Puede un usuario completar el flujo?     | 1. **Flujo de booking** completo con pago fake<br>2. **Flujo de verificación admin**<br>3. **Botón de emergencia**   |
+| **Integración (Vitest + DB)**| Invariantes de negocio y matemática       | 1. **`BookingService`** con DB real<br>2. **`PaymentService`** con API MP mockeada y DB real<br>3. **`PricingRules`** |
+| **Unit (Vitest + mocks)**    | Funciones puras y bordes                  | 1. **Calculadora de refund**<br>2. **Audit logging**<br>3. **Validación de input**                                    |
+
+## 6. Plan De Acción
+
+1. Dejar de escribir unit tests para servicios acoplados a DB; escribir pruebas de integración con DB Docker.
+2. Crear `admin.spec.ts` en Playwright.
+3. Formalizar `payouts.test.ts`.

@@ -1,115 +1,115 @@
-# Client Pitch Deck Outline 2026
+# Estructura De Pitch Deck Para Clientes 2026
 
-**Date:** 2026-04-26  
-**Audience:** Building administrators, operators, pilot prospects
+**Fecha:** 2026-04-26
+**Audiencia:** administradores de edificios, operadores, prospectos de piloto
 
-## Slide 1: Title
+## Slide 1: Título
 
-Estacionate  
-Digital visitor parking management for residential buildings.
+Estacionate
+Gestión digital de estacionamientos de visita para edificios residenciales.
 
-## Slide 2: The Problem
+## Slide 2: El Problema
 
-Buildings still manage visitor parking through manual coordination:
+Los edificios todavía gestionan estacionamientos de visita mediante coordinación manual:
 
 1. WhatsApp.
-2. Calls.
-3. Spreadsheets.
-4. Informal communication between staff and administration.
+2. Llamadas.
+3. Planillas.
+4. Comunicación informal entre personal y administración.
 
-Result:
+Resultado:
 
-1. Low visibility.
-2. Resident friction.
-3. Staff inefficiency.
-4. Repeated disputes.
+1. Baja visibilidad.
+2. Fricción para residentes.
+3. Ineficiencia del personal.
+4. Disputas repetidas.
 
-## Slide 3: The Cost of Doing Nothing
+## Slide 3: El Costo De No Actuar
 
-1. Time lost by administration and concierge.
-2. Resident dissatisfaction.
-3. Poor traceability in conflicts.
-4. Inconsistent control over visitor access.
-5. Operational dependence on people instead of process.
+1. Tiempo perdido por administración y conserjería.
+2. Insatisfacción de residentes.
+3. Trazabilidad débil ante conflictos.
+4. Control inconsistente del acceso de visitas.
+5. Dependencia operacional de personas en vez de proceso.
 
-## Slide 4: The Solution
+## Slide 4: La Solución
 
-Estacionate digitizes booking, validation, and operational visibility for visitor parking.
+Estacionate digitaliza reservas, validación y visibilidad operacional de estacionamientos de visita.
 
-Core capabilities:
+Capacidades centrales:
 
-1. Resident booking flow.
-2. Staff validation workflow.
-3. Admin visibility and control.
-4. Traceable usage history.
+1. Flujo de reserva para residentes.
+2. Workflow de validación para personal.
+3. Visibilidad y control para administración.
+4. Historial de uso trazable.
 
-## Slide 5: How It Works
+## Slide 5: Cómo Funciona
 
-1. Resident books a slot.
-2. The system validates availability.
-3. Access or validation data is generated.
-4. Concierge verifies on arrival.
-5. Administration monitors usage and activity.
+1. El residente reserva un cupo.
+2. El sistema valida disponibilidad.
+3. Se generan datos de acceso o validación.
+4. Conserjería verifica al llegar la visita.
+5. Administración monitorea uso y actividad.
 
-## Slide 6: Value for Each Stakeholder
+## Slide 6: Valor Para Cada Stakeholder
 
-### Administration
+### Administración
 
 1. Control.
-2. Traceability.
-3. Fewer complaints.
+2. Trazabilidad.
+3. Menos reclamos.
 
-### Concierge and Staff
+### Conserjería Y Personal
 
-1. Faster validation.
-2. Less ambiguity.
-3. Lower manual coordination.
+1. Validación más rápida.
+2. Menos ambigüedad.
+3. Menor coordinación manual.
 
-### Residents
+### Residentes
 
-1. Simpler process.
-2. Greater transparency.
-3. Better experience.
+1. Proceso más simple.
+2. Mayor transparencia.
+3. Mejor experiencia.
 
-## Slide 7: Why This Matters
+## Slide 7: Por Qué Importa
 
-1. Better operational order.
-2. Fewer disputes.
-3. Faster visitor handling.
-4. More professional resident experience.
-5. Stronger building governance.
+1. Mejor orden operacional.
+2. Menos disputas.
+3. Atención más rápida de visitas.
+4. Experiencia de residente más profesional.
+5. Gobernanza del edificio más sólida.
 
-## Slide 8: Trust and Reliability
+## Slide 8: Confianza Y Confiabilidad
 
-1. Role-based access.
-2. Clear operational traceability.
-3. Secure handling of critical workflows.
-4. Structured validation process.
-5. Controlled onboarding and support.
+1. Acceso basado en roles.
+2. Trazabilidad operacional clara.
+3. Manejo seguro de workflows críticos.
+4. Proceso de validación estructurado.
+5. Onboarding y soporte controlados.
 
-## Slide 9: Pilot Proposal
+## Slide 9: Propuesta De Piloto
 
-1. Limited-scope rollout.
-2. Guided setup.
-3. Defined timeline.
-4. Success metrics agreed upfront.
-5. Review at pilot close.
+1. Rollout de alcance limitado.
+2. Setup guiado.
+3. Plazo definido.
+4. Métricas de éxito acordadas por adelantado.
+5. Revisión al cierre del piloto.
 
-## Slide 10: Commercial Model
+## Slide 10: Modelo Comercial
 
-1. Monthly subscription per building.
-2. Optional setup or onboarding fee.
-3. Optional advanced support or reporting tier.
+1. Suscripción mensual por edificio.
+2. Fee opcional de setup u onboarding.
+3. Nivel opcional de soporte o reportes avanzados.
 
-## Slide 11: Why Start Now
+## Slide 11: Por Qué Partir Ahora
 
-1. Low-friction pilot.
-2. Fast operational learning.
-3. Immediate process clarity.
-4. Scalable rollout if the pilot succeeds.
+1. Piloto de baja fricción.
+2. Aprendizaje operacional rápido.
+3. Claridad de proceso inmediata.
+4. Rollout escalable si el piloto funciona.
 
-## Slide 12: Call to Action
+## Slide 12: Llamado A La Acción
 
-Book a pilot evaluation  
-or  
-Schedule a live workflow demo.
+Agendar una evaluación piloto
+o
+Agendar una demo en vivo del workflow.

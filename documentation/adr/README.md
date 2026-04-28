@@ -1,22 +1,22 @@
-# Architecture Decision Records
+# Registros De Decisión De Arquitectura
 
-This directory records durable technical decisions for Estacionate. Use ADRs for choices that future agents or maintainers would otherwise have to rediscover from code, chat history, or old audit reports.
+Este directorio registra decisiones técnicas duraderas para Estacionate. Usa ADRs para decisiones que futuros agentes o mantenedores tendrían que redescubrir desde el código, historial de chat o reportes antiguos de auditoría.
 
-## When To Add An ADR
+## Cuándo Agregar Un ADR
 
-- A framework, deployment target, database, queue, or external service is chosen.
-- A tradeoff affects reliability, security, cost, compliance, or developer workflow.
-- A decision intentionally rejects an obvious alternative.
-- A temporary constraint becomes part of how the system operates.
+- Se elige un framework, destino de despliegue, base de datos, cola o servicio externo.
+- Un tradeoff afecta confiabilidad, seguridad, costo, cumplimiento o flujo de desarrollo.
+- Una decisión rechaza intencionalmente una alternativa obvia.
+- Una restricción temporal pasa a formar parte de cómo opera el sistema.
 
-## Template
+## Plantilla
 
-Use `TEMPLATE.md` when creating a new ADR.
+Usa `TEMPLATE.md` al crear un nuevo ADR.
 
-## Records
+## Registros
 
-- `0001-local-development-stack.md`: Docker Compose for local PostgreSQL/Redis with npm-run app processes.
-- `0002-root-validation-command.md`: `npm run check:all` as the root full-repository validation command.
-- `0003-deployment-topology.md`: Vercel as the production deployment target for both frontend and backend.
-- `0004-audit-eventbus-contract.md`: `EventBus` as the canonical audit event boundary for state-changing backend workflows.
-- `0005-validation-environment-contract.md`: `npm run check:local` as the environment-aware local validation command.
+- `0001-local-development-stack.md`: Docker Compose para PostgreSQL/Redis local con procesos de app ejecutados vía npm.
+- `0002-root-validation-command.md`: `npm run check:all` como comando raíz de validación del repositorio completo.
+- `0003-deployment-topology.md`: Vercel como destino de despliegue productivo para frontend y backend.
+- `0004-audit-eventbus-contract.md`: `EventBus` como límite canónico de eventos de auditoría para flujos backend que cambian estado.
+- `0005-validation-environment-contract.md`: `npm run check:local` como comando local de validación consciente del entorno.

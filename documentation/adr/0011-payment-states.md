@@ -1,6 +1,6 @@
 # ADR 0011: Payment States — PaymentIntent, Payment, Refund, Payout
 
-**Estado:** Aceptado  
+**Estado:** Aceptado
 **Fecha:** 2026-04-27
 
 **Nota Fase 1:** Esta ADR describe infraestructura de demo/simulador y diseño

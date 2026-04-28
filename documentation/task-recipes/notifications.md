@@ -1,8 +1,8 @@
-# Notifications Recipe
+# Receta De Notificaciones
 
-Use this recipe for email, SMS, webhook, and user-notification changes.
+Usa esta receta para cambios de email, SMS, webhooks y notificaciones a usuarios.
 
-## Start With
+## Comienza Con
 
 - `backend/src/services`
 - `backend/src/lib`
@@ -11,20 +11,19 @@ Use this recipe for email, SMS, webhook, and user-notification changes.
 - `backend/.env.example`
 - `documentation/TECH_SPEC.md`
 
-## Implementation Notes
+## Notas De Implementación
 
-- Validate all notification inputs before sending.
-- Keep provider adapters isolated from domain services.
-- Mock external providers in tests.
-- Ensure retries and webhook handlers are idempotent.
-- Never log secrets, tokens, or full personally identifiable payloads.
+- Valida todas las entradas de notificación antes de enviar.
+- Mantén adaptadores de proveedores aislados de servicios de dominio.
+- Mockea proveedores externos en pruebas.
+- Asegura que reintentos y handlers de webhook sean idempotentes.
+- Nunca registres secretos, tokens ni payloads completos con información personal identificable.
 
-## Validate With
+## Validar Con
 
 ```bash
 cd backend && npm test -- notification webhook
 cd backend && npm run lint && npm run build
 ```
 
-If the change affects user-visible notification state, also run the relevant frontend
-tests for the affected flow.
+Si el cambio afecta estado de notificaciones visible para usuarios, ejecuta también las pruebas frontend relevantes para el flujo afectado.

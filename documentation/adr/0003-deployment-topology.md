@@ -1,19 +1,19 @@
-# ADR 0003: Deployment Topology
+# ADR 0003: Topología De Despliegue
 
-- Status: accepted
-- Date: 2026-04-26
+- Estado: aceptado
+- Fecha: 2026-04-26
 
-## Context
+## Contexto
 
-Current documentation historically mentioned GitHub Pages for the frontend and Vercel for the backend, while the active GitHub Actions deployment workflows use Vercel for both applications. Agents and maintainers need one production topology to reason about environment variables, routing, secrets, and release checks.
+La documentación histórica mencionaba GitHub Pages para el frontend y Vercel para el backend, mientras que los workflows activos de despliegue en GitHub Actions usan Vercel para ambas aplicaciones. Agentes y mantenedores necesitan una sola topología productiva para razonar sobre variables de entorno, routing, secretos y revisiones de release.
 
-## Decision
+## Decisión
 
-Use Vercel for both frontend and backend production deployments. Keep Docker Compose as the local development infrastructure for PostgreSQL and Redis, with backend and frontend processes normally run through npm during active development.
+Usar Vercel para los despliegues productivos de frontend y backend. Mantener Docker Compose como infraestructura de desarrollo local para PostgreSQL y Redis, con procesos backend y frontend normalmente ejecutados mediante npm durante el desarrollo activo.
 
-## Consequences
+## Consecuencias
 
-Deployment docs, CI/CD notes, and release troubleshooting should describe Vercel as the production host for both apps. Historical GitHub Pages references may remain in project-context documents, but current operational docs should not present GitHub Pages as the active frontend deployment target.
+La documentación de despliegue, notas CI/CD y solución de problemas de release deben describir Vercel como host productivo de ambas apps. Referencias históricas a GitHub Pages pueden permanecer en documentos de contexto de proyecto, pero la documentación operativa actual no debe presentar GitHub Pages como destino activo de despliegue frontend.
 
 ## Links
 

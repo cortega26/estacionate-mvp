@@ -1,38 +1,45 @@
-# Audit Master Report (A0–A8)
+# Reporte Maestro De Auditoría (A0-A8)
 
-## 1. Executive Summary
-**Overall Score:** B-
-The project has a solid structural foundation and modern frontend architecture. However, it faces critical risks in **Financial Logic** (Idempotency), **Security Configuration** (CORS disabled), and **DevEx** (Missing env examples). Addressing these high-severity findings is mandatory before scaling.
+## 1. Resumen Ejecutivo
 
-| Audit | Area | Score | Critical/High Issues |
-|---|---|---|---|
-| A0 | Structure | B | 1 (Doc duplication) |
-| A1 | Logic | B- | **1 (Commission Idempotency)** |
-| A2 | Security | C+ | **2 (CORS disabled, Secrets)** |
-| A3 | Data | B | 0 |
-| A4 | Quality | C | 2 (Any usage, Strictness) |
-| A5 | Process | B | 1 (Missing Seed) |
-| A6 | Release | B- | **1 (Missing .env.example)** |
-| A7 | Legal | A | 0 |
-| A8 | FinOps | C | 1 (Data Retention) |
+**Puntaje global:** B-
 
-## 2. Updated Status (Remediation Complete)
+El proyecto tiene una base estructural sólida y arquitectura frontend moderna. Sin embargo, enfrenta riesgos críticos en **lógica financiera** (idempotencia), **configuración de seguridad** (CORS deshabilitado) y **DevEx** (ejemplos de entorno faltantes). Abordar estos hallazgos de alta severidad es obligatorio antes de escalar.
 
-### ✅ [RESOLVED] Idempotency Failure in Commissions (A1)
-- **Status**: Fixed in `SalesService.ts`.
-- **Verification**: `tests/repro_commission_dup.test.ts` passed.
+| Auditoría | Área      | Puntaje | Problemas críticos/altos          |
+| --------- | --------- | ------- | --------------------------------- |
+| A0        | Estructura| B       | 1 (duplicación de docs)           |
+| A1        | Lógica    | B-      | **1 (idempotencia de comisión)**  |
+| A2        | Seguridad | C+      | **2 (CORS deshabilitado, secretos)** |
+| A3        | Datos     | B       | 0                                 |
+| A4        | Calidad   | C       | 2 (uso de `any`, strictness)      |
+| A5        | Proceso   | B       | 1 (seed faltante)                 |
+| A6        | Release   | B-      | **1 (`.env.example` faltante)**   |
+| A7        | Legal     | A       | 0                                 |
+| A8        | FinOps    | C       | 1 (retención de datos)            |
 
-### ✅ [RESOLVED] CORS Disabled (A2)
-- **Status**: Fixed in `app.ts`.
-- **Verification**: Code review confirms `corsMiddleware` is active.
+## 2. Estado Actualizado (Remediación Completa)
 
-### ✅ [RESOLVED] Missing Environment Documentation (A6)
-- **Status**: Fixed.
-- **Verification**: `backend/.env.example` created.
+### [RESUELTO] Falla De Idempotencia En Comisiones (A1)
 
-## 3. Remaining High Priority Recommendations
-1.  **Database Indexing**: Add indexes to `createdAt` columns on high-volume tables (`Booking`, `AuditLog`).
-2.  **Linting**: Address the `any` usage in backend (A4).
+- **Estado:** corregido en `SalesService.ts`.
+- **Verificación:** `tests/repro_commission_dup.test.ts` pasó.
 
-## 4. Next Steps
-Please ask for a "Fix Sprint" where we address the Critical findings in order.
+### [RESUELTO] CORS Deshabilitado (A2)
+
+- **Estado:** corregido en `app.ts`.
+- **Verificación:** revisión de código confirma que `corsMiddleware` está activo.
+
+### [RESUELTO] Documentación De Entorno Faltante (A6)
+
+- **Estado:** corregido.
+- **Verificación:** `backend/.env.example` creado.
+
+## 3. Recomendaciones Restantes De Alta Prioridad
+
+1. **Indexación de base de datos:** agregar índices a columnas `createdAt` en tablas de alto volumen (`Booking`, `AuditLog`).
+2. **Linting:** abordar uso de `any` en backend (A4).
+
+## 4. Siguientes Pasos
+
+Solicitar un "sprint de corrección" para abordar los hallazgos críticos en orden.

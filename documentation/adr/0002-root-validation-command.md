@@ -1,19 +1,19 @@
-# ADR 0002: Root Validation Command
+# ADR 0002: Comando Raíz De Validación
 
-- Status: accepted
-- Date: 2026-04-26
+- Estado: aceptado
+- Fecha: 2026-04-26
 
-## Context
+## Contexto
 
-Validation commands existed in backend and frontend package files, but a fresh agent had to infer which checks represented the whole repository. The previous root `check:all` only delegated to the backend.
+Los comandos de validación existían en los paquetes backend y frontend, pero un agente nuevo debía inferir qué revisiones representaban a todo el repositorio. El `check:all` raíz anterior solo delegaba al backend.
 
-## Decision
+## Decisión
 
-Make `npm run check:all` the root full-repository validation command. It runs backend and frontend linting, builds, tests, and the backend architecture audit. Keep Playwright E2E as an explicit command because it starts browser infrastructure and is slower.
+Definir `npm run check:all` como el comando raíz de validación de repositorio completo. Ejecuta linting, builds, pruebas de backend y frontend, y auditoría de arquitectura backend. Mantener Playwright E2E como comando explícito porque inicia infraestructura de navegador y es más lento.
 
-## Consequences
+## Consecuencias
 
-Agents have one default pre-handoff command for broad changes. E2E remains available for user-flow changes without making every local verification expensive. CI can continue to run backend and frontend checks separately, but both should stay behaviorally aligned with the root command.
+Los agentes tienen un comando por defecto antes de entregar cambios amplios. E2E sigue disponible para cambios de flujos de usuario sin encarecer toda verificación local. CI puede seguir ejecutando revisiones backend y frontend por separado, pero ambas deben mantenerse alineadas en comportamiento con el comando raíz.
 
 ## Links
 

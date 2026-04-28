@@ -1,56 +1,31 @@
-# Technical Specification: Estacionate MVP
+# Especificación Técnica: Estacionate MVP
 
-> **Phase 1 product boundary:** The enabled product is B2B SaaS for Chilean
-> communities/administrators. It covers visitor-parking rules, reservations,
-> concierge validation, traceability, and operational reporting. It does not
-> include integrated payments, payouts, PSP processing, direct visitor charges,
-> or custody of community funds.
+> **Límite de producto Fase 1:** el producto habilitado es SaaS B2B para comunidades/administradoras chilenas. Cubre reglas de estacionamiento de visita, reservas, validación de conserjería, trazabilidad y reportes operativos. No incluye pagos integrados, payouts, procesamiento PSP, cobros directos a visitantes ni custodia de fondos comunitarios.
 
-## 1. Core Domain
+## 1. Dominio Central
 
-Estacionate is a visitor-parking management platform for residential buildings.
-It lets residents request/reserve visitor parking under the rules configured by
-their community, lets concierge teams validate access by plate/code/QR where
-available, and gives administrators operational evidence and reports.
+Estacionate es una plataforma de gestión de estacionamientos de visita para edificios residenciales. Permite que residentes soliciten/reserven estacionamientos de visita bajo las reglas configuradas por su comunidad, que equipos de conserjería validen acceso por patente/código/QR cuando esté disponible, y que administradores obtengan evidencia y reportes operativos.
 
-## 2. Database Schema (Simplified Orientation)
+## 2. Esquema De Base De Datos (Orientación Simplificada)
 
-The Prisma schema remains the implementation source of truth. At a high level:
+El esquema Prisma sigue siendo la fuente de verdad de implementación. A alto nivel:
 
-- **User:** internal platform/building roles such as `admin`, `support`,
-  `building_admin`, `concierge`, and `sales_rep`.
-- **Resident:** resident identity associated with a building/unit and used for
-  resident-facing reservation flows.
-- **VisitorSpot / AvailabilityBlock:** visitor parking inventory and time
-  windows controlled by the community/administrator.
-- **Booking:** visitor-parking reservation state and audit trail.
-- **Payment / Payout / PricingRule:** demo/simulator and future-gated
-  infrastructure only. These models must not be treated as enabled production
-  payment flows in Phase 1.
+- **User:** roles internos de plataforma/edificio como `admin`, `support`, `building_admin`, `concierge` y `sales_rep`.
+- **Resident:** identidad de residente asociada a edificio/unidad y usada para flujos de reserva orientados a residentes.
+- **VisitorSpot / AvailabilityBlock:** inventario de estacionamientos de visita y ventanas horarias controladas por la comunidad/administradora.
+- **Booking:** estado de reserva de estacionamiento de visita y trazabilidad de auditoría.
+- **Payment / Payout / PricingRule:** infraestructura solo demo/simulador y futura con guardrails. Estos modelos no deben tratarse como flujos de pago productivos habilitados en Fase 1.
 
-## 3. Key Workflows
+## 3. Flujos Clave
 
-- **Phase 1 Booking Flow:** resident selects date/building/time -> system checks
-  availability -> system creates a reservation record -> reservation is
-  validated operationally according to building rules. A confirmed reservation
-  in Phase 1 must not depend on a real integrated payment.
-- **Concierge Validation:** concierge validates by plate/code/QR where available,
-  records operational evidence, and follows the building protocol. Concierge is
-  not a payment collection role in Phase 1.
-- **Reports:** reports focus on operational activity, occupancy, rule compliance,
-  traceability, and incidents. They must not present parking monetization as an
-  enabled production feature.
+- **Flujo de reserva Fase 1:** residente selecciona fecha/edificio/hora -> el sistema revisa disponibilidad -> el sistema crea un registro de reserva -> la reserva se valida operacionalmente según reglas del edificio. Una reserva confirmada en Fase 1 no debe depender de un pago integrado real.
+- **Validación de conserjería:** conserjería valida por patente/código/QR cuando esté disponible, registra evidencia operativa y sigue el protocolo del edificio. Conserjería no es un rol de cobranza en Fase 1.
+- **Reportes:** los reportes se enfocan en actividad operativa, ocupación, cumplimiento de reglas, trazabilidad e incidentes. No deben presentar monetización de estacionamientos como funcionalidad productiva habilitada.
 
-> **Payment / Monetization Constraint:** All payment features are subject to Chilean
-> legal restrictions defined in `documentation/LEGAL_COMMERCIAL_GUARDRAILS.md`. The
-> existing PaymentService and Payout infrastructure is classified as demo/simulator
-> code for future-gated phases. It must not be activated against real communities
-> until the gate conditions in §3 of that document are satisfied. If a future
-> gated phase is approved, the payer must always be the resident-host, never a
-> visiting third party, and Estacionate must not custody community funds.
+> **Restricción de pagos/monetización:** todas las funcionalidades de pago están sujetas a las restricciones legales chilenas definidas en `documentation/LEGAL_COMMERCIAL_GUARDRAILS.md`. La infraestructura existente de `PaymentService` y `Payout` está clasificada como código demo/simulador para fases futuras con guardrails. No debe activarse con comunidades reales hasta cumplir las condiciones de gate de la sección 3 de ese documento. Si una fase futura con gate se aprueba, el pagador siempre debe ser el residente anfitrión, nunca un tercero visitante, y Estacionate no debe custodiar fondos comunitarios.
 
-## 4. API Structure (REST)
+## 4. Estructura API (REST)
 
 - `POST /api/auth/login`
 - `GET /api/spots?available=true`
-- `POST /api/bookings` (Requires Auth)
+- `POST /api/bookings` (requiere auth)

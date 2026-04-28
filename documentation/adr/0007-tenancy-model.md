@@ -1,6 +1,6 @@
 # ADR 0007: Tenancy Model
 
-**Estado:** Aceptado  
+**Estado:** Aceptado
 **Fecha:** 2026-04-27
 
 **Nota Fase 1:** Cualquier dato de pagos mencionado en esta ADR corresponde a

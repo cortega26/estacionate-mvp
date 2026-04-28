@@ -1,6 +1,6 @@
 # ADR 0010: Booking State Machine
 
-**Estado:** Aceptado  
+**Estado:** Aceptado
 **Fecha:** 2026-04-27
 
 **Nota Fase 1:** Las transiciones que mencionan pago corresponden al simulador o

@@ -1,154 +1,137 @@
-# Process, Operations & DevEx Audit (A5)
-**Role:** VP Engineering Advisor / Platform & Reliability Auditor  
-**Focus:** Delivery Velocity • Reliability • Observability • Developer Experience
+# Auditoría De Proceso, Operaciones Y DevEx (A5)
 
----
+**Rol:** asesor VP Engineering / auditor de plataforma y confiabilidad
+**Foco:** velocidad de entrega, confiabilidad, observabilidad, experiencia de desarrollo
 
-## Scope Contract (Hard Boundary)
+## Contrato De Alcance
 
-### This audit DOES:
-- Evaluate **software delivery velocity** and flow efficiency.
-- Assess **developer experience** (inner loop friction).
-- Review **CI reliability**, flakiness, and feedback speed.
-- Analyze **operational readiness**: observability, incident response, and recovery.
-- Measure **system reliability signals** (DORA, MTTR, alert quality).
+### Esta auditoría sí:
 
-### This audit DOES NOT:
-- Review release mechanics, rollout strategies, or feature flags.
-- Evaluate application code quality or UX.
-- Detect security vulnerabilities or compliance gaps.
-- Validate business logic correctness.
+- Evalúa **velocidad de entrega de software** y eficiencia de flujo.
+- Evalúa **experiencia de desarrollo** (fricción del inner loop).
+- Revisa **confiabilidad CI**, flakiness y velocidad de feedback.
+- Analiza **preparación operacional**: observabilidad, respuesta a incidentes y recuperación.
+- Mide señales de confiabilidad del sistema (DORA, MTTR, calidad de alertas).
 
-### Delegation Rule
-If a finding relates primarily to:
-- Release safety, rollbacks, or environment parity → `Delegated to A6`
-- Code maintainability or UX → `Delegated to A4`
-- Security controls or exploitability → `Delegated to A2`
-- Compliance evidence or policy → `Delegated to A7`
+### Esta auditoría no:
 
-Do NOT duplicate findings across audits.
+- Revisa mecánicas de release, estrategias de rollout o feature flags.
+- Evalúa calidad de código de aplicación o UX.
+- Detecta vulnerabilidades de seguridad ni brechas de compliance.
+- Valida corrección de lógica de negocio.
 
----
+### Regla De Delegación
 
-## 1. Purpose
+Si un hallazgo trata principalmente de:
 
-Evaluate the **machine that builds and operates the software**.
+- Seguridad de release, rollbacks o paridad de entorno -> `Delegado a A6`
+- Mantenibilidad de código o UX -> `Delegado a A4`
+- Controles de seguridad o explotabilidad -> `Delegado a A2`
+- Evidencia o política de compliance -> `Delegado a A7`
 
-This audit answers:
-- How fast can we ship?
-- How often do we break things?
-- How quickly can we recover?
-- How much friction do developers face daily?
+No duplicar hallazgos entre auditorías.
 
----
+## 1. Propósito
 
-## 2. Audience
+Evaluar la **máquina que construye y opera el software**.
+
+Esta auditoría responde:
+
+- ¿Qué tan rápido podemos entregar?
+- ¿Con qué frecuencia rompemos cosas?
+- ¿Qué tan rápido podemos recuperarnos?
+- ¿Cuánta fricción enfrentan los desarrolladores diariamente?
+
+## 2. Audiencia
+
 - VP Engineering / CTO
-- Platform & DevOps Leads
-- Tech Leads (DevEx feedback)
-- SRE / On-call teams
+- Leads plataforma y DevOps
+- Tech leads
+- Equipos SRE / on-call
 
----
+## 3. Alcance De Evaluación
 
-## 3. Scope of Evaluation
+### 3.1 Experiencia De Desarrollo (Inner Loop)
 
-### 3.1 Developer Experience (Inner Loop)
-- Time-to-first-commit for new hires.
-- Local environment parity with CI.
-- Feedback latency for tests, linters, builds.
-- Frequency of “works on my machine” issues.
+- Tiempo hasta primer commit para nuevas personas.
+- Paridad de entorno local con CI.
+- Latencia de feedback para pruebas, linters y builds.
+- Frecuencia de problemas "funciona en mi máquina".
 
----
+### 3.2 Confiabilidad CI/CD (Outer Loop)
 
-### 3.2 CI/CD Reliability (Outer Loop)
-- Build and test execution times.
-- Cache effectiveness.
-- Pipeline flakiness and retry rates.
-- Artifact reproducibility.
+- Tiempos de build y ejecución de pruebas.
+- Efectividad de caché.
+- Flakiness de pipeline y tasas de retry.
+- Reproducibilidad de artefactos.
 
-> Release strategy is explicitly out of scope (A6).
+> La estrategia de release queda fuera de alcance (A6).
 
----
+### 3.3 Observabilidad Y Prácticas SRE
 
-### 3.3 Observability & SRE Practices
-- Coverage of golden signals (latency, traffic, errors, saturation).
-- Log / metric / trace correlation.
-- Alert fatigue and signal-to-noise ratio.
-- On-call health and escalation paths.
+- Cobertura de señales doradas (latencia, tráfico, errores, saturación).
+- Correlación de logs, métricas y traces.
+- Fatiga de alertas y relación señal/ruido.
+- Salud on-call y rutas de escalamiento.
 
----
+### 3.4 Preparación De Incidentes Y Recuperación
 
-### 3.4 Incident & Recovery Readiness
-- MTTR trends.
-- Quality of post-mortems (blameless, actionable).
-- Backup and restore *execution* (not compliance paperwork).
-- Disaster recovery rehearsal results.
+- Tendencias MTTR.
+- Calidad de post-mortems (sin culpa, accionables).
+- Ejecución de backup y restore, no solo documentación.
+- Resultados de ensayos de disaster recovery.
 
----
+## 4. Entradas Requeridas
 
-## 4. Required Inputs
-- CI/CD logs and metrics.
-- On-call schedules and alert definitions.
-- Incident reports and post-mortems.
-- Access to staging or sandbox environments.
+- Logs y métricas CI/CD.
+- Calendarios on-call y definiciones de alertas.
+- Reportes de incidentes y post-mortems.
+- Acceso a staging o sandbox.
 
----
+## 5. Metodología
 
-## 5. Methodology
+### 5.1 Descubrimiento
 
-### 5.1 Discovery
-1. Measure DORA metrics where possible.
-2. Identify top developer pain points.
-3. Inventory operational tooling.
+1. Medir métricas DORA cuando sea posible.
+2. Identificar principales dolores de desarrolladores.
+3. Inventariar tooling operacional.
 
----
-
-### 5.2 Execution
+### 5.2 Ejecución
 
 **DevEx**
-- Time local setup from scratch.
-- Run full test suite and measure feedback latency.
+
+- Medir setup local desde cero.
+- Ejecutar suite completa y medir latencia de feedback.
 
 **CI**
-- Profile pipelines to find bottlenecks.
-- Identify flaky jobs.
 
-**Reliability**
-- Review recent incidents.
-- Simulate a controlled failure in non-prod.
+- Perfilar pipelines para encontrar cuellos de botella.
+- Identificar jobs flaky.
 
----
+**Confiabilidad**
 
-### 5.3 Verification & Reporting
-- Correlate findings with delivery outcomes.
-- Prioritize by **velocity impact × reliability risk**.
-- Recommend targeted improvements, not tool sprawl.
+- Revisar incidentes recientes.
+- Simular una falla controlada en no-prod.
 
----
+### 5.3 Verificación Y Reporte
 
-## 6. Deliverables
+- Correlacionar hallazgos con resultados de entrega.
+- Priorizar por **impacto en velocidad x riesgo de confiabilidad**.
+- Recomendar mejoras acotadas, no proliferación de herramientas.
 
-1. **DevEx Friction Report**
-   - Top blockers slowing developers down.
+## 6. Entregables
 
-2. **DORA Metrics Snapshot**
-   - Current baseline with improvement targets.
+1. **Reporte de fricción DevEx**
+2. **Snapshot de métricas DORA**
+3. **Evaluación de preparación de confiabilidad**
 
-3. **Reliability Readiness Assessment**
-   - Gaps in observability and incident response.
+## 7. Niveles De Severidad
 
----
+- **S0:** parálisis operacional
+- **S1:** bloqueante de velocidad
+- **S2:** riesgo de confiabilidad
+- **S3:** fricción menor
 
-## 7. Severity Levels
+## Restricción De Ejecución
 
-- **S0 — Operational Paralysis:** CI unusable, no monitoring on core systems.
-- **S1 — Velocity Blocker:** Chronic flakiness, excessive feedback latency.
-- **S2 — Reliability Risk:** Weak alerts, slow recovery.
-- **S3 — Friction:** Minor tooling or process annoyances.
-
----
-
-## Execution Constraint
-
-This audit must be executable **in isolation** and **with partial context**.
-Focus on **flow, reliability, and developer friction**, not code or release mechanics.
+Esta auditoría debe ejecutarse **en aislamiento** y **con contexto parcial**. Enfocarse en flujo, confiabilidad y fricción de desarrollo, no en código ni mecánicas de release.

@@ -1,155 +1,136 @@
-# Compliance & Governance Audit (A7)
-**Role:** Compliance Officer / Governance & Audit Evidence Lead  
-**Focus:** Regulatory Obligations • Legal Risk • Auditability • Access Governance
+# Auditoría De Cumplimiento Y Gobernanza (A7)
 
----
+**Rol:** compliance officer / líder de gobernanza y evidencia de auditoría
+**Foco:** obligaciones regulatorias, riesgo legal, auditabilidad, gobernanza de acceso
 
-## Scope Contract (Hard Boundary)
+## Contrato De Alcance
 
-### This audit DOES:
-- Verify **regulatory and contractual compliance** requirements.
-- Assess **governance controls** and separation of duties.
-- Validate **audit trails and evidence** for external/internal audits.
-- Review **data protection obligations** from a compliance standpoint.
-- Produce **defensible documentation and matrices** for auditors.
+### Esta auditoría sí:
 
-### This audit DOES NOT:
-- Evaluate technical exploitability or AppSec controls.
-- Review business logic correctness or system behavior.
-- Optimize developer experience, CI/CD, or release mechanics.
-- Assess UX, performance, or code maintainability.
+- Verifica requisitos de **cumplimiento regulatorio y contractual**.
+- Evalúa **controles de gobernanza** y segregación de funciones.
+- Valida **audit trails y evidencia** para auditorías internas/externas.
+- Revisa obligaciones de protección de datos desde perspectiva de compliance.
+- Produce documentación y matrices defendibles para auditores.
 
-### Delegation Rule
-If a finding relates primarily to:
-- Technical security vulnerabilities → `Delegated to A2`
-- Data integrity or AI system behavior → `Delegated to A3`
-- Release mechanics or environment parity → `Delegated to A6`
-- Code quality or UX → `Delegated to A4`
+### Esta auditoría no:
 
-Do NOT duplicate findings across audits.
+- Evalúa explotabilidad técnica ni controles AppSec.
+- Revisa corrección de lógica de negocio o comportamiento del sistema.
+- Optimiza DevEx, CI/CD o mecánicas de release.
+- Evalúa UX, performance o mantenibilidad de código.
 
----
+### Regla De Delegación
 
-## 1. Purpose
+Si un hallazgo trata principalmente de:
 
-Ensure the organization can **prove** it follows the rules it claims to follow.
+- Vulnerabilidades técnicas de seguridad -> `Delegado a A2`
+- Integridad de datos o comportamiento IA -> `Delegado a A3`
+- Mecánicas de release o paridad de entorno -> `Delegado a A6`
+- Calidad de código o UX -> `Delegado a A4`
 
-This audit answers:
-- Are we compliant?
-- Can we demonstrate it with evidence?
-- Would an external auditor sign off today?
+No duplicar hallazgos entre auditorías.
 
----
+## 1. Propósito
 
-## 2. Audience
-- Compliance & Legal Teams
-- CTO / Executive Leadership
-- External Auditors
-- Security & Platform (secondary, for evidence sourcing)
+Asegurar que la organización pueda **probar** que sigue las reglas que declara seguir.
 
----
+Esta auditoría responde:
 
-## 3. Scope of Evaluation
+- ¿Estamos cumpliendo?
+- ¿Podemos demostrarlo con evidencia?
+- ¿Un auditor externo aprobaría hoy?
 
-### 3.1 Legal & Regulatory Compliance
-- Privacy regulations (GDPR, CCPA, local equivalents).
-- Sector-specific standards (SOC 2, ISO 27001, HIPAA, PCI-DSS where applicable).
-- AI regulations (e.g., EU AI Act) from a governance perspective.
+## 2. Audiencia
 
-> This audit verifies **existence and evidence**, not correctness of technical implementation.
+- Equipos legal y compliance
+- CTO / liderazgo ejecutivo
+- Auditores externos
+- Seguridad y plataforma como apoyo para obtener evidencia
 
----
+## 3. Alcance De Evaluación
 
-### 3.2 Intellectual Property & Licensing
-- Open-source license compliance (copyleft vs permissive).
-- Presence of SBOMs.
-- IP assignment for employees and contractors.
-- Third-party contractual obligations (DPAs, SLAs).
+### 3.1 Cumplimiento Legal Y Regulatorio
 
----
+- Regulaciones de privacidad (GDPR, CCPA y equivalentes locales).
+- Estándares sectoriales (SOC 2, ISO 27001, HIPAA, PCI-DSS si aplica).
+- Regulaciones IA, por ejemplo EU AI Act, desde perspectiva de gobernanza.
 
-### 3.3 Governance Controls
-- Change management and approval trails.
-- Segregation of duties (no unilateral prod access).
-- Access provisioning and deprovisioning timelines.
-- Evidence of periodic access reviews.
+> Esta auditoría verifica existencia y evidencia, no corrección técnica de implementación.
 
----
+### 3.2 Propiedad Intelectual Y Licenciamiento
 
-### 3.4 Data Protection & User Rights
-- DSAR workflows (access, deletion, correction).
-- Retention and deletion policies.
-- Evidence of execution (logs, tickets, timestamps).
+- Cumplimiento de licencias open-source.
+- Presencia de SBOMs.
+- Cesión de propiedad intelectual de empleados y contratistas.
+- Obligaciones contractuales de terceros (DPAs, SLAs).
 
----
+### 3.3 Controles De Gobernanza
 
-## 4. Required Inputs
-- Policy documents.
-- Access control logs and IAM reports.
-- Change management records (PRs, tickets, approvals).
-- Vendor lists and DPAs.
-- Audit reports (if any).
+- Gestión de cambios y trazas de aprobación.
+- Segregación de funciones, sin acceso unilateral a producción.
+- Plazos de alta, cambio y baja de accesos.
+- Evidencia de revisiones periódicas de acceso.
 
----
+### 3.4 Protección De Datos Y Derechos De Usuarios
 
-## 5. Methodology
+- Workflows DSAR (acceso, eliminación, corrección).
+- Políticas de retención y eliminación.
+- Evidencia de ejecución (logs, tickets, timestamps).
 
-### 5.1 Discovery
-1. Inventory applicable regulations and standards.
-2. Identify required controls and evidence types.
-3. Map systems to compliance obligations.
+## 4. Entradas Requeridas
 
----
+- Documentos de políticas.
+- Logs de control de acceso y reportes IAM.
+- Registros de gestión de cambios (PRs, tickets, aprobaciones).
+- Listas de proveedores y DPAs.
+- Reportes de auditoría si existen.
 
-### 5.2 Execution
+## 5. Metodología
 
-**Paper Trail Validation**
-- Select random production changes.
-- Trace them to approved tickets and reviews.
+### 5.1 Descubrimiento
 
-**Access Governance**
-- Sample joiner/mover/leaver events.
-- Verify access revocation timelines.
+1. Inventariar regulaciones y estándares aplicables.
+2. Identificar controles requeridos y tipos de evidencia.
+3. Mapear sistemas a obligaciones de compliance.
 
-**Privacy Rights**
-- Simulate a DSAR request.
-- Measure time-to-completion and evidence quality.
+### 5.2 Ejecución
 
----
+**Validación de paper trail**
 
-### 5.3 Verification & Reporting
-- Flag gaps where **evidence is missing or weak**.
-- Do NOT infer compliance from intent.
-- Prioritize findings by **legal and financial risk**.
+- Seleccionar cambios productivos al azar.
+- Trazarlos a tickets y revisiones aprobadas.
 
----
+**Gobernanza de acceso**
 
-## 6. Deliverables
+- Muestrear eventos joiner/mover/leaver.
+- Verificar tiempos de revocación de acceso.
 
-1. **Compliance Gap Matrix**
-   - Requirement | Status | Evidence | Risk
+**Derechos de privacidad**
 
-2. **SBOM & License Risk Report**
-   - Dependency licensing overview.
+- Simular solicitud DSAR.
+- Medir tiempo de finalización y calidad de evidencia.
 
-3. **Governance Control Assessment**
-   - Segregation of duties, approvals, access reviews.
+### 5.3 Verificación Y Reporte
 
-4. **Record of Processing Activities (ROPA)**
-   - Data processing map.
+- Marcar brechas donde **la evidencia falta o es débil**.
+- No inferir cumplimiento desde intención.
+- Priorizar por riesgo **legal y financiero**.
 
----
+## 6. Entregables
 
-## 7. Severity Levels
+1. **Matriz de brechas de compliance:** requisito, estado, evidencia, riesgo.
+2. **Reporte SBOM y riesgo de licencias**
+3. **Evaluación de controles de gobernanza**
+4. **Registro de actividades de tratamiento (ROPA)**
 
-- **S0 — Legal Cliff:** Active non-compliance, missing DPAs, unlawful data processing.
-- **S1 — Audit Failure:** Missing evidence for required controls.
-- **S2 — Governance Weakness:** Controls exist but are inconsistently applied.
-- **S3 — Documentation Gap:** Minor or outdated records.
+## 7. Niveles De Severidad
 
----
+- **S0:** riesgo legal activo
+- **S1:** falla de auditoría
+- **S2:** debilidad de gobernanza
+- **S3:** brecha documental
 
-## Execution Constraint
+## Restricción De Ejecución
 
-This audit must be executable **in isolation** and **with partial context**.
-Focus on **evidence and governance**, not technical implementation.
+Esta auditoría debe ejecutarse **en aislamiento** y **con contexto parcial**. Enfocarse en evidencia y gobernanza, no implementación técnica.

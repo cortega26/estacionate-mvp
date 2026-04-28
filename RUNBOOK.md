@@ -1,59 +1,59 @@
-# Operational Runbook (MVP)
+# Runbook Operacional (MVP)
 
-## 🕒 Cron Jobs & Scheduled Tasks
+## Cron Jobs Y Tareas Programadas
 
-| Task                 | Frequency          | Command                     | Purpose                                               |
-| :------------------- | :----------------- | :-------------------------- | :---------------------------------------------------- |
-| **Availability Gen** | Daily (00:00)      | `npm run cron:availability` | Generates parking slots for the next 30 days.         |
-| **Reconciliation**   | Weekly (Mon 09:00) | `npm run cron:reconcile`    | Calculates commissions and payout totals.             |
-| **Reminders**        | Hourly             | `npm run cron:reminders`    | Sends WhatsApp/Email reminders for upcoming bookings. |
+| Tarea                      | Frecuencia            | Comando                     | Propósito                                                      |
+| :------------------------- | :-------------------- | :-------------------------- | :------------------------------------------------------------- |
+| **Generar disponibilidad** | Diaria (00:00)        | `npm run cron:availability` | Genera cupos de estacionamiento para los próximos 30 días.     |
+| **Reconciliación**         | Semanal (lunes 09:00) | `npm run cron:reconcile`    | Calcula comisiones y totales de payout.                        |
+| **Recordatorios**          | Cada hora             | `npm run cron:reminders`    | Envía recordatorios por WhatsApp/email para reservas próximas. |
 
-## 💰 Refunds & Payments
+## Reembolsos Y Pagos
 
-**Platform**: MercadoPago / Stripe
+**Plataforma:** MercadoPago / Stripe
 
-1.  **Locate Transaction**: Use `paymentId` from Admin Dashboard > Bookings.
-2.  **Process Refund**: Execute via Payment Provider Dashboard.
-3.  **Update DB**: Manual SQL required for MVP (Feature Pending).
+1.  **Ubicar transacción:** usa `paymentId` desde Admin Dashboard > Bookings.
+2.  **Procesar reembolso:** ejecútalo desde el dashboard del proveedor de pago.
+3.  **Actualizar base de datos:** SQL manual requerido para el MVP (funcionalidad pendiente).
     ```sql
     UPDATE "Booking" SET status = 'cancelled', payment_status = 'refunded' WHERE id = '...';
     ```
 
-## 🗓️ Billing Lifecycle (Pricing Model)
+## Ciclo De Facturación (Modelo De Precios)
 
-**Trial Period**: Months 1-3 ($0 Fee).
-**Active Billing**: Month 4+ (0.5 UF Fee).
+**Periodo de prueba:** meses 1-3 (fee $0).
+**Facturación activa:** mes 4+ (fee 0,5 UF).
 
-**Manual Activation (Day 90):**
+**Activación manual (día 90):**
 
-1.  Connect to Database.
-2.  Update the Building record to set the monthly fee (in CLP equivalent of 0.5 UF).
-    _(Example: 0.5 UF ~= $18,500 CLP)_
+1.  Conectarse a la base de datos.
+2.  Actualizar el registro `Building` para fijar el fee mensual (en CLP equivalente a 0,5 UF).
+    _(Ejemplo: 0,5 UF ~= $18.500 CLP)_
     ```sql
     UPDATE buildings
     SET software_monthly_fee_clp = 18500
     WHERE id = 'BUILDING_ID';
     ```
-3.  The next `cron:reconcile` run will automatically deduct this amount from the payout.
+3.  La siguiente ejecución de `cron:reconcile` descontará automáticamente este monto del payout.
 
-## 🔐 Secrets Rotation
+## Rotación De Secretos
 
-**Cycle**: 90 Days or upon compromise.
+**Ciclo:** 90 días o ante compromiso.
 
-1.  **Update `.env`** (Local) & Vercel Env Vars (Prod).
-    - `JWT_SECRET`: Invalidates all active sessions. User re-login required.
-    - `ENCRYPTION_KEY`: **CRITICAL**. Do not rotate without re-encrypting `Resident.rut`.
-    - `DATABASE_URL`: Zero-downtime rotation supported by Supabase/Neon.
+1.  **Actualizar `.env`** (local) y variables de entorno de Vercel (prod).
+    - `JWT_SECRET`: invalida todas las sesiones activas. Requiere nuevo login de usuarios.
+    - `ENCRYPTION_KEY`: **crítico**. No rotar sin recifrar `Resident.rut`.
+    - `DATABASE_URL`: Supabase/Neon soportan rotación sin downtime.
 
-## 🆘 Troubleshooting
+## Solución De Problemas
 
 ### "Login Failed" (Cross-Browser)
 
-- **Symptom**: 401 on login despite correct creds.
-- **Fix**: Check `SameSite` cookie policy vs Domain. Ensure Backend URL matches Frontend Proxy.
-- **Quick Fix**: Clear Browser Cookies + Storage.
+- **Síntoma:** 401 al hacer login pese a credenciales correctas.
+- **Corrección:** revisar política de cookie `SameSite` versus dominio. Asegurar que la URL backend coincida con el proxy frontend.
+- **Corrección rápida:** limpiar cookies y almacenamiento del navegador.
 
 ### "Redis Connection Failed"
 
-- **Symptom**: API timeouts, Login hangs.
-- **Fix**: Verify Redis URL. App will fail fast (5s timeout) to prevent hanging, but Auth/Rate-limiting will degrade.
+- **Síntoma:** timeouts de API o login colgado.
+- **Corrección:** verificar URL de Redis. La app falla rápido (timeout de 5 s) para evitar cuelgues, pero auth/rate-limiting quedarán degradados.

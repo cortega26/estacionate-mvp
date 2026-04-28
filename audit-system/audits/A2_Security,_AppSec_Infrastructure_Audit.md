@@ -1,171 +1,144 @@
-# Security, AppSec & Infrastructure Audit (A2)
-**Role:** Senior Security Architect / DevSecOps Lead  
-**Focus:** Exploitability • Trust Boundaries • Secrets • Supply Chain • Infrastructure Security
+# Auditoría De Seguridad, AppSec E Infraestructura (A2)
 
----
+**Rol:** arquitecto senior de seguridad / líder DevSecOps
+**Foco:** explotabilidad, límites de confianza, secretos, supply chain, seguridad de infraestructura
 
-## Scope Contract (Hard Boundary)
+## Contrato De Alcance
 
-### This audit DOES:
-- Identify **exploitable security vulnerabilities** in code, configuration, and infrastructure.
-- Evaluate **authentication, authorization, and trust boundaries**.
-- Detect **secrets exposure**, supply-chain risks, and insecure defaults.
-- Review **cloud/IaC security posture** and container hardening.
-- Analyze **abuse cases** that enable data access, privilege escalation, or financial loss.
+### Esta auditoría sí:
 
-### This audit DOES NOT:
-- Validate business rule correctness or state-machine logic.
-- Review UX, accessibility, or code readability.
-- Enforce project structure or modularization.
-- Produce compliance evidence or legal interpretations.
+- Identifica vulnerabilidades explotables en código, configuración e infraestructura.
+- Evalúa autenticación, autorización y límites de confianza.
+- Detecta exposición de secretos, riesgos de supply chain y defaults inseguros.
+- Revisa postura de seguridad cloud/IaC y hardening de contenedores.
+- Analiza casos de abuso que habiliten acceso a datos, escalamiento de privilegios o pérdida financiera.
 
-### Delegation Rule
-If a finding relates primarily to:
-- Business logic correctness or rule duplication → `Delegated to A1`
-- Filesystem topology or naming → `Delegated to A0`
-- UX, maintainability, or non-exploitable performance → `Delegated to A4`
-- Regulatory evidence, audits, or legal risk → `Delegated to A7`
+### Esta auditoría no:
 
-Do NOT duplicate findings across audits.
+- Valida corrección de reglas de negocio ni state machines.
+- Revisa UX, accesibilidad o legibilidad de código.
+- Hace cumplir topología de proyecto o modularización.
+- Produce evidencia de compliance ni interpretaciones legales.
 
----
+### Regla De Delegación
 
-## 1. Purpose
+Si un hallazgo trata principalmente de:
 
-Identify security weaknesses that are **reachable in real-world conditions** and could be
-**exploited to compromise confidentiality, integrity, or availability**.
+- Corrección de lógica o duplicación de reglas -> `Delegado a A1`
+- Topología filesystem o nombres -> `Delegado a A0`
+- UX, mantenibilidad o performance no explotable -> `Delegado a A4`
+- Evidencia regulatoria, auditorías o riesgo legal -> `Delegado a A7`
 
-This is a **white-box audit**: no active exploitation against live systems.
+No duplicar hallazgos entre auditorías.
 
----
+## 1. Propósito
 
-## 2. Audience
-- AppSec Engineers
-- Cloud / Platform Engineers
-- Engineering Leads
-- Incident Response & SRE teams
+Identificar debilidades de seguridad **alcanzables en condiciones reales** y explotables para comprometer confidencialidad, integridad o disponibilidad.
 
----
+Esta es una auditoría **white-box**: no realizar explotación activa contra sistemas vivos.
 
-## 3. Scope of Evaluation
+## 2. Audiencia
 
-### 3.1 Application Security (SAST Logic)
-- Injection flaws (SQLi, command injection, LDAP injection).
-- Unsafe deserialization and file handling.
-- Broken authentication and authorization logic.
-- Insecure cryptographic usage (weak hashes, custom crypto).
-- Verbose errors leaking sensitive information.
+- Ingenieros AppSec
+- Ingenieros cloud/plataforma
+- Líderes de ingeniería
+- Equipos de respuesta a incidentes y SRE
 
-> Note: Incorrect behavior without exploitability belongs to A1.
+## 3. Alcance De Evaluación
 
----
+### 3.1 Seguridad De Aplicación
 
-### 3.2 Abuse & Threat Modeling
-- Rate-limiting gaps and brute-force vectors.
+- Inyecciones (SQLi, command injection, LDAP injection).
+- Deserialización y manejo de archivos inseguros.
+- Autenticación y autorización rotas.
+- Uso criptográfico inseguro (hashes débiles, crypto custom).
+- Errores verbosos que filtran información sensible.
+
+> Nota: comportamiento incorrecto sin explotabilidad pertenece a A1.
+
+### 3.2 Abuso Y Threat Modeling
+
+- Brechas de rate limiting y vectores brute-force.
 - IDOR (Insecure Direct Object Reference).
-- Privilege escalation paths.
-- Business abuse scenarios (price tampering, inventory abuse).
+- Escalamiento de privilegios.
+- Abuso de negocio: manipulación de precio, abuso de inventario.
 
----
+### 3.3 Secretos E Identidad
 
-### 3.3 Secrets & Identity
-- Hardcoded secrets and credentials in code or config.
-- Insecure secret injection (baked into images).
-- Overly permissive IAM roles.
-- Missing rotation or expiration policies.
+- Secretos y credenciales hardcodeados.
+- Inyección insegura de secretos en imágenes.
+- Roles IAM demasiado permisivos.
+- Falta de rotación o expiración.
 
----
+### 3.4 Supply Chain Y CI/CD
 
-### 3.4 Supply Chain & CI/CD Security
-- Known vulnerable dependencies (CVE exposure).
-- Unpinned CI actions or build tools.
-- Exposure of secrets in build logs.
-- Missing artifact integrity or provenance checks.
+- Dependencias con CVEs conocidos.
+- Actions CI o herramientas de build sin pinning.
+- Secretos expuestos en logs de build.
+- Falta de checks de integridad/provenance de artefactos.
 
----
+### 3.5 Infraestructura E IaC
 
-### 3.5 Infrastructure & IaC
-- Network exposure (overly open security groups).
-- Storage misconfigurations (public buckets, no encryption).
-- Container risks:
-  - Running as root
-  - Privileged containers
-  - Missing resource limits
-- Kubernetes hardening gaps.
+- Exposición de red excesiva.
+- Storage mal configurado (buckets públicos, sin cifrado).
+- Riesgos de contenedores: root, privilegios, falta de límites de recursos.
+- Brechas de hardening Kubernetes.
 
----
+## 4. Entradas Requeridas
 
-## 4. Required Inputs
-- Source code repositories.
-- Infrastructure code (Terraform, Helm, CloudFormation).
-- Dependency manifests.
-- API specifications (OpenAPI/Swagger).
-- Prior scanner outputs (if available).
+- Repositorios de código.
+- Infraestructura como código (Terraform, Helm, CloudFormation).
+- Manifiestos de dependencias.
+- Especificaciones API (OpenAPI/Swagger).
+- Salidas previas de scanners si existen.
 
----
+## 5. Metodología
 
-## 5. Methodology
+### 5.1 Descubrimiento
 
-### 5.1 Discovery
-1. Inventory critical assets (PII, secrets, payment flows).
-2. Identify trust boundaries and data entry points.
-3. Build a threat model (DFD-style).
+1. Inventariar activos críticos (PII, secretos, flujos de pago).
+2. Identificar límites de confianza y puntos de entrada de datos.
+3. Construir threat model estilo DFD.
 
----
+### 5.2 Ejecución
 
-### 5.2 Execution
+**Capa de aplicación**
 
-**Application Layer**
-- Review auth middleware and access checks.
-- Inspect database access for parameterization.
-- Validate crypto primitives.
+- Revisar middleware auth y checks de acceso.
+- Inspeccionar acceso a DB por parametrización.
+- Validar primitivas criptográficas.
 
-**Infrastructure Layer**
-- Review IaC against CIS benchmarks.
-- Inspect Dockerfiles for unsafe defaults.
+**Capa de infraestructura**
 
-**Supply Chain**
-- Cross-check dependencies against known CVEs.
-- Review CI definitions for integrity risks.
+- Revisar IaC contra benchmarks CIS.
+- Inspeccionar Dockerfiles por defaults inseguros.
 
----
+**Supply chain**
 
-### 5.3 Verification & Reporting
-- Assign severity based on **exploitability × impact**.
-- Avoid false positives: confirm reachability.
-- Propose **concrete remediation steps**.
+- Cruzar dependencias contra CVEs conocidos.
+- Revisar definiciones CI por riesgos de integridad.
 
----
+### 5.3 Verificación Y Reporte
 
-## 6. Deliverables
+- Asignar severidad según **explotabilidad x impacto**.
+- Evitar falsos positivos: confirmar alcanzabilidad.
+- Proponer pasos concretos de remediación.
 
-1. **Security Findings Matrix**
-   - Vulnerability | Severity (S0–S3) | Location | Impact | Remediation
+## 6. Entregables
 
-2. **Threat Model Diagram**
-   - Mermaid.js or equivalent notation.
+1. **Matriz de hallazgos de seguridad:** vulnerabilidad, severidad, ubicación, impacto y remediación.
+2. **Diagrama de threat model:** Mermaid.js o notación equivalente.
+3. **Reporte de secretos e IAM:** secretos expuestos y roles permisivos.
+4. **Plan de hardening IaC:** cambios concretos de configuración.
+5. **Backlog de remediación:** listo para tickets.
 
-3. **Secrets & IAM Report**
-   - Exposed secrets and over-permissive roles.
+## 7. Niveles De Severidad
 
-4. **IaC Hardening Plan**
-   - Specific config changes.
+- **S0 crítico:** RCE, bypass de auth, secretos admin filtrados.
+- **S1 alto:** IDOR, XSS almacenado, storage público con datos sensibles.
+- **S2 medio:** headers faltantes, crypto débil, dependencias antiguas.
+- **S3 bajo:** brechas de hardening con baja explotabilidad.
 
-5. **Remediation Backlog**
-   - Ready for ticketing.
+## Restricción De Ejecución
 
----
-
-## 7. Severity Levels
-
-- **S0 — Critical:** RCE, auth bypass, leaked admin secrets.
-- **S1 — High:** IDOR, stored XSS, public storage with sensitive data.
-- **S2 — Medium:** Missing headers, weak crypto, outdated dependencies.
-- **S3 — Low:** Hardening gaps with low exploitability.
-
----
-
-## Execution Constraint
-
-This audit must be executable **in isolation** and **with partial context**.
-Report only **exploitable security risks**, not theoretical weaknesses.
+Esta auditoría debe poder ejecutarse **en aislamiento** y **con contexto parcial**. Reportar solo riesgos de seguridad explotables, no debilidades teóricas.

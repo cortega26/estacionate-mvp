@@ -1,172 +1,165 @@
-# Business Logic, Code Health & Behavioral Integrity Audit (A1)
-**Role:** Principal Engineer (Logic & Correctness Auditor)  
-**Focus:** Business Rules • State Machines • Determinism • Edge Cases • Concurrency
+# Auditoría De Lógica De Negocio, Salud De Código E Integridad Conductual (A1)
 
----
+**Rol:** principal engineer (auditor de lógica y corrección)
+**Foco:** reglas de negocio, state machines, determinismo, edge cases, concurrencia
 
-## Scope Contract (Hard Boundary)
+## Contrato De Alcance
 
-### This audit DOES:
-- Verify **business logic correctness** and rule enforcement.
-- Validate **state machines**, transitions, and invariants.
-- Detect **edge cases**, non-happy paths, and failure modes.
-- Analyze **concurrency**, idempotency, and transactional integrity.
-- Ensure **deterministic behavior** under retries and partial failures.
+### Esta auditoría sí:
 
-### This audit DOES NOT:
-- Evaluate code style, readability, or naming.
-- Propose architectural reorganizations or file moves.
-- Review UX, UI, or error presentation.
-- Report performance issues unless they cause incorrect behavior.
-- Report security issues unless they directly enable rule bypass or data corruption.
+- Verifica **corrección de lógica de negocio** y cumplimiento de reglas.
+- Valida **state machines**, transiciones e invariantes.
+- Detecta **edge cases**, rutas no felices y modos de falla.
+- Analiza **concurrencia**, idempotencia e integridad transaccional.
+- Asegura comportamiento determinístico ante retries y fallas parciales.
 
-### Delegation Rule
-If a finding relates primarily to:
-- Structure or modularization → `Delegated to A0`
-- Security exploitability or secrets → `Delegated to A2`
-- UX, maintainability, or performance ergonomics → `Delegated to A4`
+### Esta auditoría no:
 
-Do NOT duplicate findings across audits.
+- Evalúa estilo, legibilidad o nombres.
+- Propone reorganizaciones arquitectónicas o movimientos de archivos.
+- Revisa UX, UI o presentación de errores.
+- Reporta performance salvo que cause comportamiento incorrecto.
+- Reporta seguridad salvo que habilite bypass de reglas o corrupción de datos.
 
----
+### Regla De Delegación
 
-## 1. Primary Goal
+Si un hallazgo se relaciona principalmente con:
 
-Detect and **fix** defects that cause the system to behave incorrectly in production, even when:
-- inputs are invalid or missing,
-- operations are retried,
-- events arrive out of order,
-- concurrency is present,
-- assumptions are violated.
+- Estructura o modularización -> `Delegado a A0`
+- Explotabilidad de seguridad o secretos -> `Delegado a A2`
+- UX, mantenibilidad o ergonomía de performance -> `Delegado a A4`
 
-This audit assumes **happy paths already exist** and actively searches for where they break.
+No duplicar hallazgos entre auditorías.
 
----
+## 1. Objetivo Principal
 
-## 2. Operating Rules (Strict)
+Detectar y **corregir** defectos que hacen que el sistema se comporte incorrectamente en producción cuando:
 
-- Every finding MUST include:
-  - Evidence (file + line)
-  - Impact (what breaks, when)
-  - Severity (S0–S3)
-  - Minimal fix (safe, localized)
-  - Verification (test or reproducible scenario)
-- Prefer **deletion** over refactor when code is provably dead.
-- No speculative refactors.
-- No stylistic feedback.
-- If behavior is ambiguous, assume **production traffic will hit it**.
+- las entradas son inválidas o faltantes,
+- las operaciones se reintentan,
+- los eventos llegan fuera de orden,
+- existe concurrencia,
+- se rompen supuestos.
 
----
+Esta auditoría asume que los happy paths ya existen y busca activamente dónde se rompen.
 
-## 3. Audit Order (Mandatory)
+## 2. Reglas Operativas Estrictas
 
-### Step 1 — Map Reality
-- Identify core business flows.
-- Identify state machines and legal transitions.
-- Identify the **single source of truth** for each business rule.
+Cada hallazgo debe incluir:
 
-### Step 2 — Eliminate Dead Behavior
-- Unused functions, branches, endpoints.
-- Impossible conditions.
-- Zombie states or flags.
+- Evidencia (archivo + línea)
+- Impacto (qué se rompe y cuándo)
+- Severidad (S0-S3)
+- Corrección mínima, segura y localizada
+- Verificación (prueba o escenario reproducible)
 
-### Step 3 — Eliminate Duplication
-- Detect duplicated or overlapping rules.
-- Compare **behavior**, not syntax.
-- Consolidate into one authoritative implementation.
+Preferir **eliminación** antes que refactor cuando el código esté probado como muerto. Sin refactors especulativos ni feedback de estilo. Si el comportamiento es ambiguo, asumir que tráfico productivo lo alcanzará.
 
-### Step 4 — Verify Correctness
-- Reconcile code with specs and formulas.
-- Validate operator precedence.
-- Validate boundary conditions.
+## 3. Orden De Auditoría
 
-### Step 5 — Stress Edge Cases
-- Nulls, empties, zeros, negatives.
-- MAX/MIN limits.
+### Paso 1: Mapear Realidad
+
+- Identificar flujos de negocio centrales.
+- Identificar state machines y transiciones legales.
+- Identificar la **fuente única de verdad** para cada regla de negocio.
+
+### Paso 2: Eliminar Comportamiento Muerto
+
+- Funciones, ramas y endpoints no usados.
+- Condiciones imposibles.
+- Estados o flags zombie.
+
+### Paso 3: Eliminar Duplicación
+
+- Detectar reglas duplicadas o solapadas.
+- Comparar **comportamiento**, no sintaxis.
+- Consolidar en una implementación autoritativa.
+
+### Paso 4: Verificar Corrección
+
+- Reconciliar código con specs y fórmulas.
+- Validar precedencia de operadores.
+- Validar condiciones de borde.
+
+### Paso 5: Estresar Edge Cases
+
+- Nulls, vacíos, ceros, negativos.
+- Límites MAX/MIN.
 - NaN / Infinity.
-- Timezones, DST, leap years.
-- Partial workflow failures.
+- Zonas horarias, DST, años bisiestos.
+- Fallas parciales de workflows.
 
-### Step 6 — Concurrency & Transactions
-- Verify idempotency.
-- Verify atomicity.
-- Detect race conditions.
-- Detect double-apply / double-spend risks.
+### Paso 6: Concurrencia Y Transacciones
 
-### Step 7 — Dependency Resilience (Chaos)
-- What happens if DB is slow (timeout behavior)?
-- What happens if 3rd party API (Integrations) returns 500 or 429?
-- Evaluate Circuit Breaker necessity.
-- Verify "Fail Closed" vs "Fail Open" decisions.
+- Verificar idempotencia.
+- Verificar atomicidad.
+- Detectar race conditions.
+- Detectar riesgos de double-apply / double-spend.
 
----
+### Paso 7: Resiliencia De Dependencias
 
-## 4. Mandatory Correctness Checks
+- Qué ocurre si DB está lenta o timeouts.
+- Qué ocurre si APIs externas responden 500 o 429.
+- Evaluar necesidad de circuit breaker.
+- Verificar decisiones "fail closed" versus "fail open".
 
-### 4.1 Math & Precision
-- No floating-point math for money unless explicitly justified.
-- Explicit rounding strategy.
-- Unit consistency enforced.
+## 4. Checks Obligatorios De Corrección
+
+### 4.1 Matemática Y Precisión
+
+- Sin punto flotante para dinero salvo justificación explícita.
+- Estrategia de redondeo explícita.
+- Consistencia de unidades forzada.
 
 ### 4.2 State Machines
-- Illegal transitions must be blocked.
-- No zombie or unreachable states.
-- Derived flags must match the master state.
 
-### 4.3 Error Semantics (NOT UX)
-- No swallowed exceptions.
-- No silent fallbacks.
-- Errors must be deterministic and specific.
-- Error *presentation* is out of scope.
+- Bloquear transiciones ilegales.
+- Sin estados zombie o inalcanzables.
+- Flags derivados deben coincidir con el estado maestro.
 
----
+### 4.3 Semántica De Errores
 
-## 5. Testing Requirements
+- Sin excepciones tragadas.
+- Sin fallbacks silenciosos.
+- Errores determinísticos y específicos.
+- Presentación del error queda fuera de alcance.
 
-For every fix, add at least ONE:
-- Regression test
-- Property-based test
-- Reproducible failing scenario
+## 5. Requisitos De Pruebas
 
-Prefer property-based testing for:
-- Financial logic
-- Aggregations
-- State transitions
+Para cada corrección, agregar al menos una:
 
----
+- Prueba de regresión
+- Prueba property-based
+- Escenario fallido reproducible
 
-## 6. Output Format (MANDATORY)
+Preferir property-based testing para lógica financiera, agregaciones y transiciones de estado.
 
-### 🔴 S0 / 🟠 S1 / 🟡 S2 / 🔵 S3 — <Short Title>
+## 6. Formato De Salida
 
-**Location:**  
+### S0 / S1 / S2 / S3 - Título Corto
+
+**Ubicación:**
 `file.ext:line`
 
-**Problem:**  
-Concrete description of incorrect behavior.
+**Problema:**
+Descripción concreta del comportamiento incorrecto.
 
-**Why It Fails:**  
-Invariant violation, unreachable path, duplicated rule, or race condition.
+**Por Qué Falla:**
+Violación de invariante, ruta inalcanzable, regla duplicada o race condition.
 
-**Fix:**  
-Minimal, safe patch or deletion.
+**Corrección:**
+Patch mínimo y seguro, o eliminación.
 
-**Verification:**  
-Test added or steps to reproduce.
+**Verificación:**
+Prueba agregada o pasos para reproducir.
 
----
+## 7. Escala De Severidad
 
-## 7. Severity Scale
+- **S0:** corrupción de datos / pérdida financiera
+- **S1:** bypass de reglas / estado inválido
+- **S2:** error de consistencia o precisión
+- **S3:** defecto de edge case
 
-- **S0 — Data corruption / financial loss**
-- **S1 — Rule bypass / invalid state**
-- **S2 — Consistency or precision error**
-- **S3 — Edge-case defect**
+## Restricción De Ejecución
 
----
-
-## Execution Constraint
-
-This audit must be executable **in isolation** and **with partial context**.
-Do NOT assume full system visibility.
-Your job is to make the system **boringly correct**.
+Esta auditoría debe poder ejecutarse **en aislamiento** y **con contexto parcial**. No asumir visibilidad completa del sistema.

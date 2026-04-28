@@ -740,7 +740,7 @@ En lugar de plataforma centralizada, vender el software como módulo integrable 
 **Pivot 3: Marketplace abierto con verificación robusta**
 Abrir la plataforma a usuarios externos manteniendo proceso de verificación estricto (RUT, foto cédula, referencia comercial). Esto 10x el mercado potencial pero requiere inversión significativa en fraud detection, seguros y compliance. Considerar solo después de dominar el segmento inicial.
 
-**Pivot 4: Focus en eventos y experiencias**
+**Pivot 4: Foco en eventos y experiencias**
 Especialización en reservas para eventos específicos: matrimonios en salones de eventos, graduaciones universitarias, partidos de fútbol en estadios cercanos. Precios premium justificados por la ocasión especial y demanda temporal concentrada.
 
 **Indicadores para decisión de pivot:**

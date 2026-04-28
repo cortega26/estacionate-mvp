@@ -1,83 +1,83 @@
-# Commercial Conversion Plan 2026
+# Plan Comercial Y De Conversión 2026
 
-**Date:** 2026-04-26  
-**Scope:** Product improvement, conversion improvement, solo-founder execution, pitch readiness  
-**Audience:** Founder, future collaborators, AI agents, advisors
+**Fecha:** 2026-04-26
+**Alcance:** mejora de producto, mejora de conversión, ejecución founder solo, preparación de pitch
+**Audiencia:** founder, futuros colaboradores, agentes de IA, asesores
 
-## Purpose
+## Propósito
 
-This document is the overview and entry point for the commercial and conversion planning set.
+Este documento es la visión general y punto de entrada para el conjunto de planificación comercial y de conversión.
 
-It keeps the main strategic recommendation in one place and links the detailed execution documents so the material stays maintainable.
+Mantiene la recomendación estratégica principal en un solo lugar y enlaza los documentos de ejecución detallada para que el material siga siendo mantenible.
 
-## Executive Summary
+## Resumen Ejecutivo
 
-The current priority is not a full platform rewrite. The priority is to make Estacionate easier to understand, easier to trust, easier to demonstrate, and easier to buy.
+La prioridad actual no es una reescritura completa de la plataforma. La prioridad es hacer que Estacionate sea más fácil de entender, más fácil de confiar, más fácil de demostrar y más fácil de comprar.
 
-For the current stage of the business, the recommended strategy is:
+Para la etapa actual del negocio, la estrategia recomendada es:
 
-1. Keep the core authenticated application stable.
-2. Improve the most visible product workflows that shape trust during demos and pilots.
-3. Strengthen the sales and acquisition layer around the product.
-4. Delay any full frontend or backend migration unless it directly improves conversion, demo quality, or delivery speed.
+1. Mantener estable la aplicación autenticada central.
+2. Mejorar los workflows visibles que forman confianza durante demos y pilotos.
+3. Fortalecer la capa de ventas y adquisición alrededor del producto.
+4. Postergar cualquier migración completa de frontend o backend salvo que mejore directamente conversión, calidad de demo o velocidad de entrega.
 
-## Technical Recommendation
+## Recomendación Técnica
 
-1. Do not perform a full frontend rewrite now.
-2. Improve the existing application UX and operational reliability first.
-3. If a public acquisition layer is needed, use Next.js for the marketing and sales surface only.
-4. Keep the backend on the current stack in the short term while refactoring critical business flows in place.
+1. No realizar ahora una reescritura completa del frontend.
+2. Mejorar primero la UX y confiabilidad operacional de la aplicación existente.
+3. Si se necesita una capa pública de adquisición, usar Next.js solo para la superficie de marketing y ventas.
+4. Mantener backend en el stack actual a corto plazo mientras se refactorizan en sitio flujos críticos de negocio.
 
-## Why This Recommendation Fits the Current Repo
+## Por Qué Esta Recomendación Calza Con El Repo Actual
 
-1. Frontend is already React, Vite, and TypeScript.
-2. Backend is already Express, TypeScript, Prisma, PostgreSQL, and Redis.
-3. Production deployment is Vercel-first.
-4. Existing audits show maintainability and consistency debt, but not an urgent need for a full-stack rewrite.
-5. Solo-founder execution benefits more from predictable delivery than from simultaneous framework migrations.
+1. El frontend ya usa React, Vite y TypeScript.
+2. El backend ya usa Express, TypeScript, Prisma, PostgreSQL y Redis.
+3. El despliegue productivo ya es Vercel-first.
+4. Las auditorías existentes muestran deuda de mantenibilidad y consistencia, pero no una necesidad urgente de reescritura full-stack.
+5. Para ejecución founder solo, la entrega predecible aporta más que migraciones simultáneas de frameworks.
 
-## Document Map
+## Mapa De Documentos
 
-Use these documents together:
+Usa estos documentos en conjunto:
 
-1. [commercial-roadmap-2026.md](commercial-roadmap-2026.md): 30-60-90 execution roadmap.
-2. [founder-sales-playbook-es.md](founder-sales-playbook-es.md): Spanish sales playbook for calls, discovery, objections, and pilot framing.
-3. [conversion-backlog-2026.md](conversion-backlog-2026.md): prioritized conversion-facing product backlog.
-4. [client-pitch-deck-outline-2026.md](client-pitch-deck-outline-2026.md): client-facing deck structure.
+1. [commercial-roadmap-2026.md](commercial-roadmap-2026.md): roadmap de ejecución 30-60-90.
+2. [founder-sales-playbook-es.md](founder-sales-playbook-es.md): playbook comercial en español para llamadas, discovery, objeciones y encuadre de piloto.
+3. [conversion-backlog-2026.md](conversion-backlog-2026.md): backlog priorizado de producto orientado a conversión.
+4. [client-pitch-deck-outline-2026.md](client-pitch-deck-outline-2026.md): estructura de deck para clientes.
 
-## KPIs To Track
+## KPIs A Medir
 
-### Product and Conversion KPIs
+### KPIs De Producto Y Conversión
 
-1. Demo-to-follow-up rate.
-2. Follow-up-to-pilot rate.
-3. Pilot-to-paid conversion rate.
-4. Time from first contact to proposal.
-5. Time from proposal to close.
-6. Drop-off point in the demo process.
-7. Critical demo failure count.
-8. Time to onboard a new building.
-9. Time to create the first successful booking.
-10. Support incidents during pilot.
+1. Tasa demo-a-seguimiento.
+2. Tasa seguimiento-a-piloto.
+3. Tasa de conversión piloto-a-pago.
+4. Tiempo desde primer contacto a propuesta.
+5. Tiempo desde propuesta a cierre.
+6. Punto de abandono en el proceso de demo.
+7. Cantidad de fallas críticas durante demo.
+8. Tiempo de onboarding de un edificio nuevo.
+9. Tiempo hasta crear la primera reserva exitosa.
+10. Incidentes de soporte durante piloto.
 
-### Technical KPIs
+### KPIs Técnicos
 
-1. p95 latency on critical flows.
-2. Booking success rate.
-3. Payment reconciliation issues.
-4. Error rate on critical endpoints.
-5. E2E pass rate for critical flows.
-6. Release rollback frequency.
+1. Latencia p95 en flujos críticos.
+2. Tasa de éxito de reservas.
+3. Problemas de conciliación de pagos.
+4. Tasa de error en endpoints críticos.
+5. Tasa de aprobación E2E para flujos críticos.
+6. Frecuencia de rollback de releases.
 
-## Final Recommendation
+## Recomendación Final
 
-The best near-term path is a commercial-product hardening strategy, not a full-stack migration.
+La mejor ruta de corto plazo es una estrategia de endurecimiento comercial-producto, no una migración full-stack.
 
-In order of priority:
+En orden de prioridad:
 
-1. Sharpen positioning.
-2. Upgrade demo quality.
-3. Improve trust signals.
-4. Polish the most visible workflows.
-5. Standardize the most fragile technical areas.
-6. Use Next.js only if a stronger public sales layer is needed.
+1. Afinar posicionamiento.
+2. Mejorar calidad de demo.
+3. Mejorar señales de confianza.
+4. Pulir los workflows más visibles.
+5. Estandarizar las áreas técnicas más frágiles.
+6. Usar Next.js solo si se necesita una capa pública de ventas más fuerte.

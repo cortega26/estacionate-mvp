@@ -1,99 +1,108 @@
-# Production-Ready Marketplace Roadmap 2025
+# Roadmap Histórico De Preparación Productiva 2025
 
-**Author:** Antigravity (Senior SaaS Architect)
-**Date:** December 19, 2025
-**Scope:** Gap Analysis for Tier 1 Marketplace Readiness
+**Autor:** Antigravity (arquitecto SaaS senior)
+**Fecha:** 2025-12-19
+**Alcance:** análisis de brecha para preparación tipo marketplace nivel 1
 
-## Executive Summary
-The current `estacionate-mvp` codebase is a solid foundation with good initial practices (TypeScript, Prisma, Sentry, Redis-based Rate Limiting). However, to reach "Tier 1 Marketplace" status—serving hundreds of thousands of users with high concurrency and strict compliance—architecture upgrades are required. The focus must shift from "Functionality" to "Reliability, Compliance, and Scalability".
+## Resumen Ejecutivo
 
-Below is the Ranked Top 10 Roadmap to bridge this gap.
+El codebase actual `estacionate-mvp` es una base sólida con buenas prácticas iniciales (TypeScript, Prisma, Sentry, rate limiting basado en Redis). Sin embargo, para alcanzar una preparación tipo "marketplace nivel 1", con cientos de miles de usuarios, alta concurrencia y cumplimiento estricto, se requieren mejoras de arquitectura. El foco debe pasar de "funcionalidad" a "confiabilidad, cumplimiento y escalabilidad".
 
----
+Este documento es histórico. Las decisiones activas de monetización y pagos deben leerse siempre junto con `documentation/LEGAL_COMMERCIAL_GUARDRAILS.md`.
 
 ## Top 10 Roadmap
 
-### 1. Distributed Event Bus (Critical Scalability)
-*   **The What**: Replace the current In-Memory `EventBus` (Map-based) with a distributed broker like **Redis Pub/Sub** or **AWS EventBridge**.
-*   **The Why**: The current bus works only within a single Node.js process. In a production cluster (Kubernetes/Auto-scaling), an event emitted on Server A (e.g., `BOOKING_CREATED`) is invisible to Server B. This prevents scalable async processing (notifications, webhooks).
-*   **Agentic Implementation Plan**:
-    1.  Create `RedisEventBus` implementing the `EventBus` interface.
-    2.  Use `ioredis` to publish/subscribe to channels.
-    3.  Update `audit-system/core/EventBus.ts` to switch strategies based on `NODE_ENV`.
-*   **Verification**: Spin up two local worker processes. Trigger an event on Worker A and verify Worker B logs/receives it.
+### 1. Event Bus Distribuido (Escalabilidad Crítica)
 
-### 2. Optimistic Concurrency Control (Data Integrity)
-*   **The What**: Add a `@version` integer field to `AvailabilityBlock` and `Booking` models in Prisma.
-*   **The Why**: High-concurrency booking attempts (e.g., concert parking) will lead to race conditions. The current system relies on transaction isolation, which can range from "slow serial locking" to "race conditions" depending on DB config. Optimistic locking prevents "Double Booking" at the application level efficiently.
-*   **Agentic Implementation Plan**:
-    1.  Add `version Int @default(0)` to usage-heavy models in `schema.prisma`.
-    2.  Update `createBooking` logic to `increment: version` and check logic.
-*   **Verification**: Run a load test script `tests/race-condition.ts` firing 50 concurrent booking requests for the exact same spot. Assert exactly 1 success and 49 failures.
+- **Qué:** reemplazar el `EventBus` actual en memoria (basado en `Map`) por un broker distribuido como **Redis Pub/Sub** o **AWS EventBridge**.
+- **Por qué:** el bus actual funciona solo dentro de un proceso Node.js. En un cluster productivo, un evento emitido en el servidor A (por ejemplo, `BOOKING_CREATED`) es invisible para el servidor B. Esto impide procesamiento async escalable (notificaciones, webhooks).
+- **Plan de implementación agentic:**
+  1. Crear `RedisEventBus` implementando la interfaz `EventBus`.
+  2. Usar `ioredis` para publicar/suscribirse a canales.
+  3. Actualizar `audit-system/core/EventBus.ts` para cambiar estrategia según `NODE_ENV`.
+- **Verificación:** levantar dos procesos worker locales. Disparar un evento en Worker A y verificar que Worker B lo registre/reciba.
 
-### 3. Multi-Tenant "Organization" Layer
-*   **The What**: Introduce an `Organization` or `Operator` model that sits above `Building`.
-*   **The Why**: Tier 1 Marketplaces interact with B2B partners (Parking Operators) who manage portfolios of buildings. The current `adminCompany` string on `Building` is insufficient for proper RBAC (Role Based Access Control) and financial aggregation.
-*   **Agentic Implementation Plan**:
-    1.  Create `Organization` model.
-    2.  Link `Building` to `Organization`.
-    3.  Create `OrganizationUser` role/relation.
-*   **Verification**: Create an Organization with 2 Buildings. Create an Org Admin. Verify they can see stats for both buildings but not for a competitor's building.
+### 2. Control De Concurrencia Optimista (Integridad De Datos)
 
-### 4. PII Encryption at Rest (SOC2 Compliance)
-*   **The What**: Implement application-level encryption for sensitive fields (`rut`, `phone`, `email`) or use Postgres TDE.
-*   **The Why**: If a database dump is leaked, raw user data is exposed. SOC2 and GDPR require "Protection of Personal Data".
-*   **Agentic Implementation Plan**:
-    1.  Create `lib/crypto.ts` with AES-256-GCM helpers.
-    2.  Add middleware or Prisma middleware to encrypt on write / decrypt on read for specific fields.
-*   **Verification**: Inspect the raw SQL rows via `psql` or Prisma Service. Fields should look like gibberish (`iv:ciphertext`). API requests should still return cleartext to authorized users.
+- **Qué:** agregar un campo entero `@version` a modelos `AvailabilityBlock` y `Booking` en Prisma.
+- **Por qué:** intentos de reserva con alta concurrencia provocarán race conditions. El sistema actual depende del aislamiento de transacciones, que puede ir desde bloqueos seriales lentos hasta race conditions según la configuración DB. El optimistic locking previene doble reserva eficientemente a nivel de aplicación.
+- **Plan de implementación agentic:**
+  1. Agregar `version Int @default(0)` a modelos de alto uso en `schema.prisma`.
+  2. Actualizar lógica `createBooking` para usar `increment: version` y checks asociados.
+- **Verificación:** ejecutar un script de carga `tests/race-condition.ts` con 50 reservas concurrentes para el mismo estacionamiento. Asegurar exactamente 1 éxito y 49 fallas.
 
-### 5. Multi-Factor Authentication (MFA)
-*   **The What**: Integrate TOTP (Time-based One-Time Password) or SMS/WhatsApp OTP for login.
-*   **The Why**: Passwords are frequently compromised. Tier 1 security mandates MFA, especially for Admin and Concierge roles.
-*   **Agentic Implementation Plan**:
-    1.  Add `mfaSecret` and `mfaEnabled` to `User` model.
-    2.  Implement `speakeasy` or `otplib` for TOTP generation/verification.
-    3.  Enforce MFA for `Role.ADMIN`.
-*   **Verification**: Attempt login as Admin. Should require a second step. Verify token using Google Authenticator.
+### 3. Capa Multi-Tenant "Organization"
 
-### 6. Structured Logging Unification
-*   **The What**: Refactor `EventBus` and global error handlers to use the standard `lib/logger.ts` (Pino) instead of `console.log`.
-*   **The Why**: `console.log` works for local dev, but in production, logs must be JSON structured to be ingested by Datadog/Splunk/CloudWatch for querying, alerting, and correlation.
-*   **Agentic Implementation Plan**:
-    1.  Search and replace `console.log`, `console.error` in backend with `logger.info`, `logger.error`.
-    2.  Ensure `traceId` context is passed to all logs.
-*   **Verification**: Run the app, trigger a flow, and inspect stdout. Output must be pure JSON lines.
+- **Qué:** introducir un modelo `Organization` u `Operator` por encima de `Building`.
+- **Por qué:** plataformas B2B interactúan con operadores que gestionan carteras de edificios. El string actual `adminCompany` en `Building` es insuficiente para RBAC y agregación financiera correcta.
+- **Plan de implementación agentic:**
+  1. Crear modelo `Organization`.
+  2. Vincular `Building` a `Organization`.
+  3. Crear rol/relación `OrganizationUser`.
+- **Verificación:** crear una `Organization` con 2 edificios. Crear un admin de organización. Verificar que ve estadísticas de ambos edificios, pero no de un edificio competidor.
 
-### 7. Automated GDPR "Right to be Forgotten"
-*   **The What**: Create a system workflow to "Anonymize" user data upon request.
-*   **The Why**: Legal requirement in EU (GDPR) and increasingly in LatAm (LGPD/LPDP). Deleting a user is dangerous (breaks foreign keys), so "Anonymization" (scrambling personal data) is the standard.
-*   **Agentic Implementation Plan**:
-    1.  Create `User.anonymize()` service method.
-    2.  Replace name with "Anonymous", email with "deleted-uuid@placeholder.com", clear phones.
-    3.  Keep transaction history for accounting.
-*   **Verification**: Create user, make booking. Run anonymize. Verify user cannot login, but booking stats remain accurate.
+### 4. Cifrado De PII En Reposo (Cumplimiento SOC2)
 
-### 8. Strict Content-Security-Policy (CSP)
-*   **The What**: Move from "Report Only" or "Weak" CSP to a Strict CSP preventing XSS and unauthorized script injection.
-*   **The Why**: Mitigates Cross-Site Scripting (XSS). Parking marketplaces process payments; ensuring no malicious scripts can skim credit card data is paramount.
-*   **Agentic Implementation Plan**:
-    1.  Configure `helmet.contentSecurityPolicy`.
-    2.  Allow only known domains (Self, MercadoPago, Google Maps).
-*   **Verification**: Inject a dummy `<script>alert(1)</script>` in a description field (if reflected). Browser should block execution and log an error.
+- **Qué:** implementar cifrado a nivel de aplicación para campos sensibles (`rut`, `phone`, `email`) o usar TDE de Postgres.
+- **Por qué:** si se filtra un dump de base de datos, datos crudos de usuarios quedan expuestos. SOC2 y GDPR exigen protección de datos personales.
+- **Plan de implementación agentic:**
+  1. Crear `lib/crypto.ts` con helpers AES-256-GCM.
+  2. Agregar middleware o Prisma middleware para cifrar al escribir y descifrar al leer campos específicos.
+- **Verificación:** inspeccionar filas SQL crudas vía `psql` o servicio Prisma. Los campos deben verse como texto cifrado (`iv:ciphertext`). Las requests API deben seguir devolviendo texto claro a usuarios autorizados.
 
-### 9. Revocable Session Management
-*   **The What**: Move stateful session control to Redis. Store `sessionId` in JWT, check validity in Redis on every request.
-*   **The Why**: Stateless JWTs cannot be revoked if a user performs "Logout on all devices" or if an admin bans a compromised user.
-*   **Agentic Implementation Plan**:
-    1.  On login, store `session:{userId}:{sessionId}` in Redis with TTL.
-    2.  Middleware checks Redis for existence.
-    3.  Limit active sessions per user (prevent account sharing).
-*   **Verification**: Login. Manually delete key from Redis. Subsequent request with valid JWT should fail 401.
+### 5. Autenticación Multifactor (MFA)
 
-### 10. Infrastructure as Code (IaC) & CI/CD Pipeline
-*   **The What**: Define the entire stack (Postgres, Redis, Node.js, Vercel Config) in Terraform or strict Docker Compose for production.
-*   **The Why**: "It works on my machine" is unacceptable for Tier 1. Environments must be deterministic parity.
-*   **Agentic Implementation Plan**:
-    1.  Formalize `docker-compose.prod.yml`.
-    2.  Write GitHub Actions for "Build, Test, Migrations, Deploy".
-*   **Verification**: Delete `node_modules` and local DB. Run single "one-click deploy" command. System should be fully operational.
+- **Qué:** integrar TOTP o SMS/WhatsApp OTP para login.
+- **Por qué:** las contraseñas suelen verse comprometidas. Seguridad nivel 1 exige MFA, especialmente para roles admin y conserjería.
+- **Plan de implementación agentic:**
+  1. Agregar `mfaSecret` y `mfaEnabled` al modelo `User`.
+  2. Implementar `speakeasy` u `otplib` para generar/verificar TOTP.
+  3. Exigir MFA para `Role.ADMIN`.
+- **Verificación:** intentar login como admin. Debe requerir un segundo paso. Verificar token usando Google Authenticator.
+
+### 6. Unificación De Logging Estructurado
+
+- **Qué:** refactorizar `EventBus` y handlers globales de error para usar `lib/logger.ts` (Pino) en vez de `console.log`.
+- **Por qué:** `console.log` sirve para desarrollo local, pero en producción los logs deben ser JSON estructurado para ingesta en Datadog/Splunk/CloudWatch, consultas, alertas y correlación.
+- **Plan de implementación agentic:**
+  1. Buscar y reemplazar `console.log`, `console.error` en backend por `logger.info`, `logger.error`.
+  2. Asegurar que el contexto `traceId` se propague a todos los logs.
+- **Verificación:** ejecutar la app, disparar un flujo e inspeccionar stdout. La salida debe ser líneas JSON puras.
+
+### 7. "Derecho Al Olvido" Automatizado
+
+- **Qué:** crear un workflow de sistema para anonimizar datos de usuario a solicitud.
+- **Por qué:** requisito legal en la UE (GDPR) y crecientemente en LatAm (LGPD/LPDP). Eliminar un usuario es riesgoso porque rompe foreign keys; anonimizar datos personales es el estándar.
+- **Plan de implementación agentic:**
+  1. Crear método de servicio `User.anonymize()`.
+  2. Reemplazar nombre por "Anónimo", email por `deleted-uuid@placeholder.com` y limpiar teléfonos.
+  3. Mantener historial transaccional para contabilidad.
+- **Verificación:** crear usuario, hacer una reserva, ejecutar anonimización. Verificar que el usuario no puede hacer login, pero las estadísticas de reserva siguen correctas.
+
+### 8. Content-Security-Policy (CSP) Estricta
+
+- **Qué:** pasar desde CSP débil o solo reporte a una CSP estricta que prevenga XSS e inyección de scripts no autorizados.
+- **Por qué:** mitiga Cross-Site Scripting (XSS). Plataformas que procesan pagos deben asegurar que ningún script malicioso capture datos de tarjeta.
+- **Plan de implementación agentic:**
+  1. Configurar `helmet.contentSecurityPolicy`.
+  2. Permitir solo dominios conocidos (`self`, MercadoPago, Google Maps).
+- **Verificación:** inyectar un `<script>alert(1)</script>` dummy en un campo de descripción si se refleja. El navegador debe bloquear la ejecución y registrar un error.
+
+### 9. Gestión De Sesiones Revocables
+
+- **Qué:** mover control de sesiones con estado a Redis. Guardar `sessionId` en JWT y verificar validez en Redis en cada request.
+- **Por qué:** JWTs stateless no pueden revocarse si un usuario ejecuta "logout en todos los dispositivos" o si un admin bloquea a un usuario comprometido.
+- **Plan de implementación agentic:**
+  1. En login, guardar `session:{userId}:{sessionId}` en Redis con TTL.
+  2. Middleware revisa existencia en Redis.
+  3. Limitar sesiones activas por usuario para prevenir uso compartido de cuentas.
+- **Verificación:** hacer login. Eliminar manualmente la key en Redis. La siguiente request con JWT válido debe fallar con 401.
+
+### 10. Infraestructura Como Código (IaC) Y Pipeline CI/CD
+
+- **Qué:** definir el stack completo (Postgres, Redis, Node.js, configuración Vercel) en Terraform o Docker Compose estricto para producción.
+- **Por qué:** "funciona en mi máquina" no es aceptable para nivel 1. Los entornos deben tener paridad determinística.
+- **Plan de implementación agentic:**
+  1. Formalizar `docker-compose.prod.yml`.
+  2. Escribir GitHub Actions para build, pruebas, migraciones y despliegue.
+- **Verificación:** eliminar `node_modules` y DB local. Ejecutar un solo comando de despliegue "one-click". El sistema debe quedar completamente operativo.

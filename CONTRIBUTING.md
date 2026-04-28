@@ -1,73 +1,73 @@
-# Contributing to Estacionate MVP
+# Contribuir A Estacionate MVP
 
-## Getting Started
+## Inicio
 
-For a fresh local environment, run:
+Para un entorno local limpio, ejecuta:
 
 ```bash
 npm run bootstrap
 ```
 
-This now provisions the local environment and launches the frontend/backend dev
-servers. To provision only, run `npm run bootstrap -- --no-start`.
+Esto aprovisiona el entorno local e inicia los servidores de desarrollo de frontend/backend. Para aprovisionar solamente, ejecuta `npm run bootstrap -- --no-start`.
 
-Manual equivalent:
+Equivalente manual:
 
-1.  **Install Dependencies:**
+1.  **Instalar dependencias:**
     ```bash
     npm run install:all
     ```
-2.  **Environment:** Copy the local environment examples to `.env`:
+2.  **Entorno:** copia los ejemplos de entorno local a `.env`:
     ```bash
     cp backend/.env.local.example backend/.env
     cp frontend/.env.example frontend/.env
     ```
-3.  **Local Services:** Start Postgres and Redis:
+3.  **Servicios locales:** inicia Postgres y Redis:
     ```bash
     docker compose up -d postgres redis
     ```
 
-## Development Workflow
+## Flujo De Desarrollo
 
-### Branching Strategy
+### Estrategia De Ramas
 
-- `feat/description`: New features.
-- `fix/description`: Bug fixes.
-- `chore/description`: Maintenance, docs, refactoring.
+- `feat/descripcion`: nuevas funcionalidades.
+- `fix/descripcion`: correcciones de bugs.
+- `chore/descripcion`: mantenimiento, documentación o refactor.
 
-### Commit Messages
+### Mensajes De Commit
 
-Use [Conventional Commits](https://www.conventionalcommits.org/):
+Usa [Conventional Commits](https://www.conventionalcommits.org/):
 
 - `feat: add booking cron`
 - `fix: resolve race condition in payments`
 - `docs: add privacy policy`
 
-### Pull Request Requirements
+### Requisitos De Pull Request
 
-Before pushing, you **MUST** run the full regression check from the repository root:
+Antes de hacer push, **debes** ejecutar la revisión completa de regresión desde la raíz del repositorio:
 
 ```bash
 npm run check:all
 ```
 
-This script runs:
+Este script ejecuta:
 
-1.  Backend and frontend linting (`eslint`)
-2.  Backend and frontend builds
-3.  Backend and frontend tests (`vitest`)
-4.  Backend architecture audit (`dependency-cruiser`)
+1.  Lint de backend y frontend (`eslint`)
+2.  Builds de backend y frontend
+3.  Pruebas de backend y frontend (`vitest`)
+4.  Auditoría de arquitectura backend (`dependency-cruiser`)
 
-**If `check:all` fails, do not open a PR.**
+**Si `check:all` falla, no abras un PR.**
 
-## Architecture
+## Arquitectura
 
-- **Backend:** Node.js/Express + Prisma. Logic in `services/`.
+- **Backend:** Node.js/Express + Prisma. Lógica en `services/`.
 - **Frontend:** React + Tailwind.
-- **Database:** PostgreSQL.
+- **Base de datos:** PostgreSQL.
 
-## Principles
+## Principios
 
-- **Type Safety:** No `any`. Use Zod for validation.
-- **Security:** Hashed PII (RUT).
-- **Idempotency:** All cron jobs and webhooks must be idempotent.
+- **Type safety:** no usar `any`. Usa Zod para validación.
+- **Seguridad:** PII hasheada (RUT).
+- **Idempotencia:** todos los cron jobs y webhooks deben ser idempotentes.
+- **Documentación:** escribir y mantener documentación en español neutro, chileno sin modismos.

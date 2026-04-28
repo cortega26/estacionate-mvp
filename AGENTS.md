@@ -1,99 +1,94 @@
-# Agent Quickstart
+# Inicio Rápido Para Agentes
 
-Start here before editing. This file is the short operational map for AI agents and new contributors; deeper rules live in `documentation/AGENTS.md`.
+Lee esto antes de editar. Este archivo es el mapa operativo corto para agentes de IA y nuevos contribuyentes; las reglas más detalladas viven en `documentation/AGENTS.md`.
 
-## Bootstrap
+## Preparación
 
-Fast path for a fresh local environment:
+Ruta rápida para un entorno local limpio:
 
 ```bash
 npm run bootstrap
 ```
 
-This installs dependencies, creates missing local env files, starts Docker-backed
-Postgres and Redis, applies checked-in Prisma migrations, seeds demo data, and
-launches the frontend and backend dev servers.
+Esto instala dependencias, crea archivos de entorno locales faltantes, levanta Postgres y Redis con Docker, aplica las migraciones Prisma registradas, carga datos demo e inicia los servidores de desarrollo de frontend y backend.
 
-To stop after provisioning and data setup, run:
+Para detenerte después del aprovisionamiento y la carga de datos, ejecuta:
 
 ```bash
 npm run bootstrap -- --no-start
 ```
 
-Manual equivalent:
+Equivalente manual:
 
-1. Install dependencies:
+1. Instalar dependencias:
    ```bash
    npm run install:all
    ```
-2. Create local environment files:
+2. Crear archivos de entorno locales:
    ```bash
    cp backend/.env.local.example backend/.env
    cp frontend/.env.example frontend/.env
    ```
-3. Start local infrastructure:
+3. Iniciar infraestructura local:
    ```bash
    docker compose up -d postgres redis
    ```
-4. Prepare the database:
+4. Preparar la base de datos:
    ```bash
    cd backend
    npx prisma migrate deploy
    npm run db:seed
    ```
-5. Start both applications from the repository root:
+5. Iniciar ambas aplicaciones desde la raíz del repositorio:
    ```bash
    npm run dev
    ```
 
-## Validation
+## Validación
 
-- Full local check: `npm run check:all`
-- Environment-aware local check: `npm run check:local`
-- Same check via shell script: `npm run verify`
-- Documentation/process check: `npm run check:docs`
-- Formatting check: `npm run format:check`
-- Backend only: `cd backend && npm run check:all`
-- Frontend only: `cd frontend && npm run lint && npm test && npm run build`
-- Browser E2E: `cd frontend && npm run test:e2e`
+- Revisión local completa: `npm run check:all`
+- Revisión local consciente del entorno: `npm run check:local`
+- Misma revisión vía script de shell: `npm run verify`
+- Revisión de documentación/proceso: `npm run check:docs`
+- Revisión de formato: `npm run format:check`
+- Solo backend: `cd backend && npm run check:all`
+- Solo frontend: `cd frontend && npm run lint && npm test && npm run build`
+- E2E en navegador: `cd frontend && npm run test:e2e`
 
-Run the narrowest relevant test while working, then run `npm run check:all` before handing off broad changes. See `documentation/VALIDATION.md` for the full validation matrix.
+Ejecuta la prueba más acotada y relevante mientras trabajas; luego ejecuta `npm run check:all` antes de entregar cambios amplios. Revisa `documentation/VALIDATION.md` para la matriz completa de validación.
 
-## Where To Work
+## Dónde Trabajar
 
-- Backend app entry: `backend/app.ts`, `backend/dev-server.ts`
-- Backend routes: `backend/src/api`
-- Backend business logic: `backend/src/services`
-- Backend infrastructure helpers: `backend/src/lib`
-- Prisma schema and migrations: `backend/prisma`
-- Frontend app entry and routing: `frontend/src/App.tsx`
-- Frontend pages: `frontend/src/pages`
-- Frontend feature components: `frontend/src/features`
-- Frontend API client and types: `frontend/src/lib`, `frontend/src/types`
-- Architecture and operational docs: `documentation`
-- Audit materials and historical findings: `audit-system`
+- Entrada de la app backend: `backend/app.ts`, `backend/dev-server.ts`
+- Rutas backend: `backend/src/api`
+- Lógica de negocio backend: `backend/src/services`
+- Helpers de infraestructura backend: `backend/src/lib`
+- Esquema y migraciones Prisma: `backend/prisma`
+- Entrada y rutas de la app frontend: `frontend/src/App.tsx`
+- Páginas frontend: `frontend/src/pages`
+- Componentes de funcionalidades frontend: `frontend/src/features`
+- Cliente API y tipos frontend: `frontend/src/lib`, `frontend/src/types`
+- Arquitectura y documentación operativa: `documentation`
+- Materiales de auditoría y hallazgos históricos: `audit-system`
 
-## Change Pointers
+## Punteros De Cambio
 
-- Auth changes usually need backend auth route/service tests and role coverage.
-- Booking changes usually need `BookingService` tests plus frontend booking-flow checks when UI-facing.
-- Payment changes require reading `documentation/LEGAL_COMMERCIAL_GUARDRAILS.md` and
-  executing `documentation/task-recipes/monetization-change.md` first; then payment
-  service/adapter tests and webhook integration coverage.
-- Prisma changes require `npx prisma migrate dev`, `npx prisma generate`, and affected API/frontend type updates.
-- Frontend user-flow changes should include Vitest coverage where practical and Playwright coverage for critical paths.
+- Los cambios de autenticación normalmente requieren pruebas de rutas/servicios de auth backend y cobertura de roles.
+- Los cambios de reservas normalmente requieren pruebas de `BookingService` y, si afectan la UI, revisiones del flujo de reserva frontend.
+- Los cambios de pagos requieren leer `documentation/LEGAL_COMMERCIAL_GUARDRAILS.md` y ejecutar primero `documentation/task-recipes/monetization-change.md`; luego requieren pruebas de servicios/adaptadores de pago y cobertura de integración de webhooks.
+- Los cambios Prisma requieren `npx prisma migrate dev`, `npx prisma generate` y actualizaciones de tipos API/frontend afectados.
+- Los cambios de flujos frontend deben incluir cobertura Vitest cuando sea práctico y cobertura Playwright para rutas críticas.
+- Toda documentación nueva o modificada debe estar en español neutro, chileno sin modismos. Conserva sin traducir comandos, rutas, nombres de librerías, identificadores de código y términos de dominio cuando sean contratos técnicos.
 
-## Read Next
+## Leer Después
 
-- `documentation/CODEMAP.md` for a fuller map of the repository.
-- `documentation/AGENT_POLICY.md` for canonical agent workflow rules.
-- `documentation/OWNERSHIP.md` for edit boundaries and high-risk/generated paths.
-- `documentation/TASKS.md` for task-specific entry points and checks.
-- `documentation/VALIDATION.md` for validation command selection.
-- `documentation/TECH_SPEC.md` for product/domain rules.
-- `documentation/PROTOCOL.md` for terminal/output expectations.
-- `documentation/LESSONS.md` for project-specific gotchas.
-- `documentation/adr/` for durable architecture decisions.
-- `documentation/LEGAL_COMMERCIAL_GUARDRAILS.md` — **mandatory before any change to
-  payments, pricing, billing, payout, or monetization features** (Chilean legal
-  constraints; read before writing code, not after).
+- `documentation/CODEMAP.md` para un mapa más completo del repositorio.
+- `documentation/AGENT_POLICY.md` para las reglas canónicas de flujo de trabajo de agentes.
+- `documentation/OWNERSHIP.md` para límites de edición y rutas de alto riesgo o generadas.
+- `documentation/TASKS.md` para puntos de entrada y revisiones por tipo de tarea.
+- `documentation/VALIDATION.md` para elegir comandos de validación.
+- `documentation/TECH_SPEC.md` para reglas de producto y dominio.
+- `documentation/PROTOCOL.md` para expectativas de terminal y salida.
+- `documentation/LESSONS.md` para aprendizajes y advertencias específicas del proyecto.
+- `documentation/adr/` para decisiones de arquitectura duraderas.
+- `documentation/LEGAL_COMMERCIAL_GUARDRAILS.md` — **obligatorio antes de cualquier cambio en pagos, precios, facturación, payout o monetización** (restricciones legales chilenas; leer antes de escribir código, no después).

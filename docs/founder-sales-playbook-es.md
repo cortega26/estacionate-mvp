@@ -1,6 +1,6 @@
 # Founder Sales Playbook ES
 
-**Fecha:** 2026-04-26  
+**Fecha:** 2026-04-26
 **Objetivo:** Mejorar la conversión comercial de Estacionate con un proceso de venta repetible y claro.
 
 ## Objetivo

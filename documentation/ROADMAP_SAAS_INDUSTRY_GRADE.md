@@ -1,10 +1,10 @@
 # Roadmap de Estacionate: de MVP a SaaS industry-grade
 
-Fecha: 2026-04-27  
-Repositorio: `cortega26/estacionate-mvp` (`/home/carlos/VS_Code_Projects/estacionate-mvp`)  
-Branch analizada: `master`  
-Commit analizado: `a90ad9d76eefdc3c3130714f520db42ca95f9d9d`  
-Alcance: auditoria de producto, arquitectura, operacion, riesgos, seguridad, pagos, legal/comercial y roadmap. Sin cambios de codigo.  
+Fecha: 2026-04-27
+Repositorio: `cortega26/estacionate-mvp` (`/home/carlos/VS_Code_Projects/estacionate-mvp`)
+Branch analizada: `master`
+Commit analizado: `a90ad9d76eefdc3c3130714f520db42ca95f9d9d`
+Alcance: auditoria de producto, arquitectura, operacion, riesgos, seguridad, pagos, legal/comercial y roadmap. Sin cambios de codigo.
 Limitaciones: analisis legal no constituye asesoria juridica; requiere abogado chileno. Se reviso codigo local y documentacion; no se verifico produccion, analytics reales, contratos, datos comerciales ni cuentas de proveedores.
 
 Nota de trazabilidad: al inicio de la auditoria HEAD era `99c342abfd960fb1895d2f9023b0273c05f68cad` con cambios locales en backend/admin/concierge/webhook y tests de observabilidad. Durante la sesion esos cambios quedaron committeados en `a90ad9d...`; el contenido analizado corresponde a ese estado final.
@@ -88,7 +88,7 @@ No hacer todavia: app nativa, IoT/barreras, microservicios, AI decisoria, market
 | CI/CD          | CI frontend/backend/docs y CD Vercel                                                                                                           | `.github/workflows/*`, ADR 0003                                              | Backend CI no incluye Redis service; frontend CD no build/test antes deploy                    | Endurecer CI/CD con staging y smoke.                        |
 | Docs           | AGENTS, CODEMAP, VALIDATION, ADRs, project context, T&C                                                                                        | `documentation/**`                                                           | `TECH_SPEC.md` simplificado/desactualizado vs schema real                                      | Actualizar tech spec y ADRs de dominio.                     |
 
-Senales de madurez: bootstrap, Docker local, migraciones, tests de seguridad/concurrencia/pagos, EventBus ADR, CORS/Helmet, cifrado PII, comisiones/payouts iniciales.  
+Senales de madurez: bootstrap, Docker local, migraciones, tests de seguridad/concurrencia/pagos, EventBus ADR, CORS/Helmet, cifrado PII, comisiones/payouts iniciales.
 Senales de deuda: docs simplificados, RBAC implicito, estados financieros/operacionales incompletos, tests dependientes de DB compartida, E2E roto, generated reports trackeados, terms sin acceptance versionado.
 
 ## 3. Inconsistencias y conflictos internos del diseno actual
@@ -149,7 +149,7 @@ Respuestas explicitas:
 
 ### Matriz por rol
 
-| Rol                             | Scope                   | Puede ver                       | Puede crear                         | Puede editar               | Puede cancelar/bloquear                | Puede exportar    | Datos sensibles  | Finanzas                       | Auditoria   | MFA                    | Observaciones                          |
+| Rol                             | Alcance                 | Puede ver                       | Puede crear                         | Puede editar               | Puede cancelar/bloquear                | Puede exportar    | Datos sensibles  | Finanzas                       | Auditoria   | MFA                    | Observaciones                          |
 | ------------------------------- | ----------------------- | ------------------------------- | ----------------------------------- | -------------------------- | -------------------------------------- | ----------------- | ---------------- | ------------------------------ | ----------- | ---------------------- | -------------------------------------- |
 | Super Admin / Platform Owner    | Global                  | Todo                            | Todo                                | Todo                       | Todo con dual approval en destructivas | Global            | Alto             | Alto                           | Alto        | Si                     | Break-glass auditado.                  |
 | Platform Operations             | Global operacional      | Edificios, bookings, incidents  | Edificios piloto, usuarios internos | Config operativa           | Suspender edificio/cupo                | Limitado          | Medio            | Bajo                           | Medio       | Si                     | Sin payouts finales.                   |
@@ -190,12 +190,12 @@ Respuestas explicitas:
 | PricingRule              | Building Admin/Ops                                   | Building Admin/Ops           | Building Admin/Ops              | Deactivate                     | Versioned effective dates.     |
 | Blocklist                | Support/Admin/Building Admin scoped                  | Support/Admin/Building Admin | Same                            | Same                           | Reason, expiry, appeal.        |
 | AuditLog                 | Platform, Legal, Auditor scoped                      | System/EventBus              | No                              | No                             | Inmutable.                     |
-| Notification             | Owner/support                                        | System                       | Status only                     | No                             | No PII in logs.                |
+| Notification             | Owner/support                                        | System                       | Solo estado                     | No                             | Sin PII en logs.               |
 | SupportTicket            | Support, requester                                   | User/support                 | Support                         | Close                          | SLA.                           |
 | Incident                 | Concierge/Admin/Support                              | Concierge/Admin/Support      | Owner assigned                  | Close                          | Evidence required.             |
 | Contract/TermsAcceptance | Legal/User scoped                                    | System                       | No                              | No                             | Versioned.                     |
 | LegalDocumentVersion     | Legal/Super                                          | Legal/Super                  | Supersede                       | No                             | Effective date.                |
-| Refund                   | Finance/Resident own                                 | Service/Finance              | Status only                     | Void before sent               | Gateway linked.                |
+| Refund                   | Finance/Resident own                                 | Service/Finance              | Solo estado                     | Anular antes de enviar         | Vinculado a gateway.           |
 | Dispute                  | Support/Finance/Legal                                | User/support                 | Support/Finance                 | Resolve                        | Evidence and owner.            |
 | WebhookEvent             | Finance/Ops                                          | Webhook                      | Processing status               | No                             | Idempotency key unique.        |
 | ApiKey/IntegrationToken  | Super/Ops                                            | Super/Ops                    | Rotate                          | Revoke                         | Secrets hashed.                |
@@ -543,11 +543,11 @@ Resultado validacion 2026-04-27: docs/lint/build/test/audit pasan individualment
 
 ## 21. Decisiones arquitectonicas necesarias
 
-| ADR              | Decision                                 | Alternativas        | Trade-offs                | Riesgo de no decidir      |
+| ADR              | Decisión                                 | Alternativas        | Trade-offs                | Riesgo de no decidir      |
 | ---------------- | ---------------------------------------- | ------------------- | ------------------------- | ------------------------- |
 | Tenancy          | Building tenant + AdminCompany agrupador | AdminCompany tenant | Simple vs multi-cartera   | Fugas entre edificios.    |
 | RBAC             | Roles + memberships + permissions        | Hardcode roles      | Mas schema, mas seguridad | Permisos ambiguos.        |
-| User vs Resident | Separar con contrato claro o unificar    | Status quo          | Migracion vs claridad     | Bugs auth.                |
+| User vs Resident | Separar con contrato claro o unificar    | Estado actual       | Migracion vs claridad     | Bugs auth.                |
 | Pagos            | PaymentIntent+Payment+Ledger             | Payment 1:1         | Mas tablas, mas control   | Dinero inconsistente.     |
 | Payout           | Ledger + approval                        | Cron directo        | Operacion financiera      | Doble pago.               |
 | Auditoria        | EventBus obligatorio + tests             | Logs sueltos        | Disciplina                | Sin evidencia.            |
@@ -564,7 +564,7 @@ Resultado validacion 2026-04-27: docs/lint/build/test/audit pasan individualment
 | Metrica                    | Que mide         | Fuente      | Frecuencia | Meta inicial        | Riesgo si empeora      |
 | -------------------------- | ---------------- | ----------- | ---------- | ------------------- | ---------------------- |
 | Reservas/edificio/semana   | Adopcion         | Booking     | Semanal    | 10+ piloto          | Bajo valor.            |
-| Conversion search->booking | UX/demanda       | Analytics   | Semanal    | 20%+                | Friccion.              |
+| Conversión search->booking | UX/demanda       | Analytics   | Semanal    | 20%+                | Friccion.              |
 | Check-in exitoso           | Operacion        | AccessEvent | Diario     | 95%+                | Conserjeria falla.     |
 | Reclamos por 100 reservas  | Conflicto        | Tickets     | Mensual    | <5                  | Producto genera ruido. |
 | Tiempo verificacion        | Conserjeria      | FE/event    | Diario     | <10s p50            | No adopcion.           |
@@ -584,7 +584,7 @@ Resultado validacion 2026-04-27: docs/lint/build/test/audit pasan individualment
 | Cross-tenant data leak                  | Seguridad   |        Media | Critico | Tests IDOR fallan       | RBAC/helper         | CTO      | P0        |
 | Payout errado                           | Financiero  |        Media |    Alto | Mismatches              | Ledger/approval     | Finance  | P0        |
 | Conserjeria no usa app                  | Adopcion    |        Media |    Alto | Verificaciones manuales | UX+training         | Ops      | P0        |
-| Residentes no pagan                     | Comercial   |        Media |    Alto | Conversion baja         | Pricing piloto      | Founder  | P0        |
+| Residentes no pagan                     | Comercial   |        Media |    Alto | Conversión baja         | Pricing piloto      | Founder  | P0        |
 | Plataforma responsable por dano         | Legal       |        Media |    Alto | Reclamos robo           | Contrato/evidencia  | Legal    | P0        |
 | Datos personales expuestos              | Privacidad  |        Media |    Alto | Logs con PII            | Minimizar/cifrar    | Security | P0        |
 | E2E roto                                | Calidad     |         Alta |   Medio | Smoke rojo              | Fix Playwright      | Eng      | P0        |
@@ -622,9 +622,9 @@ Proximos 10 pasos:
 9. Construir reporte mensual demo para comite.
 10. Ejecutar 10 entrevistas con administradoras/comites antes de expandir features.
 
-Primero implementar: RBAC/tenancy, state machine booking/payment, legal acceptance, conserjeria check-in/out, ledger financiero.  
-Primero investigar: copropiedad/reglamentos, datos personales Ley 21.719, PSP/custodia/payouts, tributario boleta/factura, responsabilidad por danos.  
-Primero vender: piloto de orden y trazabilidad en edificios con dolor real.  
+Primero implementar: RBAC/tenancy, state machine booking/payment, legal acceptance, conserjeria check-in/out, ledger financiero.
+Primero investigar: copropiedad/reglamentos, datos personales Ley 21.719, PSP/custodia/payouts, tributario boleta/factura, responsabilidad por danos.
+Primero vender: piloto de orden y trazabilidad en edificios con dolor real.
 Evitar por ahora: IoT, AI, app nativa, marketplace abierto, custodiar fondos, sobreautomatizar reglas no validadas.
 
 ## Anexos

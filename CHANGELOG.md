@@ -1,23 +1,25 @@
-# Changelog
+# Registro De Cambios
 
-All notable changes to this project will be documented in this file.
+Todos los cambios relevantes de este proyecto se documentarán en este archivo.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+El formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [Sin Publicar]
 
-### Added
-- **Account Recovery**: Implemented complete flow for password reset via WhatsApp/SMS tokens.
-- **Concierge Role**: Added new role 'concierge' with specific dashboard and permissions.
-- **Mobile-First Dashboard**: Created dedicated layout for guards/concierges.
+### Agregado
 
-### Fixed
-- **Worker Logging**: Fixed `logger.error` call signature in cron worker to correctly handle error objects.
-- **Security**: Added rate limiting to login endpoints.
-- **Security**: Enforced account verification before login.
-- **Type Safety**: Fixed various TypeScript errors in `authStore`, `scripts/create-concierge.ts`, and `admin/stats.ts`.
+- **Recuperación de cuenta:** implementación del flujo completo para restablecer contraseña mediante tokens por WhatsApp/SMS.
+- **Rol de conserjería:** nuevo rol `concierge` con dashboard y permisos específicos.
+- **Dashboard mobile-first:** layout dedicado para guardias/conserjes.
 
-### Changed
-- **Dependencies**: Updated `package.json` to include necessary types.
-- **Configuration**: Updated `.cursorrules` to reflect new agentic workflows.
+### Corregido
+
+- **Logging de workers:** corrección de la firma de llamada `logger.error` en cron worker para manejar objetos de error correctamente.
+- **Seguridad:** rate limiting agregado a endpoints de login.
+- **Seguridad:** verificación de cuenta obligatoria antes de login.
+- **Type safety:** corrección de errores TypeScript en `authStore`, `scripts/create-concierge.ts` y `admin/stats.ts`.
+
+### Cambiado
+
+- **Dependencias:** actualización de `package.json` para incluir tipos necesarios.
+- **Configuración:** actualización de `.cursorrules` para reflejar nuevos flujos agentic.
