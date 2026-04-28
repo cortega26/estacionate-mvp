@@ -1,3 +1,7 @@
+> Archived on 2026-04-28 during repository cleanup.
+> Historical reference only. This document is not a current source of truth.
+> Current authority: see README.md, documentation/AGENT_POLICY.md, documentation/OWNERSHIP.md, documentation/LEGAL_COMMERCIAL_GUARDRAILS.md, and documentation/ROADMAP_SAAS_INDUSTRY_GRADE.md as applicable.
+
 # Reporte De Preparación De Release - v1.0.0-rc.1
 
 **Commit:** `5909717`

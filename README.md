@@ -141,6 +141,8 @@ npm run check:local
 - `frontend/`: aplicación React y pruebas E2E (`/e2e`)
 - `backend/`: API Express, esquema Prisma y lógica de negocio
 - `documentation/`: documentación detallada de arquitectura y producto
+- `documentation/commercial/`: materiales comerciales activos de Fase 1
+- `documentation/archive/`: documentación histórica que no es fuente vigente
 - `documentation/CODEMAP.md`: mapa de archivos y flujos para agentes/contribuyentes
 - `documentation/OWNERSHIP.md`: guía de propiedad y límites de edición
 - `documentation/TASKS.md`: puntos de entrada por tarea y pistas de validación

@@ -37,15 +37,7 @@ export class MercadoPagoAdapter implements PaymentGateway {
             body: {
                 items: [
                     {
-                        id: 'item-id-placeholder', // Original used availableBlockId, but interface takes generic params. Service should pass logic.
-                        // Actually original: id: booking.availabilityBlockId
-                        // To be consistent, we might need to pass this ID or just use a generic one?
-                        // Let's check signature. Interface signature: createPreference(title, quantity, unitPrice, externalReference, notificationUrl, payerEmail)
-                        // It does NOT accept 'itemId'. 
-                        // I will pass 'Item' generic ID or modify interface?
-                        // The original logic used availabilityBlockId as ITEM ID. 
-                        // This might be important for MP reconciliation? Probably not, external_reference is key.
-                        // I will use 'SPOT-RENTAL' as generic ID if not passed.
+                        id: 'visitor-spot-reservation',
                         title,
                         quantity,
                         unit_price: unitPrice,

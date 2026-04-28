@@ -1,3 +1,7 @@
+> Archived on 2026-04-28 during repository cleanup.
+> Historical reference only. This document is not a current source of truth.
+> Current authority: see README.md, documentation/AGENT_POLICY.md, documentation/OWNERSHIP.md, documentation/LEGAL_COMMERCIAL_GUARDRAILS.md, and documentation/ROADMAP_SAAS_INDUSTRY_GRADE.md as applicable.
+
 # Estacionate MVP: Listo Para Staging
 
 **Fecha:** 2025-12-19
@@ -43,4 +47,4 @@ Este documento es histórico. Para uso comercial actual, prevalecen `documentati
 
 - [Roadmap productivo](production-roadmap-2025.md)
 - [Reporte de auditoría de funcionalidades](GAP_ANALYSIS_FEATURES.md)
-- [Características comerciales](CARACTERISTICAS_COMERCIALES.md)
+- [Características comerciales](../../commercial/CARACTERISTICAS_COMERCIALES.md)

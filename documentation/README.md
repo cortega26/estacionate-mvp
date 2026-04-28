@@ -17,6 +17,7 @@ Usa esta página como capa de navegación para la documentación del proyecto. P
 - `commercial/ADMINISTRADORA_OUTREACH.md`: guion outbound y discovery para conversaciones con administradoras.
 - `commercial/PILOT_PHASE_1_CHECKLIST.md`: checklist de piloto controlado sin pagos integrados.
 - `commercial/OBJECTIONS_FAQ.md`: respuestas a objeciones legales, operativas y comerciales comunes.
+- `commercial/`: materiales comerciales activos de Fase 1, incluyendo roadmap comercial, playbook, backlog de conversión y estructura de pitch.
 - `INFRASTRUCTURE.md`: notas de infraestructura local y producción.
 - `../RUNBOOK.md`: procedimientos operacionales y solución de problemas.
 
@@ -34,16 +35,15 @@ Usa esta página como capa de navegación para la documentación del proyecto. P
 
 ## Producto Y Planificación
 
-El directorio `commercial/` es la fuente comercial activa de Fase 1 para outreach y pilotos. Archivos más antiguos en `../docs/` y `project_context/` pueden contener supuestos históricos de marketplace/pagos y deben leerse a través de `LEGAL_COMMERCIAL_GUARDRAILS.md`.
+El directorio `commercial/` es la fuente comercial activa de Fase 1 para outreach, pilotos y preparación de conversión. Los documentos históricos que antes vivían en `../docs/` fueron movidos a `archive/2026-04-28-cleanup/` o reubicados en `commercial/` según su vigencia. El directorio `project_context/` conserva contexto original y puede contener supuestos históricos de marketplace/pagos; debe leerse a través de `LEGAL_COMMERCIAL_GUARDRAILS.md`.
 
-- `../docs/production-roadmap-2025.md`: roadmap.
-- `../docs/production-backlog.md`: backlog de producción.
-- `../docs/commercial-conversion-plan-2026.md`: plan operativo de producto, ventas y conversión para la etapa actual de crecimiento.
-- `../docs/commercial-roadmap-2026.md`: roadmap comercial y de producto 30-60-90.
-- `../docs/founder-sales-playbook-es.md`: playbook comercial en español para discovery, demos y conversaciones de piloto.
-- `../docs/conversion-backlog-2026.md`: backlog priorizado con foco en conversión.
-- `../docs/client-pitch-deck-outline-2026.md`: estructura de pitch deck para clientes.
-- `../docs/GAP_ANALYSIS_FEATURES.md`: análisis de brechas de funcionalidades.
+- `commercial/commercial-conversion-plan-2026.md`: plan operativo de producto, ventas y conversión para la etapa actual de crecimiento.
+- `commercial/commercial-roadmap-2026.md`: roadmap comercial y de producto 30-60-90.
+- `commercial/founder-sales-playbook-es.md`: playbook comercial en español para discovery, demos y conversaciones de piloto.
+- `commercial/conversion-backlog-2026.md`: backlog priorizado con foco en conversión.
+- `commercial/client-pitch-deck-outline-2026.md`: estructura de pitch deck para clientes.
+- `commercial/CARACTERISTICAS_COMERCIALES.md`: descripción de módulos SaaS B2B activos sin pagos integrados.
+- `archive/2026-04-28-cleanup/`: reportes, releases, roadmap 2025, backlog histórico y artefactos de ejecución archivados durante la limpieza.
 - `project_context/`: contexto original del proyecto y análisis MVP.
 
 ## Sistema De Auditoría

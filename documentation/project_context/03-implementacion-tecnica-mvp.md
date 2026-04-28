@@ -11,23 +11,27 @@
 ## 3.1 Supuestos Técnicos y Alcance
 
 ### Supuestos de Volumen Inicial
+
 - **Edificios piloto:** 2-3 edificios con 40-60 unidades cada uno
 - **Usuarios activos:** 50-100 residentes verificados en 3 meses
 - **Reservas/mes:** 100-300 transacciones (2-3% volumen target)
 - **Picos de tráfico:** 10x normal durante fines de semana y feriados
 
 ### SLOs (Service Level Objectives)
+
 - **Disponibilidad:** 99.5% (permitiendo 3.6h downtime/mes)
 - **Latencia API:** p95 < 500ms para endpoints críticos
 - **Tiempo de respuesta búsqueda:** < 2s para consultas de disponibilidad
 - **Pagos:** 99.9% de transacciones procesadas exitosamente
 
 ### Restricciones CLP Enteros
+
 - Todos los montos almacenados y mostrados en pesos chilenos sin decimales
 - Cálculos de comisiones redondeados hacia arriba (ceil) para evitar pérdidas
 - Conciliación simplificada al eliminar diferencias por centavos
 
 ### Zonas Horarias y Feriados Chile
+
 - **Timezone:** America/Santiago con manejo automático DST
 - **Ventanas horarias:** 11h (08:00-19:00) y 23h (06:00-05:00 día siguiente)
 - **Feriados:** Integración con API feriados Chile para bloqueos automáticos
@@ -37,6 +41,7 @@
 ### Semana 1: Descubrimiento y Validación
 
 **Entrevistas de Validación (5-10 administradoras)**
+
 ```
 Guión de Entrevista:
 1. ¿Cuántos espacios de visita tienen disponibles diariamente?
@@ -47,11 +52,13 @@ Guión de Entrevista:
 ```
 
 **Piloto de Edificios (1-2 seleccionados)**
+
 - [ ] Edificio A: >40 unidades, conserjería 24/7, administradora innovadora
 - [ ] Edificio B: >30 unidades, perfil socioeconómico medio-alto, déficit parking
 - [ ] Acordar prueba gratuita por 4 semanas con métricas específicas
 
 **KPIs Piloto Objetivo:**
+
 - Conversión búsqueda → reserva: 25%+
 - Cancelación: <10%
 - NPS residentes: 7.0+
@@ -61,21 +68,24 @@ Guión de Entrevista:
 ### Semana 2: Diseño UX Móvil-first (PWA)
 
 **Wireframes Esenciales**
+
 1. **Landing/Login:** Verificación residente con email edificio + RUT
-2. **Búsqueda:** Calendario con disponibilidad 11h/23h, precios dinámicos  
+2. **Búsqueda:** Calendario con disponibilidad 11h/23h, precios dinámicos
 3. **Checkout:** Resumen reserva, datos visitante, pago MercadoPago
 4. **Confirmación:** QR/código acceso, instrucciones llegada, contacto conserjería
 5. **Historial:** Reservas pasadas/futuras, reembolsos, soporte
 
 **Microcopy Chile-específico**
+
 - "Reservar cupo de estacionamiento" vs "parking slot"
-- "Medio día (11 horas)" / "Día completo (23 horas)"  
+- "Medio día (11 horas)" / "Día completo (23 horas)"
 - "Patente del vehículo" vs "placa"
 - "Conserje" vs "portero" o "vigilante"
 
 ### Semana 3: Implementación Backend + Infraestructura
 
 **Configuración Repositorios**
+
 ```bash
 # Frontend estático
 github.com/estaciónate/web-app
@@ -91,17 +101,20 @@ github.com/estaciónate/api
 ```
 
 **CI/CD Pipeline**
+
 - Tests automatizados (Jest + Supertest)
-- Linting (ESLint + Prettier)  
+- Linting (ESLint + Prettier)
 - Security scanning (Snyk + Dependabot)
 - Deployment staging + production
 
 **Dominios y SSL**
+
 - `app.estacionate.cl` (frontend)
 - `api.estacionate.cl` (backend)
 - Certificados SSL automáticos via Vercel
 
 **Analítica y Monitoreo**
+
 - Google Analytics 4 para frontend
 - Vercel Analytics para performance
 - Sentry para error tracking
@@ -110,24 +123,27 @@ github.com/estaciónate/api
 ### Semana 4: Integración Pagos y Testing
 
 **MercadoPago Sandbox Setup**
+
 ```javascript
 // Configuración inicial SDK
 import { MercadoPagoConfig, Payment, Preference } from 'mercadopago';
 
-const client = new MercadoPagoConfig({ 
+const client = new MercadoPagoConfig({
   accessToken: process.env.MP_ACCESS_TOKEN,
-  options: { timeout: 5000, integratorId: 'dev_24c65fb163bf11ea96500242ac130004' }
+  options: { timeout: 5000, integratorId: 'dev_24c65fb163bf11ea96500242ac130004' },
 });
 ```
 
 **Flujo de Checkout Completo**
+
 1. Crear preferencia con items, payer info, external_reference
-2. Redirect a Checkout Pro con success/failure URLs  
+2. Redirect a Checkout Pro con success/failure URLs
 3. Webhook validation con firma HMAC-SHA256
 4. Actualización estado reserva + notificación usuario
 5. Conciliación diaria automated
 
 **Testing Integral**
+
 - Unit tests: 80%+ cobertura funciones críticas
 - Integration tests: flujo completo reserva + pago
 - E2E tests: Playwright con escenarios principales
@@ -136,7 +152,9 @@ const client = new MercadoPagoConfig({
 ## 3.3 Arquitectura Técnica
 
 ### Frontend: React SPA + PWA
+
 **Stack Técnico:**
+
 - **React 18** con hooks para estado local
 - **Vite** para bundling optimizado y fast refresh
 - **TailwindCSS** para styling responsive
@@ -144,6 +162,7 @@ const client = new MercadoPagoConfig({
 - **React Router** para navegación SPA
 
 **PWA Características:**
+
 ```json
 // manifest.json
 {
@@ -160,23 +179,26 @@ const client = new MercadoPagoConfig({
 ```
 
 **Estado Ligero (Zustand)**
+
 ```javascript
 const useAppStore = create((set, get) => ({
   user: null,
   building: null,
   currentReservation: null,
   setUser: (user) => set({ user }),
-  clearSession: () => set({ user: null, building: null })
+  clearSession: () => set({ user: null, building: null }),
 }));
 ```
 
 ### Backend: Vercel Functions + TypeScript
+
 **Estructura Proyecto:**
+
 ```
 /api
 ├── auth/
 │   ├── login.ts
-│   ├── signup.ts  
+│   ├── signup.ts
 │   └── verify-resident.ts
 ├── spots/
 │   ├── search.ts
@@ -195,6 +217,7 @@ const useAppStore = create((set, get) => ({
 ```
 
 **Control de Concurrencia**
+
 ```javascript
 // Prevenir doble-reserva con locks optimistas
 export async function reserveSpot(spotId: string, bookingData: BookingCreate) {
@@ -204,19 +227,21 @@ export async function reserveSpot(spotId: string, bookingData: BookingCreate) {
       .where(eq(availabilityBlocks.id, spotId))
       .where(eq(availabilityBlocks.status, 'available'))
       .for('update');
-    
+
     if (!spot.length) throw new Error('SPOT_UNAVAILABLE');
-    
+
     // Crear reserva atómica
     return tx.insert(bookings).values(bookingData).returning();
   });
-  
+
   return result[0];
 }
 ```
 
 ### Base de Datos: PostgreSQL (Neon)
+
 **Configuración Connection Pool**
+
 ```javascript
 import { drizzle } from 'drizzle-orm/neon-http';
 import { neon, neonConfig } from '@neondatabase/serverless';
@@ -227,24 +252,28 @@ export const db = drizzle(sql);
 ```
 
 **Migraciones Automatizadas**
+
 - Drizzle ORM con schema TypeScript
 - GitHub Actions ejecuta migraciones en deploy
 - Rollback automático si migración falla
 
 ### Autenticación: JWT + Verificación Residentes
+
 **Flujo de Verificación:**
+
 1. Usuario ingresa email edificio (ej: `juan.perez@edificio-sanmartin.cl`)
 2. Validación formato email + dominio vs. whitelist edificios
 3. Código verificación SMS/email + validación RUT chileno
 4. Admin edificio confirma residencia manualmente (primera vez)
 5. JWT issued con claims: `userId`, `buildingId`, `unitNumber`, `role`
+
 ```javascript
 // Middleware autenticación
 export function withAuth(handler: ApiHandler): ApiHandler {
   return async (req, res) => {
     const token = req.headers.authorization?.replace('Bearer ', '');
     if (!token) return res.status(401).json({ error: 'UNAUTHORIZED' });
-    
+
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JWTPayload;
       req.user = await getUserById(decoded.userId);
@@ -257,11 +286,13 @@ export function withAuth(handler: ApiHandler): ApiHandler {
 ```
 
 ### Pagos: MercadoPago + Fintoc Dual Setup
+
 **MercadoPago Preferences:**
+
 ```javascript
 export async function createPaymentPreference(booking: Booking) {
   const preference = new Preference(mpClient);
-  
+
   return await preference.create({
     body: {
       items: [{
@@ -292,6 +323,7 @@ export async function createPaymentPreference(booking: Booking) {
 ```
 
 **Webhook Validation:**
+
 ```javascript
 export default withRateLimit(async (req: NextApiRequest, res: NextApiResponse) => {
   // Validar firma HMAC
@@ -300,35 +332,34 @@ export default withRateLimit(async (req: NextApiRequest, res: NextApiResponse) =
     .createHmac('sha256', process.env.MP_WEBHOOK_SECRET!)
     .update(JSON.stringify(req.body))
     .digest('hex');
-  
+
   if (signature !== expectedSignature) {
     return res.status(401).json({ error: 'INVALID_SIGNATURE' });
   }
-  
+
   const { action, data } = req.body;
-  
+
   if (action === 'payment.updated') {
     await handlePaymentUpdate(data.id);
   }
-  
+
   res.status(200).json({ received: true });
 });
 ```
 
 ### Observabilidad y Monitoreo
+
 **Logs Estructurados:**
+
 ```javascript
 import winston from 'winston';
 
 const logger = winston.createLogger({
-  format: winston.format.combine(
-    winston.format.timestamp(),
-    winston.format.json()
-  ),
+  format: winston.format.combine(winston.format.timestamp(), winston.format.json()),
   transports: [
     new winston.transports.Console(),
-    new winston.transports.File({ filename: 'app.log' })
-  ]
+    new winston.transports.File({ filename: 'app.log' }),
+  ],
 });
 
 // Usage en endpoints
@@ -336,25 +367,29 @@ logger.info('Booking created', {
   bookingId: booking.id,
   buildingId: booking.buildingId,
   amount: booking.amount,
-  duration: booking.duration
+  duration: booking.duration,
 });
 ```
 
 **Métricas de Negocio:**
+
 - `bookings_created_total` (counter)
-- `payment_success_rate` (gauge) 
+- `payment_success_rate` (gauge)
 - `spot_occupancy_rate` (gauge)
 - `api_request_duration_seconds` (histogram)
 - `websocket_connections_active` (gauge)
 
 **Alertas Críticas:**
+
 - Error rate > 5% por 5 minutos
-- Response time p95 > 1s por 10 minutos  
+- Response time p95 > 1s por 10 minutos
 - Payment webhook failures > 3 en 1 hora
 - Database connection pool exhaustion
 
 ### Seguridad
+
 **Rate Limiting:**
+
 ```javascript
 import { Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis';
@@ -368,17 +403,18 @@ export function withRateLimit(handler: ApiHandler) {
   return async (req: NextApiRequest, res: NextApiResponse) => {
     const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     const { success } = await ratelimit.limit(ip as string);
-    
+
     if (!success) {
       return res.status(429).json({ error: 'RATE_LIMIT_EXCEEDED' });
     }
-    
+
     return handler(req, res);
   };
 }
 ```
 
 **Security Headers:**
+
 ```javascript
 // next.config.js
 const securityHeaders = [
@@ -387,11 +423,12 @@ const securityHeaders = [
   { key: 'X-Content-Type-Options', value: 'nosniff' },
   { key: 'X-Frame-Options', value: 'DENY' },
   { key: 'X-XSS-Protection', value: '1; mode=block' },
-  { key: 'Referrer-Policy', value: 'origin-when-cross-origin' }
+  { key: 'Referrer-Policy', value: 'origin-when-cross-origin' },
 ];
 ```
 
 **Gestión de Secretos:**
+
 ```bash
 # Vercel Environment Variables
 DATABASE_URL=postgresql://...
@@ -402,6 +439,7 @@ SENTRY_DSN=...
 ```
 
 ### Diagrama de Arquitectura (ASCII)
+
 ```
                     ┌─────────────────┐
                     │   React PWA     │
@@ -438,6 +476,7 @@ SENTRY_DSN=...
 ## 3.4 Modelo de Datos + SQL
 
 ### Tablas Core con Relaciones
+
 ```sql
 -- Edificios y administradoras
 CREATE TABLE buildings (
@@ -576,6 +615,7 @@ CREATE TABLE audit_logs (
 ```
 
 ### Diagrama ER (ASCII)
+
 ```
 ┌─────────────┐    1:N    ┌─────────────┐    1:N    ┌─────────────┐
 │  buildings  │◄──────────│    units    │◄──────────│  residents  │
@@ -611,9 +651,10 @@ CREATE TABLE audit_logs (
 ### Consultas SQL Críticas
 
 **1. Búsqueda de Disponibilidad**
+
 ```sql
 -- Encontrar espacios disponibles para fecha/duración específica
-SELECT 
+SELECT
   vs.id as spot_id,
   vs.spot_number,
   ab.id as availability_id,
@@ -633,15 +674,16 @@ ORDER BY ab.base_price_clp ASC, ab.start_datetime ASC;
 ```
 
 **2. Ocupación por Edificio**
+
 ```sql
 -- Calcular ocupación promedio últimos 30 días
 WITH occupancy_stats AS (
-  SELECT 
+  SELECT
     b.id,
     b.name,
     COUNT(DISTINCT vs.id) as total_spots,
-    COUNT(CASE WHEN ab.status = 'reserved' 
-          AND ab.start_datetime >= NOW() - INTERVAL '30 days' 
+    COUNT(CASE WHEN ab.status = 'reserved'
+          AND ab.start_datetime >= NOW() - INTERVAL '30 days'
           THEN 1 END) as reserved_blocks,
     COUNT(CASE WHEN ab.status = 'available'
           AND ab.start_datetime >= NOW() - INTERVAL '30 days'
@@ -652,11 +694,11 @@ WITH occupancy_stats AS (
   WHERE b.is_active = true
   GROUP BY b.id, b.name
 )
-SELECT 
+SELECT
   name as building,
   total_spots,
   ROUND(
-    (reserved_blocks::decimal / NULLIF(reserved_blocks + available_blocks, 0)) * 100, 
+    (reserved_blocks::decimal / NULLIF(reserved_blocks + available_blocks, 0)) * 100,
     2
   ) as occupancy_percentage
 FROM occupancy_stats
@@ -664,9 +706,10 @@ ORDER BY occupancy_percentage DESC;
 ```
 
 **3. Conciliación Pagos Básica**
+
 ```sql
 -- Verificar consistencia pagos vs reservas último mes
-SELECT 
+SELECT
   DATE(b.created_at) as date,
   COUNT(*) as total_bookings,
   COUNT(CASE WHEN b.payment_status = 'paid' THEN 1 END) as paid_bookings,
@@ -686,6 +729,7 @@ ORDER BY date DESC;
 ### Autenticación
 
 **POST /api/auth/signup**
+
 ```json
 // Request
 {
@@ -715,6 +759,7 @@ ORDER BY date DESC;
 ```
 
 **POST /api/auth/login**
+
 ```json
 // Request
 {
@@ -749,6 +794,7 @@ ORDER BY date DESC;
 ### Disponibilidad
 
 **GET /api/spots/search?buildingId=uuid&date=2024-10-15&duration=11h**
+
 ```json
 // Response 200
 {
@@ -765,7 +811,7 @@ ORDER BY date DESC;
         "duration": "11h"
       },
       {
-        "spotId": "spot-uuid-2", 
+        "spotId": "spot-uuid-2",
         "spotNumber": "V-02",
         "availabilityId": "avail-uuid-2",
         "startTime": "2024-10-15T08:00:00-03:00",
@@ -785,6 +831,7 @@ ORDER BY date DESC;
 ```
 
 **GET /api/spots/{spotId}/availability?startDate=2024-10-15&endDate=2024-10-30**
+
 ```json
 // Response 200
 {
@@ -803,7 +850,7 @@ ORDER BY date DESC;
             "availabilityId": "avail-uuid-1",
             "duration": "11h",
             "startTime": "08:00",
-            "endTime": "19:00", 
+            "endTime": "19:00",
             "priceClp": 4500,
             "status": "available"
           },
@@ -828,6 +875,7 @@ ORDER BY date DESC;
 ### Reservas
 
 **POST /api/bookings/create** (Idempotente con `idempotencyKey`)
+
 ```json
 // Request
 {
@@ -870,6 +918,7 @@ ORDER BY date DESC;
 ```
 
 **PUT /api/bookings/{bookingId}/cancel**
+
 ```json
 // Request
 {
@@ -897,6 +946,7 @@ ORDER BY date DESC;
 ### Pagos
 
 **POST /api/payments/checkout**
+
 ```json
 // Request
 {
@@ -917,6 +967,7 @@ ORDER BY date DESC;
 ```
 
 **POST /api/payments/webhook** (MercadoPago)
+
 ```json
 // Request (Webhook de MercadoPago)
 {
@@ -939,6 +990,7 @@ ORDER BY date DESC;
 ```
 
 **POST /api/payments/refund**
+
 ```json
 // Request
 {
@@ -967,6 +1019,7 @@ ORDER BY date DESC;
 ### Admin Edificio
 
 **GET /api/admin/spots?buildingId=uuid**
+
 ```json
 // Response 200
 {
@@ -995,10 +1048,11 @@ ORDER BY date DESC;
 ```
 
 **PUT /api/admin/pricing**
+
 ```json
 // Request
 {
-  "buildingId": "building-uuid", 
+  "buildingId": "building-uuid",
   "priceAdjustments": [
     {
       "durationType": "11h",
@@ -1006,7 +1060,7 @@ ORDER BY date DESC;
       "weekendMultiplier": 1.2
     },
     {
-      "durationType": "23h", 
+      "durationType": "23h",
       "basePriceClp": 7000,
       "weekendMultiplier": 1.3
     }
@@ -1030,6 +1084,7 @@ ORDER BY date DESC;
 ```
 
 **GET /api/admin/reports?buildingId=uuid&period=month&year=2024&month=10**
+
 ```json
 // Response 200
 {
@@ -1062,6 +1117,7 @@ ORDER BY date DESC;
 ## 3.6 Flujo Básico de Usuario
 
 ### Secuencia Completa: Registro → Reserva → Pago → Uso
+
 ```
 Residente                PWA              API              MercadoPago    Conserjería
     │                    │                │                    │             │
@@ -1124,6 +1180,7 @@ Residente                PWA              API              MercadoPago    Conser
 ### Pantallas Clave y Microcopy
 
 **1. Landing + Registro**
+
 - **Título:** "Reserva tu espacio de estacionamiento para visitas"
 - **Subtítulo:** "Solo para residentes verificados de tu edificio"
 - **CTA:** "Crear cuenta con email del edificio"
@@ -1131,18 +1188,21 @@ Residente                PWA              API              MercadoPago    Conser
 - **Footer:** "Al registrarte aceptas términos y condiciones"
 
 **2. Verificación**
+
 - **Título:** "Confirma tu código de verificación"
 - **Instrucción:** "Enviamos un código SMS al +56987654321"
 - **Input:** Código 6 dígitos con auto-focus
 - **Enlaces:** "Reenviar código (en 60s)" | "Cambiar número"
 
 **3. Búsqueda de Espacios**
+
 - **Header:** "Torres del Parque - Depto 1205"
 - **Filtros:** Calendario fecha | Duración (11h/23h) | "Buscar"
 - **Resultados:** Cards con "V-01 | $4.500 | 08:00-19:00 | Reservar"
 - **Empty state:** "No hay espacios disponibles para esta fecha. Prueba otro día."
 
 **4. Checkout**
+
 - **Título:** "Confirma tu reserva"
 - **Resumen:** Espacio V-01 | 15 Oct 08:00-19:00 | $4.500
 - **Formulario:** Nombre visitante, teléfono, patente vehículo
@@ -1150,12 +1210,14 @@ Residente                PWA              API              MercadoPago    Conser
 - **CTA:** "Pagar con MercadoPago"
 
 **5. Confirmación**
+
 - **Success:** "¡Reserva confirmada! ✅"
 - **Código:** "EST-4529" (grande, copiable)
 - **Detalles:** Fecha, hora, espacio, instrucciones llegada
 - **Acciones:** "Agregar al calendario" | "Ver instrucciones" | "Contactar conserjería"
 
 **6. Historial**
+
 - **Tabs:** "Próximas" | "Pasadas" | "Canceladas"
 - **Cards:** Fecha | Espacio | Estado | Botón acción
 - **Estados:** "Confirmada" (verde) | "Pendiente pago" (amarillo) | "Cancelada" (gris)
@@ -1163,21 +1225,25 @@ Residente                PWA              API              MercadoPago    Conser
 ### Toasts y Mensajes de Error
 
 **Éxito:**
+
 - "Reserva creada exitosamente 🎉"
 - "Pago confirmado. Código EST-4529 enviado por SMS"
 - "Cancelación procesada. Reembolso en 3-5 días"
 
 **Errores técnicos:**
+
 - "Error al procesar el pago. Intenta nuevamente"
 - "Espacio no disponible. Actualiza la página"
 - "Problema de conexión. Verifica tu internet"
 
 **Errores de validación:**
+
 - "Ingresa una patente válida (ej: ABCD-12)"
 - "El RUT ingresado no es válido"
 - "Email debe ser del dominio @torres-del-parque.cl"
 
 **Información:**
+
 - "El pago expira en 15 minutos"
 - "Código de acceso válido desde las 07:45"
 - "Recuerda llegar puntual para evitar multas"
@@ -1187,15 +1253,16 @@ Residente                PWA              API              MercadoPago    Conser
 ### MercadoPago: Flujo Completo
 
 **Configuración SDK**
+
 ```javascript
 import { MercadoPagoConfig, Preference, Payment } from 'mercadopago';
 
 const client = new MercadoPagoConfig({
   accessToken: process.env.MP_ACCESS_TOKEN,
-  options: { 
+  options: {
     timeout: 5000,
-    integratorId: 'dev_24c65fb163bf11ea96500242ac130004' 
-  }
+    integratorId: 'dev_24c65fb163bf11ea96500242ac130004',
+  },
 });
 
 const preference = new Preference(client);
@@ -1203,6 +1270,7 @@ const payment = new Payment(client);
 ```
 
 **Crear Preferencia de Pago**
+
 ```javascript
 export async function createBookingPreference(booking: BookingWithDetails) {
   const preferenceData = {
@@ -1233,7 +1301,7 @@ export async function createBookingPreference(booking: BookingWithDetails) {
     },
     back_urls: {
       success: `${process.env.WEB_URL}/booking/${booking.id}/success`,
-      failure: `${process.env.WEB_URL}/booking/${booking.id}/failure`, 
+      failure: `${process.env.WEB_URL}/booking/${booking.id}/failure`,
       pending: `${process.env.WEB_URL}/booking/${booking.id}/pending`
     },
     auto_return: 'approved',
@@ -1250,9 +1318,9 @@ export async function createBookingPreference(booking: BookingWithDetails) {
       installments: 1 // Solo pago al contado
     }
   };
-  
+
   const response = await preference.create({ body: preferenceData });
-  
+
   // Guardar preferencia en DB para tracking
   await db.insert(mpPreferences).values({
     id: response.id,
@@ -1261,12 +1329,13 @@ export async function createBookingPreference(booking: BookingWithDetails) {
     sandboxInitPoint: response.sandbox_init_point,
     expiresAt: new Date(Date.now() + 15 * 60 * 1000)
   });
-  
+
   return response;
 }
 ```
 
 **Webhook Handler con Validación Firma**
+
 ```javascript
 import crypto from 'crypto';
 
@@ -1274,31 +1343,31 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'METHOD_NOT_ALLOWED' });
   }
-  
+
   // Validar firma HMAC-SHA256
   const signature = req.headers['x-signature'] as string;
   const requestId = req.headers['x-request-id'] as string;
-  
+
   if (!signature || !requestId) {
     return res.status(400).json({ error: 'MISSING_HEADERS' });
   }
-  
+
   const [tsSignature, v1Signature] = signature.split(',').map(s => s.split('=')[1]);
-  
+
   const manifest = `id:${req.body.data.id};request-id:${requestId};ts:${tsSignature};`;
   const expectedSignature = crypto
     .createHmac('sha256', process.env.MP_WEBHOOK_SECRET!)
     .update(manifest)
     .digest('hex');
-  
+
   if (expectedSignature !== v1Signature) {
     console.error('Invalid webhook signature', { expectedSignature, v1Signature });
     return res.status(401).json({ error: 'INVALID_SIGNATURE' });
   }
-  
+
   try {
     const { action, data, date_created, id } = req.body;
-    
+
     // Log webhook recibido
     console.info('MercadoPago webhook received', {
       action,
@@ -1306,11 +1375,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       webhookId: id,
       dateCreated: date_created
     });
-    
+
     if (action === 'payment.created' || action === 'payment.updated') {
       await processPaymentWebhook(data.id);
     }
-    
+
     res.status(200).json({ received: true });
   } catch (error) {
     console.error('Webhook processing error:', error);
@@ -1322,11 +1391,11 @@ async function processPaymentWebhook(paymentId: string) {
   // Obtener detalles del pago desde MercadoPago
   const paymentDetails = await payment.get({ id: paymentId });
   const { status, external_reference, transaction_amount } = paymentDetails;
-  
+
   if (!external_reference) {
     throw new Error(`Payment ${paymentId} missing external_reference`);
   }
-  
+
   // Actualizar booking y payment en transacción
   await db.transaction(async (tx) => {
     // Buscar booking
@@ -1334,14 +1403,14 @@ async function processPaymentWebhook(paymentId: string) {
       .from(bookings)
       .where(eq(bookings.id, external_reference))
       .limit(1);
-    
+
     if (!booking.length) {
       throw new Error(`Booking ${external_reference} not found`);
     }
-    
+
     // Mapear estado MercadoPago → interno
     const mappedStatus = mapMercadoPagoStatus(status);
-    
+
     // Actualizar payment record
     await tx.insert(payments).values({
       bookingId: external_reference,
@@ -1359,17 +1428,17 @@ async function processPaymentWebhook(paymentId: string) {
         processedAt: new Date()
       }
     });
-    
+
     // Actualizar booking status
     if (mappedStatus === 'approved') {
       await tx.update(bookings)
-        .set({ 
+        .set({
           paymentStatus: 'paid',
           status: 'confirmed',
           updatedAt: new Date()
         })
         .where(eq(bookings.id, external_reference));
-      
+
       // Generar código acceso y enviar SMS
       await generateAccessCodeAndNotify(external_reference);
     }
@@ -1379,7 +1448,7 @@ async function processPaymentWebhook(paymentId: string) {
 function mapMercadoPagoStatus(mpStatus: string): PaymentStatus {
   const statusMap: Record<string, PaymentStatus> = {
     'approved': 'approved',
-    'pending': 'pending', 
+    'pending': 'pending',
     'authorized': 'pending',
     'in_process': 'pending',
     'in_mediation': 'pending',
@@ -1388,7 +1457,7 @@ function mapMercadoPagoStatus(mpStatus: string): PaymentStatus {
     'refunded': 'refunded',
     'charged_back': 'rejected'
   };
-  
+
   return statusMap[mpStatus] || 'pending';
 }
 ```
@@ -1396,6 +1465,7 @@ function mapMercadoPagoStatus(mpStatus: string): PaymentStatus {
 ### Conciliación Diaria Automatizada
 
 **Cron Job - Vercel Cron Functions**
+
 ```javascript
 // api/cron/daily-reconciliation.ts
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -1403,17 +1473,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.headers.authorization !== `Bearer ${process.env.CRON_SECRET}`) {
     return res.status(401).json({ error: 'UNAUTHORIZED' });
   }
-  
+
   try {
     const reconciliationDate = new Date();
     reconciliationDate.setDate(reconciliationDate.getDate() - 1); // Ayer
-    
+
     const result = await performDailyReconciliation(reconciliationDate);
-    
-    res.status(200).json({ 
-      success: true, 
+
+    res.status(200).json({
+      success: true,
       date: reconciliationDate.toISOString().split('T')[0],
-      ...result 
+      ...result
     });
   } catch (error) {
     console.error('Reconciliation failed:', error);
@@ -1424,10 +1494,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 async function performDailyReconciliation(date: Date) {
   const startOfDay = new Date(date);
   startOfDay.setHours(0, 0, 0, 0);
-  
+
   const endOfDay = new Date(date);
   endOfDay.setHours(23, 59, 59, 999);
-  
+
   // 1. Obtener todos los bookings del día
   const bookings = await db.select({
     id: bookings.id,
@@ -1445,10 +1515,10 @@ async function performDailyReconciliation(date: Date) {
       lte(bookings.createdAt, endOfDay)
     )
   );
-  
+
   // 2. Verificar discrepancias
   const discrepancies = [];
-  
+
   for (const booking of bookings) {
     // Discrepancia de monto
     if (booking.gatewayAmount && booking.gatewayAmount !== booking.amountClp) {
@@ -1460,7 +1530,7 @@ async function performDailyReconciliation(date: Date) {
         difference: booking.amountClp - booking.gatewayAmount
       });
     }
-    
+
     // Status inconsistente
     if (booking.paymentStatus === 'paid' && booking.gatewayStatus !== 'approved') {
       discrepancies.push({
@@ -1470,7 +1540,7 @@ async function performDailyReconciliation(date: Date) {
         gatewayStatus: booking.gatewayStatus
       });
     }
-    
+
     // Pagos faltantes
     if (booking.paymentStatus === 'paid' && !booking.externalPaymentId) {
       discrepancies.push({
@@ -1480,10 +1550,10 @@ async function performDailyReconciliation(date: Date) {
       });
     }
   }
-  
+
   // 3. Obtener settlements de MercadoPago para validation extra
   const settlements = await getSettlements(startOfDay, endOfDay);
-  
+
   // 4. Generar reporte
   const report = {
     date: date.toISOString().split('T')[0],
@@ -1493,7 +1563,7 @@ async function performDailyReconciliation(date: Date) {
     discrepancies: discrepancies.length,
     details: discrepancies
   };
-  
+
   // 5. Guardar reporte en DB
   await db.insert(reconciliationReports).values({
     date: startOfDay,
@@ -1503,12 +1573,12 @@ async function performDailyReconciliation(date: Date) {
     reportData: report,
     status: discrepancies.length > 0 ? 'has_issues' : 'clean'
   });
-  
+
   // 6. Alertar si hay discrepancias críticas
   if (discrepancies.length > 0) {
     await sendReconciliationAlert(report);
   }
-  
+
   return report;
 }
 
@@ -1520,7 +1590,7 @@ async function getSettlements(startDate: Date, endDate: Date) {
     end_date: endDate.toISOString(),
     limit: 1000
   };
-  
+
   // Implementación específica depende de MercadoPago Settlements API
   return [];
 }
@@ -1529,14 +1599,15 @@ async function getSettlements(startDate: Date, endDate: Date) {
 ### Políticas de Reembolso y Cancelación
 
 **Reglas de Negocio CLP Enteros**
+
 ```javascript
 export function calculateRefundAmount(booking: BookingWithPayment, cancellationTime: Date): RefundCalculation {
   const bookingStart = new Date(booking.startTime);
   const hoursUntilStart = (bookingStart.getTime() - cancellationTime.getTime()) / (1000 * 60 * 60);
-  
+
   let refundRate: number;
   let cancellationFee: number;
-  
+
   // Política escalonada
   if (hoursUntilStart >= 24) {
     refundRate = 1.0; // 100%
@@ -1551,9 +1622,9 @@ export function calculateRefundAmount(booking: BookingWithPayment, cancellationT
     refundRate = 0; // No refund
     cancellationFee = booking.amountClp;
   }
-  
+
   const refundAmount = Math.max(0, Math.floor(booking.amountClp * refundRate));
-  
+
   return {
     originalAmount: booking.amountClp,
     refundAmount,
@@ -1566,17 +1637,17 @@ export function calculateRefundAmount(booking: BookingWithPayment, cancellationT
 export async function processRefund(bookingId: string, reason: string) {
   return await db.transaction(async (tx) => {
     const booking = await getBookingWithPayment(bookingId);
-    
+
     if (!booking || booking.paymentStatus !== 'paid') {
       throw new Error('BOOKING_NOT_ELIGIBLE_FOR_REFUND');
     }
-    
+
     const refundCalc = calculateRefundAmount(booking, new Date());
-    
+
     if (refundCalc.refundAmount === 0) {
       throw new Error('NO_REFUND_AVAILABLE');
     }
-    
+
     // Crear refund en MercadoPago
     const mpRefund = await payment.refund({
       id: booking.externalPaymentId,
@@ -1584,14 +1655,14 @@ export async function processRefund(bookingId: string, reason: string) {
         amount: refundCalc.refundAmount
       }
     });
-    
+
     // Actualizar booking
     await tx.update(bookings).set({
       status: 'cancelled',
       paymentStatus: 'refunded',
       updatedAt: new Date()
     }).where(eq(bookings.id, bookingId));
-    
+
     // Registrar refund
     await tx.insert(refunds).values({
       bookingId,
@@ -1603,13 +1674,13 @@ export async function processRefund(bookingId: string, reason: string) {
       status: 'processing',
       processedAt: new Date()
     });
-    
+
     // Liberar availability block
     await tx.update(availabilityBlocks).set({
       status: 'available',
       updatedAt: new Date()
     }).where(eq(availabilityBlocks.id, booking.availabilityBlockId));
-    
+
     return { refundAmount: refundCalc.refundAmount, mpRefundId: mpRefund.id };
   });
 }
@@ -1620,6 +1691,7 @@ export async function processRefund(bookingId: string, reason: string) {
 ### Monitoreo y Observabilidad
 
 **Logs Estructurados**
+
 ```javascript
 import winston from 'winston';
 
@@ -1654,7 +1726,7 @@ export const businessLogger = {
       startTime: booking.startTime
     });
   },
-  
+
   paymentProcessed: (payment: Payment) => {
     logger.info('Payment processed', {
       event: 'payment.processed',
@@ -1666,7 +1738,7 @@ export const businessLogger = {
       processingTime: payment.processedAt - payment.createdAt
     });
   },
-  
+
   apiError: (endpoint: string, error: Error, context: Record<string, any>) => {
     logger.error('API error', {
       event: 'api.error',
@@ -1680,6 +1752,7 @@ export const businessLogger = {
 ```
 
 **Métricas con Prometheus/Grafana-compatible**
+
 ```javascript
 import client from 'prom-client';
 
@@ -1697,12 +1770,12 @@ const paymentSuccessRate = new client.Gauge({
 });
 
 const spotOccupancyRate = new client.Gauge({
-  name: 'spot_occupancy_rate', 
+  name: 'spot_occupancy_rate',
   help: 'Spot occupancy rate by building (0-1)',
   labelNames: ['building_id']
 });
 
-// Technical metrics  
+// Technical metrics
 const apiDuration = new client.Histogram({
   name: 'api_request_duration_seconds',
   help: 'Duration of API requests in seconds',
@@ -1719,13 +1792,13 @@ const dbConnectionsActive = new client.Gauge({
 export function withMetrics(handler: ApiHandler): ApiHandler {
   return async (req: NextApiRequest, res: NextApiResponse) => {
     const startTime = Date.now();
-    
+
     try {
       await handler(req, res);
     } finally {
       const duration = (Date.now() - startTime) / 1000;
       const endpoint = req.url?.split('?')[0] || 'unknown';
-      
+
       apiDuration
         .labels(req.method || 'unknown', endpoint, res.statusCode.toString())
         .observe(duration);
@@ -1738,10 +1811,10 @@ export default async function metricsHandler(req: NextApiRequest, res: NextApiRe
   if (req.method !== 'GET') {
     return res.status(405).end();
   }
-  
+
   // Actualizar métricas de negocio en tiempo real
   await updateBusinessMetrics();
-  
+
   res.setHeader('Content-Type', client.register.contentType);
   res.status(200).send(await client.register.metrics());
 }
@@ -1755,12 +1828,12 @@ async function updateBusinessMetrics() {
   }).from(payments)
   .where(gte(payments.createdAt, new Date(Date.now() - 24 * 60 * 60 * 1000)))
   .groupBy(payments.paymentMethod);
-  
+
   for (const stat of paymentStats) {
     const successRate = stat.total > 0 ? stat.successful / stat.total : 0;
     paymentSuccessRate.labels(stat.method).set(successRate);
   }
-  
+
   // Occupancy rate por building
   const occupancyStats = await db.select({
     buildingId: buildings.id,
@@ -1776,7 +1849,7 @@ async function updateBusinessMetrics() {
     )
   )
   .groupBy(buildings.id);
-  
+
   for (const stat of occupancyStats) {
     const occupancyRate = stat.total > 0 ? stat.occupied / stat.total : 0;
     spotOccupancyRate.labels(stat.buildingId).set(occupancyRate);
@@ -1785,6 +1858,7 @@ async function updateBusinessMetrics() {
 ```
 
 **Alertas Críticas (usando servicio como Better Uptime o PagerDuty)**
+
 ```javascript
 // lib/alerting.ts
 import fetch from 'node-fetch';
@@ -1802,7 +1876,7 @@ export async function sendAlert(alert: Alert) {
     console.log('ALERT:', alert);
     return;
   }
-  
+
   // Webhook a servicio de alerting (ej: PagerDuty, Slack)
   await fetch(process.env.ALERTS_WEBHOOK_URL!, {
     method: 'POST',
@@ -1827,7 +1901,7 @@ export async function sendAlert(alert: Alert) {
 // Usage en error handlers
 export async function handleCriticalError(error: Error, context: Record<string, any>) {
   businessLogger.apiError('critical-path', error, context);
-  
+
   if (error.message.includes('payment') || error.message.includes('booking')) {
     await sendAlert({
       level: 'critical',
@@ -1843,6 +1917,7 @@ export async function handleCriticalError(error: Error, context: Record<string, 
 ### Testing Strategy
 
 **Unit Tests (Jest + Supertest)**
+
 ```javascript
 // tests/api/bookings.test.ts
 import { createBooking } from '../../api/bookings/create';
@@ -1851,85 +1926,96 @@ import { setupTestDb, cleanupTestDb, createTestUser, createTestBuilding } from '
 describe('/api/bookings/create', () => {
   beforeAll(setupTestDb);
   afterAll(cleanupTestDb);
-  
+
   it('should create booking with valid input', async () => {
     const user = await createTestUser();
     const building = await createTestBuilding();
     const spot = await createTestSpot(building.id);
     const availability = await createTestAvailability(spot.id);
-    
+
     const bookingData = {
       availabilityBlockId: availability.id,
       visitorName: 'Juan Pérez',
       visitorPhone: '+56987654321',
       vehiclePlate: 'ABCD-12',
-      specialInstructions: 'Vehículo azul'
+      specialInstructions: 'Vehículo azul',
     };
-    
+
     const response = await request(app)
       .post('/api/bookings/create')
       .set('Authorization', `Bearer ${user.jwt}`)
       .send(bookingData)
       .expect(201);
-    
+
     expect(response.body.data.confirmationCode).toMatch(/^EST-\d{4}$/);
     expect(response.body.data.status).toBe('pending_payment');
-    
+
     // Verify availability block is marked as reserved
     const updatedBlock = await getAvailabilityBlock(availability.id);
     expect(updatedBlock.status).toBe('reserved');
   });
-  
+
   it('should prevent double booking with race condition', async () => {
     const availability = await createTestAvailability();
     const user1 = await createTestUser({ email: 'user1@building.cl' });
     const user2 = await createTestUser({ email: 'user2@building.cl' });
-    
+
     const bookingData = {
       availabilityBlockId: availability.id,
       visitorName: 'Concurrent User',
       visitorPhone: '+56987654321',
-      vehiclePlate: 'TEST-01'
+      vehiclePlate: 'TEST-01',
     };
-    
+
     // Simulate concurrent requests
     const [response1, response2] = await Promise.allSettled([
-      request(app).post('/api/bookings/create').set('Authorization', `Bearer ${user1.jwt}`).send(bookingData),
-      request(app).post('/api/bookings/create').set('Authorization', `Bearer ${user2.jwt}`).send(bookingData)
+      request(app)
+        .post('/api/bookings/create')
+        .set('Authorization', `Bearer ${user1.jwt}`)
+        .send(bookingData),
+      request(app)
+        .post('/api/bookings/create')
+        .set('Authorization', `Bearer ${user2.jwt}`)
+        .send(bookingData),
     ]);
-    
+
     expect(response1.status).toBe('fulfilled');
     expect(response2.status).toBe('fulfilled');
-    
+
     // One should succeed, one should fail
-    const results = [response1, response2].map(r => r.status === 'fulfilled' ? r.value.status : 500);
+    const results = [response1, response2].map((r) =>
+      r.status === 'fulfilled' ? r.value.status : 500,
+    );
     expect(results).toContain(201); // One success
     expect(results).toContain(409); // One conflict (SPOT_UNAVAILABLE)
   });
-  
+
   it('should validate Chilean RUT format', async () => {
     const user = await createTestUser({ rut: 'invalid-rut' });
-    
+
     const response = await request(app)
       .post('/api/bookings/create')
       .set('Authorization', `Bearer ${user.jwt}`)
-      .send({ /* booking data */ })
+      .send({
+        /* booking data */
+      })
       .expect(400);
-    
+
     expect(response.body.error).toBe('INVALID_RUT');
   });
-  
+
   it('should handle CLP integer amounts correctly', async () => {
     const availability = await createTestAvailability({ priceClp: 4567.89 }); // Simulate decimal input
-    
+
     const response = await request(app)
       .post('/api/bookings/create')
       .set('Authorization', `Bearer ${user.jwt}`)
       .send(validBookingData)
       .expect(201);
-    
+
     // Amount should be rounded to integer
     expect(response.body.data.amountClp).toBe(4568);
     expect(Number.isInteger(response.body.data.amountClp)).toBe(true);
   });
 });
+```

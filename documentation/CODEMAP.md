@@ -21,6 +21,8 @@ Usa este mapa para elegir los archivos correctos antes de editar. Si el mapa con
 - `README.md`: visión general del proyecto y preparación para personas.
 - `CONTRIBUTING.md`: reglas de contribución y expectativas de PR.
 - `RUNBOOK.md`: procedimientos operacionales y solución de problemas.
+- `documentation/commercial/**`: materiales comerciales activos de Fase 1.
+- `documentation/archive/**`: documentos históricos que no compiten como fuente vigente.
 
 ## Backend
 

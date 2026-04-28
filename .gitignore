@@ -6,7 +6,12 @@ node_modules
 # Testing
 coverage
 *_output.txt
+*_output*.txt
 backend/coverage.txt
+coverage.txt
+lint-report*.json
+debug-*.json
+*.log
 
 # Production
 build
