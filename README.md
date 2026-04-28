@@ -33,6 +33,9 @@ Los ingresos de la Fase 1 se limitan a un contrato SaaS B2B mensual o anual con 
 
 ## Inicio
 
+Para comandos detallados de instalación, entorno, desarrollo, preview, demo,
+tests, validación y solución de problemas, revisa `RUNBOOK.md`.
+
 ### Preparación Rápida
 
 Para un entorno local limpio, ejecuta:
