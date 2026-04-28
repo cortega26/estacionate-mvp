@@ -15,6 +15,7 @@ El sistema tiene dos modelos de identidad que coexisten sin contrato formal:
 El código de login (`backend/src/api/auth/login.ts`) busca en ambas tablas. El frontend usa el rol `resident` como string en el authStore. Sin embargo, `Resident` no tiene contraseña — la autenticación de residentes va por un path diferente (o no está completamente implementada).
 
 Riesgos actuales:
+
 - Un `User` con `role = 'admin'` y un `Resident` podrían tener el mismo email sin colisión controlada.
 - El JWT no distingue explícitamente si el actor es un `User` o un `Resident`, lo que puede causar que lógica de permisos aplique incorrectamente.
 - Los endpoints no tienen un contrato explícito de "solo `Resident`s pueden hacer reservas" vs "solo `User`s internos pueden ver `/api/admin/**`".
@@ -27,14 +28,14 @@ Riesgos actuales:
 
 Son dos actores con responsabilidades distintas y no deben unificarse:
 
-| Dimensión | `User` (interno) | `Resident` (externo) |
-|---|---|---|
-| Quién es | Staff de plataforma o administradora | Habitante de una unidad en un edificio |
-| Autenticación | Email + password; MFA obligatorio para roles sensibles | Email + password; MFA recomendado |
-| Scope | Global o scoped por membership (ADR 0007, ADR 0008) | Scoped al edificio de su unidad |
-| Puede crear | Edificios, usuarios, reglas, reportes | Reservas, visitas (según reglas del edificio) |
-| Puede ver | Según rol (ADR 0008) | Sus propias reservas, datos de su unidad |
-| JWT `actorType` | `"user"` | `"resident"` |
+| Dimensión       | `User` (interno)                                       | `Resident` (externo)                          |
+| --------------- | ------------------------------------------------------ | --------------------------------------------- |
+| Quién es        | Staff de plataforma o administradora                   | Habitante de una unidad en un edificio        |
+| Autenticación   | Email + password; MFA obligatorio para roles sensibles | Email + password; MFA recomendado             |
+| Scope           | Global o scoped por membership (ADR 0007, ADR 0008)    | Scoped al edificio de su unidad               |
+| Puede crear     | Edificios, usuarios, reglas, reportes                  | Reservas, visitas (según reglas del edificio) |
+| Puede ver       | Según rol (ADR 0008)                                   | Sus propias reservas, datos de su unidad      |
+| JWT `actorType` | `"user"`                                               | `"resident"`                                  |
 
 ### Contrato del JWT
 
@@ -43,21 +44,21 @@ El JWT payload debe incluir `actorType` para que el middleware resuelva permisos
 ```typescript
 type JWTPayload =
   | { actorType: 'user'; userId: string; role: Role; buildingId?: string }
-  | { actorType: 'resident'; residentId: string; buildingId: string; unitId: string }
+  | { actorType: 'resident'; residentId: string; buildingId: string; unitId: string };
 ```
 
 Nunca usar solo `role` para determinar si el actor puede acceder a un endpoint de reservas — verificar además que `actorType === 'resident'`.
 
 ### Endpoints exclusivos por actor type
 
-| Endpoint group | Actor permitido |
-|---|---|
-| `POST /api/bookings` | Solo `resident` |
-| `GET /api/bookings` (las propias) | Solo `resident` |
-| `GET /api/spots?available=true` | `resident` o `user` (concierge, admin) |
-| `POST /api/concierge/verify` | Solo `user` con rol `concierge` o `building_admin` |
-| `GET /api/admin/**` | Solo `user` con rol autorizado (ADR 0008) |
-| `POST /api/auth/login` | Ambos — distinguir por `actorType` en respuesta |
+| Endpoint group                    | Actor permitido                                    |
+| --------------------------------- | -------------------------------------------------- |
+| `POST /api/bookings`              | Solo `resident`                                    |
+| `GET /api/bookings` (las propias) | Solo `resident`                                    |
+| `GET /api/spots?available=true`   | `resident` o `user` (concierge, admin)             |
+| `POST /api/concierge/verify`      | Solo `user` con rol `concierge` o `building_admin` |
+| `GET /api/admin/**`               | Solo `user` con rol autorizado (ADR 0008)          |
+| `POST /api/auth/login`            | Ambos — distinguir por `actorType` en respuesta    |
 
 ### Unicidad de email entre tablas
 
@@ -71,11 +72,11 @@ Si en el futuro se necesita que un residente tenga una cuenta unificada que tamb
 
 ## Alternativas descartadas
 
-| Alternativa | Por qué se descartó |
-|---|---|
+| Alternativa                                                             | Por qué se descartó                                                                      |
+| ----------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
 | Unificar `User` y `Resident` en un solo modelo con `type` discriminator | Mezcla permisos de plataforma con permisos de edificio; complica el schema y las queries |
-| `Resident` como `User` con rol `resident` | `Role` enum es para staff interno; contaminación semántica |
-| Autenticación separada por dominio (subdominio.estacionate.com) | Sobre-ingeniería para el tamaño actual; el `actorType` en JWT es suficiente |
+| `Resident` como `User` con rol `resident`                               | `Role` enum es para staff interno; contaminación semántica                               |
+| Autenticación separada por dominio (subdominio.estacionate.com)         | Sobre-ingeniería para el tamaño actual; el `actorType` en JWT es suficiente              |
 
 ---
 

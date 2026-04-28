@@ -45,6 +45,11 @@ cd frontend && npm run test:e2e -- booking.spec.ts
 
 ## Payments And Webhooks
 
+Current classification: demo/simulator and future-gated infrastructure only.
+Read `documentation/LEGAL_COMMERCIAL_GUARDRAILS.md` and execute
+`documentation/task-recipes/monetization-change.md` before any edit in this
+area. Do not present these flows as enabled production payments for communities.
+
 Start with:
 
 - `backend/src/api/payments`

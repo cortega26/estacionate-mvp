@@ -9,11 +9,19 @@ Limitaciones: analisis legal no constituye asesoria juridica; requiere abogado c
 
 Nota de trazabilidad: al inicio de la auditoria HEAD era `99c342abfd960fb1895d2f9023b0273c05f68cad` con cambios locales en backend/admin/concierge/webhook y tests de observabilidad. Durante la sesion esos cambios quedaron committeados en `a90ad9d...`; el contenido analizado corresponde a ese estado final.
 
+Nota de alineacion Fase 1 (2026-04-28): leer este roadmap junto con
+`LEGAL_COMMERCIAL_GUARDRAILS.md`. La fase habilitada es SaaS B2B sin pagos
+integrados. Toda referencia a pagos, cobros, PSP, payouts, comisiones por uso,
+conciliacion financiera o flujos MercadoPago corresponde a infraestructura
+demo/simulador o fases futuras bloqueadas, salvo el fee SaaS B2B cobrado por
+Estacionate a la comunidad/administradora. El producto no debe posicionarse como
+marketplace ni como monetizacion habilitada de estacionamientos de visita.
+
 ## 1. Resumen ejecutivo
 
-Estacionate hoy es un MVP funcional para buscar disponibilidad, reservar estacionamientos de visita, iniciar pago, confirmar via webhook, cancelar con politica simple, operar un panel de conserjeria, administrar edificios/usuarios/precios y calcular conciliacion/payouts basicos. La evidencia principal esta en `backend/prisma/schema.prisma`, `backend/src/services/BookingService.ts`, `backend/src/services/PaymentService.ts`, `backend/src/api/concierge/*`, `backend/src/api/admin/*`, `frontend/src/pages/dashboard/SearchPage.tsx`, `frontend/src/pages/gatekeeper/Dashboard.tsx` y tests backend.
+Estacionate hoy es un MVP funcional para buscar disponibilidad, reservar estacionamientos de visita, operar un panel de conserjeria, administrar edificios/usuarios/configuracion demo y generar reportes operacionales. Tambien contiene infraestructura de pagos, webhooks y payouts clasificada como demo/simulador o futuro bloqueado por `LEGAL_COMMERCIAL_GUARDRAILS.md`. La evidencia principal esta en `backend/prisma/schema.prisma`, `backend/src/services/BookingService.ts`, `backend/src/services/PaymentService.ts`, `backend/src/api/concierge/*`, `backend/src/api/admin/*`, `frontend/src/pages/dashboard/SearchPage.tsx`, `frontend/src/pages/gatekeeper/Dashboard.tsx` y tests backend.
 
-Debe llegar a ser una SaaS B2B2C para comunidades residenciales chilenas que reduzca conflictos mediante reglas configurables, autorizacion estricta por edificio, trazabilidad completa, conciliacion financiera auditable, soporte operacional y contratos prudentes. La brecha principal no es "falta dashboard"; es falta de modelo formal de tenancy, RBAC, workflow operacional completo, contratos/consentimientos versionados, estados fisicos de entrada/salida, gestion de incidentes/disputas y hardening financiero/legal.
+Debe llegar a ser una SaaS B2B para comunidades residenciales chilenas que reduzca conflictos mediante reglas configurables, autorizacion estricta por edificio, trazabilidad completa, reportes operacionales, soporte operacional y contratos prudentes. La brecha principal no es "falta dashboard"; es falta de modelo formal de tenancy, RBAC, workflow operacional completo, contratos/consentimientos versionados, estados fisicos de entrada/salida, gestion de incidentes/disputas y hardening financiero/legal.
 
 Top 10 decisiones estrategicas:
 
@@ -22,9 +30,9 @@ Top 10 decisiones estrategicas:
 | 1   | Tenant principal       | Edificio/comunidad como tenant operacional; administradora como agrupador multi-edificio.                          |
 | 2   | Rol juridico           | Posicionar como proveedor SaaS/intermediario tecnologico; evitar custodiar fondos sin validacion legal/financiera. |
 | 3   | Primer mercado         | Comunidades chilenas con conserjeria y escasez real de visitas, no estacionamientos publicos.                      |
-| 4   | Producto vendible      | Orden, trazabilidad, reglas claras, reportes y conciliacion antes que features avanzadas.                          |
+| 4   | Producto vendible      | Orden, trazabilidad, reglas claras, conserjeria y reportes operacionales antes que features avanzadas.             |
 | 5   | Conserjeria            | Vista ultra simple, mobile-first, con busqueda por patente/codigo y modo contingencia.                             |
-| 6   | Pagos                  | Mantener MercadoPago/simulador, formalizar estados, idempotencia, refunds, disputes y payouts.                     |
+| 6   | Pagos                  | Mantener MercadoPago/simulador como demo/futuro bloqueado; no activar pagos productivos en Fase 1.                 |
 | 7   | Datos personales       | Minimizar RUT/patente/telefono; cifrado, blind index, retencion y export/eliminacion por tenant.                   |
 | 8   | Arquitectura           | Monolito modular con Postgres, Redis/jobs, webhooks seguros y backoffice; no microservicios aun.                   |
 | 9   | Piloto                 | 1-3 edificios con contrato piloto, reglas manualmente validadas y soporte cercano.                                 |
@@ -36,14 +44,14 @@ Top 10 riesgos:
 | --- | ------------------------------------------------------------------------- | -------------------- | ------------------------------------------------------------------------------- |
 | 1   | Uso de estacionamientos de visita no permitido por reglamento/copropiedad | Legal/comercial alto | Validacion por edificio, contrato B2B y checklist legal.                        |
 | 2   | Cross-tenant leakage                                                      | Critico              | Authorization backend-first y tests por tenant.                                 |
-| 3   | Pago confirmado sin reserva valida o reserva sin pago                     | Alto                 | Maquina de estados, idempotency keys, conciliacion y alertas.                   |
+| 3   | Simulador de pago confundido con flujo productivo                         | Alto                 | Rotular demo, gates de fase, idempotency keys y alertas.                        |
 | 4   | Conserje rechaza visita por app confusa/offline                           | Alto                 | Flujo de verificacion de 10 segundos, contingencia y entrenamiento.             |
 | 5   | Plataforma percibida como responsable de robo/dano                        | Alto                 | Contratos, disclaimers prudentes, evidencia y delegacion operativa al edificio. |
-| 6   | Payout/commission duplicado o incorrecto                                  | Alto                 | Ledger financiero, estados tipados, constraints y aprobacion dual.              |
+| 6   | Payout/comision demo interpretado como habilitado                         | Alto                 | Ledger futuro bloqueado, estados tipados, constraints y aprobacion dual.        |
 | 7   | Resident/Usuario interno ambiguos                                         | Alto                 | ADR y modelo de identidad/cuentas formal.                                       |
 | 8   | Datos personales tratados sin base/consentimiento claro                   | Alto                 | Politica privacidad, terms acceptance versionado y minimizacion.                |
 | 9   | Tests DB no aislados para ejecucion paralela                              | Medio                | DB/schema por worker o serializar integracion.                                  |
-| 10  | Pricing/ingresos prometidos sin volumen real                              | Medio                | Pilotos con metricas y pricing conservador.                                     |
+| 10  | Ingresos por estacionamiento prometidos sin gates legales                 | Medio                | Pilotos SaaS B2B con metricas operacionales y pricing conservador.              |
 
 Top 10 mejoras de mayor impacto:
 
@@ -372,30 +380,33 @@ Estrategia proporcional: seguridad backend-first, minimo privilegio, MFA interno
 
 ## 14. Pagos, pricing, comisiones y conciliacion
 
-| Modelo                    | Ventajas               | Desventajas                        | Riesgo legal/operacional                 | Recomendacion                          |
-| ------------------------- | ---------------------- | ---------------------------------- | ---------------------------------------- | -------------------------------------- |
-| SaaS mensual por edificio | Predecible, simple B2B | Menos alineado al uso              | Cobro aun sin valor percibido            | Base para edificios medianos/grandes.  |
-| Comision transaccion      | Alineado al volumen    | Ingreso incierto                   | Marketplace/intermediacion y chargebacks | Usar en piloto con take rate claro.    |
-| Hibrido                   | Balance                | Mas dificil vender                 | Requiere conciliacion clara              | Recomendado fase 2.                    |
-| Fee por cupo              | Facil explicar         | Penaliza edificios con pocos cupos | Puede desalentar inventario              | Usar solo como componente opcional.    |
-| Revenue share comunidad   | Incentiva adopcion     | Payout complejo                    | Custodia/fiscalidad                      | Solo via PSP/contrato validado.        |
-| Comision sales rep        | Escala ventas          | Riesgo calculo/abuso               | Disputas comerciales                     | Mantener, con ledger y aprobacion.     |
-| Promocion/piloto          | Reduce friccion        | No prueba willingness-to-pay       | Expectativas de gratis                   | 30/60/90 con metricas y precio futuro. |
-| Pricing dinamico          | Optimiza ingresos      | Explica peor y genera reclamos     | Discriminacion/percepcion injusta        | Diferir; reglas simples primero.       |
+| Modelo                    | Ventajas               | Desventajas                        | Riesgo legal/operacional                 | Recomendacion                           |
+| ------------------------- | ---------------------- | ---------------------------------- | ---------------------------------------- | --------------------------------------- |
+| SaaS mensual por edificio | Predecible, simple B2B | Menos alineado al uso              | Cobro aun sin valor percibido            | Base para edificios medianos/grandes.   |
+| Comision transaccion      | Alineado al volumen    | Ingreso incierto                   | Marketplace/intermediacion y chargebacks | Bloqueado; no usar en Fase 1.           |
+| Hibrido                   | Balance                | Mas dificil vender                 | Requiere conciliacion clara              | Bloqueado; evaluar solo tras gates.     |
+| Fee por cupo              | Facil explicar         | Penaliza edificios con pocos cupos | Puede desalentar inventario              | Solo si es fee SaaS B2B, no por visita. |
+| Revenue share comunidad   | Incentiva adopcion     | Payout complejo                    | Custodia/fiscalidad                      | Bloqueado; solo futuro con gates PSP.   |
+| Comision sales rep        | Escala ventas          | Riesgo calculo/abuso               | Disputas comerciales                     | Solo sobre contratos SaaS B2B o demo.   |
+| Promocion/piloto          | Reduce friccion        | No prueba willingness-to-pay       | Expectativas de gratis                   | 30/60/90 con metricas operacionales.    |
+| Pricing dinamico          | Optimiza ingresos      | Explica peor y genera reclamos     | Discriminacion/percepcion injusta        | Diferir; reglas simples primero.        |
 
-Estados objetivo: `PaymentIntent(created/pending_gateway/approved/rejected/expired/cancelled)`, `Payment(captured/settled/chargeback)`, `Refund(requested/approved/sent/succeeded/failed)`, `Payout(calculated/approved/paid/failed/disputed)`, `LedgerEntry`.
+Estados objetivo de pagos: futuro bloqueado/demo, no Fase 1 productiva:
+`PaymentIntent(created/pending_gateway/approved/rejected/expired/cancelled)`,
+`Payment(captured/settled/chargeback)`, `Refund(requested/approved/sent/succeeded/failed)`,
+`Payout(calculated/approved/paid/failed/disputed)`, `LedgerEntry`.
 
 ## 15. Sales pitch y posicionamiento comercial
 
-Pitch 30s: "Estacionate ordena los estacionamientos de visita del edificio: residentes reservan y pagan con reglas claras, conserjeria verifica en segundos por patente o codigo, y la administracion obtiene trazabilidad, reportes e ingresos o recuperacion de costos sin manejar planillas ni discusiones por WhatsApp."
+Pitch 30s Fase 1: "Estacionate ordena los estacionamientos de visita del edificio: residentes reservan con reglas claras, conserjeria verifica en segundos por patente o codigo, y la administracion obtiene trazabilidad y reportes operacionales sin manejar planillas ni discusiones por WhatsApp. La fase habilitada no incluye pagos integrados."
 
-Pitch 2 min: enfocar en escasez, reglas por edificio, conserjeria simple, evidencia ante reclamos, conciliacion y piloto medible. No prometer seguridad fisica, custodia ni eliminacion total de conflictos.
+Pitch 2 min: enfocar en escasez, reglas por edificio, conserjeria simple, evidencia ante reclamos, reportes operacionales y piloto medible sin pagos integrados. No prometer seguridad fisica, custodia ni eliminacion total de conflictos.
 
 | Audiencia       | Mensaje                                                              |
 | --------------- | -------------------------------------------------------------------- |
 | Administradoras | Menos reclamos, proceso replicable en cartera, reportes para comite. |
-| Comites         | Control y trazabilidad sin operar; ingresos transparentes.           |
-| Residentes      | Reserva clara, pago seguro, instrucciones y estado visible.          |
+| Comites         | Control y trazabilidad sin operar; reportes operacionales.           |
+| Residentes      | Reserva clara, instrucciones y estado visible.                       |
 | Conserjeria     | No decide disputas: verifica y registra.                             |
 | Pocos cupos     | Justamente por escasos: reglas y reservas evitan arbitrariedad.      |
 | Alta rotacion   | Reduce fila, llamadas y errores de porteria.                         |
@@ -462,13 +473,13 @@ Resultado validacion 2026-04-27: docs/lint/build/test/audit pasan individualment
 
 ## 19. Roadmap por fases
 
-| Fase                       | Objetivo                        | Features                                                                | Riesgos cerrados              | Dependencias     | Criterios de salida           | No hacer todavia              |
-| -------------------------- | ------------------------------- | ----------------------------------------------------------------------- | ----------------------------- | ---------------- | ----------------------------- | ----------------------------- |
-| 0 Auditoria/estabilizacion | Cerrar inconsistencias criticas | ADR tenancy/RBAC/User-Resident, state machine, legal checklist, E2E fix | permisos, pagos, legal basico | founder+legal    | tests y docs alineados        | IoT, app nativa               |
-| 1 Piloto controlado        | Operar 1-3 edificios            | onboarding manual, reglas, soporte, reportes, conciliacion controlada   | adopcion real                 | contrato piloto  | metricas 30/60/90             | automatizacion excesiva       |
-| 2 SaaS vendible            | Repetible y cobrable            | multi-tenant robusto, backoffice, incidents, payouts, legal docs        | venta B2B                     | pilotos exitosos | onboarding sin dev, E2E verde | marketplace abierto           |
-| 3 SaaS escalable           | Operacion multi-administradora  | queues, observabilidad madura, feature flags, exports, DR               | escala soporte/finanzas       | equipo ops       | SLO y runbooks                | AI decisoria                  |
-| 4 Plataforma avanzada      | Expandir mercado                | APIs, integraciones acceso, partners, pricing inteligente               | moat                          | base estable     | unit economics                | custodiar fondos sin licencia |
+| Fase                       | Objetivo                        | Features                                                                                        | Riesgos cerrados              | Dependencias     | Criterios de salida           | No hacer todavia              |
+| -------------------------- | ------------------------------- | ----------------------------------------------------------------------------------------------- | ----------------------------- | ---------------- | ----------------------------- | ----------------------------- |
+| 0 Auditoria/estabilizacion | Cerrar inconsistencias criticas | ADR tenancy/RBAC/User-Resident, state machine, legal checklist, E2E fix                         | permisos, pagos, legal basico | founder+legal    | tests y docs alineados        | IoT, app nativa               |
+| 1 Piloto controlado        | Operar 1-3 edificios            | onboarding manual, reglas, soporte y reportes operacionales sin pagos integrados                | adopcion real                 | contrato piloto  | metricas 30/60/90             | automatizacion excesiva       |
+| 2 SaaS vendible            | Repetible y cobrable            | multi-tenant robusto, backoffice, incidents y legal docs; payouts siguen bloqueados hasta gates | venta B2B                     | pilotos exitosos | onboarding sin dev, E2E verde | marketplace abierto           |
+| 3 SaaS escalable           | Operacion multi-administradora  | queues, observabilidad madura, feature flags, exports, DR                                       | escala soporte/finanzas       | equipo ops       | SLO y runbooks                | AI decisoria                  |
+| 4 Plataforma avanzada      | Expandir mercado                | APIs, integraciones acceso, partners, pricing inteligente                                       | moat                          | base estable     | unit economics                | custodiar fondos sin licencia |
 
 ## 20. Backlog priorizado
 

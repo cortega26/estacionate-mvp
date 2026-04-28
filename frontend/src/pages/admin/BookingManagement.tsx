@@ -51,7 +51,7 @@ export const BookingManagement = () => {
             return data;
         },
         onSuccess: (data: BookingCancellationResponse) => {
-            toast.success(`Reserva cancelada. Reembolso: $${data.refundAmount}`);
+            toast.success(`Reserva cancelada. Reembolso demo: $${data.refundAmount}`);
             setSelectedBooking(null);
             refetch();
         },
@@ -95,7 +95,7 @@ export const BookingManagement = () => {
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Visita</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Patente</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
-                            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Monto</th>
+                            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Monto demo</th>
                             <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
                         </tr>
                     </thead>
@@ -148,7 +148,7 @@ export const BookingManagement = () => {
                         <h3 className="text-lg font-bold mb-4">Confirmar Cancelación</h3>
                         <p className="mb-4 text-gray-600">
                             ¿Estás seguro de cancelar la reserva de <b>{selectedBooking.visitorName}</b>?
-                            El reembolso se calculará automáticamente según la política de 24h.
+                            El reembolso demo se calculará automáticamente según la política de prueba.
                         </p>
                         <div className="flex justify-end gap-2">
                             <button

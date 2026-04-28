@@ -3,6 +3,10 @@
 **Estado:** Aceptado  
 **Fecha:** 2026-04-27
 
+**Nota Fase 1:** Las transiciones que mencionan pago corresponden al simulador o
+a fases futuras bloqueadas. En la fase habilitada, una reserva confirmada no debe
+depender de un pago integrado real.
+
 ---
 
 ## Contexto
@@ -10,6 +14,7 @@
 El `BookingStatus` enum actual tiene: `pending`, `confirmed`, `cancelled`, `completed`, `no_show`. No existe un state machine formal — las transiciones se hacen con asignaciones directas a `status` dispersas en el código. No hay estados operacionales de acceso físico (`checked_in`, `checked_out`, `overstay`). La conserjería solo lee reservas; no registra ningún evento de entrada o salida.
 
 Consecuencias hoy:
+
 - No hay prueba auditable de que la visita efectivamente ingresó al edificio.
 - `completed` y `no_show` se asignan sin verificación de si hubo check-in previo.
 - No hay mecanismo para detectar sobreestadía (visita que no sale).
@@ -23,14 +28,14 @@ Consecuencias hoy:
 
 ```
 pending
-  ├─► confirmed   (webhook de pago aprobado)
+  ├─► confirmed   (validación operacional Fase 1 o simulador/futuro bloqueado)
   │     ├─► checked_in    (concierge registra entrada)
   │     │     ├─► checked_out   (concierge registra salida — terminal)
   │     │     └─► overstay      (sistema detecta fin de ventana sin check-out)
   │     │           └─► checked_out  (concierge registra salida tardía — terminal)
   │     ├─► no_show       (sistema o concierge después de grace period — terminal)
   │     └─► cancelled     (residente o admin cancela — terminal)
-  └─► cancelled   (residente cancela antes del pago — terminal)
+  └─► cancelled   (residente cancela antes de confirmación — terminal)
 ```
 
 Estados terminales: `cancelled`, `checked_out`, `no_show`. No se puede transicionar desde un estado terminal.
@@ -39,15 +44,15 @@ Estados terminales: `cancelled`, `checked_out`, `no_show`. No se puede transicio
 
 ```typescript
 const VALID_TRANSITIONS: Record<BookingStatus, BookingStatus[]> = {
-  pending:      ['confirmed', 'cancelled'],
-  confirmed:    ['checked_in', 'no_show', 'cancelled'],
-  checked_in:   ['checked_out', 'overstay'],
-  overstay:     ['checked_out'],
-  checked_out:  [],  // terminal
-  no_show:      [],  // terminal
-  cancelled:    [],  // terminal
-  completed:    [], // alias legacy — no crear nuevos en este estado
-}
+  pending: ['confirmed', 'cancelled'],
+  confirmed: ['checked_in', 'no_show', 'cancelled'],
+  checked_in: ['checked_out', 'overstay'],
+  overstay: ['checked_out'],
+  checked_out: [], // terminal
+  no_show: [], // terminal
+  cancelled: [], // terminal
+  completed: [], // alias legacy — no crear nuevos en este estado
+};
 ```
 
 ### `BookingService.transition(bookingId, event, actorId)`
@@ -64,6 +69,7 @@ async transition(
 ```
 
 El método:
+
 1. Carga el booking y verifica que la transición es válida.
 2. Actualiza `Booking.status` dentro de una transacción Prisma.
 3. Crea un `AccessEvent` si el evento es `check_in`, `check_out`, o `no_show`.
@@ -111,6 +117,7 @@ Un cron job (ya existe `reconcile`) o un job separado marca como `no_show` las r
 ### Estado `completed` legacy
 
 El estado `completed` existe en el schema. Para efectos de este ADR:
+
 - `completed` = equivalente semántico de `checked_out` para reservas pre-existentes.
 - No crear nuevas reservas en estado `completed` directamente.
 - El cron puede marcar `checked_in` → `completed` para reservas antiguas sin check-out registrado.
@@ -119,12 +126,12 @@ El estado `completed` existe en el schema. Para efectos de este ADR:
 
 ## Alternativas descartadas
 
-| Alternativa | Por qué se descartó |
-|---|---|
-| Mantener asignaciones directas de `status` | No auditable; permite transiciones inválidas |
-| State machine en el frontend | El estado es crítico; solo el backend es fuente de verdad |
-| `completed` en lugar de `checked_out` | Semánticamente opaco; no distingue "salió" de "reserva expiró" |
-| No registrar `AccessEvent` | Sin evidencia de entrada/salida, la plataforma no puede defender disputas |
+| Alternativa                                | Por qué se descartó                                                       |
+| ------------------------------------------ | ------------------------------------------------------------------------- |
+| Mantener asignaciones directas de `status` | No auditable; permite transiciones inválidas                              |
+| State machine en el frontend               | El estado es crítico; solo el backend es fuente de verdad                 |
+| `completed` en lugar de `checked_out`      | Semánticamente opaco; no distingue "salió" de "reserva expiró"            |
+| No registrar `AccessEvent`                 | Sin evidencia de entrada/salida, la plataforma no puede defender disputas |
 
 ---
 

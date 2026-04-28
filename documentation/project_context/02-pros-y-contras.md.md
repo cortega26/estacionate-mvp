@@ -1,5 +1,11 @@
 <!-- filename: 02-pros-y-contras.md -->
 
+> **Historical note:** This file predates
+> `documentation/LEGAL_COMMERCIAL_GUARDRAILS.md` and is retained as original
+> project context only. Any marketplace, payment, revenue-share, or parking
+> monetization language below is not active Phase 1 positioning and must not be
+> used for README, pitch, UI copy, terms, or pilots.
+
 # Pros y Contras del Modelo Propuesto
 
 ## Análisis Técnico

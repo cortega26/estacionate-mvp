@@ -28,8 +28,8 @@ Use this map to choose the right files before editing. If the map disagrees with
 - `backend/dev-server.ts`: local development server entry point.
 - `backend/api/**`: Vercel-oriented API entry files.
 - `backend/src/api/**`: domain route handlers grouped by area.
-- `backend/src/services/**`: business workflows such as auth, booking, payment, notification, and sales.
-- `backend/src/services/payment/**`: payment gateway abstraction and adapters.
+- `backend/src/services/**`: business workflows such as auth, booking, demo/payment-simulator, notification, and sales.
+- `backend/src/services/payment/**`: demo/simulator and future-gated payment gateway abstraction and adapters.
 - `backend/src/services/booking/**`: booking validation helpers.
 - `backend/src/lib/**`: database, Redis, logging, CORS, errors, constants, crypto, and domain helpers.
 - `backend/src/middleware/**`: Express middleware.
@@ -73,7 +73,10 @@ See `documentation/VALIDATION.md` for command selection by change type.
 
 - Authentication: inspect `backend/src/api/auth`, `backend/src/services/auth.ts`, related frontend auth pages, and backend auth/login tests.
 - Booking lifecycle: inspect `backend/src/api/bookings`, `backend/src/services/BookingService.ts`, `backend/src/services/booking`, booking tests, and frontend booking components/pages.
-- Payments/webhooks: inspect `backend/src/api/payments`, `backend/src/services/PaymentService.ts`, `backend/src/services/payment`, payment/webhook tests, and checkout pages.
+- Payments/webhooks: inspect `documentation/LEGAL_COMMERCIAL_GUARDRAILS.md`
+  first, then `backend/src/api/payments`, `backend/src/services/PaymentService.ts`,
+  `backend/src/services/payment`, payment/webhook tests, and checkout pages. This
+  area is demo/simulator or future-gated unless §3 gates are documented as open.
 - Admin flows: inspect `backend/src/api/admin`, admin tests, `frontend/src/pages/admin`, and `frontend/src/layouts/AdminLayout.tsx`.
 - Concierge/gatekeeper flows: inspect `backend/src/api/concierge`, gatekeeper pages/layouts, and verification tests.
 - Sales flows: inspect `backend/src/api/sales`, `backend/src/services/SalesService.ts`, sales tests, and sales pages/layout.

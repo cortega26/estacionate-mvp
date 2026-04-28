@@ -96,16 +96,15 @@ export const BookingModal: React.FC<BookingModalProps> = ({
 
                 {/* Body */}
                 <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-4">
-                    {/* Price Tag */}
                     <div className="flex justify-between items-center bg-gray-50 p-3 rounded-md border border-gray-200">
-                        <span className="text-gray-600 font-medium">Total a Pagar</span>
+                        <span className="text-gray-600 font-medium">Monto demo/simulado</span>
                         <span className="text-xl font-bold text-indigo-600">${price?.toLocaleString()}</span>
                     </div>
 
                     <div className="rounded-md border border-indigo-100 bg-indigo-50/70 p-4 space-y-3">
                         <div>
-                            <p className="text-sm font-semibold text-indigo-900">Resumen antes de pagar</p>
-                            <p className="text-xs text-indigo-700">Verifica estos datos antes de salir a Mercado Pago.</p>
+                            <p className="text-sm font-semibold text-indigo-900">Resumen de reserva</p>
+                            <p className="text-xs text-indigo-700">Verifica estos datos antes de continuar.</p>
                         </div>
 
                         <div className="space-y-2 text-sm text-slate-700">
@@ -222,7 +221,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                                 ) : (
                                     <>
                                         <Lock size={16} />
-                                        Ir a Pagar
+                                        Continuar
                                     </>
                                 )}
                             </button>
@@ -231,11 +230,11 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                         {/* Trust Signal */}
                         <div className="flex items-center justify-center gap-1.5 text-xs text-gray-500">
                             <ShieldCheck size={14} className="text-green-600" />
-                            <span>Pagos seguros vía MercadoPago</span>
+                            <span>Modo demo: no se cobrará dinero real</span>
                         </div>
 
                         <p className="text-center text-xs text-gray-500">
-                            Al continuar, te redirigiremos a Mercado Pago para completar el cobro y luego volverás a Estacionate con el estado de tu reserva.
+                            En Fase 1 las reservas no tienen pagos integrados. Si aparece una redirección, corresponde al simulador de desarrollo.
                         </p>
                     </div>
                 </form>

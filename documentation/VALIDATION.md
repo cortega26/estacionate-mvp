@@ -90,6 +90,11 @@ npm run format:check
 
 If the docs changed commands or scripts, also run the command parser or shell syntax check for those files.
 
+For commercial, legal, pricing, payment, payout, or visible copy changes, also
+repeat the guardrail vocabulary scan from the task or PR description and classify
+remaining matches as negative-policy context, demo/simulator, blocked future
+phase, corrected, or pending risk.
+
 ## Formatting
 
 Check formatting without changing files:

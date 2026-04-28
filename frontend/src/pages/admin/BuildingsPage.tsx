@@ -206,8 +206,8 @@ export const BuildingsPage = () => {
                         <tr>
                             <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Edificio</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Estado</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Configuración Financiera</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Estadísticas (Volumen / Ganancias Platform)</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Configuración SaaS / demo</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Indicadores operacionales</th>
                             <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Acciones</th>
                         </tr>
                     </thead>
@@ -233,21 +233,21 @@ export const BuildingsPage = () => {
                                 </td>
                                 <td className="px-6 py-4">
                                     <div className="text-sm text-slate-900">
-                                        Comisión: <span className="font-bold text-indigo-600">{(building.platformCommissionRate * 100).toFixed(1)}%</span>
+                                        Comisión demo: <span className="font-bold text-indigo-600">{(building.platformCommissionRate * 100).toFixed(1)}%</span>
                                     </div>
                                     <div className="text-sm text-slate-900">
-                                        Fee Mensual: <span className="font-bold text-indigo-600">${building.softwareMonthlyFeeClp.toLocaleString()}</span>
+                                        Fee mensual SaaS: <span className="font-bold text-indigo-600">${building.softwareMonthlyFeeClp.toLocaleString()}</span>
                                     </div>
                                 </td>
                                 <td className="px-6 py-4">
                                     <div className="text-sm text-slate-900">
-                                        Total Procesado: ${building.stats.totalRevenueClp.toLocaleString()}
+                                        Monto demo/simulado: ${building.stats.totalRevenueClp.toLocaleString()}
                                     </div>
                                     <div className="text-sm font-bold text-green-600 mt-1">
-                                        Ganancia Plataforma: ${building.stats.totalEarningsClp.toLocaleString()}
+                                        Ingreso SaaS + demo: ${building.stats.totalEarningsClp.toLocaleString()}
                                     </div>
                                     <div className="text-xs text-slate-400">
-                                        (Comisión: ${building.stats.platformCommissionClp.toLocaleString()} + Fee)
+                                        (Comisión demo: ${building.stats.platformCommissionClp.toLocaleString()} + Fee SaaS)
                                     </div>
                                 </td>
                                 <td className="px-6 py-4 text-right flex items-center justify-end gap-3">
@@ -336,7 +336,7 @@ export const BuildingsPage = () => {
                     <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
                         <div className="flex justify-between items-center mb-4">
                             <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900">
-                                Editar Configuración Financiera
+                                Editar configuración SaaS / demo
                             </Dialog.Title>
                             <button onClick={() => setIsEditOpen(false)} className="text-gray-400 hover:text-gray-500">
                                 <X className="h-5 w-5" />
@@ -354,7 +354,7 @@ export const BuildingsPage = () => {
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">Comisión Plataforma (0.1 = 10%)</label>
+                                <label className="block text-sm font-medium text-gray-700">Comisión demo (no producción, 0.1 = 10%)</label>
                                 <input
                                     type="number"
                                     step="0.01"
@@ -364,7 +364,7 @@ export const BuildingsPage = () => {
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">Fee Mensual (CLP)</label>
+                                <label className="block text-sm font-medium text-gray-700">Fee mensual SaaS (CLP)</label>
                                 <input
                                     type="number"
                                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2"
@@ -406,14 +406,14 @@ export const BuildingsPage = () => {
                         </Dialog.Title>
                         <div className="mt-2">
                             <p className="text-sm text-gray-500">
-                                No se puede eliminar este edificio porque tiene <b>historial financiero</b> (Reservas o Pagos).
+                                No se puede eliminar este edificio porque tiene <b>historial operacional/demo</b> (reservas o pagos demo).
                             </p>
                             <p className="text-sm text-gray-500 mt-2">
                                 ¿Deseas <b>FORZAR la eliminación</b>? Esto borrará permanentemente:
                             </p>
                             <ul className="list-disc list-inside text-sm text-red-600 mt-1 font-medium pl-2">
                                 <li>Todas las reservas históricas</li>
-                                <li>Registro de Pagos y Comisiones</li>
+                                <li>Registro de pagos demo y comisiones demo</li>
                                 <li>Residentes y Unidades</li>
                             </ul>
                         </div>

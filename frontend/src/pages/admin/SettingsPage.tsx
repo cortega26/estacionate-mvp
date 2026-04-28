@@ -44,11 +44,11 @@ export const SettingsPage = () => {
             });
         },
         onSuccess: (res) => {
-            toast.success(`Precios actualizados: ${res.data.updatedCount} bloques afectados.`);
+            toast.success(`Valores demo actualizados: ${res.data.updatedCount} bloques afectados.`);
             setPendingUpdate(null);
         },
         onError: () => {
-            toast.error('Error al actualizar precios.');
+            toast.error('Error al actualizar valores demo.');
         }
     });
 
@@ -81,7 +81,7 @@ export const SettingsPage = () => {
         const buildingName = buildings?.find((building) => building.id === data.buildingId)?.name;
 
         if (!buildingName || Number.isNaN(newPrice)) {
-            toast.error('Selecciona un edificio y un precio válido antes de continuar.');
+            toast.error('Selecciona un edificio y un valor demo válido antes de continuar.');
             return;
         }
 
@@ -109,10 +109,10 @@ export const SettingsPage = () => {
             <h2 className="text-3xl font-bold text-gray-800 mb-6">Configuración</h2>
 
             <div className="bg-white p-6 rounded-lg shadow max-w-lg">
-                <h3 className="text-xl font-bold mb-4">Gestión de Precios</h3>
+                <h3 className="text-xl font-bold mb-4">Gestión de valores demo</h3>
                 <p className="text-gray-500 text-sm mb-6">
-                    Actualiza el precio base para todos los estacionamientos de visitas en un edificio.
-                    Esto afectará a los bloques futuros que estén disponibles.
+                    Actualiza el monto demo para todos los estacionamientos de visitas en un edificio.
+                    Esto no habilita pagos reales y solo afectará a los bloques futuros disponibles.
                 </p>
 
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -131,7 +131,7 @@ export const SettingsPage = () => {
                     </div>
 
                     <div>
-                        <label htmlFor="newPrice" className="block text-sm font-medium text-gray-700">Nuevo Precio Base (CLP)</label>
+                        <label htmlFor="newPrice" className="block text-sm font-medium text-gray-700">Nuevo monto demo (CLP)</label>
                         <input
                             id="newPrice"
                             type="number"
@@ -146,7 +146,7 @@ export const SettingsPage = () => {
                         disabled={updatePriceMutation.isPending}
                         className="w-full bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 disabled:bg-indigo-300"
                     >
-                        {updatePriceMutation.isPending ? 'Actualizando...' : 'Actualizar Precios'}
+                        {updatePriceMutation.isPending ? 'Actualizando...' : 'Actualizar valores demo'}
                     </button>
                 </form>
 
@@ -154,13 +154,13 @@ export const SettingsPage = () => {
                     <p className="text-sm font-semibold text-amber-900">Resumen previo</p>
                     <p className="mt-2 text-sm text-amber-900">
                         {selectedBuilding
-                            ? `Aplicarás el nuevo precio al edificio ${selectedBuilding.name}.`
+                            ? `Aplicarás el nuevo monto demo al edificio ${selectedBuilding.name}.`
                             : 'Selecciona un edificio para revisar el alcance del cambio.'}
                     </p>
                     <p className="mt-1 text-sm text-amber-900">
                         {parsedPrice !== null && !Number.isNaN(parsedPrice)
-                            ? `Precio propuesto: $${formatClp(parsedPrice)} CLP.`
-                            : 'Ingresa el nuevo precio base para preparar la confirmación.'}
+                            ? `Monto demo propuesto: $${formatClp(parsedPrice)} CLP.`
+                            : 'Ingresa el nuevo monto demo para preparar la confirmación.'}
                     </p>
                     <p className="mt-2 text-xs text-amber-800">
                         Este cambio solo afectará a los bloques futuros disponibles. Las reservas ya confirmadas no se modificarán.
@@ -169,7 +169,7 @@ export const SettingsPage = () => {
 
                 {pendingUpdate && (
                     <div className="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-5 shadow-sm">
-                        <h4 className="text-lg font-semibold text-slate-900">Confirmar actualización de precios</h4>
+                        <h4 className="text-lg font-semibold text-slate-900">Confirmar actualización de valores demo</h4>
                         <p className="mt-2 text-sm text-slate-700">
                             Revisa el alcance antes de aplicar el cambio masivo.
                         </p>
@@ -180,7 +180,7 @@ export const SettingsPage = () => {
                                 <dd>{pendingUpdate.buildingName}</dd>
                             </div>
                             <div>
-                                <dt className="font-medium text-slate-900">Nuevo precio base</dt>
+                                <dt className="font-medium text-slate-900">Nuevo monto demo</dt>
                                 <dd>${formatClp(pendingUpdate.newPrice)} CLP</dd>
                             </div>
                             <div>

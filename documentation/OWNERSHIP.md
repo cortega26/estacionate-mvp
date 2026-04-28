@@ -70,4 +70,7 @@ in the same change when practical.
   - `backend/src/api/payments/**`
   - `backend/src/api/cron/reconcile.ts`
   - Any frontend component that renders prices, charge amounts, or payment flows
+  - Any README, terms, pitch, roadmap, task recipe, or UI copy that could position
+    Estacionate as a marketplace, parking monetization product, direct visitor
+    payment flow, payout flow, or enabled PSP integration
   - Any new feature that introduces a PSP integration or recurring billing

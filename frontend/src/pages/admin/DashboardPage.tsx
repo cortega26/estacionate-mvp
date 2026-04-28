@@ -94,9 +94,9 @@ export const DashboardPage = () => {
             {/* KPI Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <div className="bg-white p-6 rounded-lg shadow border-l-4 border-green-500">
-                    <p className="text-gray-500 text-sm font-medium">Ganancias Totales</p>
+                    <p className="text-gray-500 text-sm font-medium">Uso reportado demo</p>
                     <p className="text-3xl font-bold text-gray-800">${revenue.toLocaleString('es-CL')}</p>
-                    <p className="mt-2 text-sm text-gray-500">Ingresos finalizados dentro del periodo reportado.</p>
+                    <p className="mt-2 text-sm text-gray-500">Monto simulado asociado a actividad del periodo.</p>
                 </div>
                 <div className="bg-white p-6 rounded-lg shadow border-l-4 border-blue-500">
                     <p className="text-gray-500 text-sm font-medium">Reservas Activas</p>
@@ -112,7 +112,7 @@ export const DashboardPage = () => {
 
             {/* Revenue Chart */}
             <div className="bg-white p-6 rounded-lg shadow mb-8">
-                <h3 className="text-lg font-bold text-gray-800 mb-4">Ingresos Últimos 30 Días</h3>
+                <h3 className="text-lg font-bold text-gray-800 mb-4">Actividad últimos 30 días</h3>
                 {hasRevenueTrend ? (
                     <div className="h-72 w-full">
                         <ResponsiveContainer width="100%" height="100%">
@@ -140,7 +140,7 @@ export const DashboardPage = () => {
                                 />
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
                                 <Tooltip
-                                    formatter={(value: number) => [`$${value.toLocaleString('es-CL')}`, 'Ingresos']}
+                                    formatter={(value: number) => [`$${value.toLocaleString('es-CL')}`, 'Monto demo']}
                                     labelFormatter={(label) => new Date(label + 'T00:00:00').toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long' })}
                                 />
                                 <Area
@@ -155,8 +155,8 @@ export const DashboardPage = () => {
                     </div>
                 ) : (
                     <div className="rounded-lg border border-dashed border-gray-300 bg-gray-50 p-6 text-sm text-gray-600">
-                        <p className="font-semibold text-gray-800">No hay ingresos finalizados en los últimos 30 días.</p>
-                        <p className="mt-2">Cuando se completen reservas, aquí verás la tendencia diaria de ingresos.</p>
+                        <p className="font-semibold text-gray-800">No hay actividad con monto demo en los últimos 30 días.</p>
+                        <p className="mt-2">Cuando se completen reservas, aquí verás la tendencia diaria operacional.</p>
                     </div>
                 )}
             </div>
@@ -172,7 +172,7 @@ export const DashboardPage = () => {
                             <tr>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Usuario</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estacionamiento</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Monto</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Monto demo</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
                             </tr>
                         </thead>

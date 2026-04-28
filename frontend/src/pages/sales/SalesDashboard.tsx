@@ -21,7 +21,7 @@ interface Building {
     id: string;
     name: string;
     address: string;
-    payouts: unknown[]; // Using unknown is safer than any if structure is loosely defined
+    payouts: unknown[]; // Demo/future-gated payout records; shape is loosely defined.
 }
 
 export const SalesDashboard = () => {
@@ -72,7 +72,7 @@ export const SalesDashboard = () => {
             {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                    <h3 className="text-gray-500 text-sm font-medium">Ganancias Totales</h3>
+                    <h3 className="text-gray-500 text-sm font-medium">Ingreso SaaS reportado</h3>
                     <p className="text-3xl font-bold text-emerald-600">
                         ${stats?.totalEarnings.toLocaleString() || '0'}
                     </p>
@@ -94,20 +94,20 @@ export const SalesDashboard = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Recent Commissions */}
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                    <h2 className="text-xl font-bold mb-4">Comisiones Recientes</h2>
+                    <h2 className="text-xl font-bold mb-4">Comisiones demo recientes</h2>
                     <div className="overflow-x-auto">
                         <table className="w-full text-left">
                             <thead>
                                 <tr className="border-b">
                                     <th className="pb-2">Edificio</th>
-                                    <th className="pb-2">Monto</th>
+                                    <th className="pb-2">Monto demo</th>
                                     <th className="pb-2">Estado</th>
                                     <th className="pb-2">Fecha</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y">
                                 {stats?.recentCommissions.length === 0 && (
-                                    <tr><td colSpan={4} className="py-4 text-center text-gray-400">No hay comisiones aún</td></tr>
+                                    <tr><td colSpan={4} className="py-4 text-center text-gray-400">No hay comisiones demo aún</td></tr>
                                 )}
                                 {stats?.recentCommissions.map((c: Commission) => (
                                     <tr key={c.id}>
@@ -140,7 +140,7 @@ export const SalesDashboard = () => {
                                     </div>
                                     <div className="text-right">
                                         <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
-                                            {b.payouts?.length || 0} Pagos
+                                            {b.payouts?.length || 0} registros demo
                                         </span>
                                     </div>
                                 </div>

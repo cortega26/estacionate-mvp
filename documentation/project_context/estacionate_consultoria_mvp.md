@@ -2,6 +2,12 @@
 
 **Análisis integral para el desarrollo de una plataforma de estacionamientos compartidos en edificios residenciales chilenos**
 
+> **Historical note:** This file predates
+> `documentation/LEGAL_COMMERCIAL_GUARDRAILS.md` and is retained as original
+> project context only. Any marketplace, subleasing, payment, revenue-share, or
+> parking monetization language below is not active Phase 1 positioning and must
+> not be used for README, pitch, UI copy, terms, or pilots.
+
 ---
 
 ## Tabla de contenidos

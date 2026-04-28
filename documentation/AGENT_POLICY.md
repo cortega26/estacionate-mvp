@@ -9,13 +9,18 @@ interpretation.
 1. The current user request.
 2. The root `AGENTS.md` quickstart.
 3. `documentation/LEGAL_COMMERCIAL_GUARDRAILS.md` for any task touching payments,
-   pricing, billing, payout, or monetization — read it before writing code.
+   pricing, billing, payout, monetization, commercial positioning, terms, or
+   visible copy that could imply payments/marketplace behavior — read it before
+   writing code.
 4. This policy file.
 5. Task-specific recipes in `documentation/TASKS.md` and `documentation/task-recipes/`.
 6. Historical context in `documentation/LESSONS.md` and audit reports.
 
 If two repository docs conflict, prefer the more specific and more recent operational
 document, then update the stale document as part of the same change when practical.
+For legal/commercial phase conflicts, `documentation/LEGAL_COMMERCIAL_GUARDRAILS.md`
+prevails over older roadmap, pitch, UI, terms, or historical project-context
+material.
 
 ## Default Workflow
 

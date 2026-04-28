@@ -66,14 +66,14 @@ We use Docker Compose to replicate the production environment locally.
 
 ### Backend (`backend/.env`)
 
-| Variable            | Description                    | Example (Local)                                                 |
-| :------------------ | :----------------------------- | :-------------------------------------------------------------- |
-| `DATABASE_URL`      | Connection string for Postgres | `postgresql://postgres:password@localhost:5432/estacionate_dev` |
-| `JWT_SECRET`        | Secret for signing auth tokens | `local-dev-secret`                                              |
-| `PORT`              | API Server Port                | `3000`                                                          |
-| `MP_ACCESS_TOKEN`   | MercadoPago Access Token       | `TEST-...`                                                      |
-| `MP_WEBHOOK_SECRET` | MercadoPago Webhook Secret     | `...`                                                           |
-| `REDIS_URL`         | Redis Connection String        | `redis://localhost:6379`                                        |
+| Variable            | Description                                                                  | Example (Local)                                                 |
+| :------------------ | :--------------------------------------------------------------------------- | :-------------------------------------------------------------- |
+| `DATABASE_URL`      | Connection string for Postgres                                               | `postgresql://postgres:password@localhost:5432/estacionate_dev` |
+| `JWT_SECRET`        | Secret for signing auth tokens                                               | `local-dev-secret`                                              |
+| `PORT`              | API Server Port                                                              | `3000`                                                          |
+| `MP_ACCESS_TOKEN`   | MercadoPago demo/sandbox access token; not for Phase 1 production payments   | `TEST-...`                                                      |
+| `MP_WEBHOOK_SECRET` | MercadoPago demo/sandbox webhook secret; not for Phase 1 production payments | `...`                                                           |
+| `REDIS_URL`         | Redis Connection String                                                      | `redis://localhost:6379`                                        |
 
 ### Frontend (`frontend/.env`)
 

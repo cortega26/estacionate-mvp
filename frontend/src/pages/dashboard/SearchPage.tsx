@@ -113,24 +113,22 @@ export const SearchPage = () => {
 
     const queryClient = useQueryClient();
 
-    // Unified Booking+Payment Mutation
-    // Now the backend creates booking AND returns payment init_point in one go.
+    // Unified booking mutation. Any returned payment URL is demo/simulator only in Phase 1.
     const bookMutation = useMutation({
         mutationFn: async (data: CreateBookingPayload) => {
             return api.post('/bookings/create', data);
         },
         onSuccess: (res: { data: CreateBookingResponse }) => {
-            toast.success('¡Reserva creada! Redirigiendo a pago...');
+            toast.success('¡Reserva creada! Redirigiendo al simulador demo...');
             // Invalidate spots to update UI (mark as reserved)
             queryClient.invalidateQueries({ queryKey: ['spots'] });
             setSelectedBlock(null);
 
-            // Redirect to Payment
             const url = res.data.payment?.init_point || res.data.payment?.sandbox_init_point;
             if (url) {
                 window.location.href = url;
             } else {
-                toast.error('Error: No se recibió link de pago');
+                toast.error('Error: No se recibió link del simulador');
             }
         },
         onError: (err: SearchPageError) => {
@@ -249,7 +247,7 @@ export const SearchPage = () => {
                                 <div className="text-right">
                                     <p className="text-2xl font-bold text-indigo-600">${block.basePriceClp.toLocaleString()}</p>
                                     <p className="text-xs text-gray-400 font-medium tracking-wide uppercase mt-1">
-                                        {block.durationType === 'ELEVEN_HOURS' ? '11 Horas' : '23 Horas'}
+                                        Demo · {block.durationType === 'ELEVEN_HOURS' ? '11 Horas' : '23 Horas'}
                                     </p>
                                 </div>
                             </div>
@@ -262,7 +260,7 @@ export const SearchPage = () => {
                                     ? 'No Disponible'
                                     : normalizedUserRole !== 'resident'
                                         ? 'Solo Residentes'
-                                        : 'Reservar Ahora'}
+                                        : 'Reservar'}
                             </button>
                         </div>
                     ))}

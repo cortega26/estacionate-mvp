@@ -22,7 +22,7 @@ export const PaymentSimulator = () => {
 
     const handlePayment = async (status: 'approved' | 'rejected' | 'pending') => {
         setLoading(true);
-        const toastId = toast.loading(`Procesando pago ${status}...`);
+        const toastId = toast.loading(`Procesando simulación ${status}...`);
 
         try {
             // Call our own backend webhook directly
@@ -34,7 +34,7 @@ export const PaymentSimulator = () => {
                 }
             });
 
-            toast.success('¡Pago Procesado!', { id: toastId });
+            toast.success('¡Simulación procesada!', { id: toastId });
 
             // Redirect logic mimicking MP
             setTimeout(() => {
@@ -62,7 +62,7 @@ export const PaymentSimulator = () => {
 
                 {/* Amount */}
                 <div className="p-8 text-center border-b border-gray-100">
-                    <p className="text-gray-500 text-sm uppercase tracking-wide">Total a Pagar</p>
+                    <p className="text-gray-500 text-sm uppercase tracking-wide">Monto demo/simulado</p>
                     <p className="text-4xl font-extrabold text-[#333] mt-2">
                         ${Number(amount).toLocaleString('es-CL')}
                     </p>

@@ -1,6 +1,9 @@
 # Task Recipe: Monetization Change Checklist
 
 **Aplica a:** Cualquier cambio en archivos de pagos, precios, facturación, modelos de transacciones económicas, o features de cobro.
+También aplica a README, términos, documentación comercial y copy visible que
+pueda sugerir marketplace, cobro a visitantes, payouts, PSP productivo o
+monetización habilitada.
 
 **Antes de escribir código, completa este checklist en orden.**
 
@@ -18,13 +21,13 @@
 
 Identifica en cuál categoría cae el cambio:
 
-| Categoría                           | Ejemplo                                                                               | Gate adicional         |
-| ----------------------------------- | ------------------------------------------------------------------------------------- | ---------------------- |
-| A — Demo/simulador                  | Extender tests, mejorar mock de MercadoPago, refactorizar PaymentService internamente | Solo Gate 0            |
-| B — Feature Fase 1                  | Mejorar dashboard admin, agregar notificaciones, reportes de ocupación                | Solo Gate 0            |
-| C — Feature Fase 2                  | Cualquier cobro de residente integrado a Gastos Comunes                               | Gates 0 + 2            |
-| D — Feature Fase 3                  | PSP real, Split Payment, webhooks contra comunidades reales                           | Gates 0 + 2 + 3        |
-| E — Cambio de arquitectura de datos | Nuevo modelo billing/pago en Prisma                                                   | Gates 0 + arquitectura |
+| Categoría                           | Ejemplo                                                                                                   | Gate adicional         |
+| ----------------------------------- | --------------------------------------------------------------------------------------------------------- | ---------------------- |
+| A — Demo/simulador                  | Extender tests, mejorar mock de MercadoPago, refactorizar PaymentService internamente                     | Solo Gate 0            |
+| B — Feature Fase 1                  | Mejorar dashboard admin, agregar notificaciones, reportes operacionales de ocupación sin pagos integrados | Solo Gate 0            |
+| C — Feature Fase 2                  | Cualquier cobro de residente integrado a Gastos Comunes                                                   | Gates 0 + 2            |
+| D — Feature Fase 3                  | PSP real, Split Payment, webhooks contra comunidades reales                                               | Gates 0 + 2 + 3        |
+| E — Cambio de arquitectura de datos | Nuevo modelo billing/pago en Prisma                                                                       | Gates 0 + arquitectura |
 
 - [ ] Categoría seleccionada: **\_\_**
 
@@ -53,7 +56,11 @@ Antes de implementar cualquier feature de Fase 2 o Fase 3:
 ## Gate 4 — Verificación de Vocabulario (todas las categorías con UI o copy)
 
 - [ ] No aparece la palabra "arriendo", "arrendamiento", "renta", o "alquiler" en ningún texto de UI, notificación, email, o contrato generado.
-- [ ] El vocabulario usado es: "reserva", "tarifa de uso", "aporte al Fondo de Reserva", u "obligación económica por uso de área común".
+- [ ] El vocabulario activo de Fase 1 usa: "reserva", "reglas", "validación",
+      "trazabilidad", "reportes operacionales" y "contrato SaaS B2B".
+- [ ] Cualquier mención de "tarifa de uso", "aporte al Fondo de Reserva" u
+      "obligación económica por uso de área común" queda marcada como Fase 2/Fase 3
+      bloqueada o simulador, no como feature disponible.
 
 ---
 

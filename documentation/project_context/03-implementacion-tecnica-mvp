@@ -1,5 +1,11 @@
 <!-- filename: 03-implementacion-tecnica-mvp.md -->
 
+> **Historical note:** This file predates
+> `documentation/LEGAL_COMMERCIAL_GUARDRAILS.md` and is retained as original
+> technical context only. Any payment, PSP, refund, payout, or parking
+> monetization language below describes historical/demo ideas or future blocked
+> phases, not enabled Phase 1 production behavior.
+
 # Implementación Técnica MVP
 
 ## 3.1 Supuestos Técnicos y Alcance

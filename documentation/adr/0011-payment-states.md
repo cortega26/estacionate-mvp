@@ -3,11 +3,17 @@
 **Estado:** Aceptado  
 **Fecha:** 2026-04-27
 
+**Nota Fase 1:** Esta ADR describe infraestructura de demo/simulador y diseño
+futuro bloqueado. No habilita pagos, refunds, payouts, PSP ni conciliación
+productiva para comunidades reales. `LEGAL_COMMERCIAL_GUARDRAILS.md` prevalece
+si hay conflicto.
+
 ---
 
 ## Contexto
 
 El schema actual tiene:
+
 - `Payment.status` con enum `PaymentStatus`: `pending | paid | failed | refunded`
 - `Payment.gatewayStatus` con enum `GatewayStatus`: `pending | approved | rejected | cancelled | refunded`
 - `Payout.status` como `String` libre (no enum)
@@ -15,6 +21,7 @@ El schema actual tiene:
 - No existe un `PaymentIntent` — el pago se crea directamente sin una intención previa que capture el monto y la idempotency key antes de iniciar con el gateway
 
 Consecuencias hoy:
+
 - `Booking.paymentStatus` y `Payment.status` son enums distintos que pueden divergir.
 - Un webhook duplicado del gateway puede mutar el estado de un `Payment` que ya estaba `paid`.
 - No hay forma de rastrear reintentos de pago: si el usuario abre el checkout dos veces, no hay idempotency key que prevenga dos `Payment`s para la misma reserva.
@@ -131,17 +138,18 @@ El campo `Payout.status String` existente se reemplaza por `PayoutStatus`.
 
 ### Mapping gateway → estado de negocio
 
-| GatewayStatus (webhook) | PaymentIntent → | Payment creado |
-|---|---|---|
-| `approved` | `approved` | Sí — `captured` |
-| `rejected` | `rejected` | No |
-| `cancelled` | `cancelled` | No |
-| `refunded` (callback) | N/A — aplica a `Refund.status` | `Refund → succeeded` |
-| `in_process` / `pending` | `pending_gateway` | No (aún) |
+| GatewayStatus (webhook)  | PaymentIntent →                | Payment creado       |
+| ------------------------ | ------------------------------ | -------------------- |
+| `approved`               | `approved`                     | Sí — `captured`      |
+| `rejected`               | `rejected`                     | No                   |
+| `cancelled`              | `cancelled`                    | No                   |
+| `refunded` (callback)    | N/A — aplica a `Refund.status` | `Refund → succeeded` |
+| `in_process` / `pending` | `pending_gateway`              | No (aún)             |
 
 ### Idempotency en webhooks
 
 `WebhookEvent` debe existir con `idempotencyKey UNIQUE`. Antes de procesar cualquier webhook:
+
 1. Verificar que el `WebhookEvent.idempotencyKey` no existe → si existe, ignorar (responder 200 al gateway).
 2. Crear el `WebhookEvent` en la misma transacción que la mutación de estado.
 3. Si la transacción falla, el `WebhookEvent` no quedó guardado → el retry del gateway será procesado.
@@ -154,12 +162,12 @@ El campo `Payout.status String` existente se reemplaza por `PayoutStatus`.
 
 ## Alternativas descartadas
 
-| Alternativa | Por qué se descartó |
-|---|---|
-| Mantener `Payment` como único modelo sin `PaymentIntent` | Sin idempotency key antes del gateway; dos aperturas del checkout crean dos pagos |
-| Reembolso como campo `Payment.refundedAt` | No captura el ciclo de vida del reembolso; no permite múltiples reembolsos parciales |
-| `Payout.status` como String libre | No queryable con type safety; permite estados inválidos |
-| Gateway status como estado de negocio | Cada gateway usa nomenclatura diferente; acoplamiento directo |
+| Alternativa                                              | Por qué se descartó                                                                  |
+| -------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| Mantener `Payment` como único modelo sin `PaymentIntent` | Sin idempotency key antes del gateway; dos aperturas del checkout crean dos pagos    |
+| Reembolso como campo `Payment.refundedAt`                | No captura el ciclo de vida del reembolso; no permite múltiples reembolsos parciales |
+| `Payout.status` como String libre                        | No queryable con type safety; permite estados inválidos                              |
+| Gateway status como estado de negocio                    | Cada gateway usa nomenclatura diferente; acoplamiento directo                        |
 
 ---
 

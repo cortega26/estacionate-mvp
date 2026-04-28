@@ -3,6 +3,10 @@
 **Estado:** Aceptado  
 **Fecha:** 2026-04-27
 
+**Nota Fase 1:** Cualquier dato de pagos mencionado en esta ADR corresponde a
+infraestructura demo/simulador o futuro bloqueado. La fase habilitada es SaaS B2B
+sin pagos integrados ni payouts.
+
 ---
 
 ## Contexto
@@ -17,7 +21,10 @@ Riesgo crítico: un `building_admin` asignado al Edificio A puede hoy hacer quer
 
 ### Tenant principal: `Building`
 
-El `Building` es el tenant operacional y legal. Todos los datos operativos (reservas, spots, disponibilidad, pagos, audit logs, accesos de conserjería) pertenecen a un edificio y solo son accesibles por actores autorizados en ese edificio.
+El `Building` es el tenant operacional y legal. Todos los datos operativos
+(reservas, spots, disponibilidad, registros demo/futuros de pagos, audit logs,
+accesos de conserjería) pertenecen a un edificio y solo son accesibles por
+actores autorizados en ese edificio.
 
 ### Agrupador multi-edificio: `ManagementCompany`
 
@@ -49,6 +56,7 @@ Los `Resident`s son actores distintos a los `User`s internos. Un `Resident` est�
 ### Enforcement backend
 
 Todo endpoint que opera sobre datos de un edificio debe derivar el building scope del JWT del actor autenticado:
+
 - Si el actor es un `User` con rol global → scope global, sin filtro
 - Si el actor es un `User` con membership → scope = `membership.buildingId`
 - Si el actor es un `Resident` → scope = `resident.unit.buildingId`
@@ -60,12 +68,12 @@ Ver ADR 0008 para el middleware de enforcement.
 
 ## Alternativas descartadas
 
-| Alternativa | Por qué se descartó |
-|---|---|
-| `User` como tenant | Requiere que cada usuario sea su propio tenant; no aplica a B2B |
-| `ManagementCompany` como tenant principal | Complica el modelo de datos y la isolation; edificios con distintas administradoras seguirían necesitando isolation por edificio |
-| Roles globales para todos | Un building_admin de Edificio A no debe ver Edificio B; requiere scoping |
-| `buildingId` en request como fuente de verdad | Permite IDOR; debe derivarse del token autenticado |
+| Alternativa                                   | Por qué se descartó                                                                                                              |
+| --------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `User` como tenant                            | Requiere que cada usuario sea su propio tenant; no aplica a B2B                                                                  |
+| `ManagementCompany` como tenant principal     | Complica el modelo de datos y la isolation; edificios con distintas administradoras seguirían necesitando isolation por edificio |
+| Roles globales para todos                     | Un building_admin de Edificio A no debe ver Edificio B; requiere scoping                                                         |
+| `buildingId` en request como fuente de verdad | Permite IDOR; debe derivarse del token autenticado                                                                               |
 
 ---
 

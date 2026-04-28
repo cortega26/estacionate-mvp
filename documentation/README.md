@@ -13,6 +13,14 @@ Use this page as the navigation layer for project documentation. Prefer updating
 - `task-recipes/`: deeper recipes for specialized workflows.
 - `VALIDATION.md`: validation command guide by change type.
 - `TECH_SPEC.md`: product/domain rules and core API sketch.
+- `commercial/PITCH_PHASE_1.md`: Phase 1 commercial pitch for administrators
+  and committees.
+- `commercial/ADMINISTRADORA_OUTREACH.md`: outbound and discovery script for
+  administrator conversations.
+- `commercial/PILOT_PHASE_1_CHECKLIST.md`: controlled pilot checklist with no
+  integrated payments.
+- `commercial/OBJECTIONS_FAQ.md`: answers to common legal, operational, and
+  commercial objections.
 - `INFRASTRUCTURE.md`: local and production infrastructure notes.
 - `../RUNBOOK.md`: operational procedures and troubleshooting.
 
@@ -29,6 +37,11 @@ Use this page as the navigation layer for project documentation. Prefer updating
 - `adr/0005-validation-environment-contract.md`: local validation environment contract.
 
 ## Product And Planning
+
+The `commercial/` directory is the active Phase 1 commercial source for outreach
+and pilots. Older files under `../docs/` and `project_context/` may contain
+historical marketplace/payment assumptions and must be read through
+`LEGAL_COMMERCIAL_GUARDRAILS.md`.
 
 - `../docs/production-roadmap-2025.md`: roadmap.
 - `../docs/production-backlog.md`: production backlog.

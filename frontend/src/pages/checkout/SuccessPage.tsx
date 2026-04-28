@@ -46,10 +46,10 @@ export const SuccessPage = () => {
         }
     });
 
-    const title = isPending ? 'Pago pendiente' : 'Reserva confirmada';
+    const title = isPending ? 'Simulación pendiente' : 'Reserva confirmada';
     const description = isPending
-        ? 'Recibimos tu intento de pago y estamos esperando la confirmación final de la pasarela.'
-        : 'Tu pago fue procesado y la reserva quedó confirmada para el acceso.';
+        ? 'Recibimos el intento del simulador y estamos esperando la confirmación final.'
+        : 'La simulación fue procesada y la reserva quedó confirmada para el acceso.';
 
     return (
         <div className="min-h-screen bg-green-50 px-4 py-10">
@@ -89,7 +89,7 @@ export const SuccessPage = () => {
                             <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
                                 <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">Confirmación</p>
                                 <p className="mt-1 text-lg font-semibold text-gray-900">{summary.confirmationCode}</p>
-                                <p className="text-sm text-gray-600">Monto: ${summary.amountClp.toLocaleString('es-CL')}</p>
+                                <p className="text-sm text-gray-600">Monto demo: ${summary.amountClp.toLocaleString('es-CL')}</p>
                             </div>
                         </div>
                     )}
@@ -99,8 +99,8 @@ export const SuccessPage = () => {
                         <ul className="mt-3 space-y-2 text-sm text-gray-600">
                             {isPending ? (
                                 <>
-                                    <li>Estamos esperando la confirmación final del pago. Si cambia el estado, vuelve a esta página o revisa tu historial.</li>
-                                    <li>Si el cobro no se confirma en unos minutos, vuelve a intentar desde la app.</li>
+                                    <li>Estamos esperando la confirmación final del simulador. Si cambia el estado, vuelve a esta página o revisa tu historial.</li>
+                                    <li>Si la simulación no se confirma en unos minutos, vuelve a intentar desde la app.</li>
                                 </>
                             ) : (
                                 <>

@@ -1,6 +1,33 @@
 # Estacionate MVP
 
-A comprehensive marketplace for renting residential parking spots. Connects building administrators, residents, and visitors.
+Estacionate is a SaaS platform for Chilean residential communities and building
+administrators to manage visitor parking through clear rules, reservations,
+concierge validation, traceability, and operational reporting.
+
+The currently enabled product phase is **Phase 1: B2B SaaS without integrated
+resident/community payments**. Payment, payout, and PSP-related code exists only
+as demo/simulator infrastructure and must not be used with real communities
+until the legal/commercial gates in
+`documentation/LEGAL_COMMERCIAL_GUARDRAILS.md` are satisfied.
+
+## Product Positioning
+
+Estacionate is not currently positioned as a marketplace and does not enable
+direct visitor payments for visitor parking spaces.
+
+The MVP focuses on:
+
+- reducing parking-related disputes;
+- giving administrators and committees traceability;
+- helping concierge teams validate reservations quickly;
+- creating auditable visitor-parking usage records;
+- supporting safer future monetization only if legal, tax, assembly, and PSP
+  gates are met.
+
+Phase 1 revenue is limited to a monthly or annual B2B SaaS contract with the
+community or building administrator. There is no direct visitor charge, no
+resident-to-community payment flow inside the platform, no payout flow, and no
+custody of community funds by Estacionate in the enabled product phase.
 
 ## Tech Stack
 
