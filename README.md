@@ -1,5 +1,9 @@
 # Estacionate MVP
 
+*Parte del [ecosistema Tooltician](https://tooltician.com) — SaaS para comunidades residenciales chilenas.*
+
+[![Part of Tooltician](https://img.shields.io/badge/Part%20of-Tooltician-6C47FF.svg?style=flat-square&logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTIgM2g2YTQgNCAwIDAgMSA0IDR2MTRhMiAyIDAgMCAwLTItMkg0YTIgMiAwIDAgMS0yLTJWNVoiLz48cGF0aCBkPSJNMjIgM2gtNmE0IDQgMCAwIDAtNCA0djE0YTIgMiAwIDAgMSAyLTJoNGEyIDIgMCAwIDAgMi0yVjVhMiAyIDAgMCAwLTItMloiLz48L3N2Zz4=)](https://tooltician.com)
+
 Estacionate es una plataforma SaaS para comunidades residenciales chilenas y administradores de edificios que permite gestionar estacionamientos de visita con reglas claras, reservas, validación de conserjería, trazabilidad y reportes operativos.
 
 La fase de producto habilitada actualmente es **Fase 1: SaaS B2B sin pagos integrados de residentes ni comunidades**. El código relacionado con pagos, payouts y PSP existe solo como infraestructura demo/simulador y no debe usarse con comunidades reales hasta cumplir los controles legales/comerciales definidos en `documentation/LEGAL_COMMERCIAL_GUARDRAILS.md`.
@@ -152,3 +156,7 @@ npm run check:local
 - `documentation/VALIDATION.md`: guía de comandos de validación
 - `documentation/adr/`: registros de decisión de arquitectura
 - `AGENTS.md`: guía de inicio rápido para agentes y nuevos contribuyentes
+
+---
+
+*Parte del [ecosistema Tooltician](https://tooltician.com) — SaaS para comunidades residenciales chilenas.*
