@@ -2,7 +2,7 @@
 
 *Parte del [ecosistema Tooltician](https://tooltician.com) — SaaS para comunidades residenciales chilenas.*
 
-[![Tooltician](https://tooltician.com/badge.svg)](https://tooltician.com)
+[![Parte de Tooltician](https://tooltician.com/badge.es.svg)](https://tooltician.com)
 
 Estacionate es una plataforma SaaS para comunidades residenciales chilenas y administradores de edificios que permite gestionar estacionamientos de visita con reglas claras, reservas, validación de conserjería, trazabilidad y reportes operativos.
 
